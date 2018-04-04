@@ -6,6 +6,8 @@ import com.hk.core.web.ServletContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * @author: huangkai
@@ -24,6 +26,9 @@ public abstract class BaseController {
     @Autowired
     protected SecurityContext securityContext;
 
+    @Autowired
+    private MessageSource messageSource;
+
     /**
      * 获取当前登陆的用户信息
      *
@@ -31,6 +36,16 @@ public abstract class BaseController {
      */
     protected final UserPrincipal getPrincipal() {
         return securityContext.getPrincipal();
+    }
+
+    /**
+     * 获取国际化名称值
+     *
+     * @param code
+     * @return
+     */
+    protected final String getMessage(String code) {
+        return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
     }
 
 
