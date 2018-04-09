@@ -44,7 +44,7 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		//忽略不需要认证的url
-		web.ignoring().antMatchers(HttpMethod.GET,"/login").antMatchers("/resources/**","/static/**","/favicon.ico","/webjars/**");
+		web.ignoring().antMatchers(HttpMethod.GET,"/login").antMatchers("/basecodes/**").antMatchers("/resources/**","/static/**","/favicon.ico","/webjars/**");
 	}
 
 	/*

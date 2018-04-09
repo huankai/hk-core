@@ -1,8 +1,8 @@
 package com.hk.core.query;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
+
+import java.util.List;
 
 public class QueryModel {
 
@@ -14,7 +14,7 @@ public class QueryModel {
 	/**
 	 * 查询分页参数
 	 */
-	private int pageSize;
+	private int pageSize = 10;
 
 	/**
 	 * 分页时，不需要再count，所以用该属性来存上一次count的数字

@@ -44,8 +44,8 @@ public abstract class BaseController {
      * @param code
      * @return
      */
-    protected final String getMessage(String code) {
-        return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
+    protected final String getMessage(String code, Object... args) {
+        return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
     }
 
 

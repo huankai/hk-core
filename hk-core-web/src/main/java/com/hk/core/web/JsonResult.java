@@ -18,6 +18,8 @@ public final class JsonResult {
 
         REDIRECT(10302, "重定向"),
 
+        BAD_REQUEST(10400, "请求参数不正确"),
+
         UNAUTHORIZED(10401, "访问未授权"),
 
         NOT_FOUND(10404, "访问资源不存在"),
@@ -92,6 +94,16 @@ public final class JsonResult {
      */
     public static JsonResult failure(String message) {
         return new JsonResult(false, message);
+    }
+
+    /**
+     * 请求不正确
+     *
+     * @param message
+     * @return
+     */
+    public static JsonResult badRueqest(String message) {
+        return new JsonResult(Status.BAD_REQUEST, message);
     }
 
     /**
