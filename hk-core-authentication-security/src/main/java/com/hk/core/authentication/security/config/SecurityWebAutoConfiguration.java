@@ -36,7 +36,7 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.WebSecurity)
@@ -44,7 +44,7 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		//忽略不需要认证的url
-		web.ignoring().antMatchers(HttpMethod.GET,"/login").antMatchers("/basecodes/**").antMatchers("/resources/**","/static/**","/favicon.ico","/webjars/**");
+		web.ignoring().antMatchers(HttpMethod.GET,"/login").antMatchers("/resources/**","/static/**","/favicon.ico","/webjars/**");
 	}
 
 	/*
