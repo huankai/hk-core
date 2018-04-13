@@ -1,17 +1,16 @@
 package com.hk.core.domain;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
-
+import com.alibaba.fastjson.annotation.JSONField;
+import com.hk.commons.util.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.ClassUtils;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.hk.commons.util.StringUtils;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 /**
  * 基于 UUID的主键生成
@@ -20,7 +19,6 @@ import com.hk.commons.util.StringUtils;
  * @date 2017年12月11日下午8:30:33
  */
 @MappedSuperclass
-@SuppressWarnings("serial")
 public class AbstractUUIDPersistable implements Persistable<String> {
 
 	@Id

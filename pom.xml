@@ -44,6 +44,7 @@
 
 	<modules>
 		<module>hk-core-data</module>
+		<module>hk-core-service</module>
 		<module>hk-core-web</module>
 		<module>hk-core-webmvc</module>
 		<module>hk-core-authentication-api</module>

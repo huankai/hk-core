@@ -36,7 +36,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.hk</groupId>
-			<artifactId>hk-core-data</artifactId>
+			<artifactId>hk-core-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
