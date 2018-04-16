@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * @author huangkai
  *
  */
-public abstract class UserDetailServiceImpl implements UserDetailsService {
+public abstract class AbstractUserDetailService implements UserDetailsService {
 
 	@Override
 	public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

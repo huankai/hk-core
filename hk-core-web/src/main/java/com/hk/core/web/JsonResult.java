@@ -65,7 +65,11 @@ public final class JsonResult {
      * @return
      */
     public static JsonResult success() {
-        return new JsonResult();
+        return success(null);
+    }
+
+    public static JsonResult success(String message) {
+        return new JsonResult(true, message);
     }
 
     /**

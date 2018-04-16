@@ -57,11 +57,6 @@ public class UserPrincipal implements Serializable {
 	private String iconPath;
 
 	/**
-	 * 用户角色
-	 */
-	private Set<String> roles;
-
-	/**
 	 * 用户权限
 	 */
 	private Set<String> permissions;
@@ -136,14 +131,6 @@ public class UserPrincipal implements Serializable {
 
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
-	}
-
-	public Set<String> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<String> roles) {
-		this.roles = roles;
 	}
 
 	public Set<String> getPermissions() {

@@ -10,6 +10,7 @@ import com.hk.commons.util.encrypt.Encrypt;
  * @author huangkai
  * @date 2017年12月19日下午1:12:14
  */
+@Deprecated
 public class SecurityPasswordEncrypt implements Encrypt, PasswordEncoder {
 
 	@Override
