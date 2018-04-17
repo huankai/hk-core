@@ -2,6 +2,7 @@ package com.hk.core.authentication.security;
 
 import com.google.common.collect.Lists;
 import com.hk.commons.util.CollectionUtils;
+import com.hk.core.authentication.api.PermissionContants;
 import com.hk.core.authentication.api.UserPrincipal;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +17,7 @@ import java.util.Set;
  * @date 2017年12月21日下午5:45:54
  */
 @SuppressWarnings("serial")
-public class SecurityUserPrincipal extends UserPrincipal implements UserDetails {
+public class SecurityUserPrincipal extends UserPrincipal implements UserDetails, PermissionContants {
 
     /**
      *
@@ -25,12 +26,12 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
 
     private Integer userStatus;
 
-    public SecurityUserPrincipal() {
-    }
+    private final boolean isProtect;
 
-    public SecurityUserPrincipal(String userId, String userName, String passWord, String nickName, Integer userType,
+    public SecurityUserPrincipal(boolean isProtect, String userId, String userName, String passWord, String nickName, Integer userType,
                                  String phone, String email, Integer sex, String iconPath, Integer userStatus) {
         super(userId, userName, nickName, userType, phone, email, sex, iconPath);
+        this.isProtect = isProtect;
         this.passWord = passWord;
         this.userStatus = userStatus;
     }
@@ -43,7 +44,11 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authoritieList = Lists.newArrayList();
-        Set<String> permissions = getPermissions();
+        if (isProtect) {
+            authoritieList.add(new SimpleGrantedAuthority(PROTECT_ADMIN_PERMISSION));
+            return authoritieList;
+        }
+        Set<String> permissions = getPermissionByAppId(getAppId());
         if (CollectionUtils.isNotEmpty(permissions)) {
             permissions.forEach(permission -> authoritieList.add(new SimpleGrantedAuthority(permission)));
         }

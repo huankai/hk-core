@@ -1,16 +1,5 @@
 package com.hk.core.query.jdbc;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
 import com.google.common.collect.Lists;
 import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.CollectionUtils;
@@ -18,6 +7,16 @@ import com.hk.commons.util.ConverterUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.query.Order;
 import com.hk.core.query.jdbc.dialect.Dialect;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -209,11 +208,11 @@ public class JdbcSession {
 
 	private class SelectStatement {
 
-		public StringBuilder selectSql;
+		private StringBuilder selectSql;
 
-		public StringBuilder countSql;
+		private StringBuilder countSql;
 
-		public List<Object> parameters;
+		private List<Object> parameters;
 
 		private SelectStatement(StringBuilder selectSql, StringBuilder countSql, List<Object> parameters) {
 			this.selectSql = selectSql;

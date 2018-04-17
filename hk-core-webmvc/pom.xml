@@ -20,6 +20,18 @@
 			<artifactId>hk-core-web</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!--
+			先在此把httpclient引用进来，以后必须把这个踢掉
+			这里引用进来的目的是在每个应用中都可以调用EMI的接口获取当前的app id
+			@see  com.hk.core.web.AppCodeUtils#getCurrentAppId
+		-->
+		<dependency>
+			<groupId>com.hk</groupId>
+			<artifactId>hk-commons-httpclient</artifactId>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

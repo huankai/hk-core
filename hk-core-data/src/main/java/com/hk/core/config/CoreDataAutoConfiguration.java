@@ -16,7 +16,7 @@ import com.hk.core.query.jdbc.dialect.MySQLDialect;
 
 /**
  * Core Dao 自动配置
- * 
+ *
  * @author huangkai
  *
  */
@@ -31,7 +31,7 @@ public class CoreDataAutoConfiguration {
 
 	/**
 	 * 使用的数据库，默认为MYSQL
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean
@@ -44,7 +44,7 @@ public class CoreDataAutoConfiguration {
 
 	/**
 	 * jpa audit功能
-	 * 
+	 *
 	 * @return
 	 */
 	@Bean
