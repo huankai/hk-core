@@ -9,8 +9,7 @@ import com.hk.core.query.QueryPageable;
 import com.hk.core.query.SimpleQueryResult;
 import com.hk.core.repository.BaseRepository;
 import com.hk.core.service.BaseService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -29,12 +28,13 @@ import java.util.List;
  * @date 2017年9月27日下午2:16:24
  */
 @Transactional(readOnly = true)
+@Slf4j
 public abstract class BaseServiceImpl<T, PK extends Serializable> implements BaseService<T, PK> {
 
-    /**
-     *
-     */
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+//    /**
+//     *
+//     */
+//    protected Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 返回 BaseRepository
