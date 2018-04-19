@@ -36,7 +36,7 @@ public class UserPrincipal implements Serializable {
     /**
      * 用户类型
      */
-    private Integer userType;
+    private Byte userType;
 
     /**
      * 用户手机号
@@ -51,7 +51,7 @@ public class UserPrincipal implements Serializable {
     /**
      * 用户性别
      */
-    private Integer sex;
+    private Byte sex;
 
     /**
      * 用户头像
@@ -85,8 +85,8 @@ public class UserPrincipal implements Serializable {
 
     }
 
-    public UserPrincipal(String userId, String userName, String nickName, Integer userType, String phone, String email,
-                         Integer sex, String iconPath) {
+    public UserPrincipal(String userId, String userName, String nickName, Byte userType, String phone, String email,
+                         Byte sex, String iconPath) {
         this.userId = userId;
         this.userName = userName;
         this.nickName = nickName;
@@ -113,11 +113,11 @@ public class UserPrincipal implements Serializable {
         this.userName = userName;
     }
 
-    public Integer getUserType() {
+    public Byte getUserType() {
         return userType;
     }
 
-    public void setUserType(Integer userType) {
+    public void setUserType(Byte userType) {
         this.userType = userType;
     }
 
@@ -137,11 +137,11 @@ public class UserPrincipal implements Serializable {
         this.email = email;
     }
 
-    public Integer getSex() {
+    public Byte getSex() {
         return sex;
     }
 
-    public void setSex(Integer sex) {
+    public void setSex(Byte sex) {
         this.sex = sex;
     }
 

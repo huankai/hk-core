@@ -24,12 +24,12 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
      */
     private String passWord;
 
-    private Integer userStatus;
+    private Byte userStatus;
 
     private final boolean isProtect;
 
-    public SecurityUserPrincipal(boolean isProtect, String userId, String userName, String passWord, String nickName, Integer userType,
-                                 String phone, String email, Integer sex, String iconPath, Integer userStatus) {
+    public SecurityUserPrincipal(Boolean isProtect, String userId, String userName, String passWord, String nickName, Byte userType,
+                                 String phone, String email, Byte sex, String iconPath, Byte userStatus) {
         super(userId, userName, nickName, userType, phone, email, sex, iconPath);
         this.isProtect = isProtect;
         this.passWord = passWord;

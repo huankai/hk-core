@@ -1,5 +1,7 @@
 package com.hk.core.service.impl;
 
+import com.hk.commons.util.BeanUtils;
+import com.hk.commons.util.ClassUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
@@ -11,10 +13,7 @@ import com.hk.core.repository.BaseRepository;
 import com.hk.core.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -27,14 +26,9 @@ import java.util.List;
  * @author huangkai
  * @date 2017年9月27日下午2:16:24
  */
-@Transactional(readOnly = true)
 @Slf4j
-public abstract class BaseServiceImpl<T, PK extends Serializable> implements BaseService<T, PK> {
-
-//    /**
-//     *
-//     */
-//    protected Logger logger = LoggerFactory.getLogger(getClass());
+@Transactional(readOnly = true, rollbackFor = {Throwable.class})
+public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Serializable> implements BaseService<T, PK> {
 
     /**
      * 返回 BaseRepository
@@ -97,7 +91,7 @@ public abstract class BaseServiceImpl<T, PK extends Serializable> implements Bas
      * @see com.hk.core.service.BaseService#findOne(java.io.Serializable)
      */
     @Override
-    public final T findOne(PK id) {
+    public T findOne(PK id) {
         return getBaseRepository().findOne(id);
     }
 
@@ -143,7 +137,7 @@ public abstract class BaseServiceImpl<T, PK extends Serializable> implements Bas
      * @see com.hk.core.service.BaseService#exists(java.io.Serializable)
      */
     @Override
-    public final boolean exists(PK id) {
+    public boolean exists(PK id) {
         return getBaseRepository().exists(id);
     }
 
@@ -153,7 +147,7 @@ public abstract class BaseServiceImpl<T, PK extends Serializable> implements Bas
      * @see com.hk.core.service.BaseService#findAll()
      */
     @Override
-    public final List<T> findAll() {
+    public List<T> findAll() {
         return getBaseRepository().findAll();
     }
 
@@ -163,7 +157,7 @@ public abstract class BaseServiceImpl<T, PK extends Serializable> implements Bas
      * @see com.hk.core.service.BaseService#findAll(java.lang.Iterable)
      */
     @Override
-    public final List<T> findAll(Iterable<PK> ids) {
+    public List<T> findAll(Iterable<PK> ids) {
         return getBaseRepository().findAll(ids);
     }
 
@@ -171,8 +165,20 @@ public abstract class BaseServiceImpl<T, PK extends Serializable> implements Bas
      * @param t
      * @return
      */
-    protected <S extends T> Example<S> getExample(S t) {
-        return Example.of(t);
+    private <S extends T> Example<S> getExample(S t) {
+        if (null == t) {
+            t = BeanUtils.instantiate((Class<S>) ClassUtils.getGenericType(this.getClass(), 0));
+        }
+        return Example.of(t, ofExampleMatcher());
+    }
+
+    /**
+     * 查询条件匹配
+     *
+     * @return
+     */
+    protected ExampleMatcher ofExampleMatcher() {
+        return ExampleMatcher.matching();
     }
 
     /*
@@ -209,7 +215,7 @@ public abstract class BaseServiceImpl<T, PK extends Serializable> implements Bas
      * @see com.hk.core.service.BaseService#count()
      */
     @Override
-    public final long count() {
+    public long count() {
         return getBaseRepository().count();
     }
 
