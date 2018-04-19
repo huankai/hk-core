@@ -49,7 +49,10 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         //忽略不需要认证的url
-        web.ignoring().antMatchers(HttpMethod.GET, "/login").antMatchers("/api/**","/resources/**", "/static/**", "/favicon.ico", "/webjars/**");
+        web
+            .ignoring()
+            .antMatchers(HttpMethod.GET, "/login")
+            .antMatchers("/api/**","/resources/**", "/static/**", "/favicon.ico", "/webjars/**");
     }
 
     /*
@@ -72,7 +75,7 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
             /*Logout Config */
             .and()
             .logout()
-            .logoutUrl("/logout")
+//            .logoutUrl("/logout")
             .invalidateHttpSession(true)
             .logoutSuccessHandler((request, response, authentication) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success("退出成功")))
             .permitAll()

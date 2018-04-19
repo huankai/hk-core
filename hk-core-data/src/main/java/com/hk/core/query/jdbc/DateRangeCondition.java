@@ -1,10 +1,9 @@
 package com.hk.core.query.jdbc;
 
+import com.hk.commons.util.date.DateTimeUtils;
+
 import java.util.Calendar;
 import java.util.List;
-
-import com.hk.commons.annotations.EnumDisplay;
-import com.hk.commons.util.date.DateTimeUtils;
 
 /**
  * 
@@ -13,47 +12,50 @@ import com.hk.commons.util.date.DateTimeUtils;
  */
 public class DateRangeCondition implements Condition {
 
+
+
 	public enum DateRange {
+
 		/**
 		 * today
 		 */
-		@EnumDisplay("今天")
+//		@EnumDisplay("date.today")
 		TD,
 
 		/**
 		 * last day
 		 */
-		@EnumDisplay("昨天")
+//		@EnumDisplay("date.yesterday")
 		YD,
 
 		/**
 		 * this week
 		 */
-		@EnumDisplay("本周")
+//		@EnumDisplay("date.thisweek")
 		TW,
 
 		/**
 		 * last week
 		 */
-		@EnumDisplay("上周")
+//		@EnumDisplay("date.lastweek")
 		LW,
 
 		/**
 		 * this month
 		 */
-		@EnumDisplay("本月")
+//		@EnumDisplay("date.thismonth")
 		TM,
 
 		/**
 		 * last month
 		 */
-		@EnumDisplay("上月")
+//		@EnumDisplay("date.lastmonth")
 		LM,
 
 		/**
 		 * custom
 		 */
-		@EnumDisplay("自定义")
+//		@EnumDisplay("date.custom")
 		CUSTOM
 	}
 

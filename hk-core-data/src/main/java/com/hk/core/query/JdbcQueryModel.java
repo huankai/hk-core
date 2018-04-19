@@ -20,6 +20,9 @@ public class JdbcQueryModel extends QueryModel {
      */
     private List<SimpleCondition> params;
 
+    /**
+     * And OR
+     */
     private AndOr andOr = AndOr.AND;
 
     /**
