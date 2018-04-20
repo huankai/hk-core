@@ -9,6 +9,8 @@ import java.util.List;
 @Data
 public class QueryModel {
 
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
     /**
      * 查询分页参数
      */
@@ -17,7 +19,7 @@ public class QueryModel {
     /**
      * 查询分页参数，默认为10
      */
-    private int pageSize = 10;
+    private int pageSize = DEFAULT_PAGE_SIZE;
 
     /**
      * 分页时，不需要再count，所以用该属性来存上一次count的数字
@@ -43,7 +45,7 @@ public class QueryModel {
      * @return
      */
     public int getPageSize() {
-        return pageSize <= 0 ? 1 : pageSize;
+        return pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
     }
 
     /**
