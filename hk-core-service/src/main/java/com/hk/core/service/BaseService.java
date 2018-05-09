@@ -1,6 +1,5 @@
 package com.hk.core.service;
 
-import com.hk.core.query.JpaQueryModel;
 import com.hk.core.query.QueryModel;
 import com.hk.core.query.QueryPageable;
 import org.springframework.data.domain.Persistable;
@@ -82,14 +81,6 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @return 查询结果
      */
     QueryPageable<T> queryForPage(QueryModel query);
-
-    /**
-     * 分页查询
-     *
-     * @param query 查询参数
-     * @return 查询结果
-     */
-    QueryPageable<T> queryForPage(JpaQueryModel<T> query);
 
     /**
      * Flushes all pending changes to the database.

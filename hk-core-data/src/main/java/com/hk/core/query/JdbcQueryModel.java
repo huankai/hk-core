@@ -1,10 +1,12 @@
 package com.hk.core.query;
 
 import com.google.common.collect.Lists;
+import com.hk.commons.util.CollectionUtils;
 import com.hk.core.query.jdbc.CompositeCondition;
+import com.hk.core.query.jdbc.Condition;
 import com.hk.core.query.jdbc.SelectArguments;
-import com.hk.core.query.jdbc.SimpleCondition;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -13,17 +15,18 @@ import java.util.List;
  * @date 2017年12月23日下午3:36:15
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class JdbcQueryModel extends QueryModel {
 
     /**
      * 查询参数
      */
-    private List<SimpleCondition> params;
+    private List<QueryCondition> params;
 
     /**
-     * And OR
+     * And Or
      */
-    private AndOr andOr = AndOr.AND;
+    private boolean or;
 
     /**
      * 转换为SelectArguments对象
@@ -35,7 +38,16 @@ public class JdbcQueryModel extends QueryModel {
         arguments.setOrders(getOrders());
         arguments.setPageIndex(getPageIndex());
         arguments.setPageSize(getPageSize());
-        arguments.getConditions().addConditions(new CompositeCondition(andOr, Lists.newArrayList(params)));
+        if (CollectionUtils.isNotEmpty(params)) {
+            List<Condition> conditions = Lists.newArrayList();
+            params.forEach(item -> {
+                Condition condition = item.toDataCondition();
+                if (null != condition) {
+                    conditions.add(condition);
+                }
+            });
+            arguments.getConditions().addConditions(new CompositeCondition(or ? AndOr.OR : AndOr.AND, conditions));
+        }
         return arguments;
     }
 

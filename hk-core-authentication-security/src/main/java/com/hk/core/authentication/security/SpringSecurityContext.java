@@ -16,22 +16,13 @@ import com.hk.core.web.Webs;
  */
 public class SpringSecurityContext implements SecurityContext {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.hk.core.authentication.api.SecurityContext#getPrincipal()
-	 */
+
 	@Override
 	public UserPrincipal getPrincipal() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return (UserPrincipal) authentication.getPrincipal();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.hk.core.authentication.api.SecurityContext#isAuthenticated()
-	 */
 	@Override
 	public boolean isAuthenticated() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -39,13 +30,6 @@ public class SpringSecurityContext implements SecurityContext {
 				&& authentication.isAuthenticated();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.hk.core.authentication.api.SecurityContext#setSessionAttribute(java.lang.
-	 * Object, java.lang.Object, boolean)
-	 */
 	@Override
 	public void setSessionAttribute(String key, Object value, boolean create) {
 		if (StringUtils.isNotEmpty(key)) {
@@ -53,25 +37,11 @@ public class SpringSecurityContext implements SecurityContext {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.hk.core.authentication.api.SecurityContext#getSessionAttribute(java.lang.
-	 * Object)
-	 */
 	@Override
 	public <T> T getSessionAttribute(String key) {
 		return StringUtils.isEmpty(key) ? null : Webs.getAttributeFromSession(key);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.hk.core.authentication.api.SecurityContext#removeSessionAttribute(java.
-	 * lang.Object)
-	 */
 	@Override
 	public void removeSessionAttribute(String key) {
 		if (StringUtils.isNotEmpty(key)) {

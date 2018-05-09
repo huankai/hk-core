@@ -33,75 +33,51 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder)
-     */
+//    public SecurityWebAutoConfiguration() {
+//        super(true);
+//    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.WebSecurity)
-     */
     @Override
     public void configure(WebSecurity web) throws Exception {
         //忽略不需要认证的url
         web
-            .ignoring()
-            .antMatchers(HttpMethod.GET, "/login")
-            .antMatchers("/api/**","/resources/**", "/static/**", "/favicon.ico", "/webjars/**");
+                .ignoring()
+                .antMatchers(HttpMethod.GET, "/login")
+                .antMatchers("/api/**", "/resources/**", "/static/**", "/favicon.ico", "/webjars/**");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
-     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             /* CSRF Disable*/
-            .csrf()
-            .disable()
+                .csrf()
+                .disable()
 
             /* Login Config */
-            .formLogin()
-            .permitAll()
-            .successHandler((request, response, authentication) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success("登陆成功")))
-            .failureHandler((request, response, exception) -> Webs.writeJson(response, HttpServletResponse.SC_UNAUTHORIZED, JsonResult.failure(exception.getMessage())))
+                .formLogin()
+//            .loginPage("/login") l
+                .permitAll()
+                .successHandler((request, response, authentication) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success("登陆成功")))
+                .failureHandler((request, response, exception) -> Webs.writeJson(response, HttpServletResponse.SC_UNAUTHORIZED, JsonResult.failure(exception.getMessage())))
 
             /*Logout Config */
-            .and()
-            .logout()
+                .and()
+                .logout()
 //            .logoutUrl("/logout")
-            .invalidateHttpSession(true)
-            .logoutSuccessHandler((request, response, authentication) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success("退出成功")))
-            .permitAll()
+                .invalidateHttpSession(true)
+                .logoutSuccessHandler((request, response, authentication) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success("退出成功")))
+                .permitAll()
 
             /*任意请求都需要认证*/
-            .and()
-            .authorizeRequests()
-            .anyRequest()
-            .authenticated();
+                .and()
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated();
 
-
-//
-//		http
-//		.csrf().disable() //禁用 csrf
-//		.formLogin().loginPage("/login").failureUrl("/login?error").permitAll(). // 定义登陆页、登陆失败页
-//		.and().logout().logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true).permitAll()//定义退出请求
-//		.and().authorizeRequests().anyRequest().authenticated();//任意请求都需要认证
-
-        // http.authorizeRequests().antMatchers("/","/login").permitAll() // / /login
-        // 不需要认证
-        // .anyRequest().authenticated() // 任意请求都需要认证
-        // .and().formLogin().loginPage("/login").defaultSuccessUrl("/index").failureForwardUrl("/login?error")
-        // .permitAll()// 设置默认登录页、成功跳转页、登陆失败跳转页
-        // // .and().rememberMe().tokenValiditySeconds(30 * 60 * 60).key("")//
-        // // 开启cookie保存用户数据、设置cookie有效期、设置cookie的私钥
-        // .and().logout().logoutUrl("/logout").logoutSuccessUrl("/").permitAll(); //
-        // 默认注销行为为logout，可以通过下面的方式来修改、设置注销成功后跳转页面，默认是跳转到登录页面
     }
 }

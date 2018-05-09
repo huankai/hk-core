@@ -8,50 +8,38 @@ import java.util.List;
  */
 abstract class AbstractQueryResult<T> implements QueryPageable<T> {
 
-	/**
-	 * 数据集
-	 */
-	private List<T> data;
+    /**
+     * 数据集
+     */
+    private List<T> data;
 
-	/**
-	 * 总记录数
-	 */
-	private long totalRowCount;
+    /**
+     * 总记录数
+     */
+    private long totalRowCount;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.hk.core.query.QueryPageable#getData()
-	 */
-	@Override
-	public List<T> getData() {
-		return data;
-	}
+    @Override
+    public List<T> getData() {
+        return data;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.hk.core.query.QueryPageable#getTotalRowCount()
-	 */
-	@Override
-	public long getTotalRowCount() {
-		return totalRowCount;
-	}
+    @Override
+    public long getTotalRowCount() {
+        return totalRowCount;
+    }
 
-	/**
-	 * @param data
-	 *            the data to set
-	 */
-	public void setData(List<T> data) {
-		this.data = data;
-	}
+    /**
+     * @param data the data to set
+     */
+    public void setData(List<T> data) {
+        this.data = data;
+    }
 
-	/**
-	 * @param totalRowCount
-	 *            the totalRowCount to set
-	 */
-	public void setTotalRowCount(long totalRowCount) {
-		this.totalRowCount = totalRowCount;
-	}
+    /**
+     * @param totalRowCount the totalRowCount to set
+     */
+    public void setTotalRowCount(long totalRowCount) {
+        this.totalRowCount = totalRowCount;
+    }
 
 }

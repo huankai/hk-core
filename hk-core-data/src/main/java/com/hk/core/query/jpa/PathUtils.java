@@ -3,10 +3,10 @@
  */
 package com.hk.core.query.jpa;
 
+import com.hk.commons.util.StringUtils;
+
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
-
-import com.hk.commons.util.StringUtils;
 
 /**
  * @author huangkai
@@ -17,7 +17,7 @@ public class PathUtils {
 	public static <X> Path<X> getPath(Root<X> root, String propertyName) {
 		Path<X> path;
 		if (StringUtils.contains(propertyName, ".")) {
-			String[] names = StringUtils.split(propertyName, ",");
+			String[] names = StringUtils.split(propertyName, "\\,");
 			path = root.get(names[0]);
 			for (String name : names) {
 				path = path.get(name);
