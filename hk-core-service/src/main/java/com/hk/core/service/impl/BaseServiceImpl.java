@@ -3,6 +3,7 @@ package com.hk.core.service.impl;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ClassUtils;
 import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.FieldUtils;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.query.JdbcQueryModel;
@@ -14,13 +15,22 @@ import com.hk.core.query.jdbc.ListResult;
 import com.hk.core.query.jdbc.SelectArguments;
 import com.hk.core.repository.BaseRepository;
 import com.hk.core.service.BaseService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 基本Service CRUD操作
@@ -41,10 +51,40 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     protected abstract BaseRepository<T, PK> getBaseRepository();
 
     /**
+     * 表名
+     */
+    @Getter
+    private final String tableName;
+
+    @Getter
+    private final Class<T> clazz;
+
+    /**
+     * 所以有  @Id 和 @Column修饰的字段名
+     */
+    private Set<String> allColumnSet;
+
+    /**
      * 获取登陆的用户信息
      */
     @Autowired
+    @Getter
     protected SecurityContext securityContext;
+
+    @Autowired
+    private JdbcSession jdbcSession;
+
+    public BaseServiceImpl() {
+        this.clazz = (Class<T>) ClassUtils.getGenericType(getClass(), 0);
+        List<Field> idFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Id.class);
+        Set<String> fieldSet = idFieldList.stream().map(Field::getName).collect(Collectors.toSet());
+
+        List<Field> columnFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Column.class);
+        Set<String> fields = columnFieldList.stream().map(field -> field.getAnnotation(Column.class).name()).collect(Collectors.toSet());
+        fieldSet.addAll(fields);
+        allColumnSet = Collections.unmodifiableSet(fields);
+        tableName = AnnotationUtils.findAnnotation(clazz, Table.class).name();
+    }
 
     /**
      * 获取当前登陆的用户
@@ -120,7 +160,7 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
      */
     private <S extends T> Example<S> getExample(S t) {
         if (null == t) {
-            t = BeanUtils.instantiate((Class<S>) ClassUtils.getGenericType(getClass(), 0));
+            t = (S) BeanUtils.instantiate(clazz);
         }
         return Example.of(t, ofExampleMatcher());
     }
@@ -145,13 +185,11 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
         return new SimpleQueryResult<>(query, page.getTotalElements(), page.getContent());
     }
 
-    @Autowired
-    private JdbcSession jdbcSession;
-
     @SuppressWarnings("unchecked")
-    public QueryPageable<T> queryForPage(JdbcQueryModel query) {
-        Class<T> clazz = (Class<T>) BeanUtils.instantiate((Class<T>) ClassUtils.getGenericType(getClass(), 0)).getClass();
+    protected QueryPageable<T> queryForPage(JdbcQueryModel query) {
         SelectArguments arguments = query.toSelectArguments();
+        arguments.setFields(allColumnSet);
+        arguments.setFrom(tableName);
         ListResult<T> result = jdbcSession.queryForList(arguments, true, clazz);
         return new SimpleQueryResult<>(query, result.getTotalRowCount(), result.getResult());
     }
