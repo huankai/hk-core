@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -20,6 +21,7 @@ import com.hk.core.query.jdbc.dialect.MySQLDialect;
  * @author huangkai
  */
 @Configuration
+@EnableJpaAuditing
 public class CoreDataAutoConfiguration {
 
     @Bean

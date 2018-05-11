@@ -29,6 +29,11 @@ public class JdbcQueryModel extends QueryModel {
     private boolean or;
 
     /**
+     * 不分页参数
+     */
+    private boolean paging;
+
+    /**
      * 转换为SelectArguments对象
      *
      * @return SelectArguments
@@ -37,7 +42,7 @@ public class JdbcQueryModel extends QueryModel {
         SelectArguments arguments = new SelectArguments();
         arguments.setOrders(getOrders());
         arguments.setPageIndex(getPageIndex());
-        arguments.setPageSize(getPageSize());
+        arguments.setPageSize(isPaging() ? 0 : getPageSize());
         if (CollectionUtils.isNotEmpty(params)) {
             List<Condition> conditions = Lists.newArrayList();
             params.forEach(item -> {

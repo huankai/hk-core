@@ -19,7 +19,7 @@ import javax.persistence.Transient;
  * @date 2017年12月11日下午8:30:33
  */
 @MappedSuperclass
-public class AbstractUUIDPersistable implements Persistable<String> {
+public abstract class AbstractUUIDPersistable implements Persistable<String> {
 
     @Id
     @GeneratedValue(generator = "system-uuid")

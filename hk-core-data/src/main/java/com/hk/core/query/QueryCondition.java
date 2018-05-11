@@ -24,7 +24,7 @@ public class QueryCondition {
     /**
      * condition is enable
      */
-    private boolean enabled;
+    private boolean enabled = true;
 
     /**
      * condition Field
@@ -113,10 +113,10 @@ public class QueryCondition {
                     return null;
                 if (oper == Operator.IN
                         || oper == Operator.NOTIN) {
-                    value = StringUtils.split(stringValue, "\\,");
+                    value = StringUtils.splitByComma(stringValue);
                 }
             }
-            return new SimpleCondition(condition.name, condition.operator, value);
+            return new SimpleCondition(condition.name, oper, value);
         });
         builderMap.put(DATERANGE_CONDITION_KEY, condition -> {
             DateRangeCondition dateRange = new DateRangeCondition();

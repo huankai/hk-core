@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.hk.core.query.jpa;
 
@@ -14,18 +14,18 @@ import javax.persistence.criteria.Root;
  */
 public class PathUtils {
 
-	public static <X> Path<X> getPath(Root<X> root, String propertyName) {
-		Path<X> path;
-		if (StringUtils.contains(propertyName, ".")) {
-			String[] names = StringUtils.split(propertyName, "\\,");
-			path = root.get(names[0]);
-			for (String name : names) {
-				path = path.get(name);
-			}
-		} else {
-			path = root.get(propertyName);
-		}
-		return path;
+    public static <X> Path<X> getPath(Root<X> root, String propertyName) {
+        Path<X> path;
+        if (StringUtils.contains(propertyName, ".")) {
+            String[] names = StringUtils.splitByComma(propertyName);
+            path = root.get(names[0]);
+            for (String name : names) {
+                path = path.get(name);
+            }
+        } else {
+            path = root.get(propertyName);
+        }
+        return path;
 
-	}
+    }
 }

@@ -1,6 +1,8 @@
 package com.hk.core.service;
 
-public interface TreeService<T> {
+import com.hk.core.domain.TreePersistable;
+
+public interface TreeService<T extends TreePersistable<T>> {
 
 //	List<TreeNode> getChildrens(Map<String, Object> param,T t);
 //	
@@ -25,6 +27,6 @@ public interface TreeService<T> {
 //	List<TreeNode> generateAsyncTree(boolean rootCheck,boolean childCheck,Map<String,Object> param,List<String> checkIds);
 //	
 //	List<TreeNode> generateAsyncTree(boolean rootCheck,boolean childCheck,boolean isOpen,Map<String,Object> param,List<String> checkIds);
-	
-	
+
+
 }

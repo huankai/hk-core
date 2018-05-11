@@ -1,11 +1,9 @@
 package com.hk.core.service.impl;
 
-import com.hk.commons.util.BeanUtils;
-import com.hk.commons.util.ClassUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.FieldUtils;
+import com.hk.commons.util.*;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.domain.TreePersistable;
 import com.hk.core.query.JdbcQueryModel;
 import com.hk.core.query.QueryModel;
 import com.hk.core.query.QueryPageable;
@@ -40,7 +38,7 @@ import java.util.stream.Collectors;
  * @date 2017年9月27日下午2:16:24
  */
 @Slf4j
-@Transactional(readOnly = true, rollbackFor = {Throwable.class})
+@Transactional(rollbackFor = {Throwable.class})
 public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Serializable> implements BaseService<T, PK> {
 
     /**
@@ -53,11 +51,9 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     /**
      * 表名
      */
-    @Getter
-    private final String tableName;
+    private String tableName;
 
-    @Getter
-    private final Class<T> clazz;
+    private Class<T> clazz;
 
     /**
      * 所以有  @Id 和 @Column修饰的字段名
@@ -74,16 +70,42 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     @Autowired
     private JdbcSession jdbcSession;
 
-    public BaseServiceImpl() {
-        this.clazz = (Class<T>) ClassUtils.getGenericType(getClass(), 0);
-        List<Field> idFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Id.class);
-        Set<String> fieldSet = idFieldList.stream().map(Field::getName).collect(Collectors.toSet());
+    /**
+     * 获取表名
+     *
+     * @return 表名
+     */
+    protected final String getTableName() {
+        if (StringUtils.isEmpty(tableName)) {
+            tableName = AnnotationUtils.findAnnotation(getClazz(), Table.class).name();
+        }
+        return tableName;
+    }
 
-        List<Field> columnFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Column.class);
-        Set<String> fields = columnFieldList.stream().map(field -> field.getAnnotation(Column.class).name()).collect(Collectors.toSet());
-        fieldSet.addAll(fields);
-        allColumnSet = Collections.unmodifiableSet(fields);
-        tableName = AnnotationUtils.findAnnotation(clazz, Table.class).name();
+    private Class<T> getClazz() {
+        if (null == clazz) {
+            this.clazz = (Class<T>) ClassUtils.getGenericType(getClass(), 0);
+        }
+        return clazz;
+    }
+
+    /**
+     * 获取表所有字段，包含id字段
+     *
+     * @return
+     */
+    protected Set<String> getAllColumnSet() {
+        if (null == allColumnSet) {
+            Class<T> clazz = getClazz();
+            List<Field> idFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Id.class);
+            Set<String> fieldSet = idFieldList.stream().map(Field::getName).collect(Collectors.toSet());
+
+            List<Field> columnFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Column.class);
+            Set<String> fields = columnFieldList.stream().map(field -> field.getAnnotation(Column.class).name()).collect(Collectors.toSet());
+            fieldSet.addAll(fields);
+            allColumnSet = Collections.unmodifiableSet(fieldSet);
+        }
+        return allColumnSet;
     }
 
     /**
@@ -96,60 +118,75 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     }
 
     @Override
-    @Transactional
     public <S extends T> S saveOrUpdate(S entity) {
+        setTreeParent(entity);
         return getBaseRepository().save(entity);
     }
 
+    private void setTreeParent(T entity) {
+        if (entity instanceof TreePersistable) {
+            TreePersistable<T> treeEntity = (TreePersistable<T>) entity;
+            if (treeEntity.getParent() == null) {
+                treeEntity.setParent(entity);
+            }
+        }
+    }
+
     @Override
-    @Transactional
     public <S extends T> List<S> saveOrUpdate(Iterable<S> entities) {
+        entities.forEach(item -> setTreeParent(item));
         return getBaseRepository().save(entities);
     }
 
     @Override
-    @Transactional
     public <S extends T> S saveAndFlush(S entity) {
+        setTreeParent(entity);
         return getBaseRepository().saveAndFlush(entity);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public T findOne(PK id) {
         return getBaseRepository().findOne(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public <S extends T> S findOne(S t) {
         return getBaseRepository().findOne(getExample(t));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public <S extends T> List<S> findAll(S t) {
         return getBaseRepository().findAll(getExample(t));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public T getOne(PK id) {
         return getBaseRepository().getOne(id);
     }
 
     @Override
-    @Transactional
     public void flush() {
         getBaseRepository().flush();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean exists(PK id) {
         return getBaseRepository().exists(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<T> findAll() {
         return getBaseRepository().findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<T> findAll(Iterable<PK> ids) {
         return getBaseRepository().findAll(ids);
     }
@@ -160,7 +197,7 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
      */
     private <S extends T> Example<S> getExample(S t) {
         if (null == t) {
-            t = (S) BeanUtils.instantiate(clazz);
+            t = (S) BeanUtils.instantiate(getClazz());
         }
         return Example.of(t, ofExampleMatcher());
     }
@@ -175,6 +212,7 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     }
 
     @Override
+    @Transactional(readOnly = true)
     public QueryPageable<T> queryForPage(QueryModel query) {
         if (query instanceof JdbcQueryModel) {
             return queryForPage((JdbcQueryModel) query);
@@ -188,36 +226,35 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     @SuppressWarnings("unchecked")
     protected QueryPageable<T> queryForPage(JdbcQueryModel query) {
         SelectArguments arguments = query.toSelectArguments();
-        arguments.setFields(allColumnSet);
-        arguments.setFrom(tableName);
-        ListResult<T> result = jdbcSession.queryForList(arguments, true, clazz);
+        arguments.setFields(getAllColumnSet());
+        arguments.setFrom(getTableName());
+        ListResult<T> result = jdbcSession.queryForList(arguments, !query.isPaging(), getClazz());
         return new SimpleQueryResult<>(query, result.getTotalRowCount(), result.getResult());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count() {
         return getBaseRepository().count();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(T t) {
         return getBaseRepository().count(getExample(t));
     }
 
     @Override
-    @Transactional
     public void delete(PK id) {
         getBaseRepository().delete(id);
     }
 
     @Override
-    @Transactional
     public void delete(T entity) {
         getBaseRepository().delete(entity);
     }
 
     @Override
-    @Transactional
     public void delete(Iterable<? extends T> entities) {
         getBaseRepository().delete(entities);
     }

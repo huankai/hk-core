@@ -1,8 +1,11 @@
 package com.hk.core.web.config;
 
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hk.commons.converters.*;
+import com.hk.commons.fastjson.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.web.ServletContextHolder;
@@ -62,22 +65,22 @@ public class WebMVCConfigutation extends WebMvcConfigurerAdapter {
         /* String 返回为 json对象*/
         converters.forEach(item -> {
             if (item instanceof StringHttpMessageConverter) {
-                ((StringHttpMessageConverter) item).setSupportedMediaTypes(Lists.newArrayList(MediaType.APPLICATION_JSON_UTF8));
+                ((StringHttpMessageConverter) item).setSupportedMediaTypes(Lists.newArrayList(MediaType.APPLICATION_JSON_UTF8, MediaType.TEXT_PLAIN, MediaType.ALL));
             }
         });
 
-//        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-//        FastJsonConfig config = new FastJsonConfig();
-//        // 这里不需要设置，默认使用 SerializerFeature.WriteDateUseDateFormat ，pattern = yyyy-MM-dd
-//        // HH:mm:ss
-//        // 如果需要指定 format ,可以在指定属性上添加注解 @JSONField(format = "yyyy-MM-dd HH:mm")来指定
-//        // pattern
-//        // config.setDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern());
-//        config.setSerializeConfig(JsonUtils.CONFIG);
-//        config.setSerializerFeatures(JsonUtils.FEATURES);
-//        converter.setSupportedMediaTypes(Lists.newArrayList(MediaType.APPLICATION_JSON_UTF8));
-//        converter.setFastJsonConfig(config);
-//        converters.add(converter);
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        FastJsonConfig config = new FastJsonConfig();
+        // 这里不需要设置，默认使用 SerializerFeature.WriteDateUseDateFormat ，pattern = yyyy-MM-dd
+        // HH:mm:ss
+        // 如果需要指定 format ,可以在指定属性上添加注解 @JSONField(format = "yyyy-MM-dd HH:mm")来指定
+        // pattern
+        // config.setDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern());
+        config.setSerializeConfig(JsonUtils.CONFIG);
+        config.setSerializerFeatures(JsonUtils.FEATURES);
+        converter.setSupportedMediaTypes(Lists.newArrayList(MediaType.APPLICATION_JSON_UTF8));
+        converter.setFastJsonConfig(config);
+        converters.add(converter);
     }
 
     /**
@@ -93,6 +96,7 @@ public class WebMVCConfigutation extends WebMvcConfigurerAdapter {
         registry.addConverter(new StringToLocalTimeConverter());
         registry.addConverter(new StringToLocalDateTimeConverter());
         registry.addConverter(new StringToBooleanConverter());
+        registry.addConverter(new StringToJodaDateTimeConverter());
     }
 
     /**
