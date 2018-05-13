@@ -52,6 +52,7 @@
 		<module>hk-core-authentication-security</module>
 		<module>hk-core-amqp</module>
 		<module>hk-core-rocketmq</module>
+		<module>hk-core-cache</module>
 		<module>hk-core-redis</module>
 		<module>hk-core-i18n-cn</module>
 		<module>hk-core-i18n-en</module>

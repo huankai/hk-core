@@ -46,10 +46,10 @@ public class GlobalExceptionHandler /*extends ResponseEntityExceptionHandler*/ {
      * @return
      */
     @ExceptionHandler(value = ServiceException.class)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String serviceException(ServiceException e, HttpServletRequest request) {
         log(e, request);
-        return JsonUtils.toJSONString(JsonResult.success(e.getMessage()));
+        return JsonUtils.toJSONString(JsonResult.badRueqest(e.getMessage()));
     }
 
     /**
@@ -59,10 +59,10 @@ public class GlobalExceptionHandler /*extends ResponseEntityExceptionHandler*/ {
      * @return
      */
     @ExceptionHandler(value = {DataAccessException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String serviceException(DataAccessException e, HttpServletRequest request) {
         log(e, request);
-        return JsonUtils.toJSONString(JsonResult.badRueqest(e.getMessage()));
+        return JsonUtils.toJSONString(JsonResult.error(e.getMessage()));
     }
 
     /**
@@ -82,30 +82,39 @@ public class GlobalExceptionHandler /*extends ResponseEntityExceptionHandler*/ {
         UserPrincipal principal = securityContext.getPrincipal();
         StringBuilder sb = new StringBuilder();
         sb.append(StringUtils.LF);
+
         sb.append("<------------------------->");
         sb.append(StringUtils.LF);
-        sb.append("<用户id:").append(principal.getUserId()).append(">");
 
+        sb.append("<User id:").append(principal.getUserId()).append(">");
         sb.append(StringUtils.LF);
-        sb.append("<用户名:").append(principal.getUserName()).append(">");
 
+        sb.append("<User Name:").append(principal.getUserName()).append(">");
         sb.append(StringUtils.LF);
-        sb.append("<请求时间:").append(LocalDateTime.now()).append(">");
 
+        sb.append("<Request Time:").append(LocalDateTime.now()).append(">");
         sb.append(StringUtils.LF);
-        sb.append("<请求地址:").append(request.getRequestURI()).append(">");
+
+        sb.append("<Remote Address:").append(Webs.getRemoteAddr(request)).append(">");
+        sb.append(StringUtils.LF);
+
+        sb.append("<Request URI:").append(request.getRequestURI()).append(">");
+        sb.append(StringUtils.LF);
+
+        sb.append("<Request Method:").append(request.getMethod()).append(">");
         sb.append(StringUtils.LF);
 
         Map<String, String[]> parameterMap = request.getParameterMap();
         if (CollectionUtils.isNotEmpty(parameterMap)) {
-            sb.append("<请求参数:");
+            sb.append("<Request Params:");
             parameterMap.forEach((name, value) -> sb.append(name).append("=").append(ArrayUtils.toString(value)));
             sb.append(">");
             sb.append(StringUtils.LF);
         }
 
-        sb.append("<错误信息:").append(e.getMessage()).append(">");
+        sb.append("<ERROR Message:[").append(e.getClass()).append("]:").append(e.getMessage()).append(">");
         sb.append(StringUtils.LF);
+
         sb.append("<------------------------->");
         logger.error(sb.toString());
     }

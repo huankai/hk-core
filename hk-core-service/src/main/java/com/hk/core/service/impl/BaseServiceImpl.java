@@ -4,10 +4,7 @@ import com.hk.commons.util.*;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.domain.TreePersistable;
-import com.hk.core.query.JdbcQueryModel;
-import com.hk.core.query.QueryModel;
-import com.hk.core.query.QueryPageable;
-import com.hk.core.query.SimpleQueryResult;
+import com.hk.core.query.*;
 import com.hk.core.query.jdbc.JdbcSession;
 import com.hk.core.query.jdbc.ListResult;
 import com.hk.core.query.jdbc.SelectArguments;
@@ -53,7 +50,7 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
      */
     private String tableName;
 
-    private Class<T> clazz;
+    private Class<T> entityClass;
 
     /**
      * 所以有  @Id 和 @Column修饰的字段名
@@ -77,16 +74,16 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
      */
     protected final String getTableName() {
         if (StringUtils.isEmpty(tableName)) {
-            tableName = AnnotationUtils.findAnnotation(getClazz(), Table.class).name();
+            tableName = AnnotationUtils.findAnnotation(getEntityClass(), Table.class).name();
         }
         return tableName;
     }
 
-    private Class<T> getClazz() {
-        if (null == clazz) {
-            this.clazz = (Class<T>) ClassUtils.getGenericType(getClass(), 0);
+    protected final Class<T> getEntityClass() {
+        if (null == entityClass) {
+            this.entityClass = (Class<T>) ClassUtils.getGenericType(getClass(), 0);
         }
-        return clazz;
+        return entityClass;
     }
 
     /**
@@ -94,9 +91,9 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
      *
      * @return
      */
-    protected Set<String> getAllColumnSet() {
+    protected final Set<String> getAllColumnSet() {
         if (null == allColumnSet) {
-            Class<T> clazz = getClazz();
+            Class<T> clazz = getEntityClass();
             List<Field> idFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Id.class);
             Set<String> fieldSet = idFieldList.stream().map(Field::getName).collect(Collectors.toSet());
 
@@ -119,11 +116,11 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
 
     @Override
     public <S extends T> S saveOrUpdate(S entity) {
-        setTreeParent(entity);
+        checkTreeParent(entity);
         return getBaseRepository().save(entity);
     }
 
-    private void setTreeParent(T entity) {
+    private void checkTreeParent(T entity) {
         if (entity instanceof TreePersistable) {
             TreePersistable<T> treeEntity = (TreePersistable<T>) entity;
             if (treeEntity.getParent() == null) {
@@ -134,13 +131,13 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
 
     @Override
     public <S extends T> List<S> saveOrUpdate(Iterable<S> entities) {
-        entities.forEach(item -> setTreeParent(item));
+        entities.forEach(item -> checkTreeParent(item));
         return getBaseRepository().save(entities);
     }
 
     @Override
     public <S extends T> S saveAndFlush(S entity) {
-        setTreeParent(entity);
+        checkTreeParent(entity);
         return getBaseRepository().saveAndFlush(entity);
     }
 
@@ -153,13 +150,13 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     @Override
     @Transactional(readOnly = true)
     public <S extends T> S findOne(S t) {
-        return getBaseRepository().findOne(getExample(t));
+        return getBaseRepository().findOne(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public <S extends T> List<S> findAll(S t) {
-        return getBaseRepository().findAll(getExample(t));
+        return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @Override
@@ -191,15 +188,11 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
         return getBaseRepository().findAll(ids);
     }
 
-    /**
-     * @param t
-     * @return
-     */
-    private <S extends T> Example<S> getExample(S t) {
+    protected <S extends T> S checkNull(S t) {
         if (null == t) {
-            t = (S) BeanUtils.instantiate(getClazz());
+            t = (S) BeanUtils.instantiate(getEntityClass());
         }
-        return Example.of(t, ofExampleMatcher());
+        return t;
     }
 
     /**
@@ -217,18 +210,23 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
         if (query instanceof JdbcQueryModel) {
             return queryForPage((JdbcQueryModel) query);
         }
+        T param = null;
+        if (query instanceof JpaQueryModel) {
+            param = ((JpaQueryModel<T>) query).getParams();
+        }
         List<Sort.Order> orderList = query.getSortOrderList();
-        Page<T> page = getBaseRepository().findAll(
-                new PageRequest(query.getJpaStartRowIndex(), query.getPageSize(), CollectionUtils.isEmpty(orderList) ? null : new Sort(orderList)));
+        Page<T> page = getBaseRepository().findAll(Example.of(checkNull(param), ofExampleMatcher()),
+                new PageRequest(query.getJpaStartRowIndex(), query.getPageSize(),
+                        CollectionUtils.isEmpty(orderList) ? null : new Sort(orderList)));
         return new SimpleQueryResult<>(query, page.getTotalElements(), page.getContent());
     }
 
     @SuppressWarnings("unchecked")
-    protected QueryPageable<T> queryForPage(JdbcQueryModel query) {
+    private QueryPageable<T> queryForPage(JdbcQueryModel query) {
         SelectArguments arguments = query.toSelectArguments();
         arguments.setFields(getAllColumnSet());
         arguments.setFrom(getTableName());
-        ListResult<T> result = jdbcSession.queryForList(arguments, !query.isPaging(), getClazz());
+        ListResult<T> result = jdbcSession.queryForList(arguments, !query.isPaging(), getEntityClass());
         return new SimpleQueryResult<>(query, result.getTotalRowCount(), result.getResult());
     }
 
@@ -241,7 +239,7 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     @Override
     @Transactional(readOnly = true)
     public long count(T t) {
-        return getBaseRepository().count(getExample(t));
+        return getBaseRepository().count(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @Override
@@ -258,5 +256,4 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     public void delete(Iterable<? extends T> entities) {
         getBaseRepository().delete(entities);
     }
-
 }

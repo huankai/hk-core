@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
+            <artifactId>hk-core-cache</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hk</groupId>
             <artifactId>hk-core-i18n-cn</artifactId>
             <version>${project.version}</version>
         </dependency>
