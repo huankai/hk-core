@@ -1,5 +1,8 @@
 package com.hk.core.authentication.security.config;
 
+import com.google.common.collect.Maps;
+import com.hk.core.authentication.api.SecurityContext;
+import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.web.JsonResult;
 import com.hk.core.web.Webs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * 安全配置
@@ -33,9 +37,8 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-//    public SecurityWebAutoConfiguration() {
-//        super(true);
-//    }
+    @Autowired
+    private SecurityContext securityContext;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -62,7 +65,16 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
 //            .loginPage("/login") l
                 .permitAll()
-                .successHandler((request, response, authentication) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success("登陆成功")))
+                .successHandler((request, response, authentication) -> {
+                    UserPrincipal principal = securityContext.getPrincipal();
+                    Map<String, Object> userMap = Maps.newHashMapWithExpectedSize(5);
+                    userMap.put("userId", principal.getUserId());
+                    userMap.put("useName", principal.getUserName());
+                    userMap.put("nickName", principal.getNickName());
+                    userMap.put("sex", principal.getSex());
+                    userMap.put("iconPath", principal.getIconPath());
+                    Webs.writeJson(response, HttpServletResponse.SC_OK, new JsonResult(JsonResult.Status.SUCCESS, "登陆成功", userMap));
+                })
                 .failureHandler((request, response, exception) -> Webs.writeJson(response, HttpServletResponse.SC_UNAUTHORIZED, JsonResult.failure(exception.getMessage())))
 
             /*Logout Config */

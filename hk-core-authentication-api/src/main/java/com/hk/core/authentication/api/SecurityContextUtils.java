@@ -8,10 +8,14 @@ import com.hk.commons.util.SpringContextHolder;
  */
 public class SecurityContextUtils {
 
+    private static SecurityContext getSecurityContext() {
+        return SpringContextHolder.getBean(SecurityContext.class);
+    }
+
     /**
      * @return 返回当前登陆的用户
      */
-    public static SecurityContext getSecurityContext() {
-        return SpringContextHolder.getBean(SecurityContext.class);
+    public static UserPrincipal getPrincipal() {
+        return getSecurityContext().getPrincipal();
     }
 }

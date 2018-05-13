@@ -1,5 +1,6 @@
 package com.hk.core.authentication.security;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.PermissionContants;
@@ -22,10 +23,13 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     /**
      *
      */
+    @JSONField(serialize = false,deserialize = false)
     private String passWord;
 
+    @JSONField(serialize = false,deserialize = false)
     private Byte userStatus;
 
+    @JSONField(serialize = false,deserialize = false)
     private final boolean isProtect;
 
     public SecurityUserPrincipal(Boolean isProtect, String userId, String userName, String passWord, String nickName, Byte userType,
