@@ -10,6 +10,7 @@ import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,7 +29,7 @@ import java.util.Date;
  * @author huangkai
  */
 @MappedSuperclass
-//@EntityListeners(value = {AuditingEntityListener.class})
+@EntityListeners(value = {AuditingEntityListener.class})
 public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String> {
 
     /**

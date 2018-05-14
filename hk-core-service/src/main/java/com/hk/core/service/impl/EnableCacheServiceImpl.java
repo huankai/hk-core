@@ -22,44 +22,76 @@ import java.util.List;
  */
 public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends BaseServiceImpl<T, PK> {
 
+    /**
+     * 如果key(id)在缓存中存在，直接从缓存中获取；
+     * 如果key不存在，将返回结果放入缓存中
+     *
+     * @param id
+     * @return
+     */
     @Override
     @Cacheable(key = "'id'+#id")
     public T findOne(PK id) {
         return super.findOne(id);
     }
 
+    /**
+     * 如果key(id)在缓存中存在，直接从缓存中获取；
+     * 如果key不存在，将返回结果放入缓存中
+     *
+     * @param id
+     * @return
+     */
     @Override
     @Cacheable(key = "'id'+#id")
     public T getOne(PK id) {
         return super.getOne(id);
     }
 
+    /**
+     * <pre>
+     *  保存或更新一条记录
+     *  只在有更新的时候才会将数据放入缓存中
+     * </pre>
+     *
+     * @param entity the save or update entity.
+     * @param <S>
+     * @return
+     */
     @Override
-    @Caching(
-            evict = {
-                    @CacheEvict(key = "'id:'+#result.id"),
-                    @CacheEvict(key = "'all'"),
-                    @CacheEvict(key = "'count'")
-            }
-    )
+    @Caching(cacheable = {@Cacheable(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")})
     public <S extends T> S saveOrUpdate(S entity) {
         return super.saveOrUpdate(entity);
     }
 
+    /**
+     * <pre>
+     *
+     * 批量保存
+     * 将缓存中的数据清空
+     * </pre>
+     *
+     * @param entities the save or update entities.
+     * @param <S>
+     * @return
+     */
     @Override
     @CacheEvict(allEntries = true)
     public <S extends T> List<S> saveOrUpdate(Iterable<S> entities) {
         return super.saveOrUpdate(entities);
     }
 
+    /**
+     * <pre>
+     * 只有在更新的时候，才会将返回值放入在缓存中.
+     * </pre>
+     *
+     * @param entity the save or update entity.
+     * @param <S>
+     * @return
+     */
     @Override
-    @Caching(
-            evict = {
-                    @CacheEvict(key = "'id:'+#result.id"),
-                    @CacheEvict(key = "'all'"),
-                    @CacheEvict(key = "'count'")
-            }
-    )
+    @Caching(cacheable = {@Cacheable(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")})
     public <S extends T> S saveAndFlush(S entity) {
         return super.saveAndFlush(entity);
     }
@@ -75,19 +107,11 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     @Override
-    @Caching(
-            evict = {
-                    @CacheEvict(key = "'id:'+#result.id"),
-                    @CacheEvict(key = "'all'"),
-                    @CacheEvict(key = "'count'")
-            }
-    )
     public void flush() {
         super.flush();
     }
 
     @Override
-    @Cacheable(key = "'id'+#id")
     public boolean exists(PK id) {
         return super.exists(id);
     }
@@ -121,8 +145,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(key = "'id:'+#pk"),
-                    @CacheEvict(key = "'all'"),
+                    @CacheEvict(key = "'id'+#id"),
                     @CacheEvict(key = "'count'")
             }
     )
@@ -133,8 +156,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(key = "'id:'+#pk"),
-                    @CacheEvict(key = "'all'"),
+                    @CacheEvict(key = "#root.args[0]"),
                     @CacheEvict(key = "'count'")
             }
     )
@@ -143,6 +165,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void delete(Iterable<? extends T> entities) {
         super.delete(entities);
     }

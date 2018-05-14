@@ -116,29 +116,36 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
 
     @Override
     public <S extends T> S saveOrUpdate(S entity) {
-        checkTreeParent(entity);
-        return getBaseRepository().save(entity);
+        return getBaseRepository().save(saveBefore(entity));
     }
 
-    private void checkTreeParent(T entity) {
+    /**
+     * <pre>
+     *     在保存或更新实体之前
+     *     可设置参数默认值，验证数据有效性
+     * </pre>
+     *
+     * @param entity
+     */
+    protected <S extends T> S saveBefore(S entity) {
         if (entity instanceof TreePersistable) {
             TreePersistable<T> treeEntity = (TreePersistable<T>) entity;
             if (treeEntity.getParent() == null) {
                 treeEntity.setParent(entity);
             }
         }
+        return entity;
     }
 
     @Override
     public <S extends T> List<S> saveOrUpdate(Iterable<S> entities) {
-        entities.forEach(item -> checkTreeParent(item));
+        entities.forEach(this::saveBefore);
         return getBaseRepository().save(entities);
     }
 
     @Override
     public <S extends T> S saveAndFlush(S entity) {
-        checkTreeParent(entity);
-        return getBaseRepository().saveAndFlush(entity);
+        return getBaseRepository().saveAndFlush(saveBefore(entity));
     }
 
     @Override
@@ -188,6 +195,17 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
         return getBaseRepository().findAll(ids);
     }
 
+    /**
+     * <pre>
+     *
+     * 查询之前，检查参数是否为null
+     * 使用 jpa查询的参数不能为空
+     * </pre>
+     *
+     * @param t   要查询的条件
+     * @param <S>
+     * @return t
+     */
     protected <S extends T> S checkNull(S t) {
         if (null == t) {
             t = (S) BeanUtils.instantiate(getEntityClass());
@@ -196,9 +214,9 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     }
 
     /**
-     * 查询条件匹配
+     * 使用JPA 设置查询条件匹配
      *
-     * @return
+     * @return ExampleMatcher
      */
     protected ExampleMatcher ofExampleMatcher() {
         return ExampleMatcher.matching();
@@ -244,16 +262,27 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
 
     @Override
     public void delete(PK id) {
-        getBaseRepository().delete(id);
+        getBaseRepository().delete(deleteBefore(getOne(id)));
     }
 
     @Override
     public void delete(T entity) {
-        getBaseRepository().delete(entity);
+        getBaseRepository().delete(deleteBefore(entity));
     }
 
     @Override
     public void delete(Iterable<? extends T> entities) {
-        getBaseRepository().delete(entities);
+        entities.forEach(this::delete);
+    }
+
+    /**
+     * 删除之前
+     *
+     * @param entity 删除的实体
+     * @param <S>
+     * @return
+     */
+    protected <S extends T> S deleteBefore(S entity) {
+        return entity;
     }
 }
