@@ -21,10 +21,6 @@
 			<artifactId>hk-commons-util</artifactId>
 			<exclusions>
 				<exclusion>
-					<groupId>com.alibaba</groupId>
-					<artifactId>fastjson</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>com.google.guava</groupId>
 					<artifactId>guava</artifactId>
 				</exclusion>

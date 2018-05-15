@@ -1,0 +1,68 @@
+package com.hk.core.cache;
+
+import com.hk.commons.fastjson.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache;
+import org.springframework.cache.interceptor.CacheErrorHandler;
+
+/**
+ * <pre>
+ *
+ * 缓存读取出错处理器
+ *
+ * </pre>
+ *
+ * @author: huangkai
+ * @date 2018-05-15 17:20
+ */
+public class LogCacheErrorHandler implements CacheErrorHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogCacheErrorHandler.class);
+
+    private boolean onErrorThrow;
+
+    public void setOnErrorThrow(boolean onErrorThrow) {
+        this.onErrorThrow = onErrorThrow;
+    }
+
+    @Override
+    public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
+        String message = String.format("get Error,CacheName : %s, Cache Key : %s,Error Message: %s",
+                cache.getName(), String.valueOf(key), exception.getMessage());
+        LOGGER.error(message);
+        if (onErrorThrow) {
+            throw exception;
+        }
+    }
+
+    @Override
+    public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
+        String message = String.format("put Error,CacheName : %s, Cache Key : %s,value :%s,Error Message: %s",
+                cache.getName(), String.valueOf(key), JsonUtils.toJSONString(value), exception.getMessage());
+        LOGGER.error(message);
+        if (onErrorThrow) {
+            throw exception;
+        }
+    }
+
+    @Override
+    public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
+        String message = String.format("Evict Error,CacheName : %s, Cache Key : %s,Error Message: %s",
+                cache.getName(), String.valueOf(key), exception.getMessage());
+        LOGGER.error(message);
+        if (onErrorThrow) {
+            throw exception;
+        }
+    }
+
+    @Override
+    public void handleCacheClearError(RuntimeException exception, Cache cache) {
+        String message = String.format("Clear Error,CacheName : %s,Error Message: %s",
+                cache.getName(), exception.getMessage());
+        LOGGER.error(message);
+        if (onErrorThrow) {
+            throw exception;
+        }
+    }
+}

@@ -47,17 +47,17 @@ public final class JsonResult {
     /**
      * 返回数据
      */
-    private final Object data;
+    private Object data;
 
     /**
      * 返回状态
      */
-    private final Status status;
+    private Status status;
 
     /**
      * 返回消息信息
      */
-    private final String message;
+    private String message;
 
     /**
      * 请求成功
@@ -193,6 +193,14 @@ public final class JsonResult {
 
     public String getMessage() {
         return StringUtils.isEmpty(message) ? status.getMessage() : message;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getStatus() {

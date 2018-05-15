@@ -1,7 +1,5 @@
 package com.hk.core.service.impl;
 
-import com.hk.core.query.QueryModel;
-import com.hk.core.query.QueryPageable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -14,6 +12,7 @@ import java.util.List;
  * 提供缓存功能的实现
  * 可以在子类中标注 {@link org.springframework.cache.annotation.CacheConfig} 实现缓存
  *
+ * @param <T> T
  * @author: huangkai
  * @date 2018-04-19 09:25
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
@@ -39,7 +38,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * 如果key(id)在缓存中存在，直接从缓存中获取；
      * 如果key不存在，将返回结果放入缓存中
      *
-     * @param id
+     * @param id id
      * @return
      */
     @Override
@@ -97,51 +96,18 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     @Override
-    public <S extends T> S findOne(S t) {
-        return super.findOne(t);
-    }
-
-    @Override
-    public <S extends T> List<S> findAll(S t) {
-        return super.findAll(t);
-    }
-
-    @Override
-    public void flush() {
-        super.flush();
-    }
-
-    @Override
-    public boolean exists(PK id) {
-        return super.exists(id);
-    }
-
-    @Override
-    public List<T> findAll() {
-        return super.findAll();
-    }
-
-    @Override
-    public List<T> findAll(Iterable<PK> ids) {
-        return super.findAll(ids);
-    }
-
-    @Override
-    public QueryPageable<T> queryForPage(QueryModel query) {
-        return super.queryForPage(query);
-    }
-
-    @Override
     @Cacheable(key = "'count'")
     public long count() {
         return super.count();
     }
 
-    @Override
-    public long count(T t) {
-        return super.count(t);
-    }
-
+    /**
+     * <pre>
+     *     根据id删除，并删除缓存中存在的id记录
+     * </pre>
+     *
+     * @param id id
+     */
     @Override
     @Caching(
             evict = {
@@ -153,10 +119,21 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
         super.delete(id);
     }
 
+    /**
+     * <pre>
+     *  删除缓存:
+     *  当id != null时，删除指定id的单条记录，同时删除 count 记录
+     *  当id == null时，无法确定删除有多少条记录，将所有entity都删除，同时删除 count 记录
+     *
+     * </pre>
+     *
+     * @param entity entity
+     */
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(key = "#root.args[0]"),
+                    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null"),
+                    @CacheEvict(allEntries = true, condition = "#root.args[0].id == null"),
                     @CacheEvict(key = "'count'")
             }
     )
@@ -164,6 +141,11 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
         super.delete(entity);
     }
 
+    /**
+     * delete List
+     *
+     * @param entities entities
+     */
     @Override
     @CacheEvict(allEntries = true)
     public void delete(Iterable<? extends T> entities) {

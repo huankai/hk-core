@@ -1,11 +1,10 @@
 package com.hk.core.web;
 
-import com.google.common.collect.Maps;
+import com.hk.commons.fastjson.JsonUtils;
 import com.hk.commons.http.get.SimpleGetHttpExecutor;
 import com.hk.commons.util.SpringContextHolder;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * @author: huangkai
@@ -27,12 +26,10 @@ public abstract class AppCodeUtils {
         SimpleGetHttpExecutor httpExecutor = new SimpleGetHttpExecutor();
         String result = null;
         try {
-            HashMap<String, Object> paramMap = Maps.newHashMap();
-            paramMap.put("appCode", appCode);
-            result = httpExecutor.execute("http://127.0.0.1:8002/api/apps/appCode", paramMap);
+            result = httpExecutor.execute("http://127.0.0.1:8002/api/apps/" + appCode, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return JsonUtils.parseObject(result,JsonResult.class).getData().toString();
     }
 }

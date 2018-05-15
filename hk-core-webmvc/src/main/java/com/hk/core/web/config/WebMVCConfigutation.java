@@ -10,6 +10,7 @@ import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.web.ServletContextHolder;
 import com.hk.core.web.interceptors.RequestInterceptor;
+import com.hk.core.web.interceptors.SecurityContextInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -115,6 +116,9 @@ public class WebMVCConfigutation extends WebMvcConfigurerAdapter {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
+
+        //不同应用切换当前用户信息
+        registry.addInterceptor(new SecurityContextInterceptor(securityContext)).excludePathPatterns("/api/**");
     }
 
     /* ****************** 国际化支持******************* */

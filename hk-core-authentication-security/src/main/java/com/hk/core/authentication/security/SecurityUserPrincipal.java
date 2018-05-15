@@ -1,7 +1,7 @@
 package com.hk.core.authentication.security;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
+import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.PermissionContants;
 import com.hk.core.authentication.api.UserPrincipal;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author huangkai
@@ -23,13 +22,10 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     /**
      *
      */
-    @JSONField(serialize = false,deserialize = false)
     private String passWord;
 
-    @JSONField(serialize = false,deserialize = false)
     private Byte userStatus;
 
-    @JSONField(serialize = false,deserialize = false)
     private final boolean isProtect;
 
     public SecurityUserPrincipal(Boolean isProtect, String userId, String userName, String passWord, String nickName, Byte userType,
@@ -52,7 +48,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
             authoritieList.add(new SimpleGrantedAuthority(PROTECT_ADMIN_PERMISSION));
             return authoritieList;
         }
-        Set<String> permissions = getPermissionByAppId(getAppId());
+        Collection<String> permissions = getPermissionByAppId(getAppId());
         if (CollectionUtils.isNotEmpty(permissions)) {
             permissions.forEach(permission -> authoritieList.add(new SimpleGrantedAuthority(permission)));
         }
@@ -86,7 +82,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isProtect && ByteConstants.ONE.equals(userStatus);
     }
 
 }

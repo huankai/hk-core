@@ -1,9 +1,11 @@
 package com.hk.core.authentication.api;
 
+import com.hk.commons.util.ByteConstants;
+
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 当前登陆的用户
@@ -70,7 +72,7 @@ public class UserPrincipal implements Serializable {
      *     value:角色列表
      * </pre>
      */
-    private Map<String, Set<String>> appRoleSet;
+    private Map<String, Collection<String>> appRoleSet;
 
     /**
      * 用户权限
@@ -79,7 +81,7 @@ public class UserPrincipal implements Serializable {
      *     value:权限列表
      * </pre>
      */
-    private Map<String, Set<String>> appPermissionSet;
+    private Map<String, Collection<String>> appPermissionSet;
 
     public UserPrincipal() {
 
@@ -153,19 +155,19 @@ public class UserPrincipal implements Serializable {
         this.nickName = nickName;
     }
 
-    public Map<String, Set<String>> getAppRoleSet() {
+    public Map<String, Collection<String>> getAppRoleSet() {
         return appRoleSet;
     }
 
-    public void setAppRoleSet(Map<String, Set<String>> appRoleSet) {
+    public void setAppRoleSet(Map<String, Collection<String>> appRoleSet) {
         this.appRoleSet = appRoleSet;
     }
 
-    public Map<String, Set<String>> getAppPermissionSet() {
+    public Map<String, Collection<String>> getAppPermissionSet() {
         return appPermissionSet;
     }
 
-    public void setAppPermissionSet(Map<String, Set<String>> appPermissionSet) {
+    public void setAppPermissionSet(Map<String, Collection<String>> appPermissionSet) {
         this.appPermissionSet = appPermissionSet;
     }
 
@@ -181,27 +183,22 @@ public class UserPrincipal implements Serializable {
         this.iconPath = iconPath;
     }
 
-    public Set<String> getRoleByAppId(String appId) {
+    public Collection<String> getRoleByAppId(String appId) {
         return filterByAppId(appRoleSet, appId);
-
     }
 
-    private Set<String> filterByAppId(Map<String, Set<String>> map, String appId) {
-        Set<String> resultSet;
-        if (null == map) {
-            resultSet = Collections.emptySet();
-        } else {
-            Set<String> roleSet = map.get(appId);
-            if (null == roleSet) {
-                resultSet = Collections.emptySet();
-            } else {
-                resultSet = roleSet;
-            }
+    private Collection<String> filterByAppId(Map<String, Collection<String>> map, String appId) {
+        Collection<String> result = null;
+        if (map != null) {
+            result = map.get(appId);
         }
-        return Collections.unmodifiableSet(resultSet);
+        if (result == null) {
+            result = Collections.emptyList();
+        }
+        return Collections.unmodifiableCollection(result);
     }
 
-    public Set<String> getPermissionByAppId(String appId) {
+    public Collection<String> getPermissionByAppId(String appId) {
         return filterByAppId(appPermissionSet, appId);
     }
 
@@ -219,7 +216,7 @@ public class UserPrincipal implements Serializable {
      * @return
      */
     public boolean isAdministrator() {
-        return null != userType && userType.intValue() == 0;
+        return null != userType && userType.equals(ByteConstants.ZERO);
     }
 
 }
