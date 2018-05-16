@@ -1,6 +1,7 @@
 package com.hk.core.cache;
 
 import com.hk.commons.fastjson.JsonUtils;
+import com.hk.core.cache.config.FixUseSupperClassAutoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -9,7 +10,9 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
 /**
  * <pre>
  *
- * 缓存读取出错处理器
+ * 缓存读取出错处理器,
+ * Spring 使用默认的 CacheErrorHandler 是 {@link org.springframework.cache.interceptor.SimpleCacheErrorHandler}
+ * 配置请查看 {@link FixUseSupperClassAutoConfiguration#errorHandler()}
  *
  * </pre>
  *
@@ -20,9 +23,16 @@ public class LogCacheErrorHandler implements CacheErrorHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogCacheErrorHandler.class);
 
-    private boolean onErrorThrow;
+    /**
+     * 是否抛出异常信息
+     */
+    private final boolean onErrorThrow;
 
-    public void setOnErrorThrow(boolean onErrorThrow) {
+    public LogCacheErrorHandler() {
+        this(false);
+    }
+
+    public LogCacheErrorHandler(boolean onErrorThrow) {
         this.onErrorThrow = onErrorThrow;
     }
 

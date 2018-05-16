@@ -10,13 +10,15 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.CacheOperationSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Role;
 
 /**
  * @author huangkai
  */
 @Configuration
-@EnableCaching(proxyTargetClass = true)
+@EnableCaching
+@EnableAspectJAutoProxy(exposeProxy = true)
 public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport {
 
     @Bean

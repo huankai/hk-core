@@ -1,5 +1,7 @@
-package com.hk.core.service.impl;
+package com.hk.core.cache.service;
 
+import com.hk.core.service.impl.BaseServiceImpl;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -9,17 +11,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 提供缓存功能的实现
- * 可以在子类中标注 {@link org.springframework.cache.annotation.CacheConfig} 实现缓存
- *
- * @param <T> T
  * @author: huangkai
- * @date 2018-04-19 09:25
- * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
- * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
- * @see com.hk.core.cache.spring.FixUseSupperClassFallbackCacheOperationSource
+ * @date 2018-05-16 09:58
  */
 public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends BaseServiceImpl<T, PK> {
+
 
     /**
      * 如果key(id)在缓存中存在，直接从缓存中获取；
@@ -28,7 +24,6 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * @param id
      * @return
      */
-    @Override
     @Cacheable(key = "'id'+#id")
     public T findOne(PK id) {
         return super.findOne(id);
@@ -41,7 +36,6 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * @param id id
      * @return
      */
-    @Override
     @Cacheable(key = "'id'+#id")
     public T getOne(PK id) {
         return super.getOne(id);
@@ -57,8 +51,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * @param <S>
      * @return
      */
-    @Override
-    @Caching(cacheable = {@Cacheable(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")})
+    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")
     public <S extends T> S saveOrUpdate(S entity) {
         return super.saveOrUpdate(entity);
     }
@@ -74,7 +67,6 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * @param <S>
      * @return
      */
-    @Override
     @CacheEvict(allEntries = true)
     public <S extends T> List<S> saveOrUpdate(Iterable<S> entities) {
         return super.saveOrUpdate(entities);
@@ -89,13 +81,11 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * @param <S>
      * @return
      */
-    @Override
-    @Caching(cacheable = {@Cacheable(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")})
+    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")
     public <S extends T> S saveAndFlush(S entity) {
         return super.saveAndFlush(entity);
     }
 
-    @Override
     @Cacheable(key = "'count'")
     public long count() {
         return super.count();
@@ -108,7 +98,6 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      *
      * @param id id
      */
-    @Override
     @Caching(
             evict = {
                     @CacheEvict(key = "'id'+#id"),
@@ -129,7 +118,6 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      *
      * @param entity entity
      */
-    @Override
     @Caching(
             evict = {
                     @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null"),
@@ -146,9 +134,23 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      *
      * @param entities entities
      */
-    @Override
     @CacheEvict(allEntries = true)
     public void delete(Iterable<? extends T> entities) {
         super.delete(entities);
     }
+
+    /**
+     * <pre>
+     * 如果是子类调用
+     * 获取当前代理对象
+     * 必须设置 @EnableAspectJAutoProxy(exposeProxy = true) exposeProxy 为true
+     * </pre>
+     *
+     * @return
+     * @see com.hk.core.cache.config.FixUseSupperClassAutoConfiguration
+     */
+    protected final EnableCacheServiceImpl<T, PK> getCurrentProxy() {
+        return (EnableCacheServiceImpl<T, PK>) AopContext.currentProxy();
+    }
+
 }

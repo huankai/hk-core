@@ -117,5 +117,6 @@ public class GlobalExceptionHandler /*extends ResponseEntityExceptionHandler*/ {
 
         sb.append("<------------------------->");
         logger.error(sb.toString());
+        e.printStackTrace();
     }
 }

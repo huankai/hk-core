@@ -15,7 +15,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -40,9 +40,14 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityContext securityContext;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -60,6 +65,8 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
             /* CSRF Disable*/
                 .csrf()
                 .disable()
+
+//                .anonymous().disable()
 
             /* Login Config */
                 .formLogin()
@@ -82,8 +89,12 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
                 .logout()
 //            .logoutUrl("/logout")
                 .invalidateHttpSession(true)
+//                .addLogoutHandler((request, response, authentication) -> System.out.println("logout handler....0")) logout 处理器
                 .logoutSuccessHandler((request, response, authentication) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success("退出成功")))
+//                .deleteCookies("") //删除指定的Cookie
                 .permitAll()
+
+//        .and().requestMatchers().antMatchers("/api/**")
 
             /*任意请求都需要认证*/
                 .and()
