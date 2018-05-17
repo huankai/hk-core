@@ -33,9 +33,11 @@ public class SecurityContextInterceptor extends HandlerInterceptorAdapter {
             appId = AppCodeUtils.getCurrentAppId();
             appCodeIdMap.put(appCode, appId);
         }
-        UserPrincipal principal = securityContext.getPrincipal();
-        if (StringUtils.notEquals(principal.getAppId(), appId)) {
-            principal.setAppId(appId);
+        if(securityContext.isAuthenticated()){
+            UserPrincipal principal = securityContext.getPrincipal();
+            if (StringUtils.notEquals(principal.getAppId(), appId)) {
+                principal.setAppId(appId);
+            }
         }
         return true;
     }
