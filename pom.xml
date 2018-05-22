@@ -54,8 +54,7 @@
 		<module>hk-core-rocketmq</module>
 		<module>hk-core-cache</module>
 		<module>hk-core-cache-redis</module>
-		<module>hk-core-i18n-cn</module>
-		<module>hk-core-i18n-en</module>
+		<module>hk-core-i18n</module>
 	</modules>
 
 	<dependencyManagement>

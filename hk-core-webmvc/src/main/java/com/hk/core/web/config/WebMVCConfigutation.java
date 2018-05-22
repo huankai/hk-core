@@ -123,7 +123,7 @@ public class WebMVCConfigutation extends WebMvcConfigurerAdapter {
 
     /* ****************** 国际化支持******************* */
     @Bean
-    public LocaleResolver LocaleResolver() {
+    public LocaleResolver localeResolver() {
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
         sessionLocaleResolver.setDefaultLocale(Locale.getDefault());
         return sessionLocaleResolver;

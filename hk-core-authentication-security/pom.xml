@@ -23,7 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.hk</groupId>
-			<artifactId>hk-core-i18n-cn</artifactId>
+			<artifactId>hk-core-i18n</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
