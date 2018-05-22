@@ -1,12 +1,11 @@
 package com.hk.core.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-
-import org.apache.commons.text.StringEscapeUtils;
-
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
  * Xss Request Wrapper
@@ -25,7 +24,6 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         String queryString = super.getQueryString();
         if (StringUtils.isNotEmpty(queryString)) {
             queryString = StringEscapeUtils.escapeHtml4(queryString);
-//			queryString = XssUtils.encode(queryString);
         }
         return queryString;
     }

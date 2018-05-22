@@ -26,12 +26,9 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
     private Byte userStatus;
 
-    private final boolean isProtect;
-
     public SecurityUserPrincipal(Boolean isProtect, String userId, String userName, String passWord, String nickName, Byte userType,
                                  String phone, String email, Byte sex, String iconPath, Byte userStatus) {
-        super(userId, userName, nickName, userType, phone, email, sex, iconPath);
-        this.isProtect = isProtect;
+        super(userId, userName,isProtect, nickName, userType, phone, email, sex, iconPath);
         this.passWord = passWord;
         this.userStatus = userStatus;
     }
@@ -44,10 +41,6 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authoritieList = Lists.newArrayList();
-        if (isProtect) {
-            authoritieList.add(new SimpleGrantedAuthority(PROTECT_ADMIN_PERMISSION));
-            return authoritieList;
-        }
         Collection<String> permissions = getPermissionByAppId(getAppId());
         if (CollectionUtils.isNotEmpty(permissions)) {
             permissions.forEach(permission -> authoritieList.add(new SimpleGrantedAuthority(permission)));
@@ -82,7 +75,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
     @Override
     public boolean isEnabled() {
-        return isProtect && ByteConstants.ONE.equals(userStatus);
+        return ByteConstants.ONE.equals(userStatus);
     }
 
 }

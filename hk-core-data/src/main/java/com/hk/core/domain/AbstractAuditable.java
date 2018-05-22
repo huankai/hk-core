@@ -85,7 +85,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
 
     @Override
     public DateTime getCreatedDate() {
-        return new DateTime(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        return null == createdDate ? null : new DateTime(Date.from(createdDate.atZone(ZoneId.systemDefault()).toInstant()));
     }
 
     @Override
@@ -105,7 +105,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
 
     @Override
     public DateTime getLastModifiedDate() {
-        return new DateTime(Date.from(lastModifiedDate.atZone(ZoneId.systemDefault()).toInstant()));
+        return null == lastModifiedBy ? null : new DateTime(Date.from(lastModifiedDate.atZone(ZoneId.systemDefault()).toInstant()));
     }
 
     @Override

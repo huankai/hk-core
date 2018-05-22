@@ -1,7 +1,5 @@
 package com.hk.core.authentication.api;
 
-import com.hk.commons.util.ByteConstants;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,6 +64,11 @@ public class UserPrincipal implements Serializable {
     private String appId;
 
     /**
+     * isProtect
+     */
+    private final boolean isProtect;
+
+    /**
      * 用户角色
      * <pre>
      *     key :appId
@@ -83,14 +86,11 @@ public class UserPrincipal implements Serializable {
      */
     private Map<String, Collection<String>> appPermissionSet;
 
-    public UserPrincipal() {
-
-    }
-
-    public UserPrincipal(String userId, String userName, String nickName, Byte userType, String phone, String email,
+    public UserPrincipal(String userId, String userName, boolean isProtect, String nickName, Byte userType, String phone, String email,
                          Byte sex, String iconPath) {
         this.userId = userId;
         this.userName = userName;
+        this.isProtect = isProtect;
         this.nickName = nickName;
         this.userType = userType;
         this.phone = phone;
@@ -183,6 +183,11 @@ public class UserPrincipal implements Serializable {
         this.iconPath = iconPath;
     }
 
+
+    public boolean isProtect() {
+        return isProtect;
+    }
+
     public Collection<String> getRoleByAppId(String appId) {
         return filterByAppId(appRoleSet, appId);
     }
@@ -215,8 +220,8 @@ public class UserPrincipal implements Serializable {
      *
      * @return
      */
-    public boolean isAdministrator() {
-        return null != userType && userType.equals(ByteConstants.ZERO);
+    public final boolean isAdministrator() {
+        return isProtect;
     }
 
 }

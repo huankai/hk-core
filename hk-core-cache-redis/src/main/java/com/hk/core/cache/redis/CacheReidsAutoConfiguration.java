@@ -5,7 +5,6 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.hk.commons.fastjson.JsonUtils;
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.Contants;
-import com.hk.commons.util.date.DatePattern;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -45,7 +44,6 @@ public class CacheReidsAutoConfiguration {
          * fastjson autoType
          * </p>
          * https://github.com/alibaba/fastjson/wiki/enable_autotype
-         *
          */
         private String acceptBasePackage = "com.hk";
 
@@ -55,7 +53,7 @@ public class CacheReidsAutoConfiguration {
                 return new byte[0];
             }
             FastJsonWraper<T> wraper = new FastJsonWraper<>(t);
-            return JsonUtils.toJSONString(wraper, true, DatePattern.YYYY_MM_DD_HH_MM_SS, null, SerializerFeature.WriteClassName).getBytes(Contants.CHARSET_UTF_8);
+            return JsonUtils.toJSONString(wraper, true, null, null, SerializerFeature.WriteClassName).getBytes(Contants.CHARSET_UTF_8);
         }
 
         @Override

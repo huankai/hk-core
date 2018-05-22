@@ -66,7 +66,7 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
 
-//                .anonymous().disable()
+                .anonymous().disable()
 
             /* Login Config */
                 .formLogin()

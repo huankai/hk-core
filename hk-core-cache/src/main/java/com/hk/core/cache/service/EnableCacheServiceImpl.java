@@ -11,17 +11,23 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Service implementation Enable Cache.
+ *
  * @author: huangkai
  * @date 2018-05-16 09:58
+ * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
+ * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */
 public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends BaseServiceImpl<T, PK> {
 
 
     /**
-     * 如果key(id)在缓存中存在，直接从缓存中获取；
-     * 如果key不存在，将返回结果放入缓存中
+     * <p>
+     * If the key(ID) exists in the cache,it is obtained directly from the cache.<br/>
+     * Otherwise,query from the database and put the result in the cache.
+     * <p>
      *
-     * @param id
+     * @param id id
      * @return
      */
     @Cacheable(key = "'id'+#id")
@@ -30,8 +36,10 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     /**
-     * 如果key(id)在缓存中存在，直接从缓存中获取；
-     * 如果key不存在，将返回结果放入缓存中
+     * <p>
+     * If the key(ID) exists in the cache,it is obtained directly from the cache.<br/>
+     * Otherwise,query from the database and put the result in the cache.
+     * <p>
      *
      * @param id id
      * @return
@@ -42,10 +50,10 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     /**
-     * <pre>
-     *  保存或更新一条记录
-     *  只在有更新的时候才会将数据放入缓存中
-     * </pre>
+     * <p>
+     * save or udpate.<br/>
+     * Data will only be placed in cache when there is update.
+     * </p>
      *
      * @param entity the save or update entity.
      * @param <S>
@@ -57,11 +65,10 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     /**
-     * <pre>
-     *
-     * 批量保存
-     * 将缓存中的数据清空
-     * </pre>
+     * <p>
+     * Batch storage,
+     * Deleting the data in the cache.
+     * </p>
      *
      * @param entities the save or update entities.
      * @param <S>
@@ -73,9 +80,9 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     /**
-     * <pre>
-     * 只有在更新的时候，才会将返回值放入在缓存中.
-     * </pre>
+     * <p>
+     * It is only when updated that the return value is placed in the cache.
+     * </p>
      *
      * @param entity the save or update entity.
      * @param <S>
@@ -86,15 +93,20 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
         return super.saveAndFlush(entity);
     }
 
+    /**
+     * Caching count.
+     *
+     * @return
+     */
     @Cacheable(key = "'count'")
     public long count() {
         return super.count();
     }
 
     /**
-     * <pre>
-     *     根据id删除，并删除缓存中存在的id记录
-     * </pre>
+     * <p>
+     * Delete data from the primary key and delete the data from the cache.
+     * </p>
      *
      * @param id id
      */
@@ -109,12 +121,11 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     /**
-     * <pre>
-     *  删除缓存:
-     *  当id != null时，删除指定id的单条记录，同时删除 count 记录
-     *  当id == null时，无法确定删除有多少条记录，将所有entity都删除，同时删除 count 记录
-     *
-     * </pre>
+     * <p>
+     * delete entity and Delete Cache.<br/>
+     * When id != null,delete the single record of the specified ID and delete the cached count record.<br/>
+     * Otherwise,It is impossible to determine how many records are deleted and empty the entity and count in the cache.
+     * <p>
      *
      * @param entity entity
      */
@@ -130,7 +141,9 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     /**
-     * delete List
+     * <p>
+     * delete List and Clear Cache.
+     * </p>
      *
      * @param entities entities
      */
@@ -140,11 +153,12 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     /**
-     * <pre>
-     * 如果是子类调用
-     * 获取当前代理对象
-     * 必须设置 @EnableAspectJAutoProxy(exposeProxy = true) exposeProxy 为true
-     * </pre>
+     * <p>
+     * Get the current proxy object.
+     * </p>
+     * <p>
+     * must be set @EnableAspectJAutoProxy(exposeProxy = true) to true.
+     * </p>
      *
      * @return
      * @see com.hk.core.cache.config.FixUseSupperClassAutoConfiguration

@@ -16,9 +16,9 @@ public final class JsonResult {
 
         FAILURE(-1, "操作失败"),
 
-        REDIRECT(10302, "重定向"),
+        REDIRECT(10302, "请求重定向"),
 
-        BAD_REQUEST(10400, "请求参数不正确"),
+        BAD_REQUEST(10400, "坏的请求"),
 
         UNAUTHORIZED(10401, "访问未授权"),
 

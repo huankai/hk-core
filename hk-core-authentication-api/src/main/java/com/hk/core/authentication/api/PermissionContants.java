@@ -4,6 +4,7 @@ package com.hk.core.authentication.api;
  * @author: huangkai
  * @date 2018-04-17 17:32
  */
+@Deprecated
 public interface PermissionContants {
 
     /**
