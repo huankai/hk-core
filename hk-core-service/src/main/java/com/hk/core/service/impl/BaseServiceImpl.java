@@ -1,5 +1,6 @@
 package com.hk.core.service.impl;
 
+import com.google.common.collect.Lists;
 import com.hk.commons.util.*;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
@@ -164,6 +165,24 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     @Transactional(readOnly = true)
     public <S extends T> List<S> findAll(S t) {
         return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public <S extends T> List<T> findAll(S t, Order... orders) {
+        if (ArrayUtils.isEmpty(orders)) {
+            return findAll(t);
+        }
+        List<Sort.Order> orderList = Lists.newArrayList();
+        for (Order order : orders) {
+            if (null != order) {
+                orderList.add(order.toSpringJpaOrder());
+            }
+        }
+        if (CollectionUtils.isEmpty(orderList)) {
+            return findAll(t);
+        }
+        return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()), new Sort(orderList));
     }
 
     @Override

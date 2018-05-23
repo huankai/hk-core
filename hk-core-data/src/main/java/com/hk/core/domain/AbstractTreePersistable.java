@@ -16,7 +16,7 @@ public abstract class AbstractTreePersistable<T> extends AbstractAuditable imple
      * 上级
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    @JoinColumn(name = "parent_id", referencedColumnName = "id",updatable = false)
     private T parent;
 
     /**

@@ -1,5 +1,7 @@
 package com.hk.core.web;
 
+import com.hk.commons.annotations.EnumDisplay;
+import com.hk.commons.util.EnumDisplayUtils;
 import com.hk.commons.util.StringUtils;
 
 /**
@@ -12,36 +14,46 @@ public final class JsonResult {
 
     public enum Status {
 
-        SUCCESS(10200, "操作成功"),
+        @EnumDisplay(value = "operation.success", order = 10200)
+        SUCCESS,
 
-        FAILURE(-1, "操作失败"),
+        @EnumDisplay(value = "operation.failure", order = -1)
+        FAILURE,
 
-        REDIRECT(10302, "请求重定向"),
+        @EnumDisplay(value = "operation.redirect", order = 10302)
+        REDIRECT,
 
-        BAD_REQUEST(10400, "坏的请求"),
+        @EnumDisplay(value = "operation.bad_request", order = 10400)
+        BAD_REQUEST,
 
-        UNAUTHORIZED(10401, "访问未授权"),
+        @EnumDisplay(value = "operation.unauthorized", order = 10401)
+        UNAUTHORIZED,
 
-        NOT_FOUND(10404, "访问资源不存在"),
+        @EnumDisplay(value = "operation.not_found", order = 10404)
+        NOT_FOUND,
 
-        SERVER_ERROR(10500, "未知错误");
+        @EnumDisplay(value = "operation.method_not_allowed", order = 10405)
+        METHOD_NOT_ALLOWED,
 
-        private int status;
+        @EnumDisplay(value = "operation.server_error", order = 10500)
+        SERVER_ERROR
 
-        private String message;
-
-        Status(int status, String message) {
-            this.status = status;
-            this.message = message;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-
-        public String getMessage() {
-            return message;
-        }
+//        private int status;
+//
+//        private String message;
+//
+//        Status(int status, String message) {
+//            this.status = status;
+//            this.message = message;
+//        }
+//
+//        public int getStatus() {
+//            return status;
+//        }
+//
+//        public String getMessage() {
+//            return message;
+//        }
     }
 
     /**
@@ -192,7 +204,7 @@ public final class JsonResult {
     }
 
     public String getMessage() {
-        return StringUtils.isEmpty(message) ? status.getMessage() : message;
+        return StringUtils.isEmpty(message) ? EnumDisplayUtils.getDisplayText(status.name(), Status.class) : message;
     }
 
     public void setData(Object data) {
@@ -204,7 +216,7 @@ public final class JsonResult {
     }
 
     public int getStatus() {
-        return status.getStatus();
+        return EnumDisplayUtils.getDisplayOrder(status);
     }
 
 }

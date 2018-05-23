@@ -34,6 +34,12 @@
 			<artifactId>druid</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.hk</groupId>
+			<artifactId>hk-core-i18n</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<!--
 			先在此把httpclient引用进来，以后必须把这个踢掉
 			这里引用进来的目的是在每个应用中都可以调用EMI的接口获取当前的app id

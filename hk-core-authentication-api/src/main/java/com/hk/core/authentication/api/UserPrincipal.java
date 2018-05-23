@@ -86,7 +86,8 @@ public class UserPrincipal implements Serializable {
      */
     private Map<String, Collection<String>> appPermissionSet;
 
-    public UserPrincipal(String userId, String userName, boolean isProtect, String nickName, Byte userType, String phone, String email,
+    public UserPrincipal(String userId, String userName, boolean isProtect, String nickName,
+                         Byte userType, String phone, String email,
                          Byte sex, String iconPath) {
         this.userId = userId;
         this.userName = userName;

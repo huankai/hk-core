@@ -115,9 +115,9 @@ public class WebMVCConfigutation extends WebMvcConfigurerAdapter {
         /* ****************** 国际化支持******************* */
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
-        registry.addInterceptor(localeChangeInterceptor);
+        registry.addInterceptor(localeChangeInterceptor).excludePathPatterns("/api/**");
 
-        //不同应用切换当前用户信息
+//        不同应用切换当前用户信息
         registry.addInterceptor(new SecurityContextInterceptor(securityContext)).excludePathPatterns("/api/**");
     }
 

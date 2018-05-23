@@ -1,5 +1,6 @@
 package com.hk.core.service;
 
+import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
 import com.hk.core.query.QueryPageable;
 import org.springframework.data.domain.Persistable;
@@ -62,6 +63,14 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @return
      */
     <S extends T> List<S> findAll(S t);
+
+    /**
+     * @param t
+     * @param orders
+     * @param <S>
+     * @return
+     */
+    <S extends T> List<T> findAll(S t, Order... orders);
 
     /**
      * @return

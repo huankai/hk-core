@@ -24,43 +24,43 @@ public class DateRangeCondition implements Condition {
         /**
          * today
          */
-        @EnumDisplay("date.today")
+        @EnumDisplay(value = "date.today",order = 1)
         TD,
 
         /**
          * last day
          */
-        @EnumDisplay("date.yesterday")
+        @EnumDisplay(value = "date.yesterday",order = 2)
         YD,
 
         /**
          * this week,本周
          */
-        @EnumDisplay("date.thisweek")
+        @EnumDisplay(value = "date.thisweek",order = 3)
         TW,
 
         /**
          * last week,上周
          */
-        @EnumDisplay("date.lastweek")
+        @EnumDisplay(value = "date.lastweek",order = 4)
         LW,
 
         /**
          * this month,本月
          */
-        @EnumDisplay("date.thismonth")
+        @EnumDisplay(value = "date.thismonth",order = 5)
         TM,
 
         /**
          * last month,上月
          */
-        @EnumDisplay("date.lastmonth")
+        @EnumDisplay(value = "date.lastmonth",order = 6)
         LM,
 
         /**
          * custom,自定义
          */
-        @EnumDisplay("date.custom")
+        @EnumDisplay(value = "date.custom",order = 7)
         CUSTOM
     }
 

@@ -3,7 +3,6 @@ package com.hk.core.authentication.security;
 import com.google.common.collect.Lists;
 import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
-import com.hk.core.authentication.api.PermissionContants;
 import com.hk.core.authentication.api.UserPrincipal;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +16,7 @@ import java.util.List;
  * @date 2017年12月21日下午5:45:54
  */
 @SuppressWarnings("serial")
-public class SecurityUserPrincipal extends UserPrincipal implements UserDetails, PermissionContants {
+public class SecurityUserPrincipal extends UserPrincipal implements UserDetails {
 
     /**
      *
@@ -28,7 +27,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
     public SecurityUserPrincipal(Boolean isProtect, String userId, String userName, String passWord, String nickName, Byte userType,
                                  String phone, String email, Byte sex, String iconPath, Byte userStatus) {
-        super(userId, userName,isProtect, nickName, userType, phone, email, sex, iconPath);
+        super(userId, userName, isProtect, nickName, userType, phone, email, sex, iconPath);
         this.passWord = passWord;
         this.userStatus = userStatus;
     }
@@ -65,7 +64,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
     @Override
     public boolean isAccountNonLocked() {
-        return null != userStatus && userStatus == 1;
+        return ByteConstants.ONE.equals(userStatus);
     }
 
     @Override
