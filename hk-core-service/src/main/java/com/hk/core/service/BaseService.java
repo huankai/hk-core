@@ -70,7 +70,7 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param <S>
      * @return
      */
-    <S extends T> List<T> findAll(S t, Order... orders);
+    <S extends T> List<S> findAll(S t, Order... orders);
 
     /**
      * @return

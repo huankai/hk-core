@@ -1,6 +1,5 @@
 package com.hk.core.service.impl;
 
-import com.google.common.collect.Lists;
 import com.hk.commons.util.*;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
@@ -23,9 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -164,25 +161,20 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     @Override
     @Transactional(readOnly = true)
     public <S extends T> List<S> findAll(S t) {
-        return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()));
+        return findAll(t, (Order[]) null);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public <S extends T> List<T> findAll(S t, Order... orders) {
-        if (ArrayUtils.isEmpty(orders)) {
-            return findAll(t);
-        }
-        List<Sort.Order> orderList = Lists.newArrayList();
-        for (Order order : orders) {
-            if (null != order) {
-                orderList.add(order.toSpringJpaOrder());
+    public <S extends T> List<S> findAll(S t, Order... orders) {
+        Sort sort = null;
+        if (ArrayUtils.isNotEmpty(orders)) {
+            List<Sort.Order> orderList = Arrays.stream(orders).filter(Objects::nonNull).map(Order::toSpringJpaOrder).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(orderList)) {
+                sort = new Sort(orderList);
             }
         }
-        if (CollectionUtils.isEmpty(orderList)) {
-            return findAll(t);
-        }
-        return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()), new Sort(orderList));
+        return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()), sort);
     }
 
     @Override

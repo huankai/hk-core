@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -31,7 +32,7 @@ public class QueryModel {
      */
     private List<Order> orders = Lists.newArrayList();
 
-    public int getStartRowIndex() {
+    public final int getStartRowIndex() {
         int startRow = pageIndex;
         if (pageIndex < 1) {
             startRow = 1;
@@ -44,7 +45,7 @@ public class QueryModel {
      *
      * @return
      */
-    public int getPageSize() {
+    public final int getPageSize() {
         return pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
     }
 
@@ -53,7 +54,7 @@ public class QueryModel {
      *
      * @return
      */
-    public int getJpaStartRowIndex() {
+    public final int getJpaStartRowIndex() {
         int startRow = pageIndex - 1;
         if (startRow < 0) {
             startRow = 0;
@@ -62,9 +63,7 @@ public class QueryModel {
     }
 
     public List<org.springframework.data.domain.Sort.Order> getSortOrderList() {
-        List<org.springframework.data.domain.Sort.Order> orderList = Lists.newArrayList();
-        orders.forEach(item -> orderList.add(item.toSpringJpaOrder()));
-        return orderList;
+        return orders.stream().map(Order::toSpringJpaOrder).collect(Collectors.toList());
     }
 
 }

@@ -106,13 +106,11 @@ public class QueryCondition {
                 oper = Operator.EQ;
             }
             Object value = condition.value;
-            if (value != null && oper != Operator.ISNULL
-                    && oper != Operator.ISNOTNULL) {
+            if (value != null && oper != Operator.ISNULL && oper != Operator.ISNOTNULL) {
                 String stringValue = String.valueOf(value);
                 if (StringUtils.isEmpty(stringValue))
                     return null;
-                if (oper == Operator.IN
-                        || oper == Operator.NOTIN) {
+                if (oper == Operator.IN || oper == Operator.NOTIN) {
                     value = StringUtils.splitByComma(stringValue);
                 }
             }
