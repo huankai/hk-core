@@ -4,6 +4,7 @@
 package com.hk.core.query.jdbc;
 
 import com.google.common.collect.Lists;
+import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.query.AndOr;
@@ -34,6 +35,7 @@ public class CompositeCondition implements Condition {
      * @param conditions
      */
     public CompositeCondition(AndOr andOr, List<Condition> conditions) {
+        AssertUtils.notNull(conditions, "Conditions must not be null");
         this.andOr = andOr;
         this.conditions = conditions;
     }

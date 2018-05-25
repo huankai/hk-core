@@ -160,12 +160,6 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
 
     @Override
     @Transactional(readOnly = true)
-    public <S extends T> List<S> findAll(S t) {
-        return findAll(t, (Order[]) null);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public <S extends T> List<S> findAll(S t, Order... orders) {
         Sort sort = null;
         if (ArrayUtils.isNotEmpty(orders)) {

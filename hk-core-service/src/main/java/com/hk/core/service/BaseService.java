@@ -60,12 +60,6 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
 
     /**
      * @param t
-     * @return
-     */
-    <S extends T> List<S> findAll(S t);
-
-    /**
-     * @param t
      * @param orders
      * @param <S>
      * @return

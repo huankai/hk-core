@@ -3,13 +3,13 @@
  */
 package com.hk.core.query.jdbc;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.query.AndOr;
+import lombok.Getter;
+
+import java.util.List;
 
 /**
  * @author huangkai
@@ -17,8 +17,10 @@ import com.hk.core.query.AndOr;
  */
 public class LogicalCondition implements Condition {
 
+	@Getter
 	private AndOr andOr;
 
+	@Getter
 	private List<SimpleCondition> conditions = Lists.newArrayList();
 
 	/**
@@ -33,9 +35,7 @@ public class LogicalCondition implements Condition {
 	 */
 	public LogicalCondition(SimpleCondition... conditions) {
 		this.andOr = AndOr.AND;
-		if (ArrayUtils.isNotEmpty(conditions)) {
-			CollectionUtils.addAll(this.conditions, conditions);
-		}
+		CollectionUtils.addAll(this.conditions, conditions);
 	}
 
 	/**
@@ -76,20 +76,6 @@ public class LogicalCondition implements Condition {
 			sb.insert(0, "(").append(")");
 		}
 		return sb.toString();
-	}
-
-	/**
-	 * @return the andOr
-	 */
-	public AndOr getAndOr() {
-		return andOr;
-	}
-
-	/**
-	 * @return the conditions
-	 */
-	public List<SimpleCondition> getConditions() {
-		return conditions;
 	}
 
 }

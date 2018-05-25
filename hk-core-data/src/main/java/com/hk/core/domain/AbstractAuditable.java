@@ -26,6 +26,7 @@ import java.util.Date;
  * last_modified_date 更新时间，新增时会保存,每次更新时会修改
  * </pre>
  *
+ *
  * @author huangkai
  */
 @MappedSuperclass

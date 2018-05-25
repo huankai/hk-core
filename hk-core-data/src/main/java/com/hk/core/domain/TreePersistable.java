@@ -1,5 +1,7 @@
 package com.hk.core.domain;
 
+import org.springframework.data.domain.Persistable;
+
 import java.util.Set;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Set;
  * @author: huangkai
  * @date 2018-05-11 17:21
  */
-public interface TreePersistable<T> {
+public interface TreePersistable<T> extends Persistable<String> {
 
     /**
      * @return

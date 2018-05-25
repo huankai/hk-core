@@ -1,6 +1,8 @@
 package com.hk.core.query;
 
 import com.hk.core.query.jpa.PathUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.jpa.criteria.OrderImpl;
 import org.springframework.data.domain.Sort.Direction;
 
@@ -19,11 +21,15 @@ public final class Order implements Serializable {
     /**
      * 排序字段
      */
+    @Getter
+    @Setter
     private String field;
 
     /**
      * ASC | DESC
      */
+    @Getter
+    @Setter
     private boolean desc;
 
     public Order() {
@@ -52,34 +58,6 @@ public final class Order implements Serializable {
      */
     public static Order desc(String field) {
         return new Order(field, true);
-    }
-
-    /**
-     * @return the field
-     */
-    public String getField() {
-        return field;
-    }
-
-    /**
-     * @param field the field to set
-     */
-    public void setField(String field) {
-        this.field = field;
-    }
-
-    /**
-     * @return the desc
-     */
-    public boolean isDesc() {
-        return desc;
-    }
-
-    /**
-     * @param desc the desc to set
-     */
-    public void setDesc(boolean desc) {
-        this.desc = desc;
     }
 
     @Override

@@ -1,16 +1,57 @@
 package com.hk.core.service;
 
+import com.hk.commons.util.StringUtils;
 import com.hk.core.domain.TreePersistable;
 
+import java.util.List;
+
+/**
+ * Tree
+ *
+ * @param <T>
+ */
 public interface TreeService<T extends TreePersistable<T>> {
 
-//	List<TreeNode> getChildrens(Map<String, Object> param,T t);
-//	
-//	boolean hasChildrenNode(Map<String, Object> param, T t);
-//	
-//	boolean isRootNode(Map<String, Object> param,T t);
-//	
-//	T getParentNode(Map<String, Object> param,T t);
+    /**
+     * 获取子节点
+     *
+     * @param t
+     * @return
+     */
+    List<TreePersistable<T>> getChildrenNodeList(T t);
+
+    /**
+     * 是否有子节点
+     *
+     * @param t
+     * @return
+     */
+    default boolean hasChildrenNode(T t) {
+        return getChildrenNodeList(t).size() > 0;
+    }
+
+    /**
+     * 是否为Parent节点
+     *
+     * @param param
+     * @param t
+     * @return
+     */
+    default boolean isRootNode(T t) {
+        T parent = t.getParent();
+        return parent == null || StringUtils.equals(parent.getId(), t.getId());
+    }
+
+    /**
+     * 获取父节点
+     *
+     * @param param
+     * @param t
+     * @return
+     */
+    default T getParentNode(T t) {
+        return t.getParent();
+    }
 //	
 //	List<TreeNode> generateFullTree(boolean rootCheck,boolean childCheck);
 //	
