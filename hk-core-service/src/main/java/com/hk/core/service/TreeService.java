@@ -33,7 +33,6 @@ public interface TreeService<T extends TreePersistable<T>> {
     /**
      * 是否为Parent节点
      *
-     * @param param
      * @param t
      * @return
      */
@@ -45,12 +44,12 @@ public interface TreeService<T extends TreePersistable<T>> {
     /**
      * 获取父节点
      *
-     * @param param
      * @param t
      * @return
      */
     default T getParentNode(T t) {
-        return t.getParent();
+        T parent = t.getParent();
+        return parent == null ? null :StringUtils.equals(parent.getId(),t.getId()) ? null : parent;
     }
 //	
 //	List<TreeNode> generateFullTree(boolean rootCheck,boolean childCheck);
