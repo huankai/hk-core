@@ -3,11 +3,10 @@
  */
 package com.hk.core.web;
 
-import java.net.URL;
+import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
-
-import org.springframework.web.context.ServletContextAware;
+import java.net.URL;
 
 /**
  * @author huangkai
@@ -40,6 +39,14 @@ public class ServletContextHolder implements ServletContextAware {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * get ServletContext
+	 * @return
+	 */
+	public static ServletContext getServletContext(){
+		return servletContext;
 	}
 
 	/**

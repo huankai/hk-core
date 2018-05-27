@@ -216,7 +216,7 @@ public final class JsonResult {
     }
 
     public int getStatus() {
-        return EnumDisplayUtils.getDisplayOrder(status);
+        return EnumDisplayUtils.getDisplayOrder(status).intValue();
     }
 
 }
