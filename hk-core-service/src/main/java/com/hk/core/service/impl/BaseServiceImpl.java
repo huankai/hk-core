@@ -247,7 +247,7 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
     @SuppressWarnings("unchecked")
     private QueryPageable<T> queryForPage(JdbcQueryModel query) {
         SelectArguments arguments = query.toSelectArguments();
-        arguments.setFields(getAllColumnSet());
+        arguments.setFieldSet(getAllColumnSet());
         arguments.setFrom(getTableName());
         ListResult<T> result = jdbcSession.queryForList(arguments, !query.isPaging(), getEntityClass());
         return new SimpleQueryResult<>(query, result.getTotalRowCount(), result.getResult());

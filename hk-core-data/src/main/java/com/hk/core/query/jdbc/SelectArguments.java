@@ -44,7 +44,7 @@ public final class SelectArguments {
 	 */
 	@Getter
 	@Setter
-	private Set<String> fields;
+	private Set<String> fieldSet;
 
 	/**
 	 * 查询表名
@@ -79,7 +79,7 @@ public final class SelectArguments {
 	
 	public void setFields(String... fields) {
 		if(ArrayUtils.isNotEmpty(fields)) {
-			this.fields = Sets.newHashSet(fields);
+			this.fieldSet = Sets.newHashSet(fields);
 		}
 	}
 
