@@ -1,8 +1,10 @@
-package com.hk.core.authentication.security.config;
+package com.hk.core.autoconfigure.authentication.security;
 
 import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SpringSecurityContext;
 import com.hk.core.web.AppCodeUtils;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.SecurityExpressionOperations;
@@ -18,13 +20,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author: huangkai
  * @date 2018-05-16 15:57
  */
 @Configuration
+@ConditionalOnClass(SpringSecurityContext.class)
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 

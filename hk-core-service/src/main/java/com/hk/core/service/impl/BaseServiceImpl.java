@@ -8,6 +8,7 @@ import com.hk.core.query.*;
 import com.hk.core.query.jdbc.JdbcSession;
 import com.hk.core.query.jdbc.ListResult;
 import com.hk.core.query.jdbc.SelectArguments;
+import com.hk.core.query.jdbc.Update;
 import com.hk.core.repository.BaseRepository;
 import com.hk.core.service.BaseService;
 import lombok.Getter;
@@ -117,6 +118,15 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
         return getBaseRepository().save(saveBefore(entity));
     }
 
+    @Override
+    public boolean saveFlushOrUpdate(T t, boolean updateNullField) {
+        if (t.isNew()) {
+            saveAndFlush(t);
+            return true;
+        }
+        return jdbcSession.update(new Update(t, updateNullField));
+    }
+
     /**
      * <pre>
      *     在保存或更新实体之前
@@ -224,7 +234,7 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
      * @return ExampleMatcher
      */
     protected ExampleMatcher ofExampleMatcher() {
-        return ExampleMatcher.matching();
+        return ExampleMatcher.matching().withIgnoreNullValues();
     }
 
     @Override

@@ -41,6 +41,25 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
     <S extends T> S saveAndFlush(S entity);
 
     /**
+     * 更新
+     *
+     * @param t
+     * @return
+     */
+    default boolean saveFlushOrUpdate(T t) {
+        return saveFlushOrUpdate(t, false);
+    }
+
+    /**
+     * 更新，是否更新null属性
+     *
+     * @param t
+     * @param updateNullField
+     * @return
+     */
+    boolean saveFlushOrUpdate(T t, boolean updateNullField);
+
+    /**
      * @param id
      * @return
      */

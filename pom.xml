@@ -53,8 +53,8 @@
 		<module>hk-core-amqp</module>
 		<module>hk-core-rocketmq</module>
 		<module>hk-core-cache</module>
-		<module>hk-core-cache-redis</module>
 		<module>hk-core-i18n</module>
+		<module>hk-core-autoconfigure</module>
 	</modules>
 
 	<dependencyManagement>

@@ -1,10 +1,11 @@
-package com.hk.core.cache.redis;
+package com.hk.core.autoconfigure.cache.redis;
 
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.hk.commons.fastjson.JsonUtils;
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.Contants;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -15,9 +16,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * @author: huangkai
- * @date 2018-05-18 12:25
+ * @date 2018-05-31 17:45
  */
 @Configuration
+@ConditionalOnClass(RedisTemplate.class)
 public class CacheReidsAutoConfiguration {
 
     @Bean

@@ -43,6 +43,29 @@ public class JdbcSession {
     }
 
     /**
+     * 更新
+     *
+     * @param sql
+     * @param paramMap
+     * @return
+     */
+    public boolean update(Update update) {
+        String sql = update.toSqlString();
+        return null != sql && namedParameterJdbcTemplate.update(update.toSqlString(), update.getParamMap()) > 0;
+    }
+
+    /**
+     * 更新
+     *
+     * @param sql
+     * @param args
+     * @return
+     */
+    public boolean udpate(String sql, Object... args) {
+        return jdbcTemplate.update(sql, args) > 0;
+    }
+
+    /**
      * @param arguments       arguments
      * @param retriveRowCount retriveRowCount
      * @return
@@ -121,7 +144,7 @@ public class JdbcSession {
 
     private SelectStatement buildSelect(SelectArguments arguments) {
         AssertUtils.notNull(arguments, "arguments must not be nulll");
-        AssertUtils.notBlank(arguments.getFrom(),"argument from must not be null");
+        AssertUtils.notBlank(arguments.getFrom(), "argument from must not be null");
         StringBuilder sql = new StringBuilder();
         StringBuilder countSql = new StringBuilder();
         String fields = CollectionUtils.isEmpty(arguments.getFieldSet()) ? " * "
@@ -136,7 +159,7 @@ public class JdbcSession {
         sql.append(" FROM ");
         countSql.append("count(*) FROM ");
 
-        sql.append(arguments.getFrom());
+        sql.append(arguments.getFrom());//a join b on a.id = b
         countSql.append(arguments.getFrom());
 
         List<Object> parameters = Lists.newArrayList();

@@ -1,9 +1,10 @@
-package com.hk.core.cache.config;
+package com.hk.core.autoconfigure.cache.redis;
 
 import com.hk.core.cache.LogCacheErrorHandler;
 import com.hk.core.cache.spring.FixUseSupperClassAnnotationParser;
 import com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Role;
  */
 @Configuration
 @EnableCaching
+@ConditionalOnClass(FixUseSupperClassCacheOperationSource.class)
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport {
 

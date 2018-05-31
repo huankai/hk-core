@@ -1,12 +1,15 @@
-package com.hk.core.authentication.security.config;
+package com.hk.core.autoconfigure.authentication.security;
 
 import com.google.common.collect.Maps;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SpringSecurityContext;
 import com.hk.core.web.JsonResult;
 import com.hk.core.web.Webs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
@@ -31,6 +34,8 @@ import java.util.Map;
 @Order(5)
 @Configuration
 @EnableWebSecurity
+@ConditionalOnClass(value = {SpringSecurityContext.class})
+@AutoConfigureAfter(SecurityAuthenticationAutoConfiguration.class)
 public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
@@ -62,7 +67,6 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     *
      * @return
      */
     private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() throws Exception {

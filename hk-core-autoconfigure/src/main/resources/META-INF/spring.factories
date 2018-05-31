@@ -1,0 +1,6 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.hk.core.autoconfigure.authentication.security.MethodSecurityConfig,\
+com.hk.core.autoconfigure.authentication.security.SecurityAuthenticationAutoConfiguration,\
+com.hk.core.autoconfigure.authentication.security.SecurityWebAutoConfiguration
+
