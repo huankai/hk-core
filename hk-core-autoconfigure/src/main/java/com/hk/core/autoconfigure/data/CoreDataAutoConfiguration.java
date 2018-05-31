@@ -1,6 +1,10 @@
-package com.hk.core.config;
+package com.hk.core.autoconfigure.data;
 
 import com.hk.core.audit.UserAuditorAware;
+import com.hk.core.authentication.api.SecurityContext;
+import com.hk.core.query.jdbc.JdbcSession;
+import com.hk.core.query.jdbc.dialect.Dialect;
+import com.hk.core.query.jdbc.dialect.MySQLDialect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +14,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import com.hk.core.authentication.api.SecurityContext;
-import com.hk.core.query.jdbc.JdbcSession;
-import com.hk.core.query.jdbc.dialect.Dialect;
-import com.hk.core.query.jdbc.dialect.MySQLDialect;
-
 /**
  * Core Dao 自动配置
  *
@@ -22,6 +21,7 @@ import com.hk.core.query.jdbc.dialect.MySQLDialect;
  */
 @Configuration
 @EnableJpaAuditing
+@ConditionalOnClass(JdbcSession.class)
 public class CoreDataAutoConfiguration {
 
     @Bean

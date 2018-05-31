@@ -1,7 +1,6 @@
 package com.hk.core.cache;
 
 import com.hk.commons.fastjson.JsonUtils;
-import com.hk.core.cache.config.FixUseSupperClassAutoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -12,7 +11,7 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
  *
  * 缓存读取出错处理器,
  * Spring 使用默认的 CacheErrorHandler 是 {@link org.springframework.cache.interceptor.SimpleCacheErrorHandler}
- * 配置请查看 {@link FixUseSupperClassAutoConfiguration#errorHandler()}
+ *
  *
  * </pre>
  *

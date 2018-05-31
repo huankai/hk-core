@@ -64,6 +64,12 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
         return super.saveOrUpdate(entity);
     }
 
+    @Override
+    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")
+    public boolean saveFlushOrUpdate(T t, boolean updateNullField) {
+        return super.saveFlushOrUpdate(t, updateNullField);
+    }
+
     /**
      * <p>
      * Batch storage,
@@ -161,7 +167,6 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * </p>
      *
      * @return
-     * @see com.hk.core.cache.config.FixUseSupperClassAutoConfiguration
      */
     protected final EnableCacheServiceImpl<T, PK> getCurrentProxy() {
         return (EnableCacheServiceImpl<T, PK>) AopContext.currentProxy();

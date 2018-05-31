@@ -1,4 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hk.core.config.CoreDataAutoConfiguration,\
-com.hk.core.config.DruidDataSourceAutoConfiguration
