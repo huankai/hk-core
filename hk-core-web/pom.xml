@@ -1,60 +1,43 @@
 <?xml version="1.0"?>
 <project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.hk</groupId>
-		<artifactId>hk-core</artifactId>
-		<version>1.0.0.RELEASE</version>
-	</parent>
-	<artifactId>hk-core-web</artifactId>
-	<name>hk-core-web</name>
-	<url>http://maven.apache.org</url>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.hk</groupId>
+        <artifactId>hk-core</artifactId>
+        <version>1.0.0.RELEASE</version>
+    </parent>
+    <artifactId>hk-core-web</artifactId>
+    <name>hk-core-web</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-commons-util</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>com.hk</groupId>
-			<artifactId>hk-commons-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-core-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.hk</groupId>
-			<artifactId>hk-core-i18n</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<!--
-			先在此把httpclient引用进来，以后必须把这个踢掉
-			这里引用进来的目的是在每个应用中都可以调用EMI的接口获取当前的app id
-			@see  com.hk.core.web.AppCodeUtils#getCurrentAppId
-		-->
-		<dependency>
-			<groupId>com.hk</groupId>
-			<artifactId>hk-commons-httpclient</artifactId>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!--
+            先在此把httpclient引用进来，以后必须把这个踢掉
+            这里引用进来的目的是在每个应用中都可以调用EMI的接口获取当前的app id
+            @see  com.hk.core.web.AppCodeUtils#getCurrentAppId
+        -->
+        <dependency>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-commons-httpclient</artifactId>
+        </dependency>
+    </dependencies>
 </project>

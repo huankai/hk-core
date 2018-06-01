@@ -1,8 +1,8 @@
 package com.hk.core.web;
 
 import com.google.common.collect.Maps;
-import com.hk.commons.fastjson.JsonUtils;
 import com.hk.commons.http.get.SimpleGetHttpExecutor;
+import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.commons.util.StringUtils;
 

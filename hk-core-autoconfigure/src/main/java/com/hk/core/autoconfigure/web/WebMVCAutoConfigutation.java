@@ -1,11 +1,11 @@
-package com.hk.core.autoconfigure.webmvc;
+package com.hk.core.autoconfigure.web;
 
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hk.commons.converters.*;
-import com.hk.commons.fastjson.JsonUtils;
+import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.web.ServletContextHolder;

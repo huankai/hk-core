@@ -2,9 +2,9 @@ package com.hk.core.autoconfigure.cache.redis;
 
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.hk.commons.fastjson.JsonUtils;
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.Contants;
+import com.hk.commons.util.JsonUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

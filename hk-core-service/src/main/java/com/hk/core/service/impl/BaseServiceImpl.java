@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.Validator;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -55,6 +56,9 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
      * 所以有  @Id 和 @Column修饰的字段名
      */
     private Set<String> allColumnSet;
+
+    @Autowired(required = false)
+    private Validator validator;
 
     /**
      * 获取登陆的用户信息
@@ -97,7 +101,8 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
             Set<String> fieldSet = idFieldList.stream().map(Field::getName).collect(Collectors.toSet());
 
             List<Field> columnFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Column.class);
-            Set<String> fields = columnFieldList.stream().map(field -> field.getAnnotation(Column.class).name()).collect(Collectors.toSet());
+            Set<String> fields = columnFieldList.stream().map(field -> field.getAnnotation(Column.class).name())
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
             fieldSet.addAll(fields);
             allColumnSet = Collections.unmodifiableSet(fieldSet);
         }
@@ -127,6 +132,7 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
         return jdbcSession.update(new Update(t, updateNullField));
     }
 
+
     /**
      * <pre>
      *     在保存或更新实体之前
@@ -142,8 +148,22 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
                 treeEntity.setParent(entity);
             }
         }
+//        validator
         return entity;
     }
+
+//    private <T> void validate(Supplier<Set<ConstraintViolation<T>>> validatorSetFunction) {
+//        if (validator == null) {
+////            logger.warn("validator is null!");
+//            return;
+//        }
+////        SimpleValidateResults results = new SimpleValidateResults();
+////        validatorSetFunction.get()
+////                .forEach(violation -> results.addResult(violation.getPropertyPath().toString(), violation.getMessage()));
+////        if (!results.isSuccess()) {
+////            throw new ValidationException(results);
+////        }
+//    }
 
     @Override
     public <S extends T> List<S> saveOrUpdate(Iterable<S> entities) {

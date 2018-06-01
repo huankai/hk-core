@@ -7,6 +7,5 @@ com.hk.core.autoconfigure.cache.redis.CacheReidsAutoConfiguration,\
 com.hk.core.autoconfigure.cache.redis.FixUseSupperClassAutoConfiguration,\
 com.hk.core.autoconfigure.data.CoreDataAutoConfiguration,\
 com.hk.core.autoconfigure.data.DruidDataSourceAutoConfiguration,\
-com.hk.core.autoconfigure.webmvc.DruidDataSourceWebAutoConfiguration,\
-com.hk.core.autoconfigure.webmvc.WebMVCAutoConfigutation
+com.hk.core.autoconfigure.web.WebMVCAutoConfigutation
 

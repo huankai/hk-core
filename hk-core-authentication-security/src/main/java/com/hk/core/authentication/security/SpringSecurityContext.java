@@ -1,9 +1,7 @@
 package com.hk.core.authentication.security;
 
-import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.web.Webs;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -32,21 +30,15 @@ public class SpringSecurityContext implements SecurityContext {
 
     @Override
     public void setSessionAttribute(String key, Object value, boolean create) {
-        if (StringUtils.isNotEmpty(key)) {
-            Webs.setAttributeFromSession(key, value, create);
-        }
     }
 
     @Override
     public <T> T getSessionAttribute(String key) {
-        return StringUtils.isEmpty(key) ? null : Webs.getAttributeFromSession(key);
+        return null;
     }
 
     @Override
     public void removeSessionAttribute(String key) {
-        if (StringUtils.isNotEmpty(key)) {
-            Webs.removeAttributeFromSession(key);
-        }
     }
 
 }

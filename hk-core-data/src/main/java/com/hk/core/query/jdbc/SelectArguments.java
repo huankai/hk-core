@@ -61,7 +61,7 @@ public final class SelectArguments {
 	 */
 	@Getter
 	@Setter
-	private Set<String> groupBys;
+	private Set<String> groupBySet;
 
 	/**
 	 * 查询排序
@@ -89,7 +89,7 @@ public final class SelectArguments {
 	 */
 	public void setGroupBys(String... groupBys) {
 		if (ArrayUtils.isNotEmpty(groupBys)) {
-			this.groupBys = Sets.newHashSet(groupBys);
+			this.groupBySet = Sets.newHashSet(groupBys);
 		}
 	}
 

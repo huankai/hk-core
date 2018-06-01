@@ -173,9 +173,9 @@ public class JdbcSession {
                 countSql.append(conditionSql);
             }
         }
-        Set<String> groupBys = arguments.getGroupBys();
-        if (CollectionUtils.isNotEmpty(groupBys)) {
-            String groupBySql = groupBys.stream().collect(Collectors.joining(StringUtils.COMMA_SEPARATE));
+        Set<String> groupBySet = arguments.getGroupBySet();
+        if (CollectionUtils.isNotEmpty(groupBySet)) {
+            String groupBySql = groupBySet.stream().collect(Collectors.joining(StringUtils.COMMA_SEPARATE));
             sql.append(" GROUP BY ");
             sql.append(groupBySql);
             countSql.append(" GROUP BY ");

@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.data;
 
-import com.hk.core.audit.UserAuditorAware;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.query.jdbc.JdbcSession;
 import com.hk.core.query.jdbc.dialect.Dialect;
@@ -43,6 +42,7 @@ public class CoreDataAutoConfiguration {
 
 	/* ************ audit ************ */
 
+
     /**
      * jpa audit功能
      *
@@ -53,5 +53,19 @@ public class CoreDataAutoConfiguration {
     @ConditionalOnMissingBean(value = AuditorAware.class)
     public AuditorAware<?> userIdAuditor(SecurityContext securityContext) {
         return new UserAuditorAware(securityContext);
+    }
+
+    private class UserAuditorAware implements AuditorAware<String> {
+
+        private SecurityContext securityContext;
+
+        private UserAuditorAware(SecurityContext securityContext) {
+            this.securityContext = securityContext;
+        }
+
+        @Override
+        public String getCurrentAuditor() {
+            return securityContext.getPrincipal().getUserId();
+        }
     }
 }
