@@ -37,23 +37,6 @@ public final class JsonResult {
 
         @EnumDisplay(value = "operation.server_error", order = 10500)
         SERVER_ERROR
-
-//        private int status;
-//
-//        private String message;
-//
-//        Status(int status, String message) {
-//            this.status = status;
-//            this.message = message;
-//        }
-//
-//        public int getStatus() {
-//            return status;
-//        }
-//
-//        public String getMessage() {
-//            return message;
-//        }
     }
 
     /**
@@ -216,7 +199,7 @@ public final class JsonResult {
     }
 
     public int getStatus() {
-        return EnumDisplayUtils.getDisplayOrder(status).intValue();
+        return EnumDisplayUtils.getDisplayOrder(status);
     }
 
 }

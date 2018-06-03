@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-core-service</artifactId>
+            <artifactId>hk-core-authentication-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -147,7 +147,7 @@ public class JdbcSession {
         AssertUtils.notBlank(arguments.getFrom(), "argument from must not be null");
         StringBuilder sql = new StringBuilder();
         StringBuilder countSql = new StringBuilder();
-        String fields = CollectionUtils.isEmpty(arguments.getFieldSet()) ? " * "
+        String fields = CollectionUtils.isEmpty(arguments.getFieldSet()) ? "*"
                 : arguments.getFieldSet().stream().collect(Collectors.joining(StringUtils.COMMA_SEPARATE));
         sql.append("SELECT ");
         countSql.append("SELECT ");

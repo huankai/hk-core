@@ -3,16 +3,14 @@ package com.hk.core.autoconfigure.web;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.hk.commons.converters.*;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.web.ServletContextHolder;
-import com.hk.core.web.interceptors.RequestInterceptor;
-import com.hk.core.web.interceptors.SecurityContextInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -27,7 +25,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author: huangkai
@@ -37,12 +34,14 @@ import java.util.Map;
 public class WebMVCAutoConfigutation extends WebMvcConfigurerAdapter {
 
     @Bean
+    @ConditionalOnClass(SpringContextHolder.class)
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
     }
 
     @Bean
     @ConditionalOnClass(ServletContextHolder.class)
+    @ConditionalOnWebApplication
     public ServletContextHolder servletContextHolder() {
         return new ServletContextHolder();
     }
@@ -97,11 +96,11 @@ public class WebMVCAutoConfigutation extends WebMvcConfigurerAdapter {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        RequestInterceptor interceptor = new RequestInterceptor();
-        interceptor.setSecurityContext(securityContext);
-        Map<String, String> maps = Maps.newHashMap();
-        interceptor.setProperties(maps);
-        registry.addInterceptor(interceptor).addPathPatterns("/**");
+//        RequestInterceptor interceptor = new RequestInterceptor();
+//        interceptor.setSecurityContext(securityContext);
+//        Map<String, String> maps = Maps.newHashMap();
+//        interceptor.setProperties(maps);
+//        registry.addInterceptor(interceptor).addPathPatterns("/**");
 
         /* ****************** 国际化支持******************* */
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
@@ -109,7 +108,7 @@ public class WebMVCAutoConfigutation extends WebMvcConfigurerAdapter {
         registry.addInterceptor(localeChangeInterceptor);
 
 //        不同应用切换当前用户信息
-        registry.addInterceptor(new SecurityContextInterceptor(securityContext)).excludePathPatterns("/api/**");
+//        registry.addInterceptor(new SecurityContextInterceptor(securityContext)).excludePathPatterns("/api/**");
     }
 
     /* ****************** 国际化支持******************* */
