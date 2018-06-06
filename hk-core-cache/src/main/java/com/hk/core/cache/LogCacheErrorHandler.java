@@ -7,13 +7,10 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 
 /**
- * <pre>
- *
+ * <p>
  * 缓存读取出错处理器,
  * Spring 使用默认的 CacheErrorHandler 是 {@link org.springframework.cache.interceptor.SimpleCacheErrorHandler}
- *
- *
- * </pre>
+ * </p>
  *
  * @author: huangkai
  * @date 2018-05-15 17:20

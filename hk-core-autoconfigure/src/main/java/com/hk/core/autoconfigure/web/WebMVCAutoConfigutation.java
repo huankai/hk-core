@@ -40,7 +40,6 @@ public class WebMVCAutoConfigutation extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    @ConditionalOnClass(ServletContextHolder.class)
     @ConditionalOnWebApplication
     public ServletContextHolder servletContextHolder() {
         return new ServletContextHolder();

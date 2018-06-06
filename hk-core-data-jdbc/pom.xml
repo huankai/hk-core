@@ -8,9 +8,7 @@
         <artifactId>hk-core</artifactId>
         <version>1.0.0.RELEASE</version>
     </parent>
-    <artifactId>hk-core-data</artifactId>
-    <name>hk-core-data</name>
-    <url>http://maven.apache.org</url>
+    <artifactId>hk-core-data-jdbc</artifactId>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

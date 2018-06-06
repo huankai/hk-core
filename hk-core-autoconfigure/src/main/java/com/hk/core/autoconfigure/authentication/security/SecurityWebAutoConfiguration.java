@@ -120,7 +120,8 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
 //            .logoutUrl("/logout")
                 .invalidateHttpSession(true)
 //                .addLogoutHandler((request, response, authentication) -> System.out.println("logout handler....0")) logout 处理器
-                .logoutSuccessHandler((request, response, authentication) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success(SpringContextHolder.getMessage("logout.success", null))))
+                .logoutSuccessHandler((request, response, authentication) ->
+                        Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success(SpringContextHolder.getMessage("logout.success", null))))
 //                .deleteCookies("") //删除指定的Cookie
                 .permitAll()
 
