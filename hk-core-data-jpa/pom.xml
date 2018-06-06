@@ -15,11 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-commons-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-i18n</artifactId>
+            <artifactId>hk-core-data-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

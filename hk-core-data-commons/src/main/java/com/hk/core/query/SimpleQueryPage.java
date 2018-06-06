@@ -1,6 +1,6 @@
 package com.hk.core.query;
 
-import com.hk.core.query.jdbc.ListResult;
+import com.hk.core.ListResult;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * @author kally
  * @date 2018年1月24日上午9:58:21
  */
-public final class SimpleQueryResult<T> extends AbstractQueryResult<T> {
+public final class SimpleQueryPage<T> extends AbstractQueryPage<T> {
 
     /**
      * 当前页号
@@ -22,20 +22,20 @@ public final class SimpleQueryResult<T> extends AbstractQueryResult<T> {
 
     /**
      * @param query
-     * @param totalRowCount
+     * @param totalRow
      * @param data
      */
-    public SimpleQueryResult(QueryModel query, long totalRowCount, List<T> data) {
+    public SimpleQueryPage(QueryModel query, long totalRow, List<T> data) {
         this.pageIndex = query.getPageIndex();
         this.pageSize = query.getPageSize();
-        setTotalRowCount(totalRowCount);
+        setTotalRow(totalRow);
         setData(data);
     }
 
-    public SimpleQueryResult(QueryModel query, ListResult<T> result) {
+    public SimpleQueryPage(QueryModel query, ListResult<T> result) {
         this.pageIndex = query.getPageIndex();
         this.pageSize = query.getPageSize();
-        setTotalRowCount(result.getTotalRowCount());
+        setTotalRow(result.getTotalRowCount());
         setData(result.getResult());
     }
 
