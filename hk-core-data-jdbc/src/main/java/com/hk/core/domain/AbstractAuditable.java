@@ -1,17 +1,12 @@
 package com.hk.core.domain;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Auditable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -29,8 +24,6 @@ import java.util.Date;
  *
  * @author huangkai
  */
-@MappedSuperclass
-@EntityListeners(value = {AuditingEntityListener.class})
 public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String> {
 
     /**
@@ -47,30 +40,23 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * </pre>
      */
     @CreatedBy
-    @Column(name = "created_by", updatable = false)
-    @JSONField(serialize = false)
     private String createdBy;
 
     /**
      * 创建时间
      */
-    @Column(name = "created_date", updatable = false)
     @CreatedDate
-    @JSONField(serialize = false)
     private LocalDateTime createdDate;
 
     /**
      * 最后更新用户
      */
-    @Column(name = "last_modified_by")
     @LastModifiedBy
-    @JSONField(serialize = false)
     private String lastModifiedBy;
 
     /**
      * 最后更新时间
      */
-    @Column(name = "last_modified_date")
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 

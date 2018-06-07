@@ -54,7 +54,7 @@ public class DruidDataSourceAutoConfiguration {
     }
 
     @ConditionalOnWebApplication
-    private static class DuridDataWebAutoCOnfiguration {
+    static class DuridDataWebAutoCOnfiguration {
         /**
          * 注册一个StatViewServlet
          */

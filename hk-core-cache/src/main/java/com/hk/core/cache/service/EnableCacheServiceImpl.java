@@ -8,7 +8,6 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Service implementation Enable Cache.
@@ -30,73 +29,16 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * @param id id
      * @return
      */
+    @Override
     @Cacheable(key = "'id'+#id")
     public T findOne(PK id) {
         return super.findOne(id);
     }
 
-    /**
-     * <p>
-     * If the key(ID) exists in the cache,it is obtained directly from the cache.<br/>
-     * Otherwise,query from the database and put the result in the cache.
-     * <p>
-     *
-     * @param id id
-     * @return
-     */
-    @Cacheable(key = "'id'+#id")
-    public T getOne(PK id) {
-        return super.getOne(id);
-    }
-
-    /**
-     * <p>
-     * save or udpate.<br/>
-     * Data will only be placed in cache when there is update.
-     * </p>
-     *
-     * @param entity the save or update entity.
-     * @param <S>
-     * @return
-     */
-    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")
-    public <S extends T> S saveOrUpdate(S entity) {
-        return super.saveOrUpdate(entity);
-    }
-
     @Override
-    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")
-    public boolean saveFlushOrUpdate(T t, boolean updateNullField) {
-        return super.saveFlushOrUpdate(t, updateNullField);
-    }
-
-    /**
-     * <p>
-     * Batch storage,
-     * Deleting the data in the cache.
-     * </p>
-     *
-     * @param entities the save or update entities.
-     * @param <S>
-     * @return
-     */
-    @CacheEvict(allEntries = true)
-    public <S extends T> List<S> saveOrUpdate(Iterable<S> entities) {
-        return super.saveOrUpdate(entities);
-    }
-
-    /**
-     * <p>
-     * It is only when updated that the return value is placed in the cache.
-     * </p>
-     *
-     * @param entity the save or update entity.
-     * @param <S>
-     * @return
-     */
-    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")
-    public <S extends T> S saveAndFlush(S entity) {
-        return super.saveAndFlush(entity);
+    @CacheEvict(key = "'id'+#args[0].id", condition = "#root.args[0].id != null")
+    public boolean saveOrUpdate(T entity) {
+        return super.saveOrUpdate(entity);
     }
 
     /**
@@ -104,6 +46,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      *
      * @return
      */
+    @Override
     @Cacheable(key = "'count'")
     public long count() {
         return super.count();
@@ -116,14 +59,15 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      *
      * @param id id
      */
+    @Override
     @Caching(
             evict = {
                     @CacheEvict(key = "'id'+#id"),
                     @CacheEvict(key = "'count'")
             }
     )
-    public void delete(PK id) {
-        super.delete(id);
+    public void deleteById(PK id) {
+        super.deleteById(id);
     }
 
     /**
@@ -135,6 +79,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      *
      * @param entity entity
      */
+    @Override
     @Caching(
             evict = {
                     @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null"),
@@ -153,6 +98,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      *
      * @param entities entities
      */
+    @Override
     @CacheEvict(allEntries = true)
     public void delete(Iterable<? extends T> entities) {
         super.delete(entities);

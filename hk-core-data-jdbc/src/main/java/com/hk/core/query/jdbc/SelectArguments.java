@@ -3,7 +3,7 @@ package com.hk.core.query.jdbc;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.hk.commons.util.ArrayUtils;
-import com.hk.core.query.Order;
+import com.hk.core.data.commons.query.Order;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,8 +1,8 @@
 package com.hk.core.service;
 
-import com.hk.core.query.Order;
-import com.hk.core.query.QueryModel;
-import com.hk.core.query.QueryPageable;
+import com.hk.core.data.commons.query.Order;
+import com.hk.core.data.commons.query.QueryModel;
+import com.hk.core.data.commons.query.QueryPage;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
@@ -24,7 +24,7 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param entity
      * @return
      */
-    <S extends T> S saveOrUpdate(S entity);
+    boolean saveOrUpdate(T entity);
 
     /**
      * 批量保存或更新
@@ -32,32 +32,7 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param entities
      * @return
      */
-    <S extends T> List<S> saveOrUpdate(Iterable<S> entities);
-
-    /**
-     * @param entity
-     * @return
-     */
-    <S extends T> S saveAndFlush(S entity);
-
-    /**
-     * 更新
-     *
-     * @param t
-     * @return
-     */
-    default boolean saveFlushOrUpdate(T t) {
-        return saveFlushOrUpdate(t, false);
-    }
-
-    /**
-     * 更新，是否更新null属性
-     *
-     * @param t
-     * @param updateNullField
-     * @return
-     */
-    boolean saveFlushOrUpdate(T t, boolean updateNullField);
+    boolean saveOrUpdate(Iterable<T> entities);
 
     /**
      * @param id
@@ -75,7 +50,7 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param t
      * @return
      */
-    <S extends T> S findOne(S t);
+    T findOne(T t);
 
     /**
      * @param t
@@ -83,7 +58,7 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param <S>
      * @return
      */
-    <S extends T> List<S> findAll(S t, Order... orders);
+    List<T> findAll(T t, Order... orders);
 
     /**
      * @return
@@ -94,7 +69,7 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param ids
      * @return
      */
-    List<T> findAll(Iterable<PK> ids);
+    Iterable<T> findByIds(Iterable<PK> ids);
 
     /**
      * 分页查询
@@ -102,18 +77,19 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param query 查询参数
      * @return 查询结果
      */
-    QueryPageable<T> queryForPage(QueryModel query);
-
-    /**
-     * Flushes all pending changes to the database.
-     */
-    void flush();
+    QueryPage<T> queryForPage(QueryModel query);
 
     /**
      * @param id
      * @return
      */
     boolean exists(PK id);
+
+    /**
+     * @param t
+     * @return
+     */
+    boolean exists(T t);
 
     /**
      * @return
@@ -128,7 +104,7 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
     /**
      * @param id
      */
-    void delete(PK id);
+    void deleteById(PK id);
 
     /**
      * @param entity

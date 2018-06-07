@@ -1,6 +1,5 @@
 package com.hk.core.data.jpa.domain;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -48,15 +47,13 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      */
     @CreatedBy
     @Column(name = "created_by", updatable = false)
-    @JSONField(serialize = false)
     private String createdBy;
 
     /**
      * 创建时间
      */
-    @Column(name = "created_date", updatable = false)
     @CreatedDate
-    @JSONField(serialize = false)
+    @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;
 
     /**
@@ -64,14 +61,13 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      */
     @Column(name = "last_modified_by")
     @LastModifiedBy
-    @JSONField(serialize = false)
     private String lastModifiedBy;
 
     /**
      * 最后更新时间
      */
-    @Column(name = "last_modified_date")
     @LastModifiedDate
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
     @Override

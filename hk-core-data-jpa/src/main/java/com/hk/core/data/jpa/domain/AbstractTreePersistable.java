@@ -1,8 +1,9 @@
 package com.hk.core.data.jpa.domain;
 
-import com.hk.core.domain.TreePersistable;
+import com.hk.core.data.commons.domain.TreePersistable;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -12,20 +13,20 @@ import java.util.Set;
  * @date 2018-05-11 17:17
  */
 @MappedSuperclass
-public abstract class AbstractTreePersistable<T> extends AbstractAuditable implements TreePersistable<T> {
+public abstract class AbstractTreePersistable<T> extends AbstractAuditable implements TreePersistable<T, String> {
 
     /**
      * 上级
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "parent_id", referencedColumnName = "id",updatable = false)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id", updatable = false)
     private T parent;
 
     /**
      * 子级
      */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.REMOVE)
-    private Set<T> child;
+    private Set<T> childs;
 
     @Override
     public final T getParent() {
@@ -38,12 +39,7 @@ public abstract class AbstractTreePersistable<T> extends AbstractAuditable imple
     }
 
     @Override
-    public final Set<T> getChild() {
-        return child;
-    }
-
-    @Override
-    public final void setChild(Set<T> child) {
-        this.child = child;
+    public Collection<T> getChilds() {
+        return childs;
     }
 }

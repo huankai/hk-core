@@ -1,6 +1,5 @@
 package com.hk.core.data.jpa.domain;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.hk.commons.util.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
@@ -39,8 +38,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String> {
     }
 
     @Transient // DATAJPA-622
-    @JSONField(serialize = false, deserialize = false)
-    public boolean isNew() {
+    public final boolean isNew() {
         return StringUtils.isEmpty(getId());
     }
 

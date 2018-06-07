@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.shiro.ShiroSecurityContext;
-import com.hk.core.authentication.shiro.encrypt.ShiroPasswordEncrypt;
 
 /**
  * Shiro pac4j configuration
@@ -27,16 +26,6 @@ public class AuthenticationShiroAutoConfiguration {
 	@ConditionalOnMissingBean(value = SecurityContext.class)
 	public ShiroSecurityContext securityContext() {
 		return new ShiroSecurityContext();
-	}
-
-	/**
-	 * 密码加密
-	 * 
-	 * @return
-	 */
-	@Bean
-	public ShiroPasswordEncrypt passwordEncrypt() {
-		return new ShiroPasswordEncrypt();
 	}
 
 	/* ************Core pac4j configuation ************ */

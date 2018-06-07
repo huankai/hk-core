@@ -1,8 +1,8 @@
 package com.hk.core.query.jdbc;
 
-import java.util.List;
+import com.hk.core.data.commons.query.Operator;
 
-import com.hk.core.query.Operator;
+import java.util.List;
 
 /**
  * 

@@ -21,16 +21,23 @@ public interface Select<T extends Persistable<ID>, ID extends Serializable> {
     T getById(ID id);
 
     /**
-     * @param t
+     * @param id
      * @return
      */
-    List<T> findAll(T t);
+    T findById(ID id);
 
     /**
-     * @param iterable
+     * @param t
+     * @param orders
      * @return
      */
-    List<T> findByIds(Iterable<ID> iterable);
+    List<T> findAll(T t, Order... orders);
+
+    /**
+     * @param ids
+     * @return
+     */
+    Iterable<T> findByIds(Iterable<ID> ids);
 
     /**
      * @return
@@ -53,6 +60,22 @@ public interface Select<T extends Persistable<ID>, ID extends Serializable> {
      * @return
      */
     long count(T t);
+
+    /**
+     * 是否存在
+     *
+     * @param id
+     * @return
+     */
+    boolean exists(ID id);
+
+    /**
+     * 是否存在
+     *
+     * @param t
+     * @return
+     */
+    boolean exists(T t);
 
     /**
      * @param t

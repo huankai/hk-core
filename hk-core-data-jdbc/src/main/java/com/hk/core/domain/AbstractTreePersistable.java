@@ -1,6 +1,5 @@
 package com.hk.core.domain;
 
-import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -9,20 +8,19 @@ import java.util.Set;
  * @author: huangkai
  * @date 2018-05-11 17:17
  */
-@MappedSuperclass
 public abstract class AbstractTreePersistable<T> extends AbstractAuditable implements TreePersistable<T> {
 
     /**
      * 上级
      */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "parent_id", referencedColumnName = "id",updatable = false)
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "parent_id", referencedColumnName = "id",updatable = false)
     private T parent;
 
     /**
      * 子级
      */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.REMOVE)
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.REMOVE)
     private Set<T> child;
 
     @Override

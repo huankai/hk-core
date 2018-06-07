@@ -1,12 +1,9 @@
-/**
- * 
- */
 package com.hk.core.query.jdbc;
 
 import com.google.common.collect.Lists;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
-import com.hk.core.query.AndOr;
+import com.hk.core.data.commons.query.AndOr;
 import lombok.Getter;
 
 import java.util.List;

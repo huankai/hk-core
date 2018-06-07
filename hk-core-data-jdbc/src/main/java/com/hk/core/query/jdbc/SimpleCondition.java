@@ -1,13 +1,13 @@
 package com.hk.core.query.jdbc;
 
+import com.hk.commons.util.StringUtils;
+import com.hk.core.data.commons.query.MatchMode;
+import com.hk.core.data.commons.query.Operator;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.hk.commons.util.StringUtils;
-import com.hk.core.query.MatchMode;
-import com.hk.core.query.Operator;
 
 /**
  * @author huangkai

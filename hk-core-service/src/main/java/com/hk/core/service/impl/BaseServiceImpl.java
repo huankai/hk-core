@@ -1,31 +1,17 @@
 package com.hk.core.service.impl;
 
-import com.hk.commons.util.*;
-import com.hk.core.authentication.api.SecurityContext;
-import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.domain.TreePersistable;
-import com.hk.core.query.*;
-import com.hk.core.query.jdbc.JdbcSession;
-import com.hk.core.query.jdbc.ListResult;
-import com.hk.core.query.jdbc.SelectArguments;
-import com.hk.core.query.jdbc.Update;
-import com.hk.core.repository.BaseRepository;
+import com.hk.core.data.commons.BaseDao;
+import com.hk.core.data.commons.domain.TreePersistable;
+import com.hk.core.data.commons.query.Order;
+import com.hk.core.data.commons.query.QueryModel;
+import com.hk.core.data.commons.query.QueryPage;
 import com.hk.core.service.BaseService;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Persistable;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.Validator;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * 基本Service CRUD操作
@@ -36,273 +22,105 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Transactional(rollbackFor = {Throwable.class})
-public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Serializable> implements BaseService<T, PK> {
+public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
     /**
      * 返回 BaseRepository
      *
      * @return
      */
-    protected abstract BaseRepository<T, PK> getBaseRepository();
+    protected abstract BaseDao<T, ID> getBaseDao();
 
-    /**
-     * 表名
-     */
-    private String tableName;
-
-    private Class<T> entityClass;
-
-    /**
-     * 所以有  @Id 和 @Column修饰的字段名
-     */
-    private Set<String> allColumnSet;
-
-    @Autowired(required = false)
-    private Validator validator;
-
-    /**
-     * 获取登陆的用户信息
-     */
-    @Autowired
-    @Getter
-    protected SecurityContext securityContext;
-
-    @Autowired
-    private JdbcSession jdbcSession;
-
-    /**
-     * 获取表名
-     *
-     * @return 表名
-     */
-    protected final String getTableName() {
-        if (StringUtils.isEmpty(tableName)) {
-            tableName = AnnotationUtils.findAnnotation(getEntityClass(), Table.class).name();
-        }
-        return tableName;
-    }
-
-    protected final Class<T> getEntityClass() {
-        if (null == entityClass) {
-            this.entityClass = (Class<T>) ClassUtils.getGenericType(getClass(), 0);
-        }
-        return entityClass;
-    }
-
-    /**
-     * 获取表所有字段，包含id字段
-     *
-     * @return
-     */
-    protected final Set<String> getAllColumnSet() {
-        if (null == allColumnSet) {
-            Class<T> clazz = getEntityClass();
-            List<Field> idFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Id.class);
-            Set<String> fieldSet = idFieldList.stream().map(Field::getName).collect(Collectors.toSet());
-
-            List<Field> columnFieldList = FieldUtils.getFieldsListWithAnnotation(clazz, Column.class);
-            Set<String> fields = columnFieldList.stream().map(field -> field.getAnnotation(Column.class).name())
-                    .collect(Collectors.toCollection(LinkedHashSet::new));
-            fieldSet.addAll(fields);
-            allColumnSet = Collections.unmodifiableSet(fieldSet);
-        }
-        return allColumnSet;
-    }
-
-    /**
-     * 获取当前登陆的用户
-     *
-     * @return
-     */
-    protected final UserPrincipal getUserPrincipal() {
-        return securityContext.getPrincipal();
+    @Override
+    public boolean saveOrUpdate(T entity) {
+        return getBaseDao().insertOrUpdate(saveBefore(entity));
     }
 
     @Override
-    public <S extends T> S saveOrUpdate(S entity) {
-        return getBaseRepository().save(saveBefore(entity));
-    }
-
-    @Override
-    public boolean saveFlushOrUpdate(T t, boolean updateNullField) {
-        if (t.isNew()) {
-            saveAndFlush(t);
-            return true;
-        }
-        return jdbcSession.update(new Update(t, updateNullField));
-    }
-
-
-    /**
-     * <pre>
-     *     在保存或更新实体之前
-     *     可设置参数默认值，验证数据有效性
-     * </pre>
-     *
-     * @param entity
-     */
-    protected <S extends T> S saveBefore(S entity) {
-        if (entity instanceof TreePersistable) {
-            TreePersistable<T> treeEntity = (TreePersistable<T>) entity;
-            if (treeEntity.getParent() == null) {
-                treeEntity.setParent(entity);
-            }
-        }
-//        validator
-        return entity;
-    }
-
-//    private <T> void validate(Supplier<Set<ConstraintViolation<T>>> validatorSetFunction) {
-//        if (validator == null) {
-////            logger.warn("validator is null!");
-//            return;
-//        }
-////        SimpleValidateResults results = new SimpleValidateResults();
-////        validatorSetFunction.get()
-////                .forEach(violation -> results.addResult(violation.getPropertyPath().toString(), violation.getMessage()));
-////        if (!results.isSuccess()) {
-////            throw new ValidationException(results);
-////        }
-//    }
-
-    @Override
-    public <S extends T> List<S> saveOrUpdate(Iterable<S> entities) {
-        entities.forEach(this::saveBefore);
-        return getBaseRepository().save(entities);
-    }
-
-    @Override
-    public <S extends T> S saveAndFlush(S entity) {
-        return getBaseRepository().saveAndFlush(saveBefore(entity));
+    public boolean saveOrUpdate(Iterable<T> entities) {
+        entities.forEach(this::saveOrUpdate);
+        return true;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public T findOne(PK id) {
-        return getBaseRepository().findOne(id);
+    public T findOne(ID id) {
+        return getBaseDao().findById(id);
+    }
+
+    @Override
+    public T getOne(ID id) {
+        return getBaseDao().getById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public <S extends T> S findOne(S t) {
-        return getBaseRepository().findOne(Example.of(checkNull(t), ofExampleMatcher()));
+    public T findOne(T t) {
+        return getBaseDao().findOne(t);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public <S extends T> List<S> findAll(S t, Order... orders) {
-        Sort sort = null;
-        if (ArrayUtils.isNotEmpty(orders)) {
-            List<Sort.Order> orderList = Arrays.stream(orders).filter(Objects::nonNull).map(Order::toSpringJpaOrder).collect(Collectors.toList());
-            if (CollectionUtils.isEmpty(orderList)) {
-                sort = new Sort(orderList);
-            }
-        }
-        return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()), sort);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public T getOne(PK id) {
-        return getBaseRepository().getOne(id);
-    }
-
-    @Override
-    public void flush() {
-        getBaseRepository().flush();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean exists(PK id) {
-        return getBaseRepository().exists(id);
+    public List<T> findAll(T t, Order... orders) {
+        return getBaseDao().findAll(t, orders);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<T> findAll() {
-        return getBaseRepository().findAll();
+        return getBaseDao().findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<T> findAll(Iterable<PK> ids) {
-        return getBaseRepository().findAll(ids);
-    }
-
-    /**
-     * <pre>
-     *
-     * 查询之前，检查参数是否为null
-     * 使用 jpa查询的参数不能为空
-     * </pre>
-     *
-     * @param t   要查询的条件
-     * @param <S>
-     * @return t
-     */
-    protected <S extends T> S checkNull(S t) {
-        if (null == t) {
-            t = (S) BeanUtils.instantiate(getEntityClass());
-        }
-        return t;
-    }
-
-    /**
-     * 使用JPA 设置查询条件匹配
-     *
-     * @return ExampleMatcher
-     */
-    protected ExampleMatcher ofExampleMatcher() {
-        return ExampleMatcher.matching().withIgnoreNullValues();
+    public Iterable<T> findByIds(Iterable<ID> ids) {
+        return getBaseDao().findByIds(ids);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public QueryPageable<T> queryForPage(QueryModel query) {
-        if (query instanceof JdbcQueryModel) {
-            return queryForPage((JdbcQueryModel) query);
-        }
-        T param = null;
-        if (query instanceof JpaQueryModel) {
-            param = ((JpaQueryModel<T>) query).getParams();
-        }
-        List<Sort.Order> orderList = query.getSortOrderList();
-        Page<T> page = getBaseRepository().findAll(Example.of(checkNull(param), ofExampleMatcher()),
-                new PageRequest(query.getJpaStartRowIndex(), query.getPageSize(),
-                        CollectionUtils.isEmpty(orderList) ? null : new Sort(orderList)));
-        return new SimpleQueryResult<>(query, page.getTotalElements(), page.getContent());
+    public QueryPage<T> queryForPage(QueryModel query) {
+        return getBaseDao().findByPage(query);
     }
 
-    @SuppressWarnings("unchecked")
-    private QueryPageable<T> queryForPage(JdbcQueryModel query) {
-        SelectArguments arguments = query.toSelectArguments();
-        arguments.setFieldSet(getAllColumnSet());
-        arguments.setFrom(getTableName());
-        ListResult<T> result = jdbcSession.queryForList(arguments, !query.isPaging(), getEntityClass());
-        return new SimpleQueryResult<>(query, result.getTotalRowCount(), result.getResult());
+    @Override
+    @Transactional(readOnly = true)
+    public boolean exists(ID id) {
+        return getBaseDao().exists(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean exists(T t) {
+        return getBaseDao().exists(t);
     }
 
     @Override
     @Transactional(readOnly = true)
     public long count() {
-        return getBaseRepository().count();
+        return getBaseDao().count();
     }
 
     @Override
     @Transactional(readOnly = true)
     public long count(T t) {
-        return getBaseRepository().count(Example.of(checkNull(t), ofExampleMatcher()));
+        return getBaseDao().count(t);
     }
 
+    /**
+     * 直接删除
+     *
+     * @param id
+     * @return
+     */
     @Override
-    public void delete(PK id) {
-        getBaseRepository().delete(deleteBefore(getOne(id)));
+    public void deleteById(ID id) {
+        getBaseDao().deleteById(id);
     }
 
     @Override
     public void delete(T entity) {
-        getBaseRepository().delete(deleteBefore(entity));
+        getBaseDao().delete(deleteBefore(entity));
     }
 
     @Override
@@ -314,10 +132,27 @@ public abstract class BaseServiceImpl<T extends Persistable<PK>, PK extends Seri
      * 删除之前
      *
      * @param entity 删除的实体
-     * @param <S>
      * @return
      */
-    protected <S extends T> S deleteBefore(S entity) {
+    protected T deleteBefore(T entity) {
+        return entity;
+    }
+
+    /**
+     * <pre>
+     *     在保存或更新实体之前
+     *     可设置参数默认值，验证数据有效性
+     * </pre>
+     *
+     * @param entity
+     */
+    protected T saveBefore(T entity) {
+        if (entity instanceof TreePersistable) {
+            TreePersistable<T, ID> treeEntity = (TreePersistable<T, ID>) entity;
+            if (treeEntity.getParent() == null) {
+                treeEntity.setParent(entity);
+            }
+        }
         return entity;
     }
 }

@@ -27,14 +27,21 @@ public final class SimpleQueryPage<T> extends AbstractQueryPage<T> {
      * @param data
      */
     public SimpleQueryPage(QueryModel query, long totalRow, List<T> data) {
-        this.pageIndex = query.getPageIndex();
+        this.pageIndex = query.getStartRowIndex();
         this.pageSize = query.getPageSize();
         setTotalRow(totalRow);
         setData(data);
     }
 
+    public SimpleQueryPage(List<T> data, long totalRow, int pageIndex, int pageSize) {
+        this.pageIndex = pageIndex;
+        this.pageSize = pageSize;
+        setData(data);
+        setTotalRow(totalRow);
+    }
+
     public SimpleQueryPage(QueryModel query, ListResult<T> result) {
-        this.pageIndex = query.getPageIndex();
+        this.pageIndex = query.getStartRowIndex();
         this.pageSize = query.getPageSize();
         setTotalRow(result.getTotalRowCount());
         setData(result.getResult());

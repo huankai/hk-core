@@ -11,6 +11,8 @@
     <artifactId>hk-core-data-mybatis</artifactId>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mybatis.mapper.version>1.2.3</mybatis.mapper.version>
+        <pagehelper.mapper.version>1.2.3</pagehelper.mapper.version>
     </properties>
     <dependencies>
         <dependency>
@@ -25,6 +27,17 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>${mybatis.mapper.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper.mapper.version}</version>
         </dependency>
     </dependencies>
 </project>
