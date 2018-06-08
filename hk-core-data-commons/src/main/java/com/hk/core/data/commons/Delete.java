@@ -1,10 +1,8 @@
 package com.hk.core.data.commons;
 
-import com.hk.commons.util.AssertUtils;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 /**
  * @author huangkai
@@ -26,7 +24,7 @@ public interface Delete<T extends Persistable<ID>, ID extends Serializable> {
      * @param t
      * @return
      */
-    void delete(T t);
+    <S extends T> boolean deleteEntity(T t);
 
     /**
      * 批量删除
@@ -34,10 +32,11 @@ public interface Delete<T extends Persistable<ID>, ID extends Serializable> {
      * @param ids
      * @return
      */
-    default int delete(Collection<ID> ids) {
-        AssertUtils.notNull(ids, "ids Must not be null");
+    default boolean deleteByIds(Iterable<ID> ids) {
         ids.forEach(this::deleteById);
-        return ids.size();
+        return true;
     }
+
+    boolean deleteEntities(Iterable<T> entities);
 }
 

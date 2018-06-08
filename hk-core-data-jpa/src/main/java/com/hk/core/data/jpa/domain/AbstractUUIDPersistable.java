@@ -3,7 +3,6 @@ package com.hk.core.data.jpa.domain;
 import com.hk.commons.util.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.ClassUtils;
 
 import javax.persistence.GeneratedValue;
@@ -68,7 +67,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String> {
         if (!getClass().equals(ClassUtils.getUserClass(obj))) {
             return false;
         }
-        AbstractPersistable<?> that = (AbstractPersistable<?>) obj;
+        AbstractUUIDPersistable that = (AbstractUUIDPersistable) obj;
         return null != this.getId() && this.getId().equals(that.getId());
     }
 

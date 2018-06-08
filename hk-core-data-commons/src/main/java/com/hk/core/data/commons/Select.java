@@ -1,8 +1,8 @@
 package com.hk.core.data.commons;
 
 import com.hk.core.data.commons.query.Order;
-import com.hk.core.data.commons.query.QueryModel;
 import com.hk.core.data.commons.query.QueryPage;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
@@ -31,7 +31,7 @@ public interface Select<T extends Persistable<ID>, ID extends Serializable> {
      * @param orders
      * @return
      */
-    List<T> findAll(T t, Order... orders);
+    List<T> findAll(Example<T> t, Order... orders);
 
     /**
      * @param ids
@@ -48,7 +48,7 @@ public interface Select<T extends Persistable<ID>, ID extends Serializable> {
      * @param t
      * @return
      */
-    T findOne(T t);
+    <S extends T> S findOne(Example<S> t);
 
     /**
      * @return
@@ -59,7 +59,7 @@ public interface Select<T extends Persistable<ID>, ID extends Serializable> {
      * @param t
      * @return
      */
-    long count(T t);
+    <S extends T> long count(Example<S> t);
 
     /**
      * 是否存在
@@ -75,7 +75,7 @@ public interface Select<T extends Persistable<ID>, ID extends Serializable> {
      * @param t
      * @return
      */
-    boolean exists(T t);
+    <S extends T> boolean exists(Example<S> t);
 
     /**
      * @param t
@@ -84,11 +84,6 @@ public interface Select<T extends Persistable<ID>, ID extends Serializable> {
      * @param pageSize
      * @return
      */
-    QueryPage<T> findByPage(T t, List<Order> orders, int pageIndex, int pageSize);
+    QueryPage<T> findByPage(Example<T> t, List<Order> orders, int pageIndex, int pageSize);
 
-    /**
-     * @param query
-     * @return
-     */
-    QueryPage<T> findByPage(QueryModel query);
 }

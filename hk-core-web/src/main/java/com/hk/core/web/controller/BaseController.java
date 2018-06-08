@@ -18,7 +18,26 @@ public abstract class BaseController {
         return securityContext.getPrincipal();
     }
 
+    /**
+     * 获取国际化消息
+     *
+     * @param code code
+     * @param args args
+     * @return
+     */
     protected String getMessage(String code, Object... args) {
+        return getMessage(code, null, args);
+    }
+
+    /**
+     * 获取国际化消息
+     *
+     * @param code           code
+     * @param defaultMessage defaultMessage
+     * @param args           args
+     * @return
+     */
+    protected String getMessage(String code, String defaultMessage, Object... args) {
         return SpringContextHolder.getMessage(code, null, args);
     }
 }

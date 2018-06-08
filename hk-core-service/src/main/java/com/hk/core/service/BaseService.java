@@ -1,22 +1,24 @@
 package com.hk.core.service;
 
+import com.hk.commons.util.AssertUtils;
 import com.hk.core.data.commons.query.Order;
 import com.hk.core.data.commons.query.QueryModel;
 import com.hk.core.data.commons.query.QueryPage;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * 基本CRUD操作
  *
  * @param <T>
- * @param <PK>
+ * @param <ID>
  * @author huangkai
  * @date 2017年9月27日下午5:04:48
  */
-public interface BaseService<T extends Persistable<PK>, PK extends Serializable> {
+public interface BaseService<T extends Persistable<ID>, ID extends Serializable> {
 
     /**
      * 保存或更新
@@ -24,7 +26,7 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param entity
      * @return
      */
-    boolean saveOrUpdate(T entity);
+    T saveOrUpdate(T entity);
 
     /**
      * 批量保存或更新
@@ -32,19 +34,27 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param entities
      * @return
      */
-    boolean saveOrUpdate(Iterable<T> entities);
+    Iterable<T> saveOrUpdate(Iterable<T> entities);
+
+    /**
+     * 更新不为空的字段
+     *
+     * @param entity
+     * @return
+     */
+    T updateByIdSelective(T entity);
 
     /**
      * @param id
      * @return
      */
-    T findOne(PK id);
+    T findOne(ID id);
 
     /**
      * @param id
      * @return
      */
-    T getOne(PK id);
+    T getOne(ID id);
 
     /**
      * @param t
@@ -69,7 +79,16 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param ids
      * @return
      */
-    Iterable<T> findByIds(Iterable<PK> ids);
+    Iterable<T> findByIds(Iterable<ID> ids);
+
+    /**
+     * @param ids
+     * @return
+     */
+    default Iterable<T> findByIds(ID... ids) {
+        AssertUtils.notNull(ids, "Ids must not be null");
+        return findByIds(Arrays.asList(ids));
+    }
 
     /**
      * 分页查询
@@ -77,13 +96,13 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
      * @param query 查询参数
      * @return 查询结果
      */
-    QueryPage<T> queryForPage(QueryModel query);
+    QueryPage<T> queryForPage(QueryModel<T> query);
 
     /**
      * @param id
      * @return
      */
-    boolean exists(PK id);
+    boolean exists(ID id);
 
     /**
      * @param t
@@ -104,16 +123,30 @@ public interface BaseService<T extends Persistable<PK>, PK extends Serializable>
     /**
      * @param id
      */
-    void deleteById(PK id);
+    boolean deleteById(ID id);
+
+    /**
+     * @param ids
+     */
+    boolean deleteByIds(Iterable<ID> ids);
+
+    /**
+     * @param ids
+     * @return
+     */
+    default boolean deleteByIds(ID... ids) {
+        AssertUtils.notNull(ids, "Array Id must not be null");
+        return deleteByIds(Arrays.asList(ids));
+    }
 
     /**
      * @param entity
      */
-    void delete(T entity);
+    boolean delete(T entity);
 
     /**
      * @param entities
      */
-    void delete(Iterable<? extends T> entities);
+    boolean delete(Iterable<T> entities);
 
 }

@@ -16,7 +16,7 @@ public interface Update<T extends Persistable<ID>, ID extends Serializable> {
      * @param t
      * @return
      */
-    boolean updateByPrimaryKey(T t);
+    T updateById(T t);
 
     /**
      * 根据主键只更新不为空的字段
@@ -24,7 +24,6 @@ public interface Update<T extends Persistable<ID>, ID extends Serializable> {
      * @param t
      * @return
      */
-    boolean updateByPrimaryKeySelective(T t);
-
+    T updateByIdSelective(T t);
 
 }

@@ -2,13 +2,12 @@ package com.hk.core.data.jpa.repository;
 
 import com.google.common.collect.Lists;
 import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.data.commons.query.Order;
-import com.hk.core.data.commons.query.QueryModel;
 import com.hk.core.data.commons.query.QueryPage;
 import com.hk.core.data.commons.query.SimpleQueryPage;
-import com.hk.core.data.jpa.query.JpaQueryModel;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
@@ -30,21 +29,13 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    public boolean deleteById(ID id) {
-        delete(id);
-        return true;
+    public T insert(T t) {
+        return save(t);
     }
 
     @Override
-    public boolean insert(T t) {
-        save(t);
-        return true;
-    }
-
-    @Override
-    public boolean batchInsert(Iterable<T> iterable) {
-        save(iterable);
-        return true;
+    public Iterable<T> batchInsert(Iterable<T> iterable) {
+        return save(iterable);
     }
 
     @Override
@@ -58,17 +49,17 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    public boolean exists(T t) {
-        return exists(Example.of(t, ofExampleMatcher()));
+    public Iterable<T> insertOrUpdate(Iterable<T> entities) {
+        return save(entities);
     }
 
     @Override
-    public List<T> findAll(T t, Order... orders) {
+    public List<T> findAll(Example<T> example, Order... orders) {
         List<Order> orderList = Lists.newArrayList();
         if (ArrayUtils.isNotEmpty(orders)) {
             orderList.addAll(Arrays.asList(orders));
         }
-        return findAll(Example.of(t, ofExampleMatcher()), getSort((orderList)));
+        return findAll(example, getSort((orderList)));
     }
 
     @Override
@@ -77,13 +68,27 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    public T findOne(T t) {
-        return findOne(Example.of(t, ofExampleMatcher()));
+    public boolean deleteEntities(Iterable<T> entities) {
+        deleteInBatch(entities);
+        return true;
     }
 
     @Override
-    public long count(T t) {
-        return count(Example.of(t, ofExampleMatcher()));
+    public boolean deleteById(ID id) {
+        delete(id);
+        return true;
+    }
+
+    @Override
+    public <S extends T> boolean deleteEntity(T t) {
+        super.delete(t);
+        return true;
+    }
+
+    @Override
+    public QueryPage<T> findByPage(Example<T> example, List<Order> orders, int pageIndex, int pageSize) {
+        Page<T> page = findAll(example, new PageRequest(pageIndex, pageSize, getSort(orders)));
+        return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
     }
 
     private Sort getSort(List<Order> orders) {
@@ -98,45 +103,16 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public QueryPage<T> findByPage(QueryModel query) {
-        T param = null;
-        if (query instanceof JpaQueryModel) {
-            JpaQueryModel<T> queryModel = (JpaQueryModel<T>) query;
-            param = queryModel.getParam();
-            if (null == param) {
-                param = BeanUtils.instantiate(getDomainClass());
-            }
-        }
-        return findByPage(param, query.getOrders(), query.getStartRowIndex(), query.getPageSize());
+    public final T updateById(T t) {
+        AssertUtils.isTrue(!t.isNew(), "The given id must not be null!");
+        return save(t);
     }
 
     @Override
-    public QueryPage<T> findByPage(T t, List<Order> orders, int pageIndex, int pageSize) {
-        Page<T> page = findAll(Example.of(t, ofExampleMatcher()), new PageRequest(pageIndex, pageSize, getSort(orders)));
-        return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
-    }
-
-    @Override
-    public final boolean updateByPrimaryKey(T t) {
-        if (t.isNew()) {
-            throw new RuntimeException("entity primary key must not be null");
-        }
-        save(t);
-        return true;
-    }
-
-    @Override
-    public final boolean updateByPrimaryKeySelective(T t) {
-        if (t.isNew()) {
-            throw new RuntimeException("entity primary key must not be null");
-        }
-        T find = findOne(t.getId());
-        if (null == find) {
-            throw new RuntimeException("");
-        }
-        //edit
-        save(t);
-        return true;
+    public final T updateByIdSelective(T t) {
+        AssertUtils.isTrue(!t.isNew(), "The given id must not be null!");
+        T find = getOne(t.getId());
+        BeanUtils.copyNotNullProperties(t, find);
+        return save(find);
     }
 }

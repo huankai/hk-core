@@ -36,8 +36,8 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     @Override
-    @CacheEvict(key = "'id'+#args[0].id", condition = "#root.args[0].id != null")
-    public boolean saveOrUpdate(T entity) {
+    @CacheEvict(key = "'id'+#args[0].id", condition = "#args[0].id != null")
+    public T saveOrUpdate(T entity) {
         return super.saveOrUpdate(entity);
     }
 
@@ -50,6 +50,17 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     @Cacheable(key = "'count'")
     public long count() {
         return super.count();
+    }
+
+    @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(key = "'id'+#root.args[0].id"),
+                    @CacheEvict(key = "'count'")
+            }
+    )
+    public T updateByIdSelective(T entity) {
+        return super.updateByIdSelective(entity);
     }
 
     /**
@@ -66,8 +77,14 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
                     @CacheEvict(key = "'count'")
             }
     )
-    public void deleteById(PK id) {
-        super.deleteById(id);
+    public boolean deleteById(PK id) {
+        return super.deleteById(id);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public boolean deleteByIds(Iterable<PK> ids) {
+        return super.deleteByIds(ids);
     }
 
     /**
@@ -87,8 +104,8 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
                     @CacheEvict(key = "'count'")
             }
     )
-    public void delete(T entity) {
-        super.delete(entity);
+    public boolean delete(T entity) {
+        return super.delete(entity);
     }
 
     /**
@@ -100,8 +117,8 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      */
     @Override
     @CacheEvict(allEntries = true)
-    public void delete(Iterable<? extends T> entities) {
-        super.delete(entities);
+    public boolean delete(Iterable<T> entities) {
+        return super.delete(entities);
     }
 
     /**
@@ -114,6 +131,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      *
      * @return
      */
+    @SuppressWarnings("unchecked")
     protected final EnableCacheServiceImpl<T, PK> getCurrentProxy() {
         return (EnableCacheServiceImpl<T, PK>) AopContext.currentProxy();
     }

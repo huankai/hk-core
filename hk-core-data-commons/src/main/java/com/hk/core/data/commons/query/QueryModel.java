@@ -2,12 +2,16 @@ package com.hk.core.data.commons.query;
 
 import com.google.common.collect.Lists;
 import lombok.Data;
+import org.springframework.data.domain.Persistable;
 
 import java.util.List;
 
 
+/**
+ * queryModel
+ */
 @Data
-public class QueryModel {
+public class QueryModel<T extends Persistable<?>> {
 
     private static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -25,6 +29,8 @@ public class QueryModel {
      * 分页时，不需要再count，所以用该属性来存上一次count的数字
      */
     private int totalRowCount;
+
+    private T param;
 
     /**
      * 查询排序

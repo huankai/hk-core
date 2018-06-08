@@ -1,5 +1,7 @@
 package com.hk.core.service.impl;
 
+import com.hk.commons.util.BeanUtils;
+import com.hk.commons.util.ObjectUtils;
 import com.hk.core.data.commons.BaseDao;
 import com.hk.core.data.commons.domain.TreePersistable;
 import com.hk.core.data.commons.query.Order;
@@ -7,6 +9,9 @@ import com.hk.core.data.commons.query.QueryModel;
 import com.hk.core.data.commons.query.QueryPage;
 import com.hk.core.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ResolvableType;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Persistable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,9 @@ import java.util.List;
 @Transactional(rollbackFor = {Throwable.class})
 public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
+
+    private Class<T> domainClass;
+
     /**
      * 返回 BaseRepository
      *
@@ -32,14 +40,18 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     protected abstract BaseDao<T, ID> getBaseDao();
 
     @Override
-    public boolean saveOrUpdate(T entity) {
+    public T saveOrUpdate(T entity) {
         return getBaseDao().insertOrUpdate(saveBefore(entity));
     }
 
     @Override
-    public boolean saveOrUpdate(Iterable<T> entities) {
-        entities.forEach(this::saveOrUpdate);
-        return true;
+    public Iterable<T> saveOrUpdate(Iterable<T> entities) {
+        return getBaseDao().batchInsert(entities);
+    }
+
+    @Override
+    public T updateByIdSelective(T entity) {
+        return getBaseDao().updateByIdSelective(entity);
     }
 
     @Override
@@ -56,13 +68,27 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     @Transactional(readOnly = true)
     public T findOne(T t) {
-        return getBaseDao().findOne(t);
+        return getBaseDao().findOne(Example.of(checkNull(t), ofExampleMatcher()));
+    }
+
+    protected ExampleMatcher ofExampleMatcher() {
+        return ExampleMatcher.matching();
+    }
+
+    /**
+     * Example 查询参数不能为null
+     *
+     * @param t
+     * @return
+     */
+    private T checkNull(T t) {
+        return ObjectUtils.defaultIfNull(t, BeanUtils.instantiate(getDomainClass()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<T> findAll(T t, Order... orders) {
-        return getBaseDao().findAll(t, orders);
+        return getBaseDao().findAll(Example.of(checkNull(t), ofExampleMatcher()), orders);
     }
 
     @Override
@@ -79,8 +105,9 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     @Transactional(readOnly = true)
-    public QueryPage<T> queryForPage(QueryModel query) {
-        return getBaseDao().findByPage(query);
+    @SuppressWarnings("unchecked")
+    public QueryPage<T> queryForPage(QueryModel<T> query) {
+        return getBaseDao().findByPage(Example.of(checkNull(query.getParam()), ofExampleMatcher()), query.getOrders(), query.getStartRowIndex(), query.getPageSize());
     }
 
     @Override
@@ -92,7 +119,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     @Transactional(readOnly = true)
     public boolean exists(T t) {
-        return getBaseDao().exists(t);
+        return getBaseDao().exists(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @Override
@@ -104,7 +131,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     @Transactional(readOnly = true)
     public long count(T t) {
-        return getBaseDao().count(t);
+        return getBaseDao().count(Example.of(t, ofExampleMatcher()));
     }
 
     /**
@@ -114,18 +141,23 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
      * @return
      */
     @Override
-    public void deleteById(ID id) {
-        getBaseDao().deleteById(id);
+    public boolean deleteById(ID id) {
+        return getBaseDao().deleteById(id);
     }
 
     @Override
-    public void delete(T entity) {
-        getBaseDao().delete(deleteBefore(entity));
+    public boolean delete(T entity) {
+        return getBaseDao().deleteEntity(deleteBefore(entity));
     }
 
     @Override
-    public void delete(Iterable<? extends T> entities) {
-        entities.forEach(this::delete);
+    public boolean deleteByIds(Iterable<ID> ids) {
+        return getBaseDao().deleteByIds(ids);
+    }
+
+    @Override
+    public boolean delete(Iterable<T> entities) {
+        return getBaseDao().deleteEntities(entities);
     }
 
     /**
@@ -146,6 +178,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
      *
      * @param entity
      */
+    @SuppressWarnings("unchecked")
     protected T saveBefore(T entity) {
         if (entity instanceof TreePersistable) {
             TreePersistable<T, ID> treeEntity = (TreePersistable<T, ID>) entity;
@@ -154,5 +187,14 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
             }
         }
         return entity;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<T> getDomainClass() {
+        if (null == domainClass) {
+            ResolvableType resolvableType = ResolvableType.forClass(getClass());
+            domainClass = (Class<T>) resolvableType.getSuperType().getGeneric(0).resolve();
+        }
+        return domainClass;
     }
 }

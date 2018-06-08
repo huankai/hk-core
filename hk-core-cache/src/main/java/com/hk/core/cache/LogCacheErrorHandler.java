@@ -1,6 +1,5 @@
 package com.hk.core.cache;
 
-import com.hk.commons.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -44,8 +43,8 @@ public class LogCacheErrorHandler implements CacheErrorHandler {
 
     @Override
     public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
-        String message = String.format("put Error,CacheName : %s, Cache Key : %s,value :%s,Error Message: %s",
-                cache.getName(), String.valueOf(key), JsonUtils.toJSONString(value), exception.getMessage());
+        String message = String.format("put Error,CacheName : %s, Cache Key : %s,Error Message: %s",
+                cache.getName(), String.valueOf(key),  exception.getMessage());
         LOGGER.error(message);
         if (onErrorThrow) {
             throw exception;

@@ -20,7 +20,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -69,28 +68,29 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
     /**
      * @return
      */
-    private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() throws Exception {
-        UsernamePasswordAuthenticationFilter filter = new UsernamePasswordAuthenticationFilter();
-        filter.setContinueChainBeforeSuccessfulAuthentication(true);
-        filter.setAuthenticationManager(authenticationManagerBean());
-        filter.setAuthenticationSuccessHandler((request, response, authentication) -> {
-            UserPrincipal principal = securityContext.getPrincipal();
-            Map<String, Object> userMap = Maps.newHashMapWithExpectedSize(5);
-            userMap.put("userId", principal.getUserId());
-            userMap.put("useName", principal.getUserName());
-            userMap.put("nickName", principal.getNickName());
-            userMap.put("sex", principal.getSex());
-            userMap.put("iconPath", principal.getIconPath());
-            Webs.writeJson(response, HttpServletResponse.SC_OK, new JsonResult(JsonResult.Status.SUCCESS, SpringContextHolder.getMessage("login.sucess", null), userMap));
-        });
-        filter.setAuthenticationFailureHandler((request, response, exception) -> Webs.writeJson(response, HttpServletResponse.SC_UNAUTHORIZED, JsonResult.failure(exception.getMessage())));
-        return filter;
-    }
+//    private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() throws Exception {
+//        UsernamePasswordAuthenticationFilter filter = new UsernamePasswordAuthenticationFilter();
+//        filter.setContinueChainBeforeSuccessfulAuthentication(true);
+//        filter.setAuthenticationManager(authenticationManagerBean());
+//        filter.setAuthenticationSuccessHandler((request, response, authentication) -> {
+//            UserPrincipal principal = securityContext.getPrincipal();
+//            Map<String, Object> userMap = Maps.newHashMapWithExpectedSize(5);
+//            userMap.put("userId", principal.getUserId());
+//            userMap.put("useName", principal.getUserName());
+//            userMap.put("nickName", principal.getNickName());
+//            userMap.put("sex", principal.getSex());
+//            userMap.put("iconPath", principal.getIconPath());
+//            Webs.writeJson(response, HttpServletResponse.SC_OK, new JsonResult(JsonResult.Status.SUCCESS, SpringContextHolder.getMessage("login.sucess", null), userMap));
+//        });
+//        filter.setAuthenticationFailureHandler((request, response, exception) -> Webs.writeJson(response, HttpServletResponse.SC_UNAUTHORIZED, JsonResult.failure(exception.getMessage())));
+//        return filter;
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.formLogin().disable();
+//        http.addFilterBefore(usernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.formLogin().disable();
+//        http.formLogin()/*.disable()*/;
         http
             /* CSRF Disable*/
                 .csrf()
@@ -99,23 +99,23 @@ public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
                 .anonymous().disable()
 
             /* Login Config */
-                .formLogin().disable()
-//            .loginPage("/login") l
-//                .permitAll()
-//                .successHandler((request, response, authentication) -> {
-//                    UserPrincipal principal = securityContext.getPrincipal();
-//                    Map<String, Object> userMap = Maps.newHashMapWithExpectedSize(5);
-//                    userMap.put("userId", principal.getUserId());
-//                    userMap.put("useName", principal.getUserName());
-//                    userMap.put("nickName", principal.getNickName());
-//                    userMap.put("sex", principal.getSex());
-//                    userMap.put("iconPath", principal.getIconPath());
-//                    Webs.writeJson(response, HttpServletResponse.SC_OK, new JsonResult(JsonResult.Status.SUCCESS, SpringContextHolder.getMessage("login.sucess", null), userMap));
-//                })
-//                .failureHandler((request, response, exception) -> Webs.writeJson(response, HttpServletResponse.SC_UNAUTHORIZED, JsonResult.failure(exception.getMessage())))
+                .formLogin()/*.disable()*/
+            .loginPage("/login")
+                .permitAll()
+                .successHandler((request, response, authentication) -> {
+                    UserPrincipal principal = securityContext.getPrincipal();
+                    Map<String, Object> userMap = Maps.newHashMapWithExpectedSize(5);
+                    userMap.put("userId", principal.getUserId());
+                    userMap.put("useName", principal.getUserName());
+                    userMap.put("nickName", principal.getNickName());
+                    userMap.put("sex", principal.getSex());
+                    userMap.put("iconPath", principal.getIconPath());
+                    Webs.writeJson(response, HttpServletResponse.SC_OK, new JsonResult(JsonResult.Status.SUCCESS, SpringContextHolder.getMessage("login.sucess", null), userMap));
+                })
+                .failureHandler((request, response, exception) -> Webs.writeJson(response, HttpServletResponse.SC_UNAUTHORIZED, JsonResult.failure(exception.getMessage())))
 
             /*Logout Config */
-//                .and()
+                .and()
                 .logout()
 //            .logoutUrl("/logout")
                 .invalidateHttpSession(true)

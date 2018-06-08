@@ -16,7 +16,7 @@ public interface Insert<T extends Persistable<ID>, ID extends Serializable> {
      * @param t
      * @return
      */
-    boolean insert(T t);
+    T insert(T t);
 
     /**
      * 批量保存
@@ -24,7 +24,7 @@ public interface Insert<T extends Persistable<ID>, ID extends Serializable> {
      * @param iterable
      * @return
      */
-    boolean batchInsert(Iterable<T> iterable);
+    Iterable<T> batchInsert(Iterable<T> iterable);
 
 
 }
