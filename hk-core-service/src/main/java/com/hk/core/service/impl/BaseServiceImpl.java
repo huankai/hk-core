@@ -72,7 +72,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     protected ExampleMatcher ofExampleMatcher() {
-        return ExampleMatcher.matching();
+        return ExampleMatcher.matching().withIgnoreNullValues();
     }
 
     /**
@@ -105,7 +105,6 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
     public QueryPage<T> queryForPage(QueryModel<T> query) {
         return getBaseDao().findByPage(Example.of(checkNull(query.getParam()), ofExampleMatcher()), query.getOrders(), query.getStartRowIndex(), query.getPageSize());
     }
