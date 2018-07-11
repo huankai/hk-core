@@ -13,7 +13,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 /**
- * @author huangkai
+ * @author: kevin
  * @date 2017年12月21日上午9:02:49
  */
 public class DateRangeCondition implements Condition {

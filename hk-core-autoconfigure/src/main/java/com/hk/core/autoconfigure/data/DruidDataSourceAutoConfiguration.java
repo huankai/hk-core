@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 /**
  * Druid DataSource 自动配置
  *
- * @author huangkai
+ * @author: kevin
  * @date 2017年9月27日下午3:42:07
  */
 @Configuration

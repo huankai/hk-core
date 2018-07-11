@@ -32,6 +32,7 @@
         <module>hk-core-data-jdbc</module>
         <module>hk-core-data-jpa</module>
         <module>hk-core-data-mybatis</module>
+        <module>hk-core-data-solr</module>
         <module>hk-core-service</module>
         <module>hk-core-web</module>
         <module>hk-core-authentication-api</module>

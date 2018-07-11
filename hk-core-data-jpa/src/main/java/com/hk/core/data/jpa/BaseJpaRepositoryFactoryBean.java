@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
- * @author: huangkai
+ * @author: kevin
  * @date 2018-06-07 13:49
  */
 public class BaseJpaRepositoryFactoryBean<T extends BaseRepository<S, ID>, S extends Persistable<ID>, ID extends Serializable> extends JpaRepositoryFactoryBean<T, S, ID> {

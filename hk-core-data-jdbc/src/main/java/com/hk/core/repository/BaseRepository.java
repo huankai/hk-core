@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * @param <T>
  * @param <PK>
- * @author huangkai
+ * @author: kevin
  */
 public interface BaseRepository<T extends Persistable<PK>, PK extends Serializable> {
 

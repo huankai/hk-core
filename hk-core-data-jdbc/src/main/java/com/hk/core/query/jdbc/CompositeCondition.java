@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author huangkai
+ * @author: kevin
  * @date 2017年12月21日上午8:51:51
  */
 @Data
@@ -52,7 +52,7 @@ public class CompositeCondition implements Condition {
      * @param conditions conditions
      */
     public void addConditions(Condition... conditions) {
-        CollectionUtils.addAll(this.conditions, conditions);
+        CollectionUtils.addAllNotNull(this.conditions, conditions);
     }
 
     /**

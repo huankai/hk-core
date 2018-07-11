@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * 树形结构，会级联删除，慎用.
  *
- * @author: huangkai
+ * @author: kevin
  * @date 2018-05-11 17:17
  */
 public abstract class AbstractTreePersistable<T> extends AbstractAuditable implements TreePersistable<T> {

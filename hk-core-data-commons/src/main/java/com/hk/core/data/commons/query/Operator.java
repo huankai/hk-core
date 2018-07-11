@@ -1,5 +1,9 @@
 package com.hk.core.data.commons.query;
 
+
+/**
+ * @author: kevin
+ */
 public enum Operator {
 
     EQ,

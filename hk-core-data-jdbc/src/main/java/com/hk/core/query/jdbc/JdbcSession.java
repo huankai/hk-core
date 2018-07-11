@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author huangkai
+ * @author: kevin
  * @date 2017年12月11日下午1:30:11
  */
 public class JdbcSession {

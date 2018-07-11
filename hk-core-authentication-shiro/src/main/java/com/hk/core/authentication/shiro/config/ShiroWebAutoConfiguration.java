@@ -19,7 +19,7 @@ import com.hk.core.authentication.shiro.listeners.LogSessionListener;
 /**
  * Shiro配置
  * 
- * @author huangkai
+ * @author: kevin
  * @date 2017年10月22日下午1:54:02
  */
 @Configuration

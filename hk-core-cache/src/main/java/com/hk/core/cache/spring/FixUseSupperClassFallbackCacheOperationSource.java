@@ -48,7 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author Costin Leau
  * @author Juergen Hoeller
- * @author huangkai
+ * @author: kevin
  * @see org.springframework.cache.interceptor.AbstractFallbackCacheOperationSource
  * @since 3.1
  */

@@ -1,11 +1,14 @@
 package com.hk.core.data.commons.query;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
- * @author kally
+ * @author: kevin
  * @date 2018年1月24日上午10:10:42
  */
+@Data
 abstract class AbstractQueryPage<T> implements QueryPage<T> {
 
     /**
@@ -18,28 +21,5 @@ abstract class AbstractQueryPage<T> implements QueryPage<T> {
      */
     private long totalRow;
 
-    @Override
-    public List<T> getData() {
-        return data;
-    }
-
-    @Override
-    public long getTotalRow() {
-        return totalRow;
-    }
-
-    /**
-     * @param data the data to set
-     */
-    public void setData(List<T> data) {
-        this.data = data;
-    }
-
-    /**
-     * @param totalRow the totalRow to set
-     */
-    public void setTotalRow(long totalRow) {
-        this.totalRow = totalRow;
-    }
 
 }

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 
- * @author huangkai
+ * @author: kevin
  * @date 2017年10月24日下午3:25:54
  */
 @Configuration

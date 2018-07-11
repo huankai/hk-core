@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * @author: huangkai
+ * @author: kevin
  * @date 2018-06-07 17:19
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
@@ -35,10 +35,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getParameter(String name) {
         String value = super.getParameter(StringEscapeUtils.escapeHtml4(name));
-        if (StringUtils.isNotEmpty(value)) {
-            value = StringEscapeUtils.escapeHtml4(value);
-        }
-        return value;
+        return StringUtils.isEmpty(value) ? null : StringEscapeUtils.escapeHtml4(value);
     }
 
     @Override
@@ -47,7 +44,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         if (ArrayUtils.isEmpty(parameters)) {
             return null;
         }
-        for (int i = 0; i < parameters.length; i++) {
+        for (int i = 0, length = parameters.length; i < length; i++) {
             parameters[i] = StringEscapeUtils.escapeHtml4(parameters[i]);
         }
         return parameters;

@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.util.List;
 
 /**
- * @author huangkai
+ * @author: kevin
  * @date 2017年12月22日下午1:13:35
  */
 public class LogicalCondition implements Condition {
@@ -32,7 +32,7 @@ public class LogicalCondition implements Condition {
 	 */
 	public LogicalCondition(SimpleCondition... conditions) {
 		this.andOr = AndOr.AND;
-		CollectionUtils.addAll(this.conditions, conditions);
+		CollectionUtils.addAllNotNull(this.conditions, conditions);
 	}
 
 	/**

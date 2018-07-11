@@ -8,17 +8,17 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * Service implementation Enable Cache.
  *
- * @author: huangkai
+ * @author: kevin
  * @date 2018-05-16 09:58
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
  * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */
 public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends BaseServiceImpl<T, PK> {
-
 
     /**
      * <p>
@@ -35,12 +35,6 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
         return super.findOne(id);
     }
 
-    @Override
-    @CacheEvict(key = "'id'+#args[0].id", condition = "#args[0].id != null")
-    public T saveOrUpdate(T entity) {
-        return super.saveOrUpdate(entity);
-    }
-
     /**
      * Caching count.
      *
@@ -52,15 +46,46 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
         return super.count();
     }
 
+    /**
+     * 删除缓存
+     *
+     * @param entity
+     * @return
+     */
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(key = "'id'+#root.args[0].id"),
-                    @CacheEvict(key = "'count'")
+                    @CacheEvict(key = "'id'+#root.args[0].id")
             }
     )
     public T updateByIdSelective(T entity) {
         return super.updateByIdSelective(entity);
+    }
+
+    @Caching(
+            evict = {
+                    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")
+            }
+    )
+    @Override
+    public T insertOrUpdate(T t) {
+        return super.insertOrUpdate(t);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public Collection<T> insertOrUpdate(Collection<T> entities) {
+        return super.insertOrUpdate(entities);
+    }
+
+    @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(key = "'id'+#root.args[0].id")
+            }
+    )
+    public T updateById(T t) {
+        return super.updateById(t);
     }
 
     /**
@@ -83,7 +108,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
 
     @Override
     @CacheEvict(allEntries = true)
-    public boolean deleteByIds(Iterable<PK> ids) {
+    public boolean deleteByIds(Collection<PK> ids) {
         return super.deleteByIds(ids);
     }
 

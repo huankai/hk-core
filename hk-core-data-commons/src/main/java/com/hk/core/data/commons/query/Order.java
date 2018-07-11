@@ -1,7 +1,6 @@
 package com.hk.core.data.commons.query;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.data.domain.Sort.Direction;
 
 import java.io.Serializable;
@@ -9,23 +8,20 @@ import java.io.Serializable;
 /**
  * Order
  *
- * @author kally
+ * @author: kevin
  * @date 2018年2月5日下午12:49:44
  */
+@Data
 public final class Order implements Serializable {
 
     /**
      * 排序字段
      */
-    @Getter
-    @Setter
     private String field;
 
     /**
      * ASC | DESC
      */
-    @Getter
-    @Setter
     private boolean desc;
 
     public Order() {
@@ -63,7 +59,8 @@ public final class Order implements Serializable {
     }
 
     public String toSqlString() {
-        return String.format(" %s %s", getField(), desc ? Direction.DESC.name() : Direction.ASC.name());
+        String field = getField();
+        return String.format(" %s %s", field, desc ? Direction.DESC.name() : Direction.ASC.name());
     }
 
 }

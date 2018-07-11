@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author huangkai
+ * @author: kevin
  * @date 2017年12月20日下午2:43:59
  */
 public class SimpleCondition implements Condition {

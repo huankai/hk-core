@@ -6,7 +6,7 @@ import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 /**
  * 支持Ajax请求登陆
  * 
- * @author huangkai
+ * @author: kevin
  * @date 2017年10月25日上午10:02:18
  */
 public class AjaxFormAuthenticationFilter extends FormAuthenticationFilter {

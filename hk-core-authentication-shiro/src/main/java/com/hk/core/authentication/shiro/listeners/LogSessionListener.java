@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 日志记录监听器
  * 
- * @author huangkai
+ * @author: kevin
  * @date 2017年10月22日下午2:13:27
  */
 public class LogSessionListener extends SessionListenerAdapter {

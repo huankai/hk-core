@@ -7,7 +7,7 @@ import com.hk.commons.util.SpringContextHolder;
  * SecurityContextUtils
  * </p>
  *
- * @author: huangkai
+ * @author: kevin
  * @date 2018-04-16 09:39
  * @see SecurityContext
  */

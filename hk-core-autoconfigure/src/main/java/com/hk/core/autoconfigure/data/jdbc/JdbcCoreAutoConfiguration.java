@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 /**
  * Core Dao 自动配置
  *
- * @author huangkai
+ * @author: kevin
  */
 @Configuration
 @ConditionalOnClass(JdbcSession.class)

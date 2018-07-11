@@ -3,12 +3,12 @@ package com.hk.core.data.commons.domain;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * Tree Persistable
  *
- * @author: huangkai
+ * @author: kevin
  * @date 2018-06-07 12:18
  */
 public interface TreePersistable<T, ID extends Serializable> extends Persistable<ID> {
@@ -26,5 +26,7 @@ public interface TreePersistable<T, ID extends Serializable> extends Persistable
     /**
      * @return
      */
-    Collection<T> getChilds();
+    Set<T> getChilds();
+
+    void setChilds(Set<T> childs);
 }

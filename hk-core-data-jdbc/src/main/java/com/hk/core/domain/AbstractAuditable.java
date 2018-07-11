@@ -22,7 +22,7 @@ import java.util.Date;
  * </pre>
  *
  *
- * @author huangkai
+ * @author: kevin
  */
 public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String> {
 

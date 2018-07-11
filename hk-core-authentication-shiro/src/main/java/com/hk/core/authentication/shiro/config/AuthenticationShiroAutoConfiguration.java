@@ -10,7 +10,7 @@ import com.hk.core.authentication.shiro.ShiroSecurityContext;
 /**
  * Shiro pac4j configuration
  * 
- * @author huangkai
+ * @author: kevin
  * @date 2017年12月21日下午12:38:36
  */
 @Configuration

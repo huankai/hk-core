@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * @param <T>
  * @param <ID>
- * @author huangkai
+ * @author: kevin
  */
 @NoRepositoryBean
 public interface BaseRepository<T extends Persistable<ID>, ID extends Serializable> extends BaseDao<T, ID>, JpaRepository<T, ID> {

@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * 树形结构实体
  *
- * @author: huangkai
+ * @author: kevin
  * @date 2018-05-11 17:21
  */
 public interface TreePersistable<T> extends Persistable<String> {

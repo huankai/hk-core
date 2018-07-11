@@ -8,7 +8,7 @@ import com.hk.core.authentication.api.UserPrincipal;
 
 /**
  * 
- * @author huangkai
+ * @author: kevin
  *
  */
 public class ShiroSecurityContext implements SecurityContext {

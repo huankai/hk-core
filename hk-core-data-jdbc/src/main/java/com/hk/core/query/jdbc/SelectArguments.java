@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * 查询参数
  * 
- * @author huangkai
+ * @author: kevin
  * @date 2017年12月22日下午12:30:52
  */
 public final class SelectArguments {

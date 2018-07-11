@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 当前登陆的用户
  *
- * @author huangkai
+ * @author: kevin
  * @date 2017年9月28日上午9:45:55
  */
 public class UserPrincipal implements Serializable {

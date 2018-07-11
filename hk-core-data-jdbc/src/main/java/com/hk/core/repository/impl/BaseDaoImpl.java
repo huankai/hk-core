@@ -3,7 +3,7 @@ package com.hk.core.repository.impl;
 /**
  * 基本Dao类
  * 
- * @author huangkai
+ * @author: kevin
  *
  */
 public abstract class BaseDaoImpl {

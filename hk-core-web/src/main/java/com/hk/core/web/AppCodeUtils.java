@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * @author: huangkai
+ * @author: kevin
  * @date 2018-04-17 11:35
  */
 public abstract class AppCodeUtils {

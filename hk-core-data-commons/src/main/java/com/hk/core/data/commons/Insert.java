@@ -3,9 +3,10 @@ package com.hk.core.data.commons;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
- * @author huangkai
+ * @author: kevin
  * @date 2018-6-6 22:35
  */
 public interface Insert<T extends Persistable<ID>, ID extends Serializable> {
@@ -24,7 +25,7 @@ public interface Insert<T extends Persistable<ID>, ID extends Serializable> {
      * @param iterable
      * @return
      */
-    Iterable<T> batchInsert(Iterable<T> iterable);
+    Collection<T> batchInsert(Collection<T> iterable);
 
 
 }

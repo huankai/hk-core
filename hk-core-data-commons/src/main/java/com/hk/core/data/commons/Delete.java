@@ -5,7 +5,7 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 
 /**
- * @author huangkai
+ * @author: kevin
  * @date 2018-6-6 22:45
  */
 public interface Delete<T extends Persistable<ID>, ID extends Serializable> {

@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * basePackages 指定扫描包，所有 repository 都必须放在指定的目录下
  * </p>
  *
- * @author: huangkai
+ * @author: kevin
  * @date 2018-06-07 13:07
  */
 @EnableJpaAuditing

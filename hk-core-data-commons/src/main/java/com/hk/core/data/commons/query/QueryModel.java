@@ -2,7 +2,6 @@ package com.hk.core.data.commons.query;
 
 import com.google.common.collect.Lists;
 import lombok.Data;
-import org.springframework.data.domain.Persistable;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * queryModel
  */
 @Data
-public class QueryModel<T extends Persistable<?>> {
+public class QueryModel<T> {
 
     private static final int DEFAULT_PAGE_SIZE = 10;
 
@@ -30,6 +29,9 @@ public class QueryModel<T extends Persistable<?>> {
      */
     private int totalRowCount;
 
+    /**
+     * 查询参数
+     */
     private T param;
 
     /**

@@ -10,7 +10,7 @@ import org.apache.shiro.subject.Subject;
 /**
  * 验证码登陆
  * 
- * @author huangkai
+ * @author: kevin
  * @date 2017年10月25日上午10:03:07
  */
 public class CaptchaFormAuthenticationFilter extends AjaxFormAuthenticationFilter {

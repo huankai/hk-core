@@ -15,7 +15,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Role;
 
 /**
- * @author huangkai
+ * @author: kevin
  */
 @Configuration
 @EnableCaching

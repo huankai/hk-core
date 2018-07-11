@@ -6,7 +6,7 @@ import org.springframework.data.domain.Persistable;
 /**
  * 基于 UUID的主键生成
  *
- * @author huangkai
+ * @author: kevin
  * @date 2017年12月11日下午8:30:33
  */
 //@MappedSuperclass

@@ -2,14 +2,18 @@ package com.hk.core.data.commons.query;
 
 
 import com.hk.core.data.commons.ListResult;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
- * @author kally
+ * @author: kevin
  * @date 2018年1月24日上午9:58:21
  */
-public final class SimpleQueryPage<T> extends AbstractQueryPage<T> {
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class SimpleQueryPage<T> extends AbstractQueryPage<T> {
 
     /**
      * 当前页号
@@ -23,16 +27,27 @@ public final class SimpleQueryPage<T> extends AbstractQueryPage<T> {
 
     /**
      * @param query
+     * @param result
+     */
+    public SimpleQueryPage(QueryModel<?> query, ListResult<T> result) {
+        this(query, result.getResult(), result.getTotalRowCount());
+    }
+
+    /**
+     * @param query
      * @param totalRow
      * @param data
      */
-    public SimpleQueryPage(QueryModel query, long totalRow, List<T> data) {
-        this.pageIndex = query.getStartRowIndex();
-        this.pageSize = query.getPageSize();
-        setTotalRow(totalRow);
-        setData(data);
+    public SimpleQueryPage(QueryModel<?> query, List<T> data, long totalRow) {
+        this(data, totalRow, query.getStartRowIndex(), query.getPageSize());
     }
 
+    /**
+     * @param data
+     * @param totalRow
+     * @param pageIndex
+     * @param pageSize
+     */
     public SimpleQueryPage(List<T> data, long totalRow, int pageIndex, int pageSize) {
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
@@ -40,35 +55,5 @@ public final class SimpleQueryPage<T> extends AbstractQueryPage<T> {
         setTotalRow(totalRow);
     }
 
-    public SimpleQueryPage(QueryModel query, ListResult<T> result) {
-        this.pageIndex = query.getStartRowIndex();
-        this.pageSize = query.getPageSize();
-        setTotalRow(result.getTotalRowCount());
-        setData(result.getResult());
-    }
-
-    @Override
-    public int getPageIndex() {
-        return pageIndex;
-    }
-
-    @Override
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    /**
-     * @param pageIndex the pageIndex to set
-     */
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    /**
-     * @param pageSize the pageSize to set
-     */
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
 
 }

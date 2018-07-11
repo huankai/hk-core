@@ -26,7 +26,7 @@ import java.util.Date;
  * </pre>
  *
  *
- * @author huangkai
+ * @author: kevin
  */
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
@@ -102,7 +102,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
 
     @Override
     public DateTime getLastModifiedDate() {
-        return null == lastModifiedBy ? null : new DateTime(Date.from(lastModifiedDate.atZone(ZoneId.systemDefault()).toInstant()));
+        return null == lastModifiedDate ? null : new DateTime(Date.from(lastModifiedDate.atZone(ZoneId.systemDefault()).toInstant()));
     }
 
     @Override

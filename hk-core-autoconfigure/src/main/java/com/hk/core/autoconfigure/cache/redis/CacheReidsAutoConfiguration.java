@@ -15,7 +15,7 @@ import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * @author: huangkai
+ * @author: kevin
  * @date 2018-05-31 17:45
  */
 @Configuration
@@ -39,7 +39,7 @@ public class CacheReidsAutoConfiguration {
 
     }
 
-    private class GenericFastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
+    private static class GenericFastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
 
         /**
          * <p>
@@ -49,13 +49,20 @@ public class CacheReidsAutoConfiguration {
          */
         private String acceptBasePackage = "com.hk";
 
+        /**
+         * 对于属性有上下级映射的，排序序列化
+         *
+         * @see com.hk.core.data.jpa.domain.AbstractTreePersistable
+         */
+        private static final String[] EXCLUDE_PROPERTIES = new String[]{"parent", "childs"};
+
         @Override
         public byte[] serialize(T t) throws SerializationException {
             if (null == t) {
                 return new byte[0];
             }
             FastJsonWraper<T> wraper = new FastJsonWraper<>(t);
-            return JsonUtils.toJSONString(wraper, true, null, null, SerializerFeature.WriteClassName).getBytes(Contants.CHARSET_UTF_8);
+            return JsonUtils.toJSONStringExcludes(wraper, EXCLUDE_PROPERTIES, SerializerFeature.WriteClassName).getBytes(Contants.CHARSET_UTF_8);
         }
 
         @Override

@@ -95,7 +95,7 @@ public class Criteria<T> implements Specification<T> {
     }
 
     public void addOrder(Order... orders) {
-        CollectionUtils.addAll(this.orders, orders);
+        CollectionUtils.addAllNotNull(this.orders, orders);
     }
 
     public void addGroupBy(List<String> propertyNames) {
