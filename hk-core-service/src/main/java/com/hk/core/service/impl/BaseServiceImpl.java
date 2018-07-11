@@ -1,5 +1,6 @@
 package com.hk.core.service.impl;
 
+import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.authentication.api.SecurityContext;
@@ -19,7 +20,9 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,6 +63,11 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
+    public boolean deleteByIds(ID... ids) {
+        return ArrayUtils.isNotEmpty(ids) && deleteByIds(Arrays.asList(ids));
+    }
+
+    @Override
     public boolean delete(T entity) {
         return getBaseDao().deleteEntity(deleteBefore(entity));
     }
@@ -73,6 +81,11 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     public T insert(T t) {
         return getBaseDao().insert(saveBefore(t));
+    }
+
+    @Override
+    public Collection<T> batchInsert(Collection<T> entities) {
+        return getBaseDao().batchInsert(entities);
     }
 
     /**
@@ -125,6 +138,11 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
+    public Iterable<T> findByIds(ID... ids) {
+        return ArrayUtils.isEmpty(ids) ? Collections.emptyList() : findByIds(Arrays.asList(ids));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public QueryPage<T> queryForPage(QueryModel<T> query) {
         return getBaseDao().findByPage(Example.of(checkNull(query.getParam()), ofExampleMatcher()),
@@ -174,6 +192,11 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
         return getBaseDao().updateByIdSelective(t);
     }
 
+    @Override
+    public Collection<T> batchUpdate(Collection<T> entities) {
+        return getBaseDao().batchInsert(entities);
+    }
+
     /**
      * 删除之前
      *
@@ -202,4 +225,5 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
         }
         return entity;
     }
+
 }
