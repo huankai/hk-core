@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- *Service CRUD操作
+ * Service CRUD操作
  *
  * @param <T>
  * @author kevin
@@ -38,7 +38,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Autowired
     private SecurityContext securityContext;
 
-    protected UserPrincipal getUserPrincipal(){
+    protected UserPrincipal getUserPrincipal() {
         return securityContext.getPrincipal();
     }
 
@@ -73,11 +73,6 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     public T insert(T t) {
         return getBaseDao().insert(saveBefore(t));
-    }
-
-    @Override
-    public Collection<T> saveOrUpdate(Collection<T> entities) {
-        return getBaseDao().batchInsert(entities);
     }
 
     /**
