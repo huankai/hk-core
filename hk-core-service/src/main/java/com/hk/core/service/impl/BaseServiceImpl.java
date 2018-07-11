@@ -30,7 +30,7 @@ import java.util.List;
  * @date 2017年9月27日下午2:16:24
  */
 @Slf4j
-@Transactional
+@Transactional(rollbackFor = {Throwable.class})
 public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
     private Class<T> domainClass;
@@ -76,8 +76,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
-    public Collection<T> batchInsert(Collection<T> entities) {
-        entities.forEach(this::saveBefore);
+    public Collection<T> saveOrUpdate(Collection<T> entities) {
         return getBaseDao().batchInsert(entities);
     }
 
@@ -98,7 +97,6 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
-    @Transactional(readOnly = true)
     public T getOne(ID id) {
         return getBaseDao().getById(id);
     }
