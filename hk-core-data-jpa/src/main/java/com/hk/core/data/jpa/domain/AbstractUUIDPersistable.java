@@ -1,6 +1,6 @@
 package com.hk.core.data.jpa.domain;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String> {
     private String id;
 
     @Transient // DATAJPA-622
-    @JSONField(deserialize = false, serialize = false)
+    @JsonIgnore
     public final boolean isNew() {
         return StringUtils.isEmpty(getId());
     }

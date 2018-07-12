@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.hk</groupId>
         <artifactId>hk-core</artifactId>
-        <version>1.0.0.RELEASE</version>
+        <version>2.0.0.RELEASE</version>
     </parent>
     <artifactId>hk-core-web</artifactId>
     <name>hk-core-web</name>
@@ -14,6 +14,19 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-spring-boot-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
@@ -23,21 +36,11 @@
         <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-authentication-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <!--
-            先在此把httpclient引用进来，以后必须把这个踢掉
-            这里引用进来的目的是在每个应用中都可以调用EMI的接口获取当前的app id
-            @see  com.hk.core.web.AppCodeUtils#getCurrentAppId
-        -->
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-commons-httpclient</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -1,6 +1,5 @@
 package com.hk.core.authentication.security;
 
-import com.google.common.collect.Lists;
 import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.UserPrincipal;
@@ -8,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
     /**
      *
      */
-    private String passWord;
+    private final String passWord;
 
     private Byte userStatus;
 
@@ -39,8 +39,8 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authoritieList = Lists.newArrayList();
-        Collection<String> permissions = getPermissionByAppId(getAppId());
+        List<GrantedAuthority> authoritieList = new ArrayList<>();
+        Collection<String> permissions = getPermissionByAppId(getAppCode().getAppId());
         if (CollectionUtils.isNotEmpty(permissions)) {
             permissions.forEach(permission -> authoritieList.add(new SimpleGrantedAuthority(permission)));
         }

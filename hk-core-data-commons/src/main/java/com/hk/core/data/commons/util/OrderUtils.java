@@ -30,7 +30,7 @@ public abstract class OrderUtils {
                     .map(order -> new Sort.Order(order.isDesc() ? Sort.Direction.DESC : Sort.Direction.ASC, order.getField()))
                     .collect(Collectors.toList());
             if (CollectionUtils.isNotEmpty(orderList)) {
-                sort = new Sort(orderList);
+                sort = Sort.by(orderList);
             }
         }
         return sort;
@@ -40,14 +40,10 @@ public abstract class OrderUtils {
     /**
      * 转换为Spring Data Sort
      *
-     * @param orders
+     * @param orders orders
      * @return
      */
     public static Sort toSort(Order... orders) {
-        Sort sort = null;
-        if (ArrayUtils.isNotEmpty(orders)) {
-            sort = toSort(Arrays.asList(orders));
-        }
-        return sort;
+        return ArrayUtils.isEmpty(orders) ? null : toSort(Arrays.asList(orders));
     }
 }

@@ -4,179 +4,22 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hk</groupId>
     <artifactId>hk-core</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>2.0.0.RELEASE</version>
     <name>hk-core</name>
     <packaging>pom</packaging>
-    <url>http://maven.apache.org</url>
-
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
-    </parent>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <shiro.version>1.4.0</shiro.version>
-        <hk.commons.version>1.0.0.RELEASE</hk.commons.version>
-        <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
-        <!-- 使用 thymeleaf V3+ -->
-        <thymeleaf.version>3.0.5.RELEASE</thymeleaf.version>
-        <thymeleaf-layout-dialect.version>2.2.1</thymeleaf-layout-dialect.version>
-    </properties>
 
     <modules>
         <module>hk-core-data-commons</module>
-        <module>hk-core-data-jdbc</module>
         <module>hk-core-data-jpa</module>
         <module>hk-core-data-mybatis</module>
         <module>hk-core-data-solr</module>
         <module>hk-core-service</module>
         <module>hk-core-web</module>
         <module>hk-core-authentication-api</module>
-        <module>hk-core-authentication-shiro</module>
         <module>hk-core-authentication-security</module>
         <module>hk-core-cache</module>
         <module>hk-core-i18n</module>
-        <module>hk-core-autoconfigure</module>
+        <module>hk-core-spring-boot-autoconfigure</module>
+        <module>hk-core-spring-boot-dependencies</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.hk</groupId>
-                <artifactId>hk-commons-util</artifactId>
-                <version>${hk.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.hk</groupId>
-                <artifactId>hk-commons-poi</artifactId>
-                <version>${hk.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.hk</groupId>
-                <artifactId>hk-commons-httpclient</artifactId>
-                <version>${hk.commons.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-commons</artifactId>
-                <version>1.13.9.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-tx</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter</artifactId>
-                <version>${spring.boot.version}</version>
-                <!-- 排除默认logging,使用 log4j2 -->
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <!-- Spring boot log4j2 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-log4j2</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-validation</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-cache</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-mail</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-jpa</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-redis</artifactId>
-                <version>${spring.boot.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    <build>
-        <pluginManagement>
-            <!-- 注意体会插件配置的顺序，这正体现了一个maven的运行流程 -->
-            <plugins>
-                <!-- Maven Clean Plugin -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.0.0</version>
-                    <configuration>
-                        <skip>false</skip> <!-- 忽略clean [mvn clean -Dmaven.clean.skip=true] -->
-                        <failOnError>false</failOnError> <!-- clean时忽略错误 [mvn clean -Dmaven.clean.failOnError=false] -->
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>auto-clean</id>
-                            <phase>clean</phase> <!-- clean生命周期clean阶段 -->
-                            <goals>
-                                <goal>clean</goal> <!-- 执行clean插件的clean目标 -->
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <!-- compiler插件, 设定JDK版本 -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
-                    <configuration>
-                        <source>${java.version}</source> <!-- 源代码使用的jdk版本 -->
-                        <target>${java.version}</target> <!-- 构建后生成class文件jdk版本 -->
-                        <encoding>${project.build.sourceEncoding}</encoding> <!-- 构建使用的编码 -->
-                    </configuration>
-                </plugin>
-
-                <!-- 运行Maven 单元测试 -->
-                <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.20.1</version> </plugin> -->
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
-                </plugin>
-
-                <!-- maven war -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>3.2.0</version>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

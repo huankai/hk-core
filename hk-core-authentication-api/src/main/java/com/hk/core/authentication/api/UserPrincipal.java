@@ -1,5 +1,7 @@
 package com.hk.core.authentication.api;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import java.util.Map;
  * @author: kevin
  * @date 2017年9月28日上午9:45:55
  */
+@Data
 public class UserPrincipal implements Serializable {
 
     /**
@@ -61,7 +64,7 @@ public class UserPrincipal implements Serializable {
     /**
      * appId
      */
-    private String appId;
+    private AppCode appCode;
 
     /**
      * isProtect
@@ -100,95 +103,6 @@ public class UserPrincipal implements Serializable {
         this.iconPath = iconPath;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Byte getUserType() {
-        return userType;
-    }
-
-    public void setUserType(Byte userType) {
-        this.userType = userType;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Byte getSex() {
-        return sex;
-    }
-
-    public void setSex(Byte sex) {
-        this.sex = sex;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public Map<String, Collection<String>> getAppRoleSet() {
-        return appRoleSet;
-    }
-
-    public void setAppRoleSet(Map<String, Collection<String>> appRoleSet) {
-        this.appRoleSet = appRoleSet;
-    }
-
-    public Map<String, Collection<String>> getAppPermissionSet() {
-        return appPermissionSet;
-    }
-
-    public void setAppPermissionSet(Map<String, Collection<String>> appPermissionSet) {
-        this.appPermissionSet = appPermissionSet;
-    }
-
-    public String getUserTypeChinease() {
-        return null;
-    }
-
-    public String getIconPath() {
-        return iconPath;
-    }
-
-    public void setIconPath(String iconPath) {
-        this.iconPath = iconPath;
-    }
-
-
-    public boolean isProtect() {
-        return isProtect;
-    }
-
     public Collection<String> getRoleByAppId(String appId) {
         return filterByAppId(appRoleSet, appId);
     }
@@ -206,14 +120,6 @@ public class UserPrincipal implements Serializable {
 
     public Collection<String> getPermissionByAppId(String appId) {
         return filterByAppId(appPermissionSet, appId);
-    }
-
-    public String getAppId() {
-        return appId;
-    }
-
-    public void setAppId(String appId) {
-        this.appId = appId;
     }
 
     /**

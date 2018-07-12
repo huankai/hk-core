@@ -1,6 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hk.core.authentication.shiro.config.ShiroWebAutoConfiguration,\
-com.hk.core.authentication.shiro.config.ShiroWebFilterAutoConfiguration,\
-com.hk.core.authentication.shiro.config.AuthenticationShiroAutoConfiguration
-

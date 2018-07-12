@@ -1,12 +1,12 @@
 package com.hk.core.data.jpa.query.specification;
 
-import com.google.common.collect.Lists;
 import com.hk.core.data.commons.query.AndOr;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LogicalExpression<T> implements Criterion<T> {
@@ -22,7 +22,7 @@ public class LogicalExpression<T> implements Criterion<T> {
 
 	@Override
 	public Predicate toPredicate(Root<T> root, CriteriaQuery<T> cq, CriteriaBuilder cb) {
-		List<Predicate> predicates = Lists.newArrayList();
+		List<Predicate> predicates = new ArrayList<>();
 		Criterion<T>[] crits = criterions;
 		for (int index = 0; index < crits.length; ++index) {
 			Criterion<T> criterion = crits[index];

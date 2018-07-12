@@ -5,7 +5,7 @@ import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.data.commons.BaseDao;
+import com.hk.core.data.commons.dao.BaseDao;
 import com.hk.core.data.commons.domain.TreePersistable;
 import com.hk.core.data.commons.query.Order;
 import com.hk.core.data.commons.query.QueryModel;
@@ -20,10 +20,8 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 /**
  * Service CRUD操作
@@ -53,39 +51,33 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     protected abstract BaseDao<T, ID> getBaseDao();
 
     @Override
-    public boolean deleteById(ID id) {
-        return getBaseDao().deleteById(id);
+    public void deleteById(ID id) {
+        getBaseDao().deleteById(id);
     }
 
     @Override
-    public boolean deleteByIds(Collection<ID> ids) {
-        return getBaseDao().deleteByIds(ids);
+    public void deleteByIds(Collection<ID> ids) {
+        getBaseDao().deleteByIds(ids);
     }
 
     @Override
-    public boolean deleteByIds(ID... ids) {
-        return ArrayUtils.isNotEmpty(ids) && deleteByIds(Arrays.asList(ids));
+    public void delete(T entity) {
+        getBaseDao().delete(entity);
     }
 
     @Override
-    public boolean delete(T entity) {
-        return getBaseDao().deleteEntity(deleteBefore(entity));
-    }
-
-    @Override
-    public boolean delete(Iterable<T> entities) {
-        entities.forEach(this::deleteBefore);
-        return getBaseDao().deleteEntities(entities);
+    public void delete(Collection<T> entities) {
+        getBaseDao().delete(entities);
     }
 
     @Override
     public T insert(T t) {
-        return getBaseDao().insert(saveBefore(t));
+        return getBaseDao().save(saveBefore(t));
     }
 
     @Override
     public Collection<T> batchInsert(Collection<T> entities) {
-        return getBaseDao().batchInsert(entities);
+        return getBaseDao().batchSave(entities);
     }
 
     /**
@@ -95,23 +87,23 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
      * @return
      */
     private T checkNull(T t) {
-        return ObjectUtils.defaultIfNull(t, BeanUtils.instantiate(getDomainClass()));
+        return ObjectUtils.defaultIfNull(t, BeanUtils.instantiateClass(getDomainClass()));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public T findOne(ID id) {
-        return getBaseDao().findById(id);
+    public Optional<T> findOne(ID id) {
+        return getBaseDao().findOne(id);
     }
 
     @Override
     public T getOne(ID id) {
-        return getBaseDao().getById(id);
+        return getBaseDao().getOne(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public T findOne(T t) {
+    public Optional<T> findOne(T t) {
         return getBaseDao().findOne(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
@@ -135,11 +127,6 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Transactional(readOnly = true)
     public Iterable<T> findByIds(Iterable<ID> ids) {
         return getBaseDao().findByIds(ids);
-    }
-
-    @Override
-    public Iterable<T> findByIds(ID... ids) {
-        return ArrayUtils.isEmpty(ids) ? Collections.emptyList() : findByIds(Arrays.asList(ids));
     }
 
     @Override
@@ -184,7 +171,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     public T updateById(T t) {
-        return getBaseDao().updateById(t);
+        return getBaseDao().update(t);
     }
 
     @Override
@@ -194,17 +181,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     public Collection<T> batchUpdate(Collection<T> entities) {
-        return getBaseDao().batchInsert(entities);
-    }
-
-    /**
-     * 删除之前
-     *
-     * @param entity 删除的实体
-     * @return
-     */
-    protected T deleteBefore(T entity) {
-        return entity;
+        return getBaseDao().batchSave(entities);
     }
 
     /**

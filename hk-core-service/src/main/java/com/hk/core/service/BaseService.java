@@ -1,9 +1,9 @@
 package com.hk.core.service;
 
-import com.google.common.collect.Lists;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,7 +22,7 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
     }
 
     default Collection<T> insertOrUpdate(Collection<T> entities) {
-        List<T> result = Lists.newArrayListWithExpectedSize(entities.size());
+        List<T> result = new ArrayList<>(entities.size());
         entities.forEach(entity -> result.add(insertOrUpdate(entity)));
         return result;
     }

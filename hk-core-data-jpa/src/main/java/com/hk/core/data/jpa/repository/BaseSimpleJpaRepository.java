@@ -3,6 +3,7 @@ package com.hk.core.data.jpa.repository;
 import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.BeanUtils;
 import com.hk.core.data.commons.query.Order;
+import com.hk.core.data.commons.query.QueryModel;
 import com.hk.core.data.commons.query.QueryPage;
 import com.hk.core.data.commons.query.SimpleQueryPage;
 import com.hk.core.data.commons.util.OrderUtils;
@@ -22,6 +23,7 @@ import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -44,26 +46,6 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
 
     public BaseSimpleJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
-    }
-
-    @Override
-    public T getById(ID id) {
-        return getOne(id);
-    }
-
-    @Override
-    public T findById(ID id) {
-        return findOne(id);
-    }
-
-    @Override
-    public List<T> findAll(Example<T> t, Order... orders) {
-        return findAll(t, OrderUtils.toSort(orders));
-    }
-
-    @Override
-    public Iterable<T> findByIds(Iterable<ID> ids) {
-        return findAll(ids);
     }
 
     /*
@@ -107,57 +89,58 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    public QueryPage<T> findByPage(Example<T> example, List<Order> orders, int pageIndex, int pageSize) {
-        Page<T> page = findAll(example, new PageRequest(pageIndex, pageSize, OrderUtils.toSort(orders)));
-        return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
+    public boolean exists(ID id) {
+        return super.existsById(id);
     }
 
     @Override
-    public boolean deleteById(ID id) {
-        delete(id);
-        return true;
+    public T update(T t) {
+        AssertUtils.isTrue(!t.isNew(), "Give id must not be null.");
+        return super.save(t);
     }
 
     @Override
-    public <S extends T> boolean deleteEntity(T t) {
-        delete(t);
-        return true;
+    public void deleteByIds(Collection<ID> ids) {
+        ids.forEach(this::deleteById);
     }
 
     @Override
-    public boolean deleteByIds(Iterable<ID> ids) {
-        ids.forEach(this::delete);
-        return true;
+    public void delete(Collection<T> entities) {
+        super.deleteAll(entities);
     }
 
     @Override
-    public boolean deleteEntities(Iterable<T> entities) {
-        delete(entities);
-        return true;
+    public Iterable<T> findByIds(Iterable<ID> ids) {
+        return super.findAllById(ids);
     }
 
     @Override
-    public T insert(T t) {
-        return save(t);
+    public Optional<T> findOne(ID id) {
+        return super.findById(id);
     }
 
     @Override
-    public Collection<T> batchInsert(Collection<T> iterable) {
-        return save(iterable);
+    public T saveOrUpdate(T t) {
+        return super.save(t);
     }
 
     @Override
-    public T updateById(T t) {
-        AssertUtils.notNull(t.getId(), "Give ID must not be null");
-        return save(t);
+    public T save(T t) {
+        return super.save(t);
     }
+
+    @Override
+    public Collection<T> batchSave(Collection<T> entities) {
+        return super.saveAll(entities);
+    }
+
 
     @Override
     public T updateByIdSelective(T t) {
         AssertUtils.isTrue(!t.isNew(), "Give ID must not be null");
         T find = getOne(t.getId());
         BeanUtils.copyNotNullProperties(t, find);
-        return save(find);
+        return super.save(find);
     }
 
     /**
@@ -182,10 +165,6 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
             this.example = example;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see org.springframework.data.jpa.domain.Specification#toPredicate(javax.persistence.criteria.Root, javax.persistence.criteria.CriteriaQuery, javax.persistence.criteria.CriteriaBuilder)
-         */
         @Override
         public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
             return QueryByExamplePredicateBuilder.getPredicate(root, cb, example);

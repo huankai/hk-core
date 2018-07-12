@@ -9,6 +9,7 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Service implementation Enable Cache.
@@ -31,7 +32,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      */
     @Override
     @Cacheable(key = "'id'+#id")
-    public T findOne(PK id) {
+    public Optional<T> findOne(PK id) {
         return super.findOne(id);
     }
 
@@ -102,14 +103,14 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
                     @CacheEvict(key = "'count'")
             }
     )
-    public boolean deleteById(PK id) {
-        return super.deleteById(id);
+    public void deleteById(PK id) {
+        super.deleteById(id);
     }
 
     @Override
     @CacheEvict(allEntries = true)
-    public boolean deleteByIds(Collection<PK> ids) {
-        return super.deleteByIds(ids);
+    public void deleteByIds(Collection<PK> ids) {
+        super.deleteByIds(ids);
     }
 
     /**
@@ -129,8 +130,8 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
                     @CacheEvict(key = "'count'")
             }
     )
-    public boolean delete(T entity) {
-        return super.delete(entity);
+    public void delete(T entity) {
+        super.delete(entity);
     }
 
     /**
@@ -142,8 +143,8 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      */
     @Override
     @CacheEvict(allEntries = true)
-    public boolean delete(Iterable<T> entities) {
-        return super.delete(entities);
+    public void delete(Collection<T> entities) {
+        super.delete(entities);
     }
 
     /**

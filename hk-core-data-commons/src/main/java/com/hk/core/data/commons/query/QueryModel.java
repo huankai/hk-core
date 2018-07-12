@@ -1,8 +1,9 @@
 package com.hk.core.data.commons.query;
 
-import com.google.common.collect.Lists;
+
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,7 +38,7 @@ public class QueryModel<T> {
     /**
      * 查询排序
      */
-    private List<Order> orders = Lists.newArrayList();
+    private List<Order> orders = new ArrayList<>();
 
     public final int getStartRowIndex() {
         int startRow = pageIndex;

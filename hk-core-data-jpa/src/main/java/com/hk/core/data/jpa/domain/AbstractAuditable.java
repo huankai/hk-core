@@ -1,6 +1,5 @@
 package com.hk.core.data.jpa.domain;
 
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -12,8 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+import java.util.Optional;
 
 /**
  * <pre>
@@ -25,12 +23,11 @@ import java.util.Date;
  * last_modified_date 更新时间，新增时会保存,每次更新时会修改
  * </pre>
  *
- *
  * @author: kevin
  */
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
-public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String> {
+public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String, LocalDateTime> {
 
     /**
      * <pre>
@@ -71,8 +68,8 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
     private LocalDateTime lastModifiedDate;
 
     @Override
-    public String getCreatedBy() {
-        return createdBy;
+    public Optional<String> getCreatedBy() {
+        return Optional.of(createdBy);
     }
 
     @Override
@@ -81,18 +78,18 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
     }
 
     @Override
-    public DateTime getCreatedDate() {
-        return null == createdDate ? null : new DateTime(Date.from(createdDate.atZone(ZoneId.systemDefault()).toInstant()));
+    public Optional<LocalDateTime> getCreatedDate() {
+        return Optional.of(createdDate);
     }
 
     @Override
-    public void setCreatedDate(DateTime createdDate) {
-        this.createdDate = LocalDateTime.ofInstant(createdDate.toDate().toInstant(), ZoneId.systemDefault());
+    public void setCreatedDate(LocalDateTime creationDate) {
+        this.createdDate = creationDate;
     }
 
     @Override
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
+    public Optional<String> getLastModifiedBy() {
+        return Optional.of(lastModifiedBy);
     }
 
     @Override
@@ -101,21 +98,12 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
     }
 
     @Override
-    public DateTime getLastModifiedDate() {
-        return null == lastModifiedDate ? null : new DateTime(Date.from(lastModifiedDate.atZone(ZoneId.systemDefault()).toInstant()));
+    public Optional<LocalDateTime> getLastModifiedDate() {
+        return Optional.of(lastModifiedDate);
     }
 
     @Override
-    public void setLastModifiedDate(DateTime lastModifiedDate) {
-        this.lastModifiedDate = LocalDateTime.ofInstant(lastModifiedDate.toDate().toInstant(), ZoneId.systemDefault());
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
     public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
-
 }

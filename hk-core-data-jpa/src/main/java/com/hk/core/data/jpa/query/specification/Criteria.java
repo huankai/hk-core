@@ -1,6 +1,5 @@
 package com.hk.core.data.jpa.query.specification;
 
-import com.google.common.collect.Lists;
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.data.commons.query.Order;
@@ -10,17 +9,18 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 public class Criteria<T> implements Specification<T> {
 
-    private List<Criterion<T>> criterions = Lists.newArrayList();
+    private List<Criterion<T>> criterions = new ArrayList();
 
-    private List<Criterion<T>> havings = Lists.newArrayList();
+    private List<Criterion<T>> havings = new ArrayList();
 
-    private List<Order> orders = Lists.newArrayList();
+    private List<Order> orders = new ArrayList();
 
     private List<String> groupByPropertyNames;
 
@@ -31,7 +31,7 @@ public class Criteria<T> implements Specification<T> {
         Iterator var5;
         Criterion criterion;
         if (!this.criterions.isEmpty()) {
-            predicates = Lists.newArrayList();
+            predicates = new ArrayList();
             var5 = this.criterions.iterator();
             while (var5.hasNext()) {
                 criterion = (Criterion) var5.next();
@@ -47,7 +47,7 @@ public class Criteria<T> implements Specification<T> {
             }
         }
         if (this.orders != null) {
-            predicates = Lists.newArrayList();
+            predicates = new ArrayList();
             var5 = this.orders.iterator();
             while (var5.hasNext()) {
                 Order order = (Order) var5.next();
@@ -56,7 +56,7 @@ public class Criteria<T> implements Specification<T> {
             query.orderBy(predicates);
         }
         if (this.groupByPropertyNames != null) {
-            predicates = Lists.newArrayList();
+            predicates = new ArrayList();
             var5 = this.groupByPropertyNames.iterator();
 
             while (var5.hasNext()) {
@@ -67,7 +67,7 @@ public class Criteria<T> implements Specification<T> {
             query.groupBy(predicates);
         }
         if (!this.havings.isEmpty()) {
-            predicates = Lists.newArrayList();
+            predicates = new ArrayList();
             var5 = this.havings.iterator();
             while (var5.hasNext()) {
                 criterion = (Criterion) var5.next();

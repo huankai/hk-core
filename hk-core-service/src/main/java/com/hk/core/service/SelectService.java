@@ -1,5 +1,6 @@
 package com.hk.core.service;
 
+import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.AssertUtils;
 import com.hk.core.data.commons.query.Order;
 import com.hk.core.data.commons.query.QueryModel;
@@ -8,7 +9,9 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author: kevin
@@ -20,7 +23,7 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * @param id
      * @return
      */
-    T findOne(ID id);
+    Optional<T> findOne(ID id);
 
     /**
      * @param id
@@ -32,12 +35,11 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * @param t
      * @return
      */
-    T findOne(T t);
+    Optional<T> findOne(T t);
 
     /**
      * @param t
      * @param orders
-     * @param <S>
      * @return
      */
     List<T> findAll(T t, Order... orders);
@@ -58,8 +60,7 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * @return
      */
     default Iterable<T> findByIds(ID... ids) {
-        AssertUtils.notNull(ids, "Ids must not be null");
-        return findByIds(Arrays.asList(ids));
+       return ArrayUtils.isEmpty(ids) ? Collections.emptyList() : findByIds(Arrays.asList(ids));
     }
 
     /**

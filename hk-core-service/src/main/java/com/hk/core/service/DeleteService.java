@@ -1,5 +1,6 @@
 package com.hk.core.service;
 
+import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.AssertUtils;
 import org.springframework.data.domain.Persistable;
 
@@ -17,29 +18,30 @@ public interface DeleteService<T extends Persistable<ID>, ID extends Serializabl
      * @param id
      * @return
      */
-    boolean deleteById(ID id);
+    void deleteById(ID id);
 
     /**
      * @param ids
      */
-    boolean deleteByIds(Collection<ID> ids);
+    void deleteByIds(Collection<ID> ids);
 
     /**
      * @param ids
      * @return
      */
-    default boolean deleteByIds(ID... ids) {
-        AssertUtils.notNull(ids, "Array Id must not be null");
-        return deleteByIds(Arrays.asList(ids));
+    default void deleteByIds(ID... ids) {
+        if (ArrayUtils.isNotEmpty(ids)) {
+            deleteByIds(Arrays.asList(ids));
+        }
     }
 
     /**
      * @param entity
      */
-    boolean delete(T entity);
+    void delete(T entity);
 
     /**
      * @param entities
      */
-    boolean delete(Iterable<T> entities);
+    void delete(Collection<T> entities);
 }

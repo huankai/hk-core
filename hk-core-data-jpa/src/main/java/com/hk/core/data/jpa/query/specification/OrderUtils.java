@@ -1,6 +1,6 @@
 package com.hk.core.data.jpa.query.specification;
 
-import org.hibernate.jpa.criteria.OrderImpl;
+import org.hibernate.query.criteria.internal.OrderImpl;
 
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;

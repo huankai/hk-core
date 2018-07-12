@@ -3,8 +3,9 @@ package com.hk.core.data.jpa.convert;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.repository.core.support.ExampleMatcherAccessor;
+import org.springframework.data.support.ExampleMatcherAccessor;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
+import org.springframework.lang.Nullable;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -80,15 +81,21 @@ public class QueryByExamplePredicateBuilder {
                 continue;
             }
 
-            Object attributeValue = exampleAccessor.getValueTransformerForPath(currentPath)
-                    .convert(beanWrapper.getPropertyValue(attribute.getName()));
+            ExampleMatcher.PropertyValueTransformer transformer = exampleAccessor.getValueTransformerForPath(currentPath);
+            Optional<Object> optionalValue = transformer
+                    .apply(Optional.ofNullable(beanWrapper.getPropertyValue(attribute.getName())));
 
-            // 过滤属性类型为 String 且值为为 "" 查询条件,Spring data jpa 默认只是为 null
-            // @see org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder#getPredicates
-            if (com.hk.commons.util.ObjectUtils.isEmpty(attributeValue)) {
+            if (!optionalValue.isPresent()) {
                 if (exampleAccessor.getNullHandler().equals(ExampleMatcher.NullHandler.INCLUDE)) {
                     predicates.add(cb.isNull(from.get(attribute)));
                 }
+                continue;
+            }
+
+            Object attributeValue = optionalValue.get();
+
+            // 过滤属性类型为 String 且值为为 "" 查询条件,Spring data jpa 默认只是为 null
+            if (attributeValue instanceof CharSequence && ((CharSequence) attributeValue).length() == 0) {
                 continue;
             }
 
@@ -102,8 +109,8 @@ public class QueryByExamplePredicateBuilder {
             if (isAssociation(attribute)) {
 
                 if (!(from instanceof From)) {
-                    throw new JpaSystemException(new IllegalArgumentException(
-                            String.format("Unexpected path type for %s. Found %s where From.class was expected.", currentPath, from)));
+                    throw new JpaSystemException(new IllegalArgumentException(String
+                            .format("Unexpected path type for %s. Found %s where From.class was expected.", currentPath, from)));
                 }
 
                 QueryByExamplePredicateBuilder.PathNode node = currentNode.add(attribute.getName(), attributeValue);
@@ -159,7 +166,7 @@ public class QueryByExamplePredicateBuilder {
     }
 
     /**
-     * {@link QueryByExamplePredicateBuilder.PathNode} is used to dynamically grow a directed graph structure that allows to detect cycles within its
+     * {@link org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder.PathNode} is used to dynamically grow a directed graph structure that allows to detect cycles within its
      * direct predecessor nodes by comparing parent node values using {@link System#identityHashCode(Object)}.
      *
      * @author Christoph Strobl
@@ -167,18 +174,20 @@ public class QueryByExamplePredicateBuilder {
     private static class PathNode {
 
         String name;
+        @Nullable
         QueryByExamplePredicateBuilder.PathNode parent;
         List<QueryByExamplePredicateBuilder.PathNode> siblings = new ArrayList<>();
+        @Nullable
         Object value;
 
-        public PathNode(String edge, QueryByExamplePredicateBuilder.PathNode parent, Object value) {
+        PathNode(String edge, @Nullable QueryByExamplePredicateBuilder.PathNode parent, @Nullable Object value) {
 
             this.name = edge;
             this.parent = parent;
             this.value = value;
         }
 
-        QueryByExamplePredicateBuilder.PathNode add(String attribute, Object value) {
+        QueryByExamplePredicateBuilder.PathNode add(String attribute, @Nullable Object value) {
 
             QueryByExamplePredicateBuilder.PathNode node = new QueryByExamplePredicateBuilder.PathNode(attribute, this, value);
             siblings.add(node);
@@ -192,14 +201,14 @@ public class QueryByExamplePredicateBuilder {
             }
 
             String identityHex = ObjectUtils.getIdentityHexString(value);
-            QueryByExamplePredicateBuilder.PathNode tmp = parent;
+            QueryByExamplePredicateBuilder.PathNode current = parent;
 
-            while (tmp != null) {
+            while (current != null) {
 
-                if (ObjectUtils.getIdentityHexString(tmp.value).equals(identityHex)) {
+                if (current.value != null && ObjectUtils.getIdentityHexString(current.value).equals(identityHex)) {
                     return true;
                 }
-                tmp = tmp.parent;
+                current = current.parent;
             }
 
             return false;
