@@ -1,5 +1,6 @@
 package com.hk.core.authentication.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.UserPrincipal;
@@ -21,8 +22,10 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
     /**
      *
      */
+    @JsonIgnore
     private final String passWord;
 
+    @JsonIgnore
     private Byte userStatus;
 
     public SecurityUserPrincipal(Boolean isProtect, String userId, String userName, String passWord, String nickName, Byte userType,
@@ -39,12 +42,12 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authoritieList = new ArrayList<>();
+        List<GrantedAuthority> authorityList = new ArrayList<>();
         Collection<String> permissions = getPermissionByAppId(getAppCode().getAppId());
         if (CollectionUtils.isNotEmpty(permissions)) {
-            permissions.forEach(permission -> authoritieList.add(new SimpleGrantedAuthority(permission)));
+            permissions.forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission)));
         }
-        return authoritieList;
+        return authorityList;
     }
 
     @Override
@@ -58,21 +61,25 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return ByteConstants.ONE.equals(userStatus);
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return ByteConstants.ONE.equals(userStatus);
     }

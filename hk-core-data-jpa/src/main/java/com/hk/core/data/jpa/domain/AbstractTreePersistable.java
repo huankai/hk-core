@@ -12,6 +12,7 @@ import java.util.Set;
  * @date 2018-05-11 17:17
  */
 @MappedSuperclass
+@Deprecated
 public abstract class AbstractTreePersistable<T> extends AbstractAuditable implements TreePersistable<T, String> {
 
     /**

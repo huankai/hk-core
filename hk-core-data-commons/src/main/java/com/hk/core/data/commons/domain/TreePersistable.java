@@ -11,6 +11,7 @@ import java.util.Set;
  * @author: kevin
  * @date 2018-06-07 12:18
  */
+@Deprecated
 public interface TreePersistable<T, ID extends Serializable> extends Persistable<ID> {
 
     /**
