@@ -45,24 +45,26 @@ public abstract class SolrDeltaImportUtils {
                                    String hostUrl, String solrCore) {
         SolrDeltaImport solrDeltaImport = AnnotationUtils.getAnnotation(method,
                 SolrDeltaImport.class);
-        String[] entities = solrDeltaImport.entities();
-        Arrays.stream(entities).forEach(item -> {
-            try {
-                String response = executor.execute(getDataImportUrl(hostUrl, solrCore), getParams(item));
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Solr response result :{}", response);
+        if(null != solrDeltaImport){
+            String[] entities = solrDeltaImport.entities();
+            Arrays.stream(entities).forEach(item -> {
+                try {
+                    String response = executor.execute(getDataImportUrl(hostUrl, solrCore), getDeltaImportParams(item));
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("Solr response result :{}", response);
+                    }
+                } catch (IOException e) {
+                    LOGGER.error(e.getMessage(), e);
                 }
-            } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-        });
+            });
+        }
     }
 
     /**
      * @param entity
      * @return
      */
-    private static Map<String, Object> getParams(String entity) {
+    private static Map<String, Object> getDeltaImportParams(String entity) {
         Map<String, Object> params = new HashMap<>();
         params.put("verbose", "false");
         params.put("command", "delta-import");
