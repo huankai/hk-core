@@ -28,17 +28,4 @@ public class SpringSecurityContext implements SecurityContext {
                 && authentication.isAuthenticated();
     }
 
-    @Override
-    public void setSessionAttribute(String key, Object value, boolean create) {
-    }
-
-    @Override
-    public <T> T getSessionAttribute(String key) {
-        return null;
-    }
-
-    @Override
-    public void removeSessionAttribute(String key) {
-    }
-
 }

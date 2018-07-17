@@ -33,7 +33,7 @@ public class AdditionalSimpleQueryPage<T> extends SimpleQueryPage<T> {
         this.additional = additional;
     }
 
-    public AdditionalSimpleQueryPage(QueryPage<T> page, Object additional) {
+    public AdditionalSimpleQueryPage(SimpleQueryPage<T> page, Object additional) {
         super(page.getData(), page.getTotalRow(), page.getPageIndex(), page.getPageSize());
         this.additional = additional;
     }

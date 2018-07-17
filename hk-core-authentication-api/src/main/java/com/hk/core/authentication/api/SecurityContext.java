@@ -22,38 +22,4 @@ public interface SecurityContext {
 	 */
 	boolean isAuthenticated();
 
-	/**
-	 * 设置Session属性，如果session不存在，不创建新的session
-	 * 
-	 * @param key
-	 * @param value
-	 */
-	default void setSessionAttribute(String key, Object value) {
-		setSessionAttribute(key, value, false);
-	}
-
-	/**
-	 * 设置Session属性
-	 * 
-	 * @param key
-	 * @param value
-	 * @param create
-	 */
-	void setSessionAttribute(String key, Object value, boolean create);
-
-	/**
-	 * 获取Session属性值
-	 * 
-	 * @param key
-	 * @return
-	 */
-	<T> T getSessionAttribute(String key);
-
-	/**
-	 * 删除session属性值
-	 * 
-	 * @param key
-	 */
-	void removeSessionAttribute(String key);
-
 }

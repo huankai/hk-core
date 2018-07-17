@@ -125,7 +125,7 @@ public class UserPrincipal implements Serializable {
     /**
      * 是否为管理员
      *
-     * @return
+     * @return true if is an admin.
      */
     public final boolean isAdministrator() {
         return isProtect;

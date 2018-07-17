@@ -210,7 +210,7 @@ public abstract class Webs {
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try (PrintWriter writer = response.getWriter()) {
             response.setStatus(status);
-            writer.write(JsonUtils.toJSONString(result));
+            writer.write(JsonUtils.serialize(result));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }

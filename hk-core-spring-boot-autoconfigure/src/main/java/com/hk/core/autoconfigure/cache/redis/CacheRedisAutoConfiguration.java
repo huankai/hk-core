@@ -12,13 +12,15 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.util.Objects;
+
 /**
  * @author: kevin
  * @date 2018-05-31 17:45
  */
 @Configuration
 @ConditionalOnClass(RedisTemplate.class)
-public class CacheReidsAutoConfiguration {
+public class CacheRedisAutoConfiguration {
 
     @Bean
     public RedisTemplate redisTemplate(RedisConnectionFactory connectionFactory) {
@@ -39,29 +41,14 @@ public class CacheReidsAutoConfiguration {
 
     private static class GenericFastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
 
-        /**
-         * <p>
-         * fastjson autoType
-         * </p>
-         * https://github.com/alibaba/fastjson/wiki/enable_autotype
-         */
-        private String acceptBasePackage = "com.hk";
-
-        /**
-         * 对于属性有上下级映射的，排序序列化
-         *
-         * @see com.hk.core.data.jpa.domain.AbstractTreePersistable
-         */
-        private static final String[] EXCLUDE_PROPERTIES = new String[]{"parent", "childs"};
 
         @Override
         public byte[] serialize(T t) throws SerializationException {
             if (null == t) {
                 return new byte[0];
             }
-            FastJsonWraper<T> wraper = new FastJsonWraper<>(t);
-            return null;
-//            return JsonUtils.toJSONStringExcludes(wraper, EXCLUDE_PROPERTIES, SerializerFeature.WriteClassName).getBytes(Contants.CHARSET_UTF_8);
+            JsonWraper<T> wraper = new JsonWraper<>(t);
+            return JsonUtils.serialize(wraper).getBytes(Contants.CHARSET_UTF_8);
         }
 
         @Override
@@ -71,22 +58,19 @@ public class CacheReidsAutoConfiguration {
                 return null;
             }
             String jsonString = new String(bytes, Contants.CHARSET_UTF_8);
-//            ParserConfig.getGlobalInstance().addAccept(acceptBasePackage);
-//            FastJsonWraper<T> wraper = JsonUtils.parseObject(jsonString, FastJsonWraper.class);
-//            return wraper.getValue();
-            return null;
+            return (T) Objects.requireNonNull(JsonUtils.deserialize(jsonString, JsonWraper.class), "Json String to Object is Null:" + jsonString).value;
         }
     }
 
-    private static class FastJsonWraper<T> {
+    private static class JsonWraper<T> {
 
         private T value;
 
-        public FastJsonWraper() {
+        public JsonWraper() {
 
         }
 
-        public FastJsonWraper(T value) {
+        public JsonWraper(T value) {
             this.value = value;
         }
 
