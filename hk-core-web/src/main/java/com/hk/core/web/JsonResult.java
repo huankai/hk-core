@@ -14,27 +14,51 @@ public final class JsonResult {
 
     public enum Status {
 
+        /**
+         * 成功
+         */
         @EnumDisplay(value = "operation.success", order = 10200)
         SUCCESS,
 
+        /**
+         * 失败
+         */
         @EnumDisplay(value = "operation.failure", order = -1)
         FAILURE,
 
+        /**
+         * 重定向
+         */
         @EnumDisplay(value = "operation.redirect", order = 10302)
         REDIRECT,
 
+        /**
+         * 坏的请求
+         */
         @EnumDisplay(value = "operation.bad_request", order = 10400)
         BAD_REQUEST,
 
+        /**
+         * 未认证
+         */
         @EnumDisplay(value = "operation.unauthorized", order = 10401)
         UNAUTHORIZED,
 
+        /**
+         * 资源不存在
+         */
         @EnumDisplay(value = "operation.not_found", order = 10404)
         NOT_FOUND,
 
+        /**
+         * 请求方法不支持
+         */
         @EnumDisplay(value = "operation.method_not_allowed", order = 10405)
         METHOD_NOT_ALLOWED,
 
+        /**
+         * 服务器错误
+         */
         @EnumDisplay(value = "operation.server_error", order = 10500)
         SERVER_ERROR
     }

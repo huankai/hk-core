@@ -9,11 +9,6 @@
         <version>2.0.0.RELEASE</version>
     </parent>
     <artifactId>hk-core-web</artifactId>
-    <name>hk-core-web</name>
-    <url>http://maven.apache.org</url>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -32,12 +27,6 @@
             <groupId>com.hk</groupId>
             <artifactId>hk-commons-util</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-authentication-api</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

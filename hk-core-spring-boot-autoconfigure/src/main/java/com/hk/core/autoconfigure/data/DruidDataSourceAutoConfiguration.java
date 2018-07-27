@@ -26,12 +26,7 @@ import javax.sql.DataSource;
 @ConditionalOnProperty(name = "spring.datasource.type", havingValue = "com.alibaba.druid.pool.DruidDataSource", matchIfMissing = true)
 public class DruidDataSourceAutoConfiguration {
 
-    /**
-     * @param properties
-     * @param type
-     * @return
-     */
-    protected DataSource createDataSource(DataSourceProperties properties, Class<? extends DataSource> type) {
+    private DataSource createDataSource(DataSourceProperties properties, Class<? extends DataSource> type) {
         return properties.initializeDataSourceBuilder().type(type).build();
     }
 
@@ -39,10 +34,10 @@ public class DruidDataSourceAutoConfiguration {
      * DruidDataSource
      *
      * @param properties 读入的配置
-     * @return
+     * @return DruidDataSource
      */
     @Bean
-    @ConfigurationProperties("spring.datasource.druid")
+    @ConfigurationProperties(prefix = "spring.datasource.druid")
     public DruidDataSource dataSource(DataSourceProperties properties) {
         DruidDataSource dataSource = (DruidDataSource) createDataSource(properties, DruidDataSource.class);
         String validationQuery = dataSource.getValidationQuery();
@@ -53,14 +48,15 @@ public class DruidDataSourceAutoConfiguration {
         return dataSource;
     }
 
+    @Configuration
     @ConditionalOnWebApplication
-    static class DuridDataWebAutoCOnfiguration {
+    static class DruidDataWebAutoConfiguration {
         /**
          * 注册一个StatViewServlet
          */
         @Bean
         public ServletRegistrationBean druidStatViewServlet() {
-            ServletRegistrationBean registrationBean = new ServletRegistrationBean(new StatViewServlet(),
+            ServletRegistrationBean<StatViewServlet> registrationBean = new ServletRegistrationBean<>(new StatViewServlet(),
                     "/monitor/druid/*");
             // 添加初始化参数：initParams
             // 白名单：
@@ -81,7 +77,7 @@ public class DruidDataSourceAutoConfiguration {
          */
         @Bean
         public FilterRegistrationBean druidStatFilter() {
-            FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
+            FilterRegistrationBean<WebStatFilter> filterRegistrationBean = new FilterRegistrationBean<>(new WebStatFilter());
             filterRegistrationBean.setName("druidWebStatFilter");
             // 添加过滤规则.
             filterRegistrationBean.addUrlPatterns("/*");

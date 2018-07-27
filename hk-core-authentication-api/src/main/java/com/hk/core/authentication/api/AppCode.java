@@ -1,11 +1,18 @@
 package com.hk.core.authentication.api;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
 /**
  * @author: kevin
  * @date 2018-07-12 16:30
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AppCode implements Serializable {
 
     private String appId;
@@ -13,29 +20,4 @@ public class AppCode implements Serializable {
     private String appCode;
 
     private String appName;
-
-
-    public String getAppId() {
-        return appId;
-    }
-
-    public void setAppId(String appId) {
-        this.appId = appId;
-    }
-
-    public String getAppCode() {
-        return appCode;
-    }
-
-    public void setAppCode(String appCode) {
-        this.appCode = appCode;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
 }

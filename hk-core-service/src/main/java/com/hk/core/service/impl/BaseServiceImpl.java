@@ -1,14 +1,15 @@
 package com.hk.core.service.impl;
 
+import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.data.commons.dao.BaseDao;
 import com.hk.core.data.commons.domain.TreePersistable;
 import com.hk.core.data.commons.query.Order;
 import com.hk.core.data.commons.query.QueryModel;
 import com.hk.core.data.commons.query.QueryPage;
+import com.hk.core.data.jpa.repository.BaseRepository;
 import com.hk.core.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Autowired
     private SecurityContext securityContext;
 
-    protected UserPrincipal getUserPrincipal() {
+    protected final UserPrincipal getUserPrincipal() {
         return securityContext.getPrincipal();
     }
 
@@ -48,36 +49,36 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
      *
      * @return
      */
-    protected abstract BaseDao<T, ID> getBaseDao();
+    protected abstract BaseRepository<T, ID> getBaseRepository();
 
     @Override
     public void deleteById(ID id) {
-        getBaseDao().deleteById(id);
+        getBaseRepository().deleteById(id);
     }
 
     @Override
     public void deleteByIds(Collection<ID> ids) {
-        getBaseDao().deleteByIds(ids);
+        ids.forEach(this::deleteById);
     }
 
     @Override
     public void delete(T entity) {
-        getBaseDao().delete(entity);
+        getBaseRepository().delete(entity);
     }
 
     @Override
     public void delete(Collection<T> entities) {
-        getBaseDao().delete(entities);
+        getBaseRepository().deleteAll(entities);
     }
 
     @Override
     public T insert(T t) {
-        return getBaseDao().save(saveBefore(t));
+        return getBaseRepository().save(saveBefore(t));
     }
 
     @Override
     public Collection<T> batchInsert(Collection<T> entities) {
-        return getBaseDao().batchSave(entities);
+        return getBaseRepository().saveAll(entities);
     }
 
     /**
@@ -93,18 +94,19 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     @Transactional(readOnly = true)
     public Optional<T> findOne(ID id) {
-        return getBaseDao().findOne(id);
+        return getBaseRepository().findById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public T getOne(ID id) {
-        return getBaseDao().getOne(id);
+        return getBaseRepository().getOne(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<T> findOne(T t) {
-        return getBaseDao().findOne(Example.of(checkNull(t), ofExampleMatcher()));
+        return getBaseRepository().findOne(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     protected ExampleMatcher ofExampleMatcher() {
@@ -114,50 +116,51 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     @Transactional(readOnly = true)
     public List<T> findAll(T t, Order... orders) {
-        return getBaseDao().findAll(Example.of(checkNull(t), ofExampleMatcher()), orders);
+        return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()), orders);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<T> findAll() {
-        return getBaseDao().findAll();
+        return getBaseRepository().findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<T> findByIds(Iterable<ID> ids) {
-        return getBaseDao().findByIds(ids);
+    public Collection<T> findByIds(Iterable<ID> ids) {
+        return getBaseRepository().findAllById(ids);
+
     }
 
     @Override
     @Transactional(readOnly = true)
     public QueryPage<T> queryForPage(QueryModel<T> query) {
-        return getBaseDao().findByPage(Example.of(checkNull(query.getParam()), ofExampleMatcher()),
+        return getBaseRepository().findByPage(Example.of(checkNull(query.getParam()), ofExampleMatcher()),
                 query.getOrders(), query.getStartRowIndex(), query.getPageSize());
     }
 
     @Override
     @Transactional(readOnly = true)
     public boolean exists(ID id) {
-        return getBaseDao().exists(id);
+        return getBaseRepository().existsById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public boolean exists(T t) {
-        return getBaseDao().exists(Example.of(checkNull(t), ofExampleMatcher()));
+        return getBaseRepository().exists(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public long count() {
-        return getBaseDao().count();
+        return getBaseRepository().count();
     }
 
     @Override
     @Transactional(readOnly = true)
     public long count(T t) {
-        return getBaseDao().count(Example.of(checkNull(t), ofExampleMatcher()));
+        return getBaseRepository().count(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @SuppressWarnings("unchecked")
@@ -171,17 +174,18 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     public T updateById(T t) {
-        return getBaseDao().update(t);
+        AssertUtils.isTrue(!t.isNew(), "Update Id must not be null");
+        return getBaseRepository().save(t);
     }
 
     @Override
     public T updateByIdSelective(T t) {
-        return getBaseDao().updateByIdSelective(t);
+        return getBaseRepository().updateByIdSelective(t);
     }
 
     @Override
     public Collection<T> batchUpdate(Collection<T> entities) {
-        return getBaseDao().batchSave(entities);
+        return getBaseRepository().saveAll(entities);
     }
 
     /**

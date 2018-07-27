@@ -1,4 +1,4 @@
-package com.hk.core.data.commons.util;
+package com.hk.core.data.jpa.util;
 
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
@@ -10,12 +10,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Order util
- *
  * @author: kevin
- * @date 2018-07-04 12:12
+ * @date 2018-07-24 16:37
  */
 public abstract class OrderUtils {
+
 
     /**
      * 转换为Spring Data Sort

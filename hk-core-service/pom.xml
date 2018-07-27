@@ -9,11 +9,6 @@
         <version>2.0.0.RELEASE</version>
     </parent>
     <artifactId>hk-core-service</artifactId>
-    <name>hk-core-service</name>
-    <url>http://maven.apache.org</url>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -30,7 +25,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-core-data-commons</artifactId>
+            <artifactId>hk-core-data-jpa</artifactId>
         </dependency>
 
         <dependency>

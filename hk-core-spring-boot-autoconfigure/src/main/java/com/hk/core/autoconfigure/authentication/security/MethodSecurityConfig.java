@@ -35,8 +35,12 @@ import java.util.Set;
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
-    @Autowired
-    private AppCodeContext appCodeContext;
+    private final AppCodeContext appCodeContext;
+
+    @Autowired(required = false)
+    public MethodSecurityConfig(AppCodeContext appCodeContext) {
+        this.appCodeContext = appCodeContext;
+    }
 
     public PermissionEvaluator permissionEvaluator() {
         return new PermissionEvaluator() {

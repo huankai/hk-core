@@ -58,7 +58,7 @@ public class CacheRedisAutoConfiguration {
                 return null;
             }
             String jsonString = new String(bytes, Contants.CHARSET_UTF_8);
-            return (T) Objects.requireNonNull(JsonUtils.deserialize(jsonString, JsonWraper.class), "Json String to Object is Null:" + jsonString).value;
+            return (T) Objects.requireNonNull(JsonUtils.deserialize(jsonString, JsonWraper.class), "Json String to Object is Null:" + jsonString).getValue();
         }
     }
 

@@ -38,7 +38,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
     /**
      * 获取用户权限
      *
-     * @return
+     * @return GrantedAuthorityList
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -60,24 +60,44 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
         return getNickName();
     }
 
+    /**
+     * 用户不过期
+     *
+     * @return true
+     */
     @Override
     @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * 账户是否锁定
+     *
+     * @return true if userStatus is One.
+     */
     @Override
     @JsonIgnore
     public boolean isAccountNonLocked() {
         return ByteConstants.ONE.equals(userStatus);
     }
 
+    /**
+     * 密码是否不过期
+     *
+     * @return true
+     */
     @Override
     @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    /**
+     * 账户是否可用
+     *
+     * @return true if userStatus is One.
+     */
     @Override
     @JsonIgnore
     public boolean isEnabled() {

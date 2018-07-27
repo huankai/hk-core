@@ -1,5 +1,6 @@
 package com.hk.core.data.jpa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -43,6 +44,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * </pre>
      */
     @CreatedBy
+    @JsonIgnore
     @Column(name = "created_by", updatable = false)
     private String createdBy;
 
@@ -50,6 +52,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * 创建时间
      */
     @CreatedDate
+    @JsonIgnore
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;
 
@@ -57,6 +60,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * 最后更新用户
      */
     @Column(name = "last_modified_by")
+    @JsonIgnore
     @LastModifiedBy
     private String lastModifiedBy;
 
@@ -64,6 +68,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * 最后更新时间
      */
     @LastModifiedDate
+    @JsonIgnore
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 

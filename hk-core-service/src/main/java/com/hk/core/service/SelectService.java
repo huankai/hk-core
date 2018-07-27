@@ -1,17 +1,13 @@
 package com.hk.core.service;
 
 import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.AssertUtils;
 import com.hk.core.data.commons.query.Order;
 import com.hk.core.data.commons.query.QueryModel;
 import com.hk.core.data.commons.query.QueryPage;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author: kevin
@@ -53,13 +49,13 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * @param ids
      * @return
      */
-    Iterable<T> findByIds(Iterable<ID> ids);
+    Collection<T> findByIds(Iterable<ID> ids);
 
     /**
      * @param ids
      * @return
      */
-    default Iterable<T> findByIds(ID... ids) {
+    default Collection<T> findByIds(ID... ids) {
        return ArrayUtils.isEmpty(ids) ? Collections.emptyList() : findByIds(Arrays.asList(ids));
     }
 

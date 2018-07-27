@@ -1,12 +1,5 @@
 package com.hk.core.data.jpa.repository;
 
-import com.hk.commons.util.AssertUtils;
-import com.hk.commons.util.BeanUtils;
-import com.hk.core.data.commons.query.Order;
-import com.hk.core.data.commons.query.QueryModel;
-import com.hk.core.data.commons.query.QueryPage;
-import com.hk.core.data.commons.query.SimpleQueryPage;
-import com.hk.core.data.commons.util.OrderUtils;
 import com.hk.core.data.jpa.convert.QueryByExamplePredicateBuilder;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,9 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -89,58 +80,8 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    public boolean exists(ID id) {
+    public boolean existsById(ID id) {
         return super.existsById(id);
-    }
-
-    @Override
-    public T update(T t) {
-        AssertUtils.isTrue(!t.isNew(), "Give id must not be null.");
-        return super.save(t);
-    }
-
-    @Override
-    public void deleteByIds(Collection<ID> ids) {
-        ids.forEach(this::deleteById);
-    }
-
-    @Override
-    public void delete(Collection<T> entities) {
-        super.deleteAll(entities);
-    }
-
-    @Override
-    public Iterable<T> findByIds(Iterable<ID> ids) {
-        return super.findAllById(ids);
-    }
-
-    @Override
-    public Optional<T> findOne(ID id) {
-        return super.findById(id);
-    }
-
-    @Override
-    public T saveOrUpdate(T t) {
-        return super.save(t);
-    }
-
-    @Override
-    public T save(T t) {
-        return super.save(t);
-    }
-
-    @Override
-    public Collection<T> batchSave(Collection<T> entities) {
-        return super.saveAll(entities);
-    }
-
-
-    @Override
-    public T updateByIdSelective(T t) {
-        AssertUtils.isTrue(!t.isNew(), "Give ID must not be null");
-        T find = getOne(t.getId());
-        BeanUtils.copyNotNullProperties(t, find);
-        return super.save(find);
     }
 
     /**
