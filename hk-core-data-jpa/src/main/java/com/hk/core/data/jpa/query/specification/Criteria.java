@@ -1,26 +1,29 @@
 package com.hk.core.data.jpa.query.specification;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.core.data.commons.query.Order;
-import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.core.data.commons.query.Order;
+
+@SuppressWarnings("serial")
 public class Criteria<T> implements Specification<T> {
 
-    private List<Criterion<T>> criterions = new ArrayList();
+    private List<Criterion<T>> criterions = new ArrayList<>();
 
-    private List<Criterion<T>> havings = new ArrayList();
+    private List<Criterion<T>> havings = new ArrayList<>();
 
-    private List<Order> orders = new ArrayList();
+    private List<Order> orders = new ArrayList<>();
 
     private List<String> groupByPropertyNames;
 

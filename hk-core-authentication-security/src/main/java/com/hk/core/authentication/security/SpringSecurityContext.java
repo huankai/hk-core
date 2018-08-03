@@ -8,9 +8,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
+ * 使用 Spring Security 获取当前登陆用户信息
+ *
  * @author: kevin
  */
-public class SpringSecurityContext implements SecurityContext {
+public final class SpringSecurityContext implements SecurityContext {
 
     @Override
     public UserPrincipal getPrincipal() {

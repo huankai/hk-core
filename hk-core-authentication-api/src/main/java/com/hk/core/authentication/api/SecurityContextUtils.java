@@ -3,26 +3,12 @@ package com.hk.core.authentication.api;
 import com.hk.commons.util.SpringContextHolder;
 
 /**
- * <p>
- * SecurityContextUtils
- * </p>
- *
  * @author: kevin
- * @date 2018-04-16 09:39
- * @see SecurityContext
+ * @date 2018-08-01 16:58
  */
-public final class SecurityContextUtils {
+public class SecurityContextUtils {
 
-
-    /**
-     * @return 返回当前登陆的用户
-     */
     public static UserPrincipal getPrincipal() {
-        return getSecurityContext().getPrincipal();
-    }
-
-
-    private static SecurityContext getSecurityContext() {
-        return SpringContextHolder.getBean(SecurityContext.class);
+        return SpringContextHolder.getBean(SecurityContext.class).getPrincipal();
     }
 }

@@ -1,9 +1,9 @@
 package com.hk.core.authentication.security.authentication.email;
 
+import java.util.Collection;
+
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
 
 /**
  * Email AuthenticationToken
@@ -11,6 +11,7 @@ import java.util.Collection;
  * @author: kevin
  * @date 2018-07-26 16:37
  */
+@SuppressWarnings("serial")
 public class EmailAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Object principal;

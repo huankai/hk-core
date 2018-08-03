@@ -1,11 +1,10 @@
 package com.hk.core.authentication.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * 当前登陆的用户
@@ -27,14 +26,14 @@ public class UserPrincipal implements Serializable {
     private String userId;
 
     /**
-     * 用户名
+     * 用户账号
      */
-    private String userName;
+    private String account;
 
     /**
-     * 用户匿名
+     * 真实名称
      */
-    private String nickName;
+    private String realName;
 
     /**
      * 用户类型
@@ -64,38 +63,34 @@ public class UserPrincipal implements Serializable {
     /**
      * appId
      */
-    private AppCode appCode;
+    private ClientAppInfo appInfo;
 
     /**
-     * isProtect
+     * 是否受保护的用户
+     * protectUser
      */
-    private final boolean isProtect;
+    @JsonIgnore
+    private final boolean protectUser;
 
     /**
      * 用户角色
-     * <pre>
-     *     key :appId
-     *     value:角色列表
-     * </pre>
      */
-    private Map<String, Collection<String>> appRoleSet;
+    @JsonIgnore
+    private Set<String> roleSet;
 
     /**
      * 用户权限
-     * * <pre>
-     *     key :appId
-     *     value:权限列表
-     * </pre>
      */
-    private Map<String, Collection<String>> appPermissionSet;
+    @JsonIgnore
+    private Set<String> permissionSet;
 
-    public UserPrincipal(String userId, String userName, boolean isProtect, String nickName,
+    public UserPrincipal(String userId, String account, boolean protectUser, String realName,
                          Byte userType, String phone, String email,
                          Byte sex, String iconPath) {
         this.userId = userId;
-        this.userName = userName;
-        this.isProtect = isProtect;
-        this.nickName = nickName;
+        this.account = account;
+        this.protectUser = protectUser;
+        this.realName = realName;
         this.userType = userType;
         this.phone = phone;
         this.email = email;
@@ -103,32 +98,15 @@ public class UserPrincipal implements Serializable {
         this.iconPath = iconPath;
     }
 
-    public Collection<String> getRoleByAppId(String appId) {
-        return filterByAppId(appRoleSet, appId);
-    }
-
-    private Collection<String> filterByAppId(Map<String, Collection<String>> map, String appId) {
-        Collection<String> result = null;
-        if (map != null) {
-            result = map.get(appId);
-        }
-        if (result == null) {
-            result = Collections.emptyList();
-        }
-        return Collections.unmodifiableCollection(result);
-    }
-
-    public Collection<String> getPermissionByAppId(String appId) {
-        return filterByAppId(appPermissionSet, appId);
-    }
 
     /**
      * 是否为管理员
      *
      * @return true if is an admin.
      */
+    @JsonIgnore
     public final boolean isAdministrator() {
-        return isProtect;
+        return protectUser;
     }
 
 }

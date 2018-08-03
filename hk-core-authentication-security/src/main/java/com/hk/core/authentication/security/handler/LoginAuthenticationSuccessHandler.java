@@ -45,7 +45,7 @@ public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
                 result.put("userId", principal.getUserId());
                 result.put("username", principal.getUsername());
                 result.put("sex", principal.getSex());
-                result.put("nickName", principal.getNickName());
+                result.put("realName", principal.getRealName());
                 result.put("iconPath", principal.getIconPath());
                 Webs.writeJson(response, HttpStatus.OK.value(), JsonResult.success(result));
                 break;

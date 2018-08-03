@@ -1,16 +1,19 @@
 package com.hk.core.authentication.security;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hk.commons.util.ByteConstants;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.core.authentication.api.UserPrincipal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hk.commons.util.ByteConstants;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.StringUtils;
+import com.hk.core.authentication.api.UserPrincipal;
 
 /**
  * @author: kevin
@@ -26,14 +29,16 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
     private final String passWord;
 
     @JsonIgnore
-    private Byte userStatus;
+    private final Byte userStatus;
 
-    public SecurityUserPrincipal(Boolean isProtect, String userId, String userName, String passWord, String nickName, Byte userType,
-                                 String phone, String email, Byte sex, String iconPath, Byte userStatus) {
-        super(userId, userName, isProtect, nickName, userType, phone, email, sex, iconPath);
-        this.passWord = passWord;
+    public SecurityUserPrincipal(String userId, String account, boolean protectUser,
+                                 String realName, Byte userType, String phone,
+                                 String email, Byte sex, String iconPath, String passWord, Byte userStatus) {
+        super(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
         this.userStatus = userStatus;
+        this.passWord = passWord;
     }
+
 
     /**
      * 获取用户权限
@@ -41,23 +46,35 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails 
      * @return GrantedAuthorityList
      */
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        Collection<String> permissions = getPermissionByAppId(getAppCode().getAppId());
-        if (CollectionUtils.isNotEmpty(permissions)) {
-            permissions.forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission)));
+        Set<String> roleSet = getRoleSet();
+        if (CollectionUtils.isNotEmpty(roleSet)) {
+            roleSet.forEach(role -> {
+                if (!StringUtils.startsWith(role, "ROLE_")) {
+                    role = "ROLE_" + role;
+                }
+                authorityList.add(new SimpleGrantedAuthority(role));
+
+            });
+        }
+        Set<String> permissionSet = getPermissionSet();
+        if (CollectionUtils.isNotEmpty(permissionSet)) {
+            roleSet.forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission)));
         }
         return authorityList;
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return passWord;
     }
 
     @Override
     public String getUsername() {
-        return getNickName();
+        return getAccount();
     }
 
     /**

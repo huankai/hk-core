@@ -1,8 +1,7 @@
 package com.hk.core.autoconfigure.data;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.support.http.StatViewServlet;
-import com.alibaba.druid.support.http.WebStatFilter;
+import javax.sql.DataSource;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -13,7 +12,9 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.sql.DataSource;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.support.http.StatViewServlet;
+import com.alibaba.druid.support.http.WebStatFilter;
 
 /**
  * Druid DataSource 自动配置
@@ -55,7 +56,7 @@ public class DruidDataSourceAutoConfiguration {
          * 注册一个StatViewServlet
          */
         @Bean
-        public ServletRegistrationBean druidStatViewServlet() {
+        public ServletRegistrationBean<StatViewServlet> druidStatViewServlet() {
             ServletRegistrationBean<StatViewServlet> registrationBean = new ServletRegistrationBean<>(new StatViewServlet(),
                     "/monitor/druid/*");
             // 添加初始化参数：initParams
@@ -76,7 +77,7 @@ public class DruidDataSourceAutoConfiguration {
          * 注册一个：filterRegistrationBean
          */
         @Bean
-        public FilterRegistrationBean druidStatFilter() {
+        public FilterRegistrationBean<WebStatFilter> druidStatFilter() {
             FilterRegistrationBean<WebStatFilter> filterRegistrationBean = new FilterRegistrationBean<>(new WebStatFilter());
             filterRegistrationBean.setName("druidWebStatFilter");
             // 添加过滤规则.

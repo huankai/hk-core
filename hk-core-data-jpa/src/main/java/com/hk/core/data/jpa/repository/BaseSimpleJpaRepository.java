@@ -1,11 +1,7 @@
 package com.hk.core.data.jpa.repository;
 
-import com.hk.core.data.jpa.convert.QueryByExamplePredicateBuilder;
-import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.util.Assert;
+import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -13,8 +9,19 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.Serializable;
-import java.util.List;
+
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.util.Assert;
+
+import com.hk.core.data.jpa.convert.QueryByExamplePredicateBuilder;
 
 
 /**
@@ -92,7 +99,8 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
      * @author Christoph Strobl
      * @since 1.10
      */
-    private static class ExampleSpecification<T> implements Specification<T> {
+    @SuppressWarnings("serial")
+	private static class ExampleSpecification<T> implements Specification<T> {
 
         private final Example<T> example;
 

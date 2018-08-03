@@ -1,17 +1,12 @@
 package com.hk.core.service.impl;
 
-import com.hk.commons.util.AssertUtils;
-import com.hk.commons.util.BeanUtils;
-import com.hk.commons.util.ObjectUtils;
-import com.hk.core.authentication.api.SecurityContext;
-import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.data.commons.domain.TreePersistable;
-import com.hk.core.data.commons.query.Order;
-import com.hk.core.data.commons.query.QueryModel;
-import com.hk.core.data.commons.query.QueryPage;
-import com.hk.core.data.jpa.repository.BaseRepository;
-import com.hk.core.service.BaseService;
-import lombok.extern.slf4j.Slf4j;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.domain.Example;
@@ -19,10 +14,17 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Persistable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import com.hk.commons.util.AssertUtils;
+import com.hk.commons.util.BeanUtils;
+import com.hk.commons.util.ObjectUtils;
+import com.hk.core.authentication.api.SecurityContext;
+import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.data.commons.query.Order;
+import com.hk.core.data.commons.query.QueryModel;
+import com.hk.core.data.commons.query.QueryPage;
+import com.hk.core.data.jpa.repository.BaseRepository;
+import com.hk.core.exception.ServiceException;
+import com.hk.core.service.BaseService;
 
 /**
  * Service CRUD操作
@@ -31,10 +33,11 @@ import java.util.Optional;
  * @author kevin
  * @date 2017年9月27日下午2:16:24
  */
-@Slf4j
 @Transactional(rollbackFor = {Throwable.class})
 public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	
     private Class<T> domainClass;
 
     @Autowired
@@ -196,14 +199,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
      *
      * @param entity
      */
-    @SuppressWarnings("unchecked")
-    protected T saveBefore(T entity) {
-        if (entity instanceof TreePersistable) {
-            TreePersistable<T, ID> treeEntity = (TreePersistable<T, ID>) entity;
-            if (treeEntity.getParent() == null) {
-                treeEntity.setParent(entity);
-            }
-        }
+    protected T saveBefore(T entity) throws ServiceException {
         return entity;
     }
 

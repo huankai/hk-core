@@ -1,13 +1,18 @@
 package com.hk.core.service;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Persistable;
+
 import com.hk.commons.util.ArrayUtils;
 import com.hk.core.data.commons.query.Order;
 import com.hk.core.data.commons.query.QueryModel;
 import com.hk.core.data.commons.query.QueryPage;
-import org.springframework.data.domain.Persistable;
-
-import java.io.Serializable;
-import java.util.*;
 
 /**
  * @author: kevin
@@ -55,7 +60,8 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * @param ids
      * @return
      */
-    default Collection<T> findByIds(ID... ids) {
+    @SuppressWarnings("unchecked")
+	default Collection<T> findByIds(ID... ids) {
        return ArrayUtils.isEmpty(ids) ? Collections.emptyList() : findByIds(Arrays.asList(ids));
     }
 

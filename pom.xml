@@ -16,6 +16,7 @@
 
     <modules>
         <module>hk-core-data-commons</module>
+        <module>hk-core-exception</module>
         <module>hk-core-data-jpa</module>
         <module>hk-core-data-mybatis</module>
         <module>hk-core-data-solr</module>
@@ -23,6 +24,7 @@
         <module>hk-core-web</module>
         <module>hk-core-authentication-api</module>
         <module>hk-core-authentication-security</module>
+        <module>hk-core-authentication-security-oauth2</module>
         <module>hk-core-cache</module>
         <module>hk-core-i18n</module>
         <module>hk-core-spring-boot-autoconfigure</module>

@@ -1,10 +1,9 @@
 package com.hk.core.autoconfigure.authentication.security;
 
-import com.hk.core.authentication.api.AppCodeContext;
+import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.authentication.security.SpringSecurityContext;
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.PermissionEvaluator;
@@ -35,13 +34,6 @@ import java.util.Set;
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
-    private final AppCodeContext appCodeContext;
-
-    @Autowired(required = false)
-    public MethodSecurityConfig(AppCodeContext appCodeContext) {
-        this.appCodeContext = appCodeContext;
-    }
-
     public PermissionEvaluator permissionEvaluator() {
         return new PermissionEvaluator() {
 
@@ -56,8 +48,8 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
             public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
                 UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
                 return principal.isAdministrator()
-                        || principal.isProtect()
-                        || principal.getPermissionByAppId(appCodeContext.getCurrentAppInfo().getAppId()).contains(String.valueOf(permission));
+                        || principal.isProtectUser()
+                        || principal.getPermissionSet().contains(String.valueOf(permission));
             }
 
             /**
@@ -80,7 +72,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
         return new DefaultMethodSecurityExpressionHandler() {
             @Override
             protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
-                ProtectedMethodSecurityExpressionRoot root = new ProtectedMethodSecurityExpressionRoot(authentication, appCodeContext);
+                ProtectedMethodSecurityExpressionRoot root = new ProtectedMethodSecurityExpressionRoot(authentication);
                 root.setThis(invocation.getThis());
                 root.setPermissionEvaluator(permissionEvaluator());
                 root.setTrustResolver(getTrustResolver());
@@ -102,8 +94,6 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
     protected static class ProtectedSecurityExpressionRoot implements SecurityExpressionOperations {
 
         protected final Authentication authentication;
-
-        private AppCodeContext appCodeContext;
 
         private AuthenticationTrustResolver trustResolver;
 
@@ -140,12 +130,11 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
          *
          * @param authentication the {@link Authentication} to use. Cannot be null.
          */
-        public ProtectedSecurityExpressionRoot(Authentication authentication, AppCodeContext appCodeContext) {
+        public ProtectedSecurityExpressionRoot(Authentication authentication) {
             if (authentication == null) {
                 throw new IllegalArgumentException("Authentication object cannot be null");
             }
             this.authentication = authentication;
-            this.appCodeContext = appCodeContext;
         }
 
         @Override
@@ -162,8 +151,8 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
         public boolean hasAnyAuthority(String... authorities) {
             UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
             return principal.isAdministrator()
-                    || principal.isProtect()
-                    || principal.getPermissionByAppId(appCodeContext.getCurrentAppInfo().getAppId()).containsAll(Arrays.asList(authorities))
+                    || principal.isProtectUser()
+                    || principal.getPermissionSet().containsAll(Arrays.asList(authorities))
                     || hasAnyAuthorityName(null, authorities);
         }
 
@@ -181,8 +170,8 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
         public final boolean hasAnyRole(String... roles) {
             UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
             return principal.isAdministrator()
-                    || principal.isProtect()
-                    || principal.getRoleByAppId(appCodeContext.getCurrentAppInfo().getAppId()).containsAll(Arrays.asList(roles))
+                    || principal.isProtectUser()
+                    || CollectionUtils.containsAny(principal.getRoleSet(), Arrays.asList(roles))
                     || hasAnyAuthorityName(defaultRolePrefix, roles);
         }
 
@@ -336,8 +325,8 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
          *
          * @param authentication the {@link Authentication} to use. Cannot be null.
          */
-        public ProtectedMethodSecurityExpressionRoot(Authentication authentication, AppCodeContext appCodeContext) {
-            super(authentication, appCodeContext);
+        public ProtectedMethodSecurityExpressionRoot(Authentication authentication) {
+            super(authentication);
         }
 
         @Override

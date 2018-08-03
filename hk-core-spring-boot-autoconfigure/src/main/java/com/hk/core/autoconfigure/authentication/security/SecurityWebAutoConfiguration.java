@@ -1,19 +1,12 @@
 package com.hk.core.autoconfigure.authentication.security;
 
 import com.hk.commons.sms.SmsCodeSender;
-import com.hk.core.authentication.security.SpringSecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,12 +26,12 @@ import java.util.Set;
  * @author: kevin
  * @date 2017年12月18日下午5:26:46
  */
-@Order(5)
-@Configuration
-@EnableWebSecurity
-@ConditionalOnClass(value = {SpringSecurityContext.class})
-@AutoConfigureAfter(SecurityAuthenticationAutoConfiguration.class)
-@EnableConfigurationProperties(AuthenticationProperties.class)
+//@Order(5)
+//@Configuration
+//@EnableWebSecurity
+//@ConditionalOnClass(value = {SpringSecurityContext.class})
+//@AutoConfigureAfter(SecurityAuthenticationAutoConfiguration.class)
+//@EnableConfigurationProperties(AuthenticationProperties.class)
 public class SecurityWebAutoConfiguration extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationProperties properties;

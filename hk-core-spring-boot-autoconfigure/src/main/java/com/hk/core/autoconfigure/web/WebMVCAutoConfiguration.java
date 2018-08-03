@@ -25,6 +25,7 @@ import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -47,9 +48,13 @@ import java.util.Locale;
 public class WebMVCAutoConfiguration implements WebMvcConfigurer {
 
     @Bean
-    @ConditionalOnClass(SpringContextHolder.class)
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
+    }
+
+    @Override
+    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
+        System.out.println(resolvers.isEmpty());
     }
 
     @Bean

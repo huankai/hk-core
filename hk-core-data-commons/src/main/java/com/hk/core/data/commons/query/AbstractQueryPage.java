@@ -1,14 +1,15 @@
 package com.hk.core.data.commons.query;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 /**
  * @author: kevin
  * @date 2018年1月24日上午10:10:42
  */
 @Data
+@SuppressWarnings("serial")
 abstract class AbstractQueryPage<T> implements QueryPage<T> {
 
     /**

@@ -39,7 +39,7 @@ public class AuthenticationProperties {
      * 浏览器登陆处理
      */
     @Data
-    static class BrowserProperties {
+    public static class BrowserProperties {
 
         /**
          * Get 登陆页面URL

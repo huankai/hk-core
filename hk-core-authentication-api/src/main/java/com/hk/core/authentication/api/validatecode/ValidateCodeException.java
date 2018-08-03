@@ -9,6 +9,7 @@ import com.hk.core.authentication.api.AuthenticationException;
  * @author: kevin
  * @date 2018-07-26 15:39
  */
+@SuppressWarnings("serial")
 public class ValidateCodeException extends AuthenticationException {
 
     public ValidateCodeException(String msg, Throwable t) {

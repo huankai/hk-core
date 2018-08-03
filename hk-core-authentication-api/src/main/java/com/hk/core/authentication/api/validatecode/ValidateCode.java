@@ -1,9 +1,9 @@
 package com.hk.core.authentication.api.validatecode;
 
-import lombok.Getter;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import lombok.Getter;
 
 /**
  * 验证码
@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
  * @author: kevin
  * @date 2018-07-27 13:40
  */
+@SuppressWarnings("serial")
 public class ValidateCode implements Serializable {
 
     /**

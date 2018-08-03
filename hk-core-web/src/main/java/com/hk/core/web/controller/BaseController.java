@@ -15,7 +15,7 @@ public abstract class BaseController {
      * @param args args
      * @return
      */
-    protected String getMessage(String code, Object... args) {
+    protected final String getMessage(String code, Object... args) {
         return getMessage(code, null, args);
     }
 
@@ -27,7 +27,7 @@ public abstract class BaseController {
      * @param args           args
      * @return
      */
-    protected String getMessage(String code, String defaultMessage, Object... args) {
+    protected final String getMessage(String code, String defaultMessage, Object... args) {
         return SpringContextHolder.getMessage(code, null, args);
     }
 }

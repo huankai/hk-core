@@ -1,9 +1,10 @@
 package com.hk.core.data.commons.query;
 
-import lombok.Data;
+import java.io.Serializable;
+
 import org.springframework.data.domain.Sort.Direction;
 
-import java.io.Serializable;
+import lombok.Data;
 
 /**
  * Order
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @date 2018年2月5日下午12:49:44
  */
 @Data
+@SuppressWarnings("serial")
 public final class Order implements Serializable {
 
     /**

@@ -16,7 +16,18 @@
 
 package com.hk.core.cache.spring;
 
-import org.springframework.cache.annotation.*;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.cache.interceptor.CacheEvictOperation;
 import org.springframework.cache.interceptor.CacheOperation;
 import org.springframework.cache.interceptor.CachePutOperation;
@@ -24,13 +35,6 @@ import org.springframework.cache.interceptor.CacheableOperation;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Strategy implementation for parsing Spring's {@link Caching}, {@link Cacheable},
@@ -48,7 +52,7 @@ import java.util.Collection;
 public class FixUseSupperClassAnnotationParser implements FixUseSupperClassCacheAnnotationParser, Serializable {
 
     @Override
-    public Collection<CacheOperation> parseCacheAnnotations(Class targetClass, Method method) {
+    public Collection<CacheOperation> parseCacheAnnotations(Class<?> targetClass, Method method) {
         DefaultCacheConfig defaultConfig = getDefaultCacheConfig(targetClass);
         return parseCacheAnnotations(defaultConfig, method);
     }

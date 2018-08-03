@@ -1,8 +1,7 @@
 package com.hk.core.autoconfigure.cache.redis;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.Contants;
-import com.hk.commons.util.JsonUtils;
+import java.util.Objects;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +11,9 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.util.Objects;
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.Contants;
+import com.hk.commons.util.JsonUtils;
 
 /**
  * @author: kevin
@@ -23,7 +24,7 @@ import java.util.Objects;
 public class CacheRedisAutoConfiguration {
 
     @Bean
-    public RedisTemplate redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
 
@@ -66,20 +67,12 @@ public class CacheRedisAutoConfiguration {
 
         private T value;
 
-        public JsonWraper() {
-
-        }
-
         public JsonWraper(T value) {
             this.value = value;
         }
 
         public T getValue() {
             return value;
-        }
-
-        public void setValue(T value) {
-            this.value = value;
         }
     }
 }

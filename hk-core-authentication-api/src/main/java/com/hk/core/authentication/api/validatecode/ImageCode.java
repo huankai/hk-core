@@ -1,9 +1,9 @@
 package com.hk.core.authentication.api.validatecode;
 
-import lombok.Getter;
-
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
+
+import lombok.Getter;
 
 /**
  * 图片验证码
@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
  * @author: kevin
  * @date 2018-07-26 15:08
  */
+@SuppressWarnings("serial")
 public class ImageCode extends ValidateCode {
 
     /**

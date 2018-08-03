@@ -1,10 +1,11 @@
 package com.hk.core.data.commons.query;
 
+import java.util.List;
+
 import com.hk.core.data.commons.ListResult;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.List;
 
 
 /**
@@ -13,6 +14,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@SuppressWarnings("serial")
 public class AdditionalSimpleQueryPage<T> extends SimpleQueryPage<T> {
 
     /**
