@@ -28,7 +28,7 @@ public abstract class Webs {
     /**
      * 获取request对象
      *
-     * @return
+     * @return HttpServletRequest
      */
     public static HttpServletRequest getHttpServletRequest() {
         return getRequestAttribute().getRequest();
@@ -37,7 +37,7 @@ public abstract class Webs {
     /**
      * 获取response对象
      *
-     * @return
+     * @return HttpServletResponse
      */
     public static HttpServletResponse getHttpservletResponse() {
         return getRequestAttribute().getResponse();
@@ -46,8 +46,8 @@ public abstract class Webs {
     /**
      * 从request请求域中获取属性值
      *
-     * @param name
-     * @return
+     * @param name name
+     * @return request attribute by give name.
      */
     public static <T> T getAttributeFromRequest(String name) {
         return getAttribute(name, RequestAttributes.SCOPE_REQUEST);
@@ -56,8 +56,8 @@ public abstract class Webs {
     /**
      * 从Session请求域中获取属性值
      *
-     * @param name
-     * @return
+     * @param name name
+     * @return session value by give name
      */
     public static <T> T getAttributeFromSession(String name) {
         return getAttribute(name, RequestAttributes.SCOPE_SESSION);
@@ -66,7 +66,8 @@ public abstract class Webs {
     /**
      * 从Session请求域中设置属性值
      *
-     * @param name
+     * @param name  name
+     * @param value value
      */
     public static void setAttributeFromSession(String name, Object value) {
         setAttributeFromSession(name, value, false);
@@ -76,7 +77,9 @@ public abstract class Webs {
     /**
      * 从Session请求域中设置属性值
      *
-     * @param name
+     * @param name   name
+     * @param value  value
+     * @param create Whether to create session
      */
     public static void setAttributeFromSession(String name, Object value, boolean create) {
         HttpSession session = getRequestAttribute().getRequest().getSession(create);
@@ -88,7 +91,7 @@ public abstract class Webs {
     /**
      * 从Session请求域中设置属性值
      *
-     * @param name
+     * @param name name
      */
     public static void removeAttributeFromSession(String name) {
         getRequestAttribute().removeAttribute(name, RequestAttributes.SCOPE_SESSION);
@@ -97,9 +100,9 @@ public abstract class Webs {
     /**
      * 获取属性值
      *
-     * @param name
-     * @param scope
-     * @return
+     * @param name  name
+     * @param scope scope
+     * @return Value
      */
     @SuppressWarnings("unchecked")
     public static <T> T getAttribute(String name, int scope) {
@@ -109,7 +112,7 @@ public abstract class Webs {
     /**
      * 获取SessionId
      *
-     * @return
+     * @return Session Id
      */
     public static String getSessionId() {
         return getRequestAttribute().getSessionId();
@@ -122,8 +125,8 @@ public abstract class Webs {
     /**
      * 是否为ajax请求
      *
-     * @param request
-     * @return
+     * @param request request
+     * @return true if Request Header contains X-Requested-With
      */
     public static boolean isAjax(HttpServletRequest request) {
         return null != request.getHeader("X-Requested-With");
@@ -132,7 +135,7 @@ public abstract class Webs {
     /**
      * 是否为ajax请求
      *
-     * @return
+     * @return true if Request Header contains X-Requested-With
      */
     public static boolean isAjax() {
         return isAjax(getHttpServletRequest());
@@ -141,8 +144,8 @@ public abstract class Webs {
     /**
      * 是否是微信浏览器请求
      *
-     * @param request
-     * @return
+     * @param request request
+     * @return true if Request Header contains MicroMessenger
      */
     public static boolean isWeiXin(HttpServletRequest request) {
         String userAgent = request.getHeader("user-agent");
@@ -150,9 +153,9 @@ public abstract class Webs {
     }
 
     /**
-     * @param fileName
-     * @param body
-     * @return
+     * @param fileName fileName
+     * @param body     body
+     * @return ResponseEntity
      */
     public static ResponseEntity<byte[]> toDownResponseEntity(String fileName, byte[] body) {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -164,7 +167,7 @@ public abstract class Webs {
     /**
      * 获取请求地址
      *
-     * @return
+     * @return ip address
      */
     public static String getRemoteAddr() {
         return getRemoteAddr(getHttpServletRequest());
@@ -173,8 +176,8 @@ public abstract class Webs {
     /**
      * 获取请求地址
      *
-     * @param request
-     * @return
+     * @param request request
+     * @return ip address
      */
     public static String getRemoteAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
@@ -191,7 +194,7 @@ public abstract class Webs {
             if (StringUtils.equalsIgnoreCase("unknown", ip)) {
                 ip = request.getHeader("HTTP_X_FORWARDED_FOR");
             }
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
+            if (StringUtils.equalsIgnoreCase("unknown", ip) || StringUtils.isEmpty(ip)) {
                 ip = request.getRemoteAddr();
             }
         }
@@ -201,9 +204,9 @@ public abstract class Webs {
     /**
      * 写入Json数据
      *
-     * @param response
-     * @param status
-     * @param result
+     * @param response response
+     * @param status   status
+     * @param result   result
      */
     public static void writeJson(HttpServletResponse response, int status, JsonResult result) {
         response.setCharacterEncoding(Contants.UTF_8);

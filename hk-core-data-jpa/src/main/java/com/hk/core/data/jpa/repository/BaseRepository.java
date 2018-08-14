@@ -1,20 +1,22 @@
 package com.hk.core.data.jpa.repository;
 
-import com.hk.commons.util.AssertUtils;
-import com.hk.commons.util.BeanUtils;
-import com.hk.core.data.commons.query.Order;
-import com.hk.core.data.commons.query.QueryPage;
-import com.hk.core.data.commons.query.SimpleQueryPage;
-import com.hk.core.data.jpa.util.OrderUtils;
+import java.io.Serializable;
+import java.util.List;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 
-import java.io.Serializable;
-import java.util.List;
+import com.hk.commons.util.AssertUtils;
+import com.hk.commons.util.BeanUtils;
+import com.hk.core.data.jpa.util.OrderUtils;
+import com.hk.core.page.QueryPage;
+import com.hk.core.page.SimpleQueryPage;
+import com.hk.core.query.Order;
 
 
 /**
@@ -23,7 +25,7 @@ import java.util.List;
  * @author: kevin
  */
 @NoRepositoryBean
-public interface BaseRepository<T extends Persistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {
+public interface BaseRepository<T extends Persistable<ID>, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
 
     /**
      * 更新不为空的属性

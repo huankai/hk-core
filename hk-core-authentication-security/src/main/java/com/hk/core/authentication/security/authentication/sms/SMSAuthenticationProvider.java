@@ -1,15 +1,14 @@
 package com.hk.core.authentication.security.authentication.sms;
 
+import com.hk.commons.util.ByteConstants;
+import com.hk.core.authentication.api.UserPrincipal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.Collection;
-import java.util.Collections;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  * 短信验证 Provider
@@ -19,24 +18,30 @@ import java.util.Collections;
  */
 public class SMSAuthenticationProvider implements AuthenticationProvider {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SMSAuthenticationProvider.class);
+
     private final UserDetailsService userDetailsService;
 
-    private boolean needBindAccount;
-
-    public SMSAuthenticationProvider(boolean needBindAccount, UserDetailsService userDetailsService) {
+    public SMSAuthenticationProvider(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.needBindAccount = needBindAccount;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         SMSAuthenticationToken token = (SMSAuthenticationToken) authentication;
-        UserDetails userDetails = userDetailsService.loadUserByUsername(token.getPrincipal().toString());
-        if (needBindAccount && null == userDetails) {
-            throw new InternalAuthenticationServiceException("无法获取用户信息");
+        String principal = token.getPrincipal().toString();
+        UserPrincipal userPrincipal = null;
+        try {
+            userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(principal);
+        } catch (UsernameNotFoundException e) {
+            LOGGER.error("用户不存在:{}", principal);
         }
-        Collection<? extends GrantedAuthority> authorities = userDetails == null ? Collections.emptyList() : userDetails.getAuthorities();
-        SMSAuthenticationToken authenticationToken = new SMSAuthenticationToken(token.getPrincipal(), authorities);
+        if (null == userPrincipal) {
+            userPrincipal = new UserPrincipal(null, principal, false, principal, ByteConstants.NINE, principal, null, ByteConstants.NINE, null);
+//            throw new InternalAuthenticationServiceException("无法获取用户信息");
+        }
+//        Collection<? extends GrantedAuthority> authorities = userPrincipal.getAuthorities();
+        SMSAuthenticationToken authenticationToken = new SMSAuthenticationToken(userPrincipal, null);
         authenticationToken.setDetails(token.getDetails());
         return authenticationToken;
     }

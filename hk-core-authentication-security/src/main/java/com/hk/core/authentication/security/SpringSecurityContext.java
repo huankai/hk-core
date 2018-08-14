@@ -20,7 +20,7 @@ public final class SpringSecurityContext implements SecurityContext {
             throw new AuthenticationServiceException("未认证的用户");
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (UserPrincipal) authentication.getPrincipal();
+        return UserPrincipal.class.cast(authentication.getPrincipal());
     }
 
     @Override

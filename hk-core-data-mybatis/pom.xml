@@ -33,6 +33,10 @@
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
+            <artifactId>hk-core-page</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hk</groupId>
             <artifactId>hk-core-data-commons</artifactId>
         </dependency>
         <dependency>

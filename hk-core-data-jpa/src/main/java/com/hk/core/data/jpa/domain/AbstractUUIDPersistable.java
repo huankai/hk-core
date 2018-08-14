@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
+import java.io.Serializable;
 
 /**
  * 基于 UUID的主键生成
@@ -20,7 +21,8 @@ import javax.persistence.Transient;
  * @date 2017年12月11日下午8:30:33
  */
 @MappedSuperclass
-public abstract class AbstractUUIDPersistable implements Persistable<String> {
+@SuppressWarnings("serial")
+public abstract class AbstractUUIDPersistable implements Persistable<String>,Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")

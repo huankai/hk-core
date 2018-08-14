@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
-import com.hk.core.data.commons.query.Order;
+import com.hk.core.query.Order;
 
 @SuppressWarnings("serial")
 public class Criteria<T> implements Specification<T> {

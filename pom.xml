@@ -5,7 +5,6 @@
     <groupId>com.hk</groupId>
     <artifactId>hk-core</artifactId>
     <version>2.0.0.RELEASE</version>
-    <name>hk-core</name>
     <packaging>pom</packaging>
 
     <properties>
@@ -15,16 +14,18 @@
     </properties>
 
     <modules>
-        <module>hk-core-data-commons</module>
         <module>hk-core-exception</module>
+        <module>hk-core-page</module>
+        <module>hk-core-data-commons</module>
+        <module>hk-core-web</module>
         <module>hk-core-data-jpa</module>
+        <module>hk-core-data-jdbc</module>
         <module>hk-core-data-mybatis</module>
         <module>hk-core-data-solr</module>
-        <module>hk-core-service</module>
-        <module>hk-core-web</module>
         <module>hk-core-authentication-api</module>
         <module>hk-core-authentication-security</module>
         <module>hk-core-authentication-security-oauth2</module>
+        <module>hk-core-service</module>
         <module>hk-core-cache</module>
         <module>hk-core-i18n</module>
         <module>hk-core-spring-boot-autoconfigure</module>

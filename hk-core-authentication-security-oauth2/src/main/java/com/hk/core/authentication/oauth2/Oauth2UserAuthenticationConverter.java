@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.provider.token.UserAuthenticationConv
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.ClientAppInfo;
 import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SecurityUserPrincipal;
 
 /**
  * @author: kevin
@@ -46,7 +47,7 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
             UserPrincipal principal = new UserPrincipal((String) map.get("userId"),
-                    (String) map.get(USERNAME),
+                    (String) map.get("account"),
                     (Boolean) map.get("isProtect"),
                     (String) map.get("realName"),
                     Byte.valueOf(map.get("userType").toString()),
@@ -66,8 +67,8 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                 Set<String> roleSet = new HashSet<>(roleList);
                 principal.setRoleSet(roleSet);
                 roleSet.forEach(role -> {
-                    if (!StringUtils.startsWith(role, "ROLE_")) {
-                        role = "ROLE_" + role;
+                    if (!StringUtils.startsWith(role, SecurityUserPrincipal.ROLE_PREFIX)) {
+                        role = SecurityUserPrincipal.ROLE_PREFIX + role;
                     }
                     authorities.add(new SimpleGrantedAuthority(role));
                 });

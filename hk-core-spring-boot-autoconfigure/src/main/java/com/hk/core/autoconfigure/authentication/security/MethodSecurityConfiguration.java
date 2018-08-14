@@ -2,6 +2,7 @@ package com.hk.core.autoconfigure.authentication.security;
 
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SecurityUserPrincipal;
 import com.hk.core.authentication.security.SpringSecurityContext;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -20,7 +21,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +32,7 @@ import java.util.Set;
 @Configuration
 @ConditionalOnClass(SpringSecurityContext.class)
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
-public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
+public class MethodSecurityConfiguration extends GlobalMethodSecurityConfiguration {
 
     public PermissionEvaluator permissionEvaluator() {
         return new PermissionEvaluator() {
@@ -49,7 +49,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
                 UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
                 return principal.isAdministrator()
                         || principal.isProtectUser()
-                        || principal.getPermissionSet().contains(String.valueOf(permission));
+                        || CollectionUtils.contains(principal.getPermissionSet(), permission);
             }
 
             /**
@@ -91,7 +91,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
      *
      * @see org.springframework.security.access.expression.SecurityExpressionRoot
      */
-    protected static class ProtectedSecurityExpressionRoot implements SecurityExpressionOperations {
+    public static class ProtectedSecurityExpressionRoot implements SecurityExpressionOperations {
 
         protected final Authentication authentication;
 
@@ -101,13 +101,13 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
         private Set<String> roles;
 
-        private String defaultRolePrefix = "ROLE_";
+        private String defaultRolePrefix = SecurityUserPrincipal.ROLE_PREFIX;
 
         /**
          * Allows "permitAll" expression
          */
         public final boolean permitAll = true;
-
+//
         /**
          * Allows "denyAll" expression
          */
@@ -152,7 +152,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
             UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
             return principal.isAdministrator()
                     || principal.isProtectUser()
-                    || principal.getPermissionSet().containsAll(Arrays.asList(authorities))
+                    || CollectionUtils.containsAny(principal.getPermissionSet(), authorities)
                     || hasAnyAuthorityName(null, authorities);
         }
 
@@ -171,7 +171,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
             UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
             return principal.isAdministrator()
                     || principal.isProtectUser()
-                    || CollectionUtils.containsAny(principal.getRoleSet(), Arrays.asList(roles))
+                    || CollectionUtils.containsAny(principal.getRoleSet(), roles)
                     || hasAnyAuthorityName(defaultRolePrefix, roles);
         }
 
@@ -179,7 +179,7 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
             Set<String> roleSet = getAuthoritySet();
             for (String role : roles) {
                 String defaultedRole = getRoleWithDefaultPrefix(prefix, role);
-                if (roleSet.contains(defaultedRole)) {
+                if (CollectionUtils.contains(roleSet, defaultedRole)) {
                     return true;
                 }
             }

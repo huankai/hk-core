@@ -1,9 +1,9 @@
 package com.hk.core.authentication.security.authentication.sms;
 
-import java.util.Collection;
-
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 /**
  * SMS AuthenticationToken
@@ -21,9 +21,9 @@ public class SMSAuthenticationToken extends AbstractAuthenticationToken {
      * <code>UsernamePasswordAuthenticationToken</code>, as the {@link #isAuthenticated()}
      * will return <code>false</code>.
      */
-    public SMSAuthenticationToken(Object mobile) {
+    public SMSAuthenticationToken(Object principal) {
         super(null);
-        this.principal = mobile;
+        this.principal = principal;
         setAuthenticated(false);
     }
 
@@ -33,12 +33,12 @@ public class SMSAuthenticationToken extends AbstractAuthenticationToken {
      * producing a trusted (i.e. {@link #isAuthenticated()} = <code>true</code>)
      * authentication token.
      *
-     * @param mobile
+     * @param principal
      * @param authorities
      */
-    public SMSAuthenticationToken(Object mobile, Collection<? extends GrantedAuthority> authorities) {
+    public SMSAuthenticationToken(Object principal, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
-        this.principal = mobile;
+        this.principal = principal;
         super.setAuthenticated(true); // must use super, as we override
     }
 

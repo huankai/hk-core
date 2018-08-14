@@ -33,7 +33,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
 
 
     /**
-     * Creates a new {@link SimpleJpaRepository} to manage objects of the given domain type.
+     * Creates a new {@link BaseSimpleJpaRepository} to manage objects of the given domain type.
      *
      * @param domainClass must not be {@literal null}.
      * @param em          must not be {@literal null}.
@@ -46,38 +46,22 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
         super(entityInformation, entityManager);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.data.repository.query.QueryByExampleExecutor#exists(org.springframework.data.domain.Example)
-     */
     @Override
     public <S extends T> boolean exists(Example<S> example) {
         return !getQuery(new ExampleSpecification<>(example), example.getProbeType(), (Sort) null).getResultList()
                 .isEmpty();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.data.repository.query.QueryByExampleExecutor#findAll(org.springframework.data.domain.Example)
-     */
     @Override
     public <S extends T> List<S> findAll(Example<S> example) {
         return getQuery(new ExampleSpecification<>(example), example.getProbeType(), (Sort) null).getResultList();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.data.repository.query.QueryByExampleExecutor#findAll(org.springframework.data.domain.Example, org.springframework.data.domain.Sort)
-     */
     @Override
     public <S extends T> List<S> findAll(Example<S> example, Sort sort) {
         return getQuery(new ExampleSpecification<>(example), example.getProbeType(), sort).getResultList();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.data.repository.query.QueryByExampleExecutor#findAll(org.springframework.data.domain.Example, org.springframework.data.domain.Pageable)
-     */
     @Override
     public <S extends T> Page<S> findAll(Example<S> example, Pageable pageable) {
         ExampleSpecification<S> spec = new ExampleSpecification<>(example);
@@ -96,7 +80,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
      * {@link Example}.
      *
      * @param <T>
-     * @author Christoph Strobl
+     * @author kevin
      * @since 1.10
      */
     @SuppressWarnings("serial")

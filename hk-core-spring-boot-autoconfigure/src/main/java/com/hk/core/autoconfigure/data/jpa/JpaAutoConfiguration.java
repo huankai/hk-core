@@ -36,7 +36,7 @@ public class JpaAutoConfiguration {
     @Bean
     @ConditionalOnClass(value = {SecurityContext.class})
     @ConditionalOnMissingBean(value = AuditorAware.class)
-    public AuditorAware<?> userIdAuditor(SecurityContext securityContext) {
+    public AuditorAware<String> userIdAuditor(SecurityContext securityContext) {
         return new UserAuditorAware(securityContext);
     }
 

@@ -1,8 +1,8 @@
-package com.hk.core.data.commons.query;
-
-import java.util.List;
+package com.hk.core.page;
 
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author: kevin

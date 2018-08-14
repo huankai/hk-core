@@ -2,9 +2,9 @@ package com.hk.data.mybatis;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.hk.core.data.commons.query.Order;
-import com.hk.core.data.commons.query.QueryPage;
-import com.hk.core.data.commons.query.SimpleQueryPage;
+import com.hk.core.page.QueryPage;
+import com.hk.core.page.SimpleQueryPage;
+import com.hk.core.query.Order;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

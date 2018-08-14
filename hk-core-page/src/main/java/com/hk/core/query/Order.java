@@ -1,10 +1,8 @@
-package com.hk.core.data.commons.query;
-
-import java.io.Serializable;
-
-import org.springframework.data.domain.Sort.Direction;
+package com.hk.core.query;
 
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * Order
@@ -53,16 +51,6 @@ public final class Order implements Serializable {
      */
     public static Order desc(String field) {
         return new Order(field, true);
-    }
-
-    @Override
-    public String toString() {
-        return toSqlString();
-    }
-
-    public String toSqlString() {
-        String field = getField();
-        return String.format(" %s %s", field, desc ? Direction.DESC.name() : Direction.ASC.name());
     }
 
 }

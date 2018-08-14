@@ -28,6 +28,7 @@ import java.util.Optional;
  */
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
+@SuppressWarnings("serial")
 public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String, LocalDateTime> {
 
     /**

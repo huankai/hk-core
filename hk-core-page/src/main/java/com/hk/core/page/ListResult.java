@@ -1,4 +1,5 @@
-package com.hk.core.data.commons;
+package com.hk.core.page;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

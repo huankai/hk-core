@@ -10,9 +10,9 @@ import java.util.Optional;
 import org.springframework.data.domain.Persistable;
 
 import com.hk.commons.util.ArrayUtils;
-import com.hk.core.data.commons.query.Order;
-import com.hk.core.data.commons.query.QueryModel;
-import com.hk.core.data.commons.query.QueryPage;
+import com.hk.core.page.QueryModel;
+import com.hk.core.page.QueryPage;
+import com.hk.core.query.Order;
 
 /**
  * @author: kevin

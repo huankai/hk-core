@@ -33,9 +33,10 @@ public class LogCacheErrorHandler implements CacheErrorHandler {
 
     @Override
     public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
-        String message = String.format("get Error,CacheName : %s, Cache Key : %s,Error Message: %s",
-                cache.getName(), String.valueOf(key), exception.getMessage());
-        LOGGER.error(message);
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error(String.format("get Error,CacheName : %s, Cache Key : %s,Error Message: %s",
+                    cache.getName(), String.valueOf(key), exception.getMessage()));
+        }
         if (onErrorThrow) {
             throw exception;
         }
@@ -43,9 +44,10 @@ public class LogCacheErrorHandler implements CacheErrorHandler {
 
     @Override
     public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
-        String message = String.format("put Error,CacheName : %s, Cache Key : %s,Error Message: %s",
-                cache.getName(), String.valueOf(key),  exception.getMessage());
-        LOGGER.error(message);
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error(String.format("put Error,CacheName : %s, Cache Key : %s,Error Message: %s",
+                    cache.getName(), String.valueOf(key), exception.getMessage()));
+        }
         if (onErrorThrow) {
             throw exception;
         }
@@ -53,9 +55,10 @@ public class LogCacheErrorHandler implements CacheErrorHandler {
 
     @Override
     public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
-        String message = String.format("Evict Error,CacheName : %s, Cache Key : %s,Error Message: %s",
-                cache.getName(), String.valueOf(key), exception.getMessage());
-        LOGGER.error(message);
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error(String.format("Evict Error,CacheName : %s, Cache Key : %s,Error Message: %s",
+                    cache.getName(), String.valueOf(key), exception.getMessage()));
+        }
         if (onErrorThrow) {
             throw exception;
         }
@@ -63,9 +66,10 @@ public class LogCacheErrorHandler implements CacheErrorHandler {
 
     @Override
     public void handleCacheClearError(RuntimeException exception, Cache cache) {
-        String message = String.format("Clear Error,CacheName : %s,Error Message: %s",
-                cache.getName(), exception.getMessage());
-        LOGGER.error(message);
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error(String.format("Clear Error,CacheName : %s,Error Message: %s",
+                    cache.getName(), exception.getMessage()));
+        }
         if (onErrorThrow) {
             throw exception;
         }

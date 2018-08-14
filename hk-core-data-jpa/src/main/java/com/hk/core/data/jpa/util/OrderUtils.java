@@ -1,13 +1,14 @@
 package com.hk.core.data.jpa.util;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.core.data.commons.query.Order;
-import org.springframework.data.domain.Sort;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Sort;
+
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.core.query.Order;
 
 /**
  * @author: kevin

@@ -32,7 +32,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
         this.codeParameterName = codeParameterName;
     }
 
-    protected void setValidateCodeStrategy(ValidateCodeStrategy validateCodeStrategy) {
+    public void setValidateCodeStrategy(ValidateCodeStrategy validateCodeStrategy) {
         this.validateCodeStrategy = validateCodeStrategy;
     }
 

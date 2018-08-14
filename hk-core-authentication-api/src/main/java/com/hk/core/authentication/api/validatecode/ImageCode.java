@@ -1,9 +1,8 @@
 package com.hk.core.authentication.api.validatecode;
 
-import java.awt.image.BufferedImage;
-import java.time.LocalDateTime;
-
 import lombok.Getter;
+
+import java.awt.image.BufferedImage;
 
 /**
  * 图片验证码
@@ -22,11 +21,6 @@ public class ImageCode extends ValidateCode {
 
     public ImageCode(BufferedImage image, String code, int expireIn) {
         super(code, expireIn);
-        this.image = image;
-    }
-
-    public ImageCode(BufferedImage image, String code, LocalDateTime expireTime) {
-        super(code, expireTime);
         this.image = image;
     }
 

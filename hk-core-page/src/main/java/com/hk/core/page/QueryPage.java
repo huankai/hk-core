@@ -1,4 +1,4 @@
-package com.hk.core.data.commons.query;
+package com.hk.core.page;
 
 import java.io.Serializable;
 import java.util.List;

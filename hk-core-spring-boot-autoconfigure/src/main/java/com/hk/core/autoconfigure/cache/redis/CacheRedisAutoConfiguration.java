@@ -1,7 +1,8 @@
 package com.hk.core.autoconfigure.cache.redis;
 
-import java.util.Objects;
-
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.Contants;
+import com.hk.commons.util.JsonUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,9 +12,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.Contants;
-import com.hk.commons.util.JsonUtils;
+import java.util.Objects;
 
 /**
  * @author: kevin
@@ -29,7 +28,7 @@ public class CacheRedisAutoConfiguration {
         redisTemplate.setConnectionFactory(connectionFactory);
 
         StringRedisSerializer keySerializer = new StringRedisSerializer();
-        GenericFastJson2JsonRedisSerializer<?> valueSerializer = new GenericFastJson2JsonRedisSerializer<>();
+        GenericJson2JsonRedisSerializer<?> valueSerializer = new GenericJson2JsonRedisSerializer<>();
 
         redisTemplate.setKeySerializer(keySerializer);
         redisTemplate.setValueSerializer(valueSerializer);
@@ -40,7 +39,7 @@ public class CacheRedisAutoConfiguration {
 
     }
 
-    private static class GenericFastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
+    private static class GenericJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
 
 
         @Override

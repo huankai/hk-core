@@ -1,9 +1,9 @@
 package com.hk.core.authentication.api.validatecode;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import lombok.Getter;
 
 /**
  * 验证码
@@ -21,18 +21,20 @@ public class ValidateCode implements Serializable {
     private final String code;
 
     /**
+     * 过期时间秒,单位:秒
+     */
+    @Getter
+    private final int expireSecond;
+
+    /**
      * 过期时间
      */
     private final LocalDateTime expireTime;
 
     public ValidateCode(String code, int expireIn) {
         this.code = code;
+        this.expireSecond = expireIn;
         this.expireTime = LocalDateTime.now().plusSeconds(expireIn);
-    }
-
-    public ValidateCode(String code, LocalDateTime expireTime) {
-        this.code = code;
-        this.expireTime = expireTime;
     }
 
     /**

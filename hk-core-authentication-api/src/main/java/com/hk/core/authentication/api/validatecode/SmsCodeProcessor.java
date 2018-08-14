@@ -28,6 +28,6 @@ public class SmsCodeProcessor extends AbstractValidateCodeProcessor<ValidateCode
 
     @Override
     protected void send(ValidateCode validateCode, ServletWebRequest request) throws ServletRequestBindingException {
-        smsCodeSender.send(ServletRequestUtils.getRequiredStringParameter(request.getRequest(), mobileParamName), validateCode.getCode());
+        smsCodeSender.send(ServletRequestUtils.getRequiredStringParameter(request.getRequest(), mobileParamName), validateCode.getCode(), validateCode.getExpireSecond());
     }
 }

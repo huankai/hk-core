@@ -19,11 +19,11 @@ import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.data.commons.query.Order;
-import com.hk.core.data.commons.query.QueryModel;
-import com.hk.core.data.commons.query.QueryPage;
 import com.hk.core.data.jpa.repository.BaseRepository;
 import com.hk.core.exception.ServiceException;
+import com.hk.core.page.QueryModel;
+import com.hk.core.page.QueryPage;
+import com.hk.core.query.Order;
 import com.hk.core.service.BaseService;
 
 /**

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * @author: kevin
  * @date 2018-07-27 13:48
  */
-public class DefaultGenerator implements ValidateCodeGenerator<ValidateCode> {
+public class DefaultValidateCodeGenerator implements ValidateCodeGenerator<ValidateCode> {
 
     /**
      * 生成长度
@@ -19,7 +19,7 @@ public class DefaultGenerator implements ValidateCodeGenerator<ValidateCode> {
      */
     private int expireIn;
 
-    public DefaultGenerator(byte codeLength, int expireIn) {
+    public DefaultValidateCodeGenerator(byte codeLength, int expireIn) {
         AssertUtils.isTrue(codeLength > 0, "生成的验证码长度必须大于0");
         this.codeLength = codeLength;
         this.expireIn = expireIn;

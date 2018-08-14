@@ -1,11 +1,9 @@
-package com.hk.core.data.commons.query;
-
-import java.util.List;
-
-import com.hk.core.data.commons.ListResult;
+package com.hk.core.page;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 
 /**

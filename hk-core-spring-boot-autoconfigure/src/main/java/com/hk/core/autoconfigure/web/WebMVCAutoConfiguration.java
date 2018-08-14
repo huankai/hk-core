@@ -18,14 +18,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -36,6 +36,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,16 +46,13 @@ import java.util.Locale;
  */
 @Configuration
 @ServletComponentScan(basePackages = {"com.hk.core"})
+@ComponentScan("com.hk.core.autoconfigure.exception")
 public class WebMVCAutoConfiguration implements WebMvcConfigurer {
 
     @Bean
+    @ConditionalOnClass(SpringContextHolder.class)
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
-    }
-
-    @Override
-    public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> resolvers) {
-        System.out.println(resolvers.isEmpty());
     }
 
     @Bean
@@ -66,27 +64,36 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        JavaTimeModule module = new JavaTimeModule();
-        module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
-        module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
+        converters.forEach(converter -> {
+            if (converter instanceof StringHttpMessageConverter) {
+                ((StringHttpMessageConverter) converter).setDefaultCharset(Contants.CHARSET_UTF_8);
+            }
+            if (converter instanceof MappingJackson2HttpMessageConverter) {
+                MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
+                JavaTimeModule module = new JavaTimeModule();
+                module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
+                module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
 
-        module.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
-        module.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
+                module.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
+                module.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
 
-        module.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
-        module.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
-                .json()
-                .simpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())
-                .defaultUseWrapper(true)
-                .modules(module)
-                .failOnUnknownProperties(false)
-                .build();
-        mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
-        converters.add(0, new StringHttpMessageConverter(Contants.CHARSET_UTF_8));
-        converters.add(1, new ResourceHttpMessageConverter());
-        converters.add(2, mappingJackson2HttpMessageConverter);
+                module.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
+                module.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
+                ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
+                        .json()
+                        .simpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())
+                        .defaultUseWrapper(true)
+                        .modules(module)
+                        .failOnUnknownProperties(false)
+                        .build();
+                mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
+                mappingJackson2HttpMessageConverter.setDefaultCharset(Contants.CHARSET_UTF_8);
+                List<MediaType> mediaTypeList = new ArrayList<>();
+                mediaTypeList.add(MediaType.APPLICATION_JSON_UTF8);
+                mappingJackson2HttpMessageConverter.setSupportedMediaTypes(mediaTypeList);
+
+            }
+        });
     }
 
     /**

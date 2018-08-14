@@ -12,7 +12,7 @@ import org.hibernate.query.criteria.internal.OrderImpl;
  */
 class OrderUtils {
 
-    public static Order toJpaOrder(Root<?> root, com.hk.core.data.commons.query.Order order) {
+    public static Order toJpaOrder(Root<?> root, com.hk.core.query.Order order) {
         Path<?> expression = PathUtils.getPath(root, order.getField());
         return new OrderImpl(expression, !order.isDesc());
     }

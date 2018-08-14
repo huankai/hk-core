@@ -3,6 +3,7 @@ package com.hk.core.autoconfigure.authentication.security;
 import com.hk.core.authentication.api.LoginResponseType;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +48,16 @@ public class AuthenticationProperties {
         private String loginUrl = "/login";
 
         /**
+         * 登陆的用户名参数名
+         */
+        private String usernameParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY;
+
+        /**
+         * 登陆的密码参数名
+         */
+        private String passwordParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY;
+
+        /**
          * POST 登陆处理URL
          */
         private String loginProcessingUrl = "/login";
@@ -57,7 +68,37 @@ public class AuthenticationProperties {
         private String sessionInvalidUrl = "/login";
 
         /**
+         * 退出地址
+         */
+        private String logoutUrl = "/logout";
+
+        /**
+         * 退出成功后的请求地址
+         */
+        private String logoutSuccessUrl = "/";
+
+        /**
+         * <p>
          * 不需要登陆授权的URL
+         * </p>
+         * <p>
+         * 集合中每个元素以英文状态下的逗号(,) 分隔 ：格式为 Request Method , url , authority <br/>
+         * ---------------------------------------- <br/>
+         * 如果长度为1: 表示 Url <br/>
+         * 如果长度为2,表示 请求方法 + url <br/>
+         * 如果长度为 3表示 请求方法 + url + 权限 <br/>
+         * 如果长度为 大于3 仅表示为 url <br/>
+         * ----------------------------------------
+         * </p>
+         *
+         * <p>
+         * such as : <br/>
+         * /login <--------->  HTTP请求 /login 可任意访问 <br/>
+         * GET,/login <--------->  HTTP GET 请求 /login 可任意访问 <br/>
+         * GET,/user, user <--------->  HTTP GET 请求 /user 需要 user 权限能才访问 <br/>
+         * /user/** <--------->  HTTP 请求 /user/** 可任意访问 <br/>
+         * /user,/abc,/def,/xxx <--------->  HTTP 请求 /user 、/abc、/def、/xxx 可任意访问 <br/>
+         * </p>
          */
         private Set<String> permitAllMatchers = new HashSet<>();
 
@@ -90,9 +131,17 @@ public class AuthenticationProperties {
 
         /**
          * RememberMe Parameter
-         * Spring Security 可查看 : org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer#rememberMeParameter
+         *
+         * @see org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer#rememberMeParameter
          */
         private String rememberMeParameter = "remember-me";
+
+        /**
+         * RememberMe Parameter
+         *
+         * @see org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer#rememberMeCookieName
+         */
+        private String rememberMeCookieName = "remember-me";
 
         private boolean useSecureCookie = true;
 
@@ -126,7 +175,7 @@ public class AuthenticationProperties {
      * 短信验证码配置
      */
     @Data
-    static class SMSProperties {
+    public static class SMSProperties {
         /**
          * 是否启用
          */
@@ -136,11 +185,6 @@ public class AuthenticationProperties {
          * 只支持POST请求
          */
         private boolean postOnly = true;
-
-        /**
-         * 是否需要与账号绑定
-         */
-        private boolean needBindAccount = false;
 
         /**
          * 手机号参数名
@@ -155,7 +199,7 @@ public class AuthenticationProperties {
         /**
          * 验证码过期时间,单位:秒
          */
-        private int codeExpireIn = 1800;
+        private int codeExpireIn = 180;
 
         /**
          * 验证码请求参数名
@@ -163,9 +207,9 @@ public class AuthenticationProperties {
         private String codeParameter = "phoneCode";
 
         /**
-         * 请求地址
+         * 手机号登陆请求地址
          */
-        private String phoneRequestUri = "/authentication/mobile";
+        private String phoneLoginUri = "/mobile/login";
     }
 
 }

@@ -2,7 +2,6 @@ package com.hk.core.autoconfigure.authentication.security;
 
 import com.hk.core.authentication.api.validatecode.ImageCodeGenerator;
 import com.hk.core.authentication.api.validatecode.ImageCodeProcessor;
-import com.hk.core.authentication.security.authentication.filters.ValidateCodeFilter;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -35,7 +34,7 @@ public class ImageAuthenticationSecurityConfiguration extends SecurityConfigurer
             ImageCodeGenerator imageCodeGenerator = new ImageCodeGenerator(imageCodeProperties.getWidth(), imageCodeProperties.getHeight(),
                     imageCodeProperties.getCodeLength(), imageCodeProperties.getCodeExpireIn());
             ImageCodeProcessor imageCodeProcessor = new ImageCodeProcessor(imageCodeGenerator, imageCodeProperties.getCodeParameter());
-            http.apply(new ValidateCodeSecurityConfiguration(new ValidateCodeFilter(authenticationFailureHandler, imageCodeProcessor, loginProcessingUrl)));
+//            http.apply(new ValidateCodeSecurityConfiguration(new ValidateCodeFilter(authenticationFailureHandler, imageCodeProcessor, loginProcessingUrl)));
         }
     }
 }
