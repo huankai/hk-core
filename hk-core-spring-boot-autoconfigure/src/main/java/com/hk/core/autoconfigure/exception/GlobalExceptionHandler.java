@@ -2,7 +2,6 @@ package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.EnumDisplayUtils;
-import com.hk.commons.util.JsonUtils;
 import com.hk.core.authentication.api.SecurityContextUtils;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.exception.ServiceException;
@@ -63,9 +62,9 @@ public class GlobalExceptionHandler {
      * 需要在 application.yml中配置 spring.mvc.throw-exception-if-no-handler-found: true
      * 默认为false（404时不抛出异常）
      *
-     * @param e
-     * @param request
-     * @return
+     * @param e e
+     * @param request request
+     * @return jsonResult
      */
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -81,9 +80,9 @@ public class GlobalExceptionHandler {
      * 响应状态码： 404
      * </p>
      *
-     * @param e
-     * @param request
-     * @return
+     * @param e e
+     * @param request request
+     * @return jsonResult
      */
     @ExceptionHandler(value = {EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -119,7 +118,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public JsonResult serviceException(DataAccessException e, HttpServletRequest request) {
         log(e, request);
-        return JsonResult.error("服务器开小了点差，请稍后再试！");
+        return JsonResult.error("服务器开了点小差，请稍后再试！");
     }
 
     /**
@@ -150,18 +149,19 @@ public class GlobalExceptionHandler {
     }
 
     private void log(Throwable e, HttpServletRequest request) {
-        UserPrincipal principal = SecurityContextUtils.getPrincipal();
         StringBuilder sb = new StringBuilder();
         sb.append(StringUtils.LF);
 
         sb.append("<------------------------->");
         sb.append(StringUtils.LF);
+        if (SecurityContextUtils.isAuthenticated()) {
+            UserPrincipal principal = SecurityContextUtils.getPrincipal();
+            sb.append("<User id:").append(principal.getUserId()).append(">");
+            sb.append(StringUtils.LF);
 
-        sb.append("<User id:").append(principal.getUserId()).append(">");
-        sb.append(StringUtils.LF);
-
-        sb.append("<User Account:").append(principal.getAccount()).append(">");
-        sb.append(StringUtils.LF);
+            sb.append("<User Account:").append(principal.getAccount()).append(">");
+            sb.append(StringUtils.LF);
+        }
 
         sb.append("<Request Time:").append(LocalDateTime.now()).append(">");
         sb.append(StringUtils.LF);
@@ -188,6 +188,5 @@ public class GlobalExceptionHandler {
 
         sb.append("<------------------------->");
         logger.error(sb.toString());
-        e.printStackTrace();
     }
 }

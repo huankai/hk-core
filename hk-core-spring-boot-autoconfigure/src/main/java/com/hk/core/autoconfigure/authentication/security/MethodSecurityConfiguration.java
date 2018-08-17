@@ -42,7 +42,7 @@ public class MethodSecurityConfiguration extends GlobalMethodSecurityConfigurati
              * @param authentication authentication
              * @param targetDomainObject targetDomainObject
              * @param permission permission
-             * @return
+             * @return boolean
              */
             @Override
             public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {

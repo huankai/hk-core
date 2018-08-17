@@ -36,6 +36,30 @@ public class AuthenticationProperties {
      */
     private LoginResponseType responseType = LoginResponseType.JSON;
 
+
+    /**
+     * 默认失败页面
+     *
+     * @see com.hk.core.autoconfigure.exception.DefaultErrorController
+     * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#defaultFailureUrl
+     */
+    private String defaultFailureUrl = "/error";
+
+    /**
+     * 是否请求重定向
+     *
+     * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#forwardToDestination
+     */
+    private boolean forwardToDestination = false;
+
+    /**
+     * 是否可以创建session
+     *
+     * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#allowSessionCreation
+     */
+    private boolean allowSessionCreation = true;
+    /* ******************************************************************* */
+
     /**
      * 浏览器登陆处理
      */
