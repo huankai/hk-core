@@ -25,5 +25,4 @@ public class OAuth2ClientAuthenticationConfigurer extends SecurityConfigurerAdap
         ssoFilter.setSessionAuthenticationStrategy(builder.getSharedObject(SessionAuthenticationStrategy.class));
         builder.addFilterAfter(ssoFilter, AbstractPreAuthenticatedProcessingFilter.class);
     }
-
 }
