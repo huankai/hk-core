@@ -1,5 +1,6 @@
 package com.hk.core.data.jpa.domain;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.util.StringUtils;
 import lombok.Getter;
@@ -15,14 +16,20 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
+ * <p>
  * 基于 UUID的主键生成
+ * </p>
+ * <p>
+ * JsonFilter : 过滤某一些字段
+ * </p>
  *
  * @author: kevin
  * @date 2017年12月11日下午8:30:33
  */
 @MappedSuperclass
+@JsonFilter("fieldFilter")
 @SuppressWarnings("serial")
-public abstract class AbstractUUIDPersistable implements Persistable<String>,Serializable {
+public abstract class AbstractUUIDPersistable implements Persistable<String>, Serializable {
 
     @Id
     @GeneratedValue(generator = "system-uuid")

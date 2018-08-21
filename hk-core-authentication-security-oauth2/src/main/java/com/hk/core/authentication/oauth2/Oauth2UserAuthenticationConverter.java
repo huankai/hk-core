@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hk.commons.util.ByteConstants;
+import com.hk.commons.util.CollectionUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -46,23 +48,26 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
     @SuppressWarnings("unchecked")
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
-            UserPrincipal principal = new UserPrincipal((String) map.get("userId"),
-                    (String) map.get("account"),
-                    (Boolean) map.get("isProtect"),
-                    (String) map.get("realName"),
-                    Byte.valueOf(map.get("userType").toString()),
-                    (String) map.get("phone"),
-                    (String) map.get("email"), Byte.valueOf(map.get("sex").toString()),
-                    (String) map.get("iconPath"));
+            Map<String, Object> m = (Map<String, Object>) map;
+            UserPrincipal principal = new UserPrincipal(CollectionUtils.getValue(m, "userId", String.class),
+                    CollectionUtils.getValue(m, "account", String.class), CollectionUtils.getValueOrDefault(m, "isProtect", false, Boolean.class),
+                    CollectionUtils.getValue(m, "realName", String.class),
+                    Byte.valueOf(CollectionUtils.getValueOrDefault(m, "userType", 0, Integer.class).toString()),
+                    CollectionUtils.getValue(m, "phone", String.class),
+                    CollectionUtils.getValue(m, "email", String.class),
+                    Byte.valueOf(CollectionUtils.getValueOrDefault(m, "sex", 0, Integer.class).toString()),
+                    CollectionUtils.getValue(m, "iconPath", String.class));
 
-            Map<String, String> clientAppInfo = (Map<String, String>) map.get("clientApp");
+            Map<String, Object> clientAppInfo = CollectionUtils.getValue(m, "clientApp", Map.class);
             if (null != clientAppInfo) {
-                principal.setAppInfo(new ClientAppInfo(clientAppInfo.get("appId"), clientAppInfo.get("appCode"),
-                        clientAppInfo.get("appName"), clientAppInfo.get("appIcon")));
+                principal.setAppInfo(new ClientAppInfo(CollectionUtils.getValue(clientAppInfo, "appId", String.class),
+                        CollectionUtils.getValue(clientAppInfo, "appCode", String.class),
+                        CollectionUtils.getValue(clientAppInfo, "appName", String.class),
+                        CollectionUtils.getValue(clientAppInfo, "appIcon", String.class)));
             }
 
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            List<String> roleList = (List<String>) map.get("roles");
+            List<String> roleList = CollectionUtils.getValue(m, "roles", List.class);
             if (null != roleList) {
                 Set<String> roleSet = new HashSet<>(roleList);
                 principal.setRoleSet(roleSet);
@@ -73,7 +78,7 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                     authorities.add(new SimpleGrantedAuthority(role));
                 });
             }
-            List<String> permissionList = (List<String>) map.get("permissions");
+            List<String> permissionList = CollectionUtils.getValue(m, "permissions", List.class);
             if (null != permissionList) {
                 Set<String> permissionSet = new HashSet<>(permissionList);
                 principal.setPermissionSet(permissionSet);

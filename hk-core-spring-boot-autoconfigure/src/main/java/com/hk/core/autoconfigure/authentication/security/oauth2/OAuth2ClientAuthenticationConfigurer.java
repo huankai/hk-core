@@ -23,6 +23,6 @@ public class OAuth2ClientAuthenticationConfigurer extends SecurityConfigurerAdap
     public void configure(HttpSecurity builder) {
         OAuth2ClientAuthenticationProcessingFilter ssoFilter = this.filter;
         ssoFilter.setSessionAuthenticationStrategy(builder.getSharedObject(SessionAuthenticationStrategy.class));
-        builder.addFilterAfter(ssoFilter, AbstractPreAuthenticatedProcessingFilter.class);
+        builder.addFilterBefore(ssoFilter, AbstractPreAuthenticatedProcessingFilter.class);
     }
 }

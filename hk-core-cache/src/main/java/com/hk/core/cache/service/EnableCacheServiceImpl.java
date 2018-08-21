@@ -3,6 +3,7 @@ package com.hk.core.cache.service;
 import com.hk.core.service.impl.BaseServiceImpl;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Persistable;
@@ -31,9 +32,15 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * @return
      */
     @Override
-    @Cacheable(key = "'id'+#id")
+    @Cacheable(key = "'id'+#root.args[0]")
     public Optional<T> findOne(PK id) {
         return super.findOne(id);
+    }
+
+    @Override
+    @Cacheable(key = "'id'+#root.args[0]")
+    public T getOne(PK pk) {
+        return super.getOne(pk);
     }
 
     /**
@@ -54,23 +61,21 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
      * @return
      */
     @Override
-    @Caching(
-            evict = {
-                    @CacheEvict(key = "'id'+#root.args[0].id")
-            }
-    )
+    @CachePut(key = "'id'+#root.args[0].id")
     public T updateByIdSelective(T entity) {
         return super.updateByIdSelective(entity);
     }
 
-    @Caching(
-            evict = {
-                    @CacheEvict(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null")
-            }
-    )
     @Override
+    @Caching(put = @CachePut(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null"))
     public T insertOrUpdate(T t) {
         return super.insertOrUpdate(t);
+    }
+
+    @Override
+//    @Cacheable(key = "'id'+#result.id")
+    public T insert(T t) {
+        return super.insert(t);
     }
 
     @Override
@@ -80,11 +85,7 @@ public abstract class EnableCacheServiceImpl<T extends Persistable<PK>, PK exten
     }
 
     @Override
-    @Caching(
-            evict = {
-                    @CacheEvict(key = "'id'+#root.args[0].id")
-            }
-    )
+    @CachePut(key = "'id'+#root.args[0].id")
     public T updateById(T t) {
         return super.updateById(t);
     }

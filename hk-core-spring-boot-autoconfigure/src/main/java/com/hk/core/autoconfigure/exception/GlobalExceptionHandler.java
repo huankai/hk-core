@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -53,7 +55,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = ServiceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public JsonResult serviceException(ServiceException e, HttpServletRequest request) {
-        log(e, request);
+        log(e, e.getMessage(), request);
         return JsonResult.badRueqest(e.getMessage());
     }
 
@@ -62,14 +64,14 @@ public class GlobalExceptionHandler {
      * 需要在 application.yml中配置 spring.mvc.throw-exception-if-no-handler-found: true
      * 默认为false（404时不抛出异常）
      *
-     * @param e e
+     * @param e       e
      * @param request request
      * @return jsonResult
      */
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public JsonResult serviceException(NoHandlerFoundException e, HttpServletRequest request) {
-        log(e, request);
+        log(e, e.getMessage(), request);
         return new JsonResult(JsonResult.Status.NOT_FOUND,
                 String.format("%s %s %s ", EnumDisplayUtils.getDisplayText(JsonResult.Status.NOT_FOUND.name(), JsonResult.Status.class), e.getHttpMethod(), e.getRequestURL()));
     }
@@ -80,14 +82,14 @@ public class GlobalExceptionHandler {
      * 响应状态码： 404
      * </p>
      *
-     * @param e e
+     * @param e       e
      * @param request request
      * @return jsonResult
      */
     @ExceptionHandler(value = {EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public JsonResult serviceException(EntityNotFoundException e, HttpServletRequest request) {
-        log(e, request);
+        log(e, e.getMessage(), request);
         return new JsonResult(JsonResult.Status.NOT_FOUND, "您访问的资源可能不存在!");
     }
 
@@ -104,7 +106,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public JsonResult serviceException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
-        log(e, request);
+        log(e, e.getMessage(), request);
         return new JsonResult(JsonResult.Status.METHOD_NOT_ALLOWED, "您访问的资源不支持此方式 :" + e.getMethod());
     }
 
@@ -117,7 +119,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {DataAccessException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public JsonResult serviceException(DataAccessException e, HttpServletRequest request) {
-        log(e, request);
+        log(e, e.getMessage(), request);
         return JsonResult.error("服务器开了点小差，请稍后再试！");
     }
 
@@ -131,8 +133,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {AccessDeniedException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public JsonResult accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
-        log(e, request);
+        log(e, e.getMessage(), request);
         return JsonResult.error("您无权限访问，请与管理员联系！");
+    }
+
+
+    /**
+     * JSR验证不通过处理
+     *
+     * @param e       MethodArgumentNotValidException
+     * @param request request
+     * @return JsonResult
+     */
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public JsonResult throwable(MethodArgumentNotValidException e, HttpServletRequest request) {
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        String message = fieldError.getField() + fieldError.getDefaultMessage();
+        log(e, message, request);
+        return JsonResult.badRueqest(message);
     }
 
     /**
@@ -144,11 +163,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {Throwable.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public JsonResult throwable(Throwable e, HttpServletRequest request) {
-        log(e, request);
+        log(e, e.getMessage(), request);
         return JsonResult.error(e.getMessage());
     }
 
-    private void log(Throwable e, HttpServletRequest request) {
+    private void log(Throwable e, String message, HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
         sb.append(StringUtils.LF);
 
@@ -183,7 +202,8 @@ public class GlobalExceptionHandler {
             sb.append(StringUtils.LF);
         }
 
-        sb.append("<ERROR Message:[").append(e.getClass()).append("]:").append(e.getMessage()).append(">");
+        sb.append("<ERROR:[").append(e.getClass()).append("]:").append(e).append(">");
+        sb.append("<ERROR Message:[").append(e.getClass()).append("]:").append(StringUtils.isEmpty(message) ? e.getMessage() : message).append(">");
         sb.append(StringUtils.LF);
 
         sb.append("<------------------------->");

@@ -2,17 +2,11 @@ package com.hk.core.autoconfigure.web;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hk.commons.converters.*;
 import com.hk.commons.util.Contants;
+import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
-import com.hk.commons.util.date.DatePattern;
 import com.hk.core.web.ServletContextHolder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -32,10 +26,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -70,22 +60,12 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
             }
             if (converter instanceof MappingJackson2HttpMessageConverter) {
                 MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
-                JavaTimeModule module = new JavaTimeModule();
-                module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
-                module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
-
-                module.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
-                module.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
-
-                module.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
-                module.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
                 ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
                         .json()
-                        .simpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())
                         .defaultUseWrapper(true)
-                        .modules(module)
-                        .failOnUnknownProperties(false)
+                        .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                         .build();
+                JsonUtils.configure(objectMapper);
                 mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
                 mappingJackson2HttpMessageConverter.setDefaultCharset(Contants.CHARSET_UTF_8);
                 List<MediaType> mediaTypeList = new ArrayList<>();
