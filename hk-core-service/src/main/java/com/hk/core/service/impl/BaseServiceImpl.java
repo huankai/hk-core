@@ -1,19 +1,5 @@
 package com.hk.core.service.impl;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ResolvableType;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Persistable;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
@@ -25,6 +11,19 @@ import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.service.BaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ResolvableType;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Persistable;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Service CRUD操作
@@ -87,8 +86,8 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     /**
      * Example 查询参数不能为null
      *
-     * @param t
-     * @return
+     * @param t t
+     * @return t
      */
     private T checkNull(T t) {
         return ObjectUtils.defaultIfNull(t, BeanUtils.instantiateClass(getDomainClass()));
@@ -197,7 +196,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
      *     可设置参数默认值，验证数据有效性
      * </pre>
      *
-     * @param entity
+     * @param entity entity
      */
     protected T saveBefore(T entity) throws ServiceException {
         return entity;

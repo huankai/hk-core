@@ -37,6 +37,9 @@ public abstract class AbstractSessionStrategy {
 
     }
 
+    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
+        this.redirectStrategy = redirectStrategy;
+    }
 
     /**
      * Determines whether a new session should be created before redirecting (to

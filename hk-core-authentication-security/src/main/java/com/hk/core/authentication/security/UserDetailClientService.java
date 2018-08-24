@@ -1,6 +1,7 @@
 package com.hk.core.authentication.security;
 
 import com.hk.commons.util.AssertUtils;
+import com.hk.core.authentication.api.ClientAppInfo;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,14 +9,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 /**
  * @author: kevin
  */
-public abstract class AbstractUserDetailService implements UserDetailsService {
+public interface UserDetailClientService extends UserDetailsService {
 
     @Override
-    public final UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    default UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AssertUtils.notBlank(username, "username must not be null");
         return loadUserByLoginUsername(username);
     }
 
-    protected abstract SecurityUserPrincipal loadUserByLoginUsername(String username);
+    SecurityUserPrincipal loadUserByLoginUsername(String username);
+
+    /**
+     * 获取客户端信息
+     *
+     * @param clientId clientId
+     * @return ClientAppInfo
+     */
+    ClientAppInfo getClientInfoById(String clientId);
+
 
 }

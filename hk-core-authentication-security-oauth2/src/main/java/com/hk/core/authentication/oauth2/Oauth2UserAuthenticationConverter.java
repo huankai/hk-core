@@ -1,25 +1,17 @@
 package com.hk.core.authentication.oauth2;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.StringUtils;
+import com.hk.core.authentication.api.ClientAppInfo;
+import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SecurityUserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 
-import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.api.ClientAppInfo;
-import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.authentication.security.SecurityUserPrincipal;
+import java.util.*;
 
 /**
  * @author: kevin

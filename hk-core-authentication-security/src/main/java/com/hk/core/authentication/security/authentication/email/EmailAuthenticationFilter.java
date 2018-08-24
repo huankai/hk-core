@@ -37,7 +37,7 @@ public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingF
         String mobile = StringUtils.trimToEmpty(obtainEmail(request));
         EmailAuthenticationToken authenticationToken = new EmailAuthenticationToken(mobile);
         setDetails(request, authenticationToken);
-        return this.getAuthenticationManager().authenticate(authenticationToken);
+        return getAuthenticationManager().authenticate(authenticationToken);
     }
 
     private String obtainEmail(HttpServletRequest request) {

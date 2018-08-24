@@ -32,7 +32,7 @@ public class SMSAuthenticationProvider implements AuthenticationProvider {
         String principal = token.getPrincipal().toString();
         UserPrincipal userPrincipal = null;
         try {
-            userPrincipal = (UserPrincipal) userDetailsService.loadUserByUsername(principal);
+            userPrincipal = UserPrincipal.class.cast(userDetailsService.loadUserByUsername(principal));
         } catch (UsernameNotFoundException e) {
             LOGGER.error("用户不存在:{}", principal);
         }
