@@ -23,6 +23,7 @@
         <module>hk-core-data-solr</module>
         <module>hk-core-authentication-api</module>
         <module>hk-core-authentication-security</module>
+		<module>hk-core-authentication-weixin-mp</module>
         <module>hk-core-authentication-security-oauth2</module>
         <module>hk-core-service</module>
         <module>hk-core-cache</module>

@@ -114,6 +114,11 @@
                 <artifactId>hk-core-cache</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-authentication-weixin-mp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.hk</groupId>
