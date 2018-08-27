@@ -1,6 +1,6 @@
 package com.hk.core.autoconfigure.authentication.security.oauth2;
 
-import com.hk.core.authentication.oauth2.Oauth2UserAuthenticationConverter;
+import com.hk.core.authentication.oauth2.converter.Oauth2UserAuthenticationConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.JwtAccessTokenConverterConfigurer;
 import org.springframework.context.annotation.Configuration;

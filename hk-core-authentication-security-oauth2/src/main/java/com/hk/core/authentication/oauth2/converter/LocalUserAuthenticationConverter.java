@@ -1,4 +1,4 @@
-package com.hk.core.authentication.oauth2;
+package com.hk.core.authentication.oauth2.converter;
 
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.UserPrincipal;

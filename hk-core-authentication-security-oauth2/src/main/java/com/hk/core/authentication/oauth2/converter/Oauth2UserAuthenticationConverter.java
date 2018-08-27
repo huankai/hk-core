@@ -1,4 +1,4 @@
-package com.hk.core.authentication.oauth2;
+package com.hk.core.authentication.oauth2.converter;
 
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
@@ -42,7 +42,9 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
         if (map.containsKey(USERNAME)) {
             Map<String, Object> m = (Map<String, Object>) map;
             UserPrincipal principal = new UserPrincipal(CollectionUtils.getValue(m, "userId", String.class),
-                    CollectionUtils.getValue(m, "account", String.class), CollectionUtils.getValueOrDefault(m, "isProtect", false, Boolean.class),
+                    CollectionUtils.getValueOrDefault(m, "account",
+                            CollectionUtils.getValue(m, USERNAME, String.class), String.class),
+                    CollectionUtils.getValueOrDefault(m, "isProtect", false, Boolean.class),
                     CollectionUtils.getValue(m, "realName", String.class),
                     Byte.valueOf(CollectionUtils.getValueOrDefault(m, "userType", 0, Integer.class).toString()),
                     CollectionUtils.getValue(m, "phone", String.class),
