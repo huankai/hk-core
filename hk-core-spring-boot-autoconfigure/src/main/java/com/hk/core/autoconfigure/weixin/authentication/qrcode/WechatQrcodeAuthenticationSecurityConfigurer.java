@@ -35,7 +35,7 @@ public class WechatQrcodeAuthenticationSecurityConfigurer extends SecurityConfig
      * 此方法是将 WechatQrCodeAuthenticationProvider 注册到spring security的filter 中
      */
     @Override
-    public void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) {
         WechatQrCodeCallbackAuthenticationFilter filter = new WechatQrCodeCallbackAuthenticationFilter(wxMpService, config);
         filter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
         WechatQrCodeAuthenticationProvider provider = new WechatQrCodeAuthenticationProvider();
