@@ -136,6 +136,12 @@ public class AuthenticationProperties {
          */
         private boolean maxSessionsPreventsLogin = false;
 
+        /**
+         * 使用gateWay设置地址
+         * @see com.hk.core.authentication.security.savedrequest.GateWayHttpSessionRequestCache
+         */
+        private String gateWayHost;
+
         private RememberMeProperties rememberMe = new RememberMeProperties();
     }
 
