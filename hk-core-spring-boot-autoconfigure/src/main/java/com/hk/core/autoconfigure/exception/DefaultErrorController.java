@@ -15,12 +15,13 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2018-08-17 12:28
  */
 @RestController
+@RequestMapping("${server.error.path:${error.path:/error}}")
 public class DefaultErrorController implements ErrorController {
 
-    @Value("${security.oauth2.sso.default-failure-url:/error}")
+    @Value("${server.error.path:${error.path:/error}}")
     private String errorPath;
 
-    @RequestMapping("${security.oauth2.sso.default-failure-url:/error}")
+    @RequestMapping
     public JsonResult error(HttpServletRequest request) {
         AuthenticationException exception = AuthenticationException.class.cast(request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION));
         if (null == exception) {

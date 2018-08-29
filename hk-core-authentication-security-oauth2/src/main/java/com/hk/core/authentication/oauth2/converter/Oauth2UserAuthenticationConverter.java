@@ -51,7 +51,11 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                     CollectionUtils.getValue(m, "email", String.class),
                     Byte.valueOf(CollectionUtils.getValueOrDefault(m, "sex", 0, Integer.class).toString()),
                     CollectionUtils.getValue(m, "iconPath", String.class));
-
+            principal.setSexChinese(CollectionUtils.getValue(m, "sexChinese", String.class));
+            principal.setOrgId(CollectionUtils.getValue(m, "orgId", String.class));
+            principal.setOrgName(CollectionUtils.getValue(m, "orgName", String.class));
+            principal.setDeptId(CollectionUtils.getValue(m, "deptId", String.class));
+            principal.setDeptName(CollectionUtils.getValue(m, "deptName", String.class));
             Map<String, Object> clientAppInfo = CollectionUtils.getValue(m, "clientApp", Map.class);
             if (null != clientAppInfo) {
                 principal.setAppInfo(new ClientAppInfo(CollectionUtils.getValue(clientAppInfo, "appId", String.class),

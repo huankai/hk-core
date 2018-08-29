@@ -55,6 +55,8 @@ public class UserPrincipal implements Serializable {
      */
     private Byte sex;
 
+    private String sexChinese;
+
     /**
      * 用户头像
      */
@@ -71,6 +73,26 @@ public class UserPrincipal implements Serializable {
      */
     @JsonIgnore
     private final boolean protectUser;
+
+    /**
+     * orgId
+     */
+    private String orgId;
+
+    /**
+     * orgName
+     */
+    private String orgName;
+
+    /**
+     * deptId
+     */
+    private String deptId;
+
+    /**
+     * deptNames
+     */
+    private String deptName;
 
     /**
      * 用户角色
@@ -97,7 +119,6 @@ public class UserPrincipal implements Serializable {
         this.sex = sex;
         this.iconPath = iconPath;
     }
-
 
     /**
      * 是否为管理员
