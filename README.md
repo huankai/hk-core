@@ -5,6 +5,9 @@
 
 - hk-core-authentication-security-oauth2 使用Spring Security oauth2实现单点登陆.
 
+- hk-core-authentication-weixin-mp 使用Spring Security oauth2实现微信登陆.
+
+
 - hk-core-cache 缓存功能的自动配置
 Spring 默认需要在标记有缓存注解的方法上定义缓存名 、或在类上定义@CacheConfig 来指定缓存名，
 这里只需要在继承 EnableCacheServiceImpl ，并在子类上添加 @CacheConfig指定缓存名，就可以实现缓存的效果，
