@@ -14,16 +14,16 @@ public interface InsertService<T extends Persistable<ID>, ID extends Serializabl
     /**
      * 实体保存
      *
-     * @param t
-     * @return
+     * @param t t
+     * @return T
      */
     T insert(T t);
 
     /**
      * 实体批量保存
      *
-     * @param entities
-     * @return
+     * @param entities entities
+     * @return Collection
      */
     Collection<T> batchInsert(Collection<T> entities);
 

@@ -22,8 +22,8 @@ public class BaseJpaRepositoryFactory extends JpaRepositoryFactory {
     }
 
     /**
-     * @param metadata
-     * @return
+     * @param metadata metadata
+     * @return Class
      */
     @Override
     protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {

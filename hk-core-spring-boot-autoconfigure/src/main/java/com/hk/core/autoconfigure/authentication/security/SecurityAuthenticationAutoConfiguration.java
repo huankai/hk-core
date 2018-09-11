@@ -4,6 +4,7 @@ import com.hk.commons.sms.DefaultSmsCodeSender;
 import com.hk.commons.sms.SmsCodeSender;
 import com.hk.core.authentication.api.validatecode.*;
 import com.hk.core.authentication.security.SpringSecurityContext;
+import com.hk.core.authentication.security.savedrequest.GateWayHttpSessionRequestCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.savedrequest.RequestCache;
 
 
 /**
@@ -47,6 +49,12 @@ public class SecurityAuthenticationAutoConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "hk.authentication.browser", name = "gate-way-host")
+    public RequestCache requestCache() {
+        return new GateWayHttpSessionRequestCache(properties.getBrowser().getGateWayHost());
     }
 
 //    /**

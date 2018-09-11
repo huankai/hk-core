@@ -27,7 +27,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      */
     private final String codeParameterName;
 
-    protected AbstractValidateCodeProcessor(ValidateCodeGenerator<C> validateCodeGenerator, String codeParameterName) {
+    AbstractValidateCodeProcessor(ValidateCodeGenerator<C> validateCodeGenerator, String codeParameterName) {
         this.validateCodeGenerator = validateCodeGenerator;
         this.codeParameterName = codeParameterName;
     }

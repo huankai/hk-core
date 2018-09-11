@@ -8,11 +8,13 @@ import com.hk.commons.util.SpringContextHolder;
  */
 public class SecurityContextUtils {
 
-	public static UserPrincipal getPrincipal() {
-		return SpringContextHolder.getBean(SecurityContext.class).getPrincipal();
-	}
+    private static final SecurityContext SECURITY_CONTEXT = SpringContextHolder.getBean(SecurityContext.class);
 
-	public static boolean isAuthenticated() {
-		return SpringContextHolder.getBean(SecurityContext.class).isAuthenticated();
-	}
+    public static UserPrincipal getPrincipal() {
+        return SECURITY_CONTEXT.getPrincipal();
+    }
+
+    public static boolean isAuthenticated() {
+        return SECURITY_CONTEXT.isAuthenticated();
+    }
 }

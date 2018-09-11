@@ -1,7 +1,11 @@
 package com.hk.core.data.jpa.repository;
 
-import java.io.Serializable;
-import java.util.List;
+import com.hk.core.data.jpa.convert.QueryByExamplePredicateBuilder;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -9,19 +13,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.util.Assert;
-
-import com.hk.core.data.jpa.convert.QueryByExamplePredicateBuilder;
+import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -48,13 +41,13 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
 
     @Override
     public <S extends T> boolean exists(Example<S> example) {
-        return !getQuery(new ExampleSpecification<>(example), example.getProbeType(), (Sort) null).getResultList()
+        return !getQuery(new ExampleSpecification<>(example), example.getProbeType(), Sort.unsorted()).getResultList()
                 .isEmpty();
     }
 
     @Override
     public <S extends T> List<S> findAll(Example<S> example) {
-        return getQuery(new ExampleSpecification<>(example), example.getProbeType(), (Sort) null).getResultList();
+        return getQuery(new ExampleSpecification<>(example), example.getProbeType(), Sort.unsorted()).getResultList();
     }
 
     @Override
@@ -67,7 +60,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
         ExampleSpecification<S> spec = new ExampleSpecification<>(example);
         Class<S> probeType = example.getProbeType();
         TypedQuery<S> query = getQuery(new ExampleSpecification<>(example), probeType, pageable);
-        return pageable == null ? new PageImpl<>(query.getResultList()) : readPage(query, probeType, pageable, spec);
+        return readPage(query, probeType, pageable, spec);
     }
 
     @Override
@@ -84,16 +77,16 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
      * @since 1.10
      */
     @SuppressWarnings("serial")
-	private static class ExampleSpecification<T> implements Specification<T> {
+    private static class ExampleSpecification<T> implements Specification<T> {
 
         private final Example<T> example;
 
         /**
          * Creates new {@link SimpleJpaRepository.ExampleSpecification}.
          *
-         * @param example
+         * @param example example
          */
-        public ExampleSpecification(Example<T> example) {
+        ExampleSpecification(Example<T> example) {
             Assert.notNull(example, "Example must not be null!");
             this.example = example;
         }

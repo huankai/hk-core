@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
@@ -36,8 +35,8 @@ import java.util.Locale;
  */
 @Configuration
 @ServletComponentScan(basePackages = {"com.hk.core"})
-@ComponentScan("com.hk.core.autoconfigure.exception")
 public class WebMVCAutoConfiguration implements WebMvcConfigurer {
+
 
     @Bean
     @ConditionalOnClass(SpringContextHolder.class)
@@ -90,8 +89,6 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
         registry.addConverter(new StringToLocalDateTimeConverter());
     }
 
-//    @Autowired
-//    private SecurityContext securityContext;
 
     /**
      * 添加拦截器

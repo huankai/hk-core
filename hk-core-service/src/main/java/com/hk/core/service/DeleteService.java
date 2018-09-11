@@ -1,12 +1,11 @@
 package com.hk.core.service;
 
+import com.hk.commons.util.ArrayUtils;
+import org.springframework.data.domain.Persistable;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-
-import org.springframework.data.domain.Persistable;
-
-import com.hk.commons.util.ArrayUtils;
 
 /**
  * @author: kevin
@@ -15,34 +14,32 @@ import com.hk.commons.util.ArrayUtils;
 public interface DeleteService<T extends Persistable<ID>, ID extends Serializable> {
 
     /**
-     * @param id
-     * @return
+     * @param id id
      */
     void deleteById(ID id);
 
     /**
-     * @param ids
+     * @param ids ids
      */
     void deleteByIds(Collection<ID> ids);
 
     /**
-     * @param ids
-     * @return
+     * @param ids ids
      */
     @SuppressWarnings("unchecked")
-	default void deleteByIds(ID... ids) {
+    default void deleteByIds(ID... ids) {
         if (ArrayUtils.isNotEmpty(ids)) {
             deleteByIds(Arrays.asList(ids));
         }
     }
 
     /**
-     * @param entity
+     * @param entity entity
      */
     void delete(T entity);
 
     /**
-     * @param entities
+     * @param entities entities
      */
     void delete(Collection<T> entities);
 }

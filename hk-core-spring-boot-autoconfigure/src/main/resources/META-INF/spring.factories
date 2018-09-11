@@ -7,6 +7,7 @@ com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2JWTAccessTokenCon
 com.hk.core.autoconfigure.cache.redis.CacheRedisAutoConfiguration,\
 com.hk.core.autoconfigure.cache.FixUseSupperClassAutoConfiguration,\
 com.hk.core.autoconfigure.web.WebMVCAutoConfiguration,\
+  com.hk.core.autoconfigure.exception.ExceptionHandlerConfiguration,\
 com.hk.core.autoconfigure.data.jpa.JpaAutoConfiguration,\
 com.hk.core.autoconfigure.solr.SolrDeltaImportAutoConfiguration,\
 com.hk.core.autoconfigure.weixin.WechatMpConfiguration

@@ -3,6 +3,7 @@ package com.hk.core.autoconfigure.authentication.security;
 import com.hk.core.authentication.api.LoginResponseType;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashSet;
@@ -32,8 +33,9 @@ public class AuthenticationProperties {
     private ImageCodeProperties imageCode = new ImageCodeProperties();
 
     /**
-     * 登陆返回的类型
+     * 暂时未使用此属性登陆返回的类型
      */
+    @Deprecated
     private LoginResponseType responseType = LoginResponseType.JSON;
 
 
@@ -105,26 +107,8 @@ public class AuthenticationProperties {
          * <p>
          * 不需要登陆授权的URL
          * </p>
-         * <p>
-         * 集合中每个元素以英文状态下的逗号(,) 分隔 ：格式为 Request Method , url , authority <br/>
-         * ---------------------------------------- <br/>
-         * 如果长度为1: 表示 Url <br/>
-         * 如果长度为2,表示 请求方法 + url <br/>
-         * 如果长度为 3表示 请求方法 + url + 权限 <br/>
-         * 如果长度为 大于3 仅表示为 url <br/>
-         * ----------------------------------------
-         * </p>
-         *
-         * <p>
-         * such as : <br/>
-         * /login <--------->  HTTP请求 /login 可任意访问 <br/>
-         * GET,/login <--------->  HTTP GET 请求 /login 可任意访问 <br/>
-         * GET,/user, user <--------->  HTTP GET 请求 /user 需要 user 权限能才访问 <br/>
-         * /user/** <--------->  HTTP 请求 /user/** 可任意访问 <br/>
-         * /user,/abc,/def,/xxx <--------->  HTTP 请求 /user 、/abc、/def、/xxx 可任意访问 <br/>
-         * </p>
          */
-        private Set<String> permitAllMatchers = new HashSet<>();
+        private Set<PermitMatcher> permitAllMatchers = new HashSet<>();
 
         /**
          * 同一个用户在系统中的最大session数，默认1
@@ -138,11 +122,24 @@ public class AuthenticationProperties {
 
         /**
          * 使用gateWay设置地址
+         *
          * @see com.hk.core.authentication.security.savedrequest.GateWayHttpSessionRequestCache
          */
         private String gateWayHost;
 
         private RememberMeProperties rememberMe = new RememberMeProperties();
+    }
+
+    @Data
+    public static class PermitMatcher {
+
+        private HttpMethod method;
+
+        private String[] uris;
+
+        private String[] roles;
+
+        private String[] permissions;
     }
 
     @Data

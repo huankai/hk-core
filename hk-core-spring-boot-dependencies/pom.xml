@@ -68,6 +68,11 @@
                 <artifactId>hk-commons-poi</artifactId>
                 <version>${hk.commons.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-commons-validator</artifactId>
+                <version>${hk.commons.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.alibaba</groupId>

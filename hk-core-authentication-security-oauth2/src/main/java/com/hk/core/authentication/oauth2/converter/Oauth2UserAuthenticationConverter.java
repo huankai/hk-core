@@ -41,27 +41,27 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
             Map<String, Object> m = (Map<String, Object>) map;
-            UserPrincipal principal = new UserPrincipal(CollectionUtils.getValue(m, "userId", String.class),
-                    CollectionUtils.getValueOrDefault(m, "account",
-                            CollectionUtils.getValue(m, USERNAME, String.class), String.class),
-                    CollectionUtils.getValueOrDefault(m, "isProtect", false, Boolean.class),
-                    CollectionUtils.getValue(m, "realName", String.class),
-                    Byte.valueOf(CollectionUtils.getValueOrDefault(m, "userType", 0, Integer.class).toString()),
-                    CollectionUtils.getValue(m, "phone", String.class),
-                    CollectionUtils.getValue(m, "email", String.class),
-                    Byte.valueOf(CollectionUtils.getValueOrDefault(m, "sex", 0, Integer.class).toString()),
-                    CollectionUtils.getValue(m, "iconPath", String.class));
-            principal.setSexChinese(CollectionUtils.getValue(m, "sexChinese", String.class));
-            principal.setOrgId(CollectionUtils.getValue(m, "orgId", String.class));
-            principal.setOrgName(CollectionUtils.getValue(m, "orgName", String.class));
-            principal.setDeptId(CollectionUtils.getValue(m, "deptId", String.class));
-            principal.setDeptName(CollectionUtils.getValue(m, "deptName", String.class));
-            Map<String, Object> clientAppInfo = CollectionUtils.getValue(m, "clientApp", Map.class);
+            UserPrincipal principal = new UserPrincipal(CollectionUtils.getStringValue(m, "userId"),
+                    CollectionUtils.getStringValue(m, "account", CollectionUtils.getStringValue(m, USERNAME)),
+                    CollectionUtils.getBooleanValue(m, "isProtect", false),
+                    CollectionUtils.getStringValue(m, "realName"),
+                    CollectionUtils.getByteValue(m, "userType"),
+                    CollectionUtils.getStringValue(m, "phone"),
+                    CollectionUtils.getStringValue(m, "email"),
+                    CollectionUtils.getByteValue(m, "sex"),
+                    CollectionUtils.getStringValue(m, "iconPath"));
+            principal.setSexChinese(CollectionUtils.getStringValue(m, "sexChinese"));
+            principal.setOrgId(CollectionUtils.getStringValue(m, "orgId"));
+            principal.setOrgName(CollectionUtils.getStringValue(m, "orgName"));
+            principal.setDeptId(CollectionUtils.getStringValue(m, "deptId"));
+            principal.setDeptName(CollectionUtils.getStringValue(m, "deptName"));
+
+            Map<String, Object> clientAppInfo = CollectionUtils.getMapValue(m, "clientApp");
             if (null != clientAppInfo) {
-                principal.setAppInfo(new ClientAppInfo(CollectionUtils.getValue(clientAppInfo, "appId", String.class),
-                        CollectionUtils.getValue(clientAppInfo, "appCode", String.class),
-                        CollectionUtils.getValue(clientAppInfo, "appName", String.class),
-                        CollectionUtils.getValue(clientAppInfo, "appIcon", String.class)));
+                principal.setAppInfo(new ClientAppInfo(CollectionUtils.getStringValue(clientAppInfo, "appId"),
+                        CollectionUtils.getStringValue(clientAppInfo, "appCode"),
+                        CollectionUtils.getStringValue(clientAppInfo, "appName"),
+                        CollectionUtils.getStringValue(clientAppInfo, "appIcon")));
             }
 
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -76,6 +76,7 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                     authorities.add(new SimpleGrantedAuthority(role));
                 });
             }
+
             List<String> permissionList = CollectionUtils.getValue(m, "permissions", List.class);
             if (null != permissionList) {
                 Set<String> permissionSet = new HashSet<>(permissionList);

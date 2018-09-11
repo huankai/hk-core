@@ -6,6 +6,7 @@ import com.hk.commons.util.ObjectUtils;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.data.jpa.repository.BaseRepository;
+import com.hk.core.data.jpa.util.OrderUtils;
 import com.hk.core.exception.ServiceException;
 import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
@@ -35,21 +36,21 @@ import java.util.Optional;
 @Transactional(rollbackFor = {Throwable.class})
 public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Serializable> implements BaseService<T, ID> {
 
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
+
     private Class<T> domainClass;
 
     @Autowired
     private SecurityContext securityContext;
 
-    protected final UserPrincipal getUserPrincipal() {
+    protected final UserPrincipal getPrincipal() {
         return securityContext.getPrincipal();
     }
 
     /**
      * 返回 BaseRepository
      *
-     * @return
+     * @return BaseRepository
      */
     protected abstract BaseRepository<T, ID> getBaseRepository();
 
@@ -123,8 +124,8 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     @Transactional(readOnly = true)
-    public List<T> findAll() {
-        return getBaseRepository().findAll();
+    public List<T> findAll(Order... orders) {
+        return getBaseRepository().findAll(OrderUtils.toSort(orders));
     }
 
     @Override

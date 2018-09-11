@@ -54,9 +54,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getHeader(String name) {
         String value = super.getHeader(StringEscapeUtils.escapeHtml4(name));
-        if (StringUtils.isNotEmpty(value)) {
-            value = StringEscapeUtils.escapeHtml4(value);
-        }
-        return value;
+        return StringUtils.isNotEmpty(value) ? StringEscapeUtils.escapeHtml4(value) : value;
     }
+
 }

@@ -6,6 +6,7 @@ import com.hk.core.data.jpa.repository.BaseRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -28,29 +29,34 @@ import java.util.Optional;
 @ConditionalOnClass(BaseRepository.class)
 @EnableJpaRepositories(basePackages = {"com.hk.**.repository", "com.hk.**.dao"}, repositoryFactoryBeanClass = BaseJpaRepositoryFactoryBean.class)
 public class JpaAutoConfiguration {
+
     /**
      * jpa audit功能
      *
      * @return
      */
-    @Bean
+    @Configuration
     @ConditionalOnClass(value = {SecurityContext.class})
-    @ConditionalOnMissingBean(value = AuditorAware.class)
-    public AuditorAware<String> userIdAuditor(SecurityContext securityContext) {
-        return new UserAuditorAware(securityContext);
-    }
+    protected class AuditorConfiguration {
 
-    private class UserAuditorAware implements AuditorAware<String> {
-
-        private SecurityContext securityContext;
-
-        private UserAuditorAware(SecurityContext securityContext) {
-            this.securityContext = securityContext;
+        @Bean
+        @ConditionalOnMissingBean(value = AuditorAware.class)
+        public AuditorAware<String> userIdAuditor(SecurityContext securityContext) {
+            return new UserAuditorAware(securityContext);
         }
 
-        @Override
-        public Optional<String> getCurrentAuditor() {
-            return Optional.of(securityContext.getPrincipal().getUserId());
+        private class UserAuditorAware implements AuditorAware<String> {
+
+            private SecurityContext securityContext;
+
+            private UserAuditorAware(SecurityContext securityContext) {
+                this.securityContext = securityContext;
+            }
+
+            @Override
+            public Optional<String> getCurrentAuditor() {
+                return Optional.of(securityContext.getPrincipal().getUserId());
+            }
         }
     }
 

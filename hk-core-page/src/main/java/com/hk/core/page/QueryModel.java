@@ -52,7 +52,7 @@ public class QueryModel<T> {
     /**
      * 不能小于等于0
      *
-     * @return
+     * @return pageSize
      */
     public final int getPageSize() {
         return pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;

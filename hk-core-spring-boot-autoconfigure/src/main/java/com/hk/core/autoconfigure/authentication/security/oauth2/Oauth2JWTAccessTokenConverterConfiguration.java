@@ -1,5 +1,6 @@
 package com.hk.core.autoconfigure.authentication.security.oauth2;
 
+import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.authentication.oauth2.converter.Oauth2UserAuthenticationConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.JwtAccessTokenConverterConfigurer;
@@ -8,7 +9,7 @@ import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConv
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 /**
- * Oauth2 返回信息封装到 {@link com.hk.core.authentication.api.UserPrincipal } 对象中自动配置
+ * Oauth2 返回信息封装到 {@link UserPrincipal } 对象中自动配置
  *
  * @author: kevin
  * @date 2018-08-01 16:29

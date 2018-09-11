@@ -18,11 +18,11 @@ public abstract class OrderUtils {
     /**
      * 转换为Spring Data Sort
      *
-     * @param orders
-     * @return
+     * @param orders orders
+     * @return Sort
      */
     public static Sort toSort(List<Order> orders) {
-        Sort sort = null;
+        Sort sort = Sort.unsorted();
         if (CollectionUtils.isNotEmpty(orders)) {
             List<Sort.Order> orderList = orders.stream()
                     .map(order -> new Sort.Order(order.isDesc() ? Sort.Direction.DESC : Sort.Direction.ASC, order.getField()))
@@ -39,9 +39,9 @@ public abstract class OrderUtils {
      * 转换为Spring Data Sort
      *
      * @param orders orders
-     * @return
+     * @return Sort
      */
     public static Sort toSort(Order... orders) {
-        return ArrayUtils.isEmpty(orders) ? null : toSort(Arrays.asList(orders));
+        return ArrayUtils.isEmpty(orders) ? Sort.unsorted() : toSort(Arrays.asList(orders));
     }
 }

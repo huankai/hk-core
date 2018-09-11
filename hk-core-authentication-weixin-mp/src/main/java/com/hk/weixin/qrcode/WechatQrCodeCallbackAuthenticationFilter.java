@@ -76,7 +76,6 @@ public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthentica
 
     private void setDetails(HttpServletRequest request, WechatQrCodeAuthenticationToken authenticationToken) {
         authenticationToken.setDetails(authenticationDetailsSource.buildDetails(request));
-
     }
 
 }
