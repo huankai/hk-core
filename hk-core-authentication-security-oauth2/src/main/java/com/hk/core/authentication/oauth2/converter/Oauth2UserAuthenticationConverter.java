@@ -24,7 +24,7 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put(USERNAME, authentication.getName());
-        if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(authentication.getAuthorities())) {
             response.put(AUTHORITIES, AuthorityUtils.authorityListToSet(authentication.getAuthorities()));
         }
         return response;

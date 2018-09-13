@@ -29,7 +29,7 @@ public class LocalUserAuthenticationConverter implements UserAuthenticationConve
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put(USERNAME, authentication.getName());
-        if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(authentication.getAuthorities())) {
             response.put(AUTHORITIES, AuthorityUtils.authorityListToSet(authentication.getAuthorities()));
         }
         return response;
@@ -40,7 +40,7 @@ public class LocalUserAuthenticationConverter implements UserAuthenticationConve
             Map<String, Object> m = new HashMap<>(map);
             String principal = CollectionUtils.getValue(m, USERNAME, String.class);
             UserPrincipal user = UserPrincipal.class.cast(userDetailClientService.loadUserByUsername(principal));
-            user.setAppInfo(userDetailClientService.getClientInfoById(CollectionUtils.getValue(m, "client_id", String.class)));
+            user.setAppInfo(userDetailClientService.getClientInfoById(CollectionUtils.getStringValue(m, "client_id")));
             List<GrantedAuthority> authorities = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(user.getPermissionSet())) {
                 user.getPermissionSet().forEach(item -> authorities.add(new SimpleGrantedAuthority(item)));
