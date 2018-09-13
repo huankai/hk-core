@@ -9,23 +9,23 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogicalExpression<T> implements Criterion<T> {
+public class LogicalExpression implements Criterion {
 
-	private Criterion<T>[] criterions;
+	private Criterion[] criterions;
 
 	private AndOr andOr;
 
-	public LogicalExpression(Criterion<T>[] criterions, AndOr andOr) {
+	public LogicalExpression(Criterion[] criterions, AndOr andOr) {
 		this.criterions = criterions;
 		this.andOr = andOr;
 	}
 
 	@Override
-	public Predicate toPredicate(Root<T> root, CriteriaQuery<T> cq, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<?> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
 		List<Predicate> predicates = new ArrayList<>();
-		Criterion<T>[] crits = criterions;
+		Criterion[] crits = criterions;
 		for (int index = 0; index < crits.length; ++index) {
-			Criterion<T> criterion = crits[index];
+			Criterion criterion = crits[index];
 			if (criterion != null) {
 				predicates.add(criterion.toPredicate(root, cq, cb));
 			}
@@ -42,7 +42,7 @@ public class LogicalExpression<T> implements Criterion<T> {
 		}
 	}
 
-	public Criterion<T>[] getCriterions() {
+	public Criterion[] getCriterions() {
 		return criterions;
 	}
 

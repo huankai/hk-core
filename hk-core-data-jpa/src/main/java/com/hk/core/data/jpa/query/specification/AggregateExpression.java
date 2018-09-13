@@ -10,7 +10,7 @@ import javax.persistence.criteria.Root;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class AggregateExpression<T> implements Criterion<T> {
+public class AggregateExpression implements Criterion {
 
     private Projection projection;
 
@@ -26,7 +26,7 @@ public class AggregateExpression<T> implements Criterion<T> {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Predicate toPredicate(Root<T> root, CriteriaQuery<T> cq, CriteriaBuilder cb) {
+    public Predicate toPredicate(Root<?> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
         switch (operator) {
             case EQ:
                 return cb.equal(projection.toExpression(root, cq, cb), value);

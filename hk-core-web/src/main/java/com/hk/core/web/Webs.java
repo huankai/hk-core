@@ -1,8 +1,13 @@
 package com.hk.core.web;
 
 import com.hk.commons.util.Contants;
+import com.hk.commons.util.FileUtils;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
+import org.springframework.core.Constants;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,8 +19,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 /**
  * web相关的工具类
@@ -24,6 +31,14 @@ import java.io.PrintWriter;
  * @date 2017年9月22日下午2:51:02
  */
 public abstract class Webs {
+
+    private static final String USER_AGENT_HEADER_NAME = "User-Agent";
+
+    private static final String MSIE_USER_AGENT_HEADER_VALUE = "MSIE";
+
+    private static final String TRIDENT_USER_AGENT_HEADER_VALUE = "Trident";
+
+    private static final String MOZILLA_USER_AGENT_HEADER_VALUE = "Mozilla";
 
     /**
      * 获取request对象
@@ -153,15 +168,114 @@ public abstract class Webs {
     }
 
     /**
+     * 下载文件
+     *
      * @param fileName fileName
      * @param body     body
      * @return ResponseEntity
      */
-    public static ResponseEntity<byte[]> toDownResponseEntity(String fileName, byte[] body) {
+    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, byte[] body) {
+        return toDownloadResponseEntity(fileName, new ByteArrayResource(body));
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param fileName fileName
+     * @param url      url
+     * @return ResponseEntity
+     */
+    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, URL url) {
+        try {
+            URLConnection connection = url.openConnection();
+            return toDownloadResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param fileName fileName
+     * @param resource resource
+     * @return ResponseEntity
+     */
+    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, Resource resource) {
+        try {
+            return toDownloadResponseEntity(fileName, resource.contentLength(), resource.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 图片预览
+     *
+     * @param resource resource
+     * @return ResponseEntity
+     */
+    public static ResponseEntity<InputStreamResource> toImageViewResponseEntity(Resource resource) {
+        try {
+            return toDownloadResponseEntity(null, MediaType.IMAGE_JPEG, resource.contentLength(), new InputStreamResource(resource.getInputStream()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @param fileName fileName
+     * @param in       in
+     * @return ResponseEntity
+     */
+    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, long contextLength, InputStream in) {
+        InputStreamResource streamResource = new InputStreamResource(in);
+        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        try {
+            if (streamResource.isFile()) {
+                File file = streamResource.getFile();
+                if (FileUtils.isImage(file)) {
+                    mediaType = MediaType.IMAGE_JPEG;
+                }
+            }
+            return toDownloadResponseEntity(fileName, mediaType, contextLength, streamResource);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static <T> ResponseEntity<T> toDownloadResponseEntity(String fileName, MediaType mediaType, long contextLength, T body) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentDispositionFormData("attachment", fileName);
-        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        return new ResponseEntity<>(body, httpHeaders, HttpStatus.OK);
+        if (StringUtils.isNotEmpty(fileName)) {
+            httpHeaders.setContentDispositionFormData("attachment", getAttachFileName(fileName));
+        }
+        httpHeaders.setContentType(mediaType);
+        httpHeaders.setContentLength(contextLength);
+        return ResponseEntity.ok().headers(httpHeaders).body(body);
+    }
+
+    /**
+     * 附件名
+     *
+     * @param fileName fileName
+     * @return fileName
+     */
+    private static String getAttachFileName(String fileName) {
+        String encodeFileName = fileName;
+        HttpServletRequest request = getHttpServletRequest();
+        try {
+            String agent = request.getHeader(USER_AGENT_HEADER_NAME);
+            if (StringUtils.isNotEmpty(agent)) {
+                if (agent.contains(MSIE_USER_AGENT_HEADER_VALUE) || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {//IE
+                    encodeFileName = URLEncoder.encode(fileName, Contants.UTF_8);
+                } else if (agent.contains(MOZILLA_USER_AGENT_HEADER_VALUE)) {//火狐,谷歌
+                    encodeFileName = StringUtils.newStringIso8859_1(StringUtils.getByteUtf8(fileName));
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return encodeFileName;
     }
 
     /**

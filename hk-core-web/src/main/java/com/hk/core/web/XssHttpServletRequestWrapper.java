@@ -35,7 +35,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getParameter(String name) {
         String value = super.getParameter(StringEscapeUtils.escapeHtml4(name));
-        return StringUtils.isEmpty(value) ? null : StringEscapeUtils.escapeHtml4(value);
+        return StringUtils.isEmpty(value) ? value : StringEscapeUtils.escapeHtml4(value);
     }
 
     @Override

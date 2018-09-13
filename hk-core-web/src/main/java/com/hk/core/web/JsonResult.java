@@ -45,6 +45,12 @@ public final class JsonResult {
         UNAUTHORIZED,
 
         /**
+         * 无权限
+         */
+        @EnumDisplay(value = "operation.forbidden", order = 10403)
+        FORBIDDEN,
+
+        /**
          * 资源不存在
          */
         @EnumDisplay(value = "operation.not_found", order = 10404)
@@ -125,8 +131,18 @@ public final class JsonResult {
      * @param message
      * @return
      */
-    public static JsonResult badRueqest(String message) {
+    public static JsonResult badRequest(String message) {
         return new JsonResult(Status.BAD_REQUEST, message);
+    }
+
+    /**
+     * 访问拒绝
+     *
+     * @param message message
+     * @return
+     */
+    public static JsonResult forbidden(String message) {
+        return new JsonResult(Status.FORBIDDEN, message);
     }
 
     /**

@@ -123,7 +123,7 @@ public class AuthenticationProperties {
         /**
          * 使用gateWay设置地址
          *
-         * @see com.hk.core.authentication.security.savedrequest.GateWayHttpSessionRequestCache
+         * @see com.hk.core.authentication.security.savedrequest.GateWayHttpSessionRequestCache#gateWayUrl
          */
         private String gateWayHost;
 
@@ -133,12 +133,24 @@ public class AuthenticationProperties {
     @Data
     public static class PermitMatcher {
 
+        /**
+         * HTTP Method
+         */
         private HttpMethod method;
 
+        /**
+         * URI
+         */
         private String[] uris;
 
+        /**
+         * 需要的角色
+         */
         private String[] roles;
 
+        /**
+         * 需要的权限
+         */
         private String[] permissions;
     }
 

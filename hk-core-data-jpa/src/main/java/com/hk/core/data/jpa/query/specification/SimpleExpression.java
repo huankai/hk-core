@@ -9,9 +9,8 @@ import java.util.Iterator;
 
 
 /**
- * @param <T>
  */
-public class SimpleExpression<T> implements Criterion<T> {
+public class SimpleExpression implements Criterion {
 
     private String propertyName;
 
@@ -31,7 +30,7 @@ public class SimpleExpression<T> implements Criterion<T> {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Predicate toPredicate(Root<T> root, CriteriaQuery<T> cq, CriteriaBuilder cb) {
+    public Predicate toPredicate(Root<?> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
         Path path = PathUtils.getPath(root, propertyName);
         switch (this.operator) {
             case EQ:

@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 
 /**
  * @author: kevin
- * @date 2018-06-07 13:48
+ * @date: 2018-06-07 13:48
  */
 public class BaseJpaRepositoryFactory extends JpaRepositoryFactory {
 

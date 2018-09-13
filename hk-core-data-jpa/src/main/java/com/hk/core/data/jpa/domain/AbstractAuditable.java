@@ -75,7 +75,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
 
     @Override
     public Optional<String> getCreatedBy() {
-        return Optional.ofNullable(createdBy);
+        return Optional.of(createdBy);
     }
 
     @Override
@@ -85,7 +85,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
 
     @Override
     public Optional<LocalDateTime> getCreatedDate() {
-        return Optional.ofNullable(createdDate);
+        return Optional.of(createdDate);
     }
 
     @Override
@@ -95,7 +95,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
 
     @Override
     public Optional<String> getLastModifiedBy() {
-        return Optional.ofNullable(lastModifiedBy);
+        return Optional.of(lastModifiedBy);
     }
 
     @Override
@@ -105,7 +105,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
 
     @Override
     public Optional<LocalDateTime> getLastModifiedDate() {
-        return Optional.ofNullable(lastModifiedDate);
+        return Optional.of(lastModifiedDate);
     }
 
     @Override

@@ -1,27 +1,25 @@
 package com.hk.core.data.jpa.query.specification;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.core.query.Order;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.springframework.data.jpa.domain.Specification;
-
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.core.query.Order;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class Criteria<T> implements Specification<T> {
 
-    private List<Criterion<T>> criterions = new ArrayList<>();
+    private List<Criterion> criterions = new ArrayList<>();
 
-    private List<Criterion<T>> havings = new ArrayList<>();
+    private List<Criterion> havings = new ArrayList<>();
 
     private List<Order> orders = new ArrayList<>();
 
@@ -83,14 +81,14 @@ public class Criteria<T> implements Specification<T> {
         return null;
     }
 
-    public Criteria<T> add(Criterion<T> criterion) {
+    public Criteria<T> add(Criterion criterion) {
         if (criterion != null) {
             this.criterions.add(criterion);
         }
         return this;
     }
 
-    public Criteria<T> having(Criterion<T> criterion) {
+    public Criteria<T> having(Criterion criterion) {
         if (criterion != null) {
             this.havings.add(criterion);
         }
@@ -111,11 +109,11 @@ public class Criteria<T> implements Specification<T> {
         }
     }
 
-    public List<Criterion<T>> getCriterions() {
+    public List<Criterion> getCriterions() {
         return criterions;
     }
 
-    public List<Criterion<T>> getHavings() {
+    public List<Criterion> getHavings() {
         return havings;
     }
 
@@ -126,5 +124,4 @@ public class Criteria<T> implements Specification<T> {
     public List<String> getGroupByPropertyNames() {
         return groupByPropertyNames;
     }
-
 }

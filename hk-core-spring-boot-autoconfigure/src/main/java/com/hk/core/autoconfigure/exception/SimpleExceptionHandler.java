@@ -33,7 +33,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public JsonResult serviceException(ServiceException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return JsonResult.badRueqest(e.getMessage());
+        return JsonResult.badRequest(e.getMessage());
     }
 
     /**
@@ -113,7 +113,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
         FieldError fieldError = e.getBindingResult().getFieldError();
         String message = fieldError.getField() + fieldError.getDefaultMessage();
         error(e, message, request);
-        return JsonResult.badRueqest(message);
+        return JsonResult.badRequest(message);
     }
 
     /**
