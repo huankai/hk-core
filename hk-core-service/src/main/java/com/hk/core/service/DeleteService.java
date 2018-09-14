@@ -9,7 +9,7 @@ import java.util.Collection;
 
 /**
  * @author: kevin
- * @date 2018-07-04 09:47
+ * @date: 2018-07-04 09:47
  */
 public interface DeleteService<T extends Persistable<ID>, ID extends Serializable> {
 

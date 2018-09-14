@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
  * 图片验证码配置
  *
  * @author: kevin
- * @date 2018-07-27 16:00
+ * @date: 2018-07-27 16:00
  */
 public class ImageAuthenticationSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 

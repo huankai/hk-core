@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author: kevin
- * @date 2018-07-04 09:40
+ * @date: 2018-07-04 09:40
  */
 public interface UpdateService<T extends Persistable<ID>, ID extends Serializable> {
 

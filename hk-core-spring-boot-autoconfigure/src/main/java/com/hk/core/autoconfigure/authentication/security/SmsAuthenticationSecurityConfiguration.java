@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * 短信验证配置
  *
  * @author: kevin
- * @date 2018-07-27 09:07
+ * @date: 2018-07-27 09:07
  */
 public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 

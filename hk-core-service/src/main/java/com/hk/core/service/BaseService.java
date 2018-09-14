@@ -13,7 +13,7 @@ import java.util.List;
  * @param <T>
  * @param <ID>
  * @author: kevin
- * @date 2017年9月27日下午5:04:48
+ * @date: 2017年9月27日下午5:04:48
  */
 public interface BaseService<T extends Persistable<ID>, ID extends Serializable> extends InsertService<T, ID>, UpdateService<T, ID>, DeleteService<T, ID>, SelectService<T, ID> {
 

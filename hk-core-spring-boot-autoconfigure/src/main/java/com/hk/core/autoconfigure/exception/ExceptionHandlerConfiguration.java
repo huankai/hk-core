@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author: kevin
- * @date 2018-09-10 14:38
+ * @date: 2018-09-10 14:38
  */
 @Configuration
 public class ExceptionHandlerConfiguration {

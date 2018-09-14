@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * @author: kevin
- * @date 2018年1月24日上午9:56:21
+ * @date: 2018年1月24日上午9:56:21
  */
 public interface QueryPage<T> extends Serializable {
 

@@ -6,7 +6,7 @@ import org.springframework.web.context.request.ServletWebRequest;
  * 验证码处理器
  *
  * @author: kevin
- * @date 2018-07-27 13:37
+ * @date: 2018-07-27 13:37
  */
 public interface ValidateCodeProcessor {
 

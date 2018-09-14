@@ -4,7 +4,7 @@ import com.hk.commons.util.SpringContextHolder;
 
 /**
  * @author: kevin
- * @date 2018-08-01 16:58
+ * @date: 2018-08-01 16:58
  */
 public class SecurityContextUtils {
 

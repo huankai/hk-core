@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * @author: kevin
- * @date 2018-08-01 16:24
+ * @date: 2018-08-01 16:24
  * @see org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter
  */
 public class Oauth2UserAuthenticationConverter implements UserAuthenticationConverter {

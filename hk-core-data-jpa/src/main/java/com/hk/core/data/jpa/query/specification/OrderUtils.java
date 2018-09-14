@@ -8,7 +8,7 @@ import org.hibernate.query.criteria.internal.OrderImpl;
 
 /**
  * @author: kevin
- * @date 2018-06-07 12:31
+ * @date: 2018-06-07 12:31
  */
 class OrderUtils {
 

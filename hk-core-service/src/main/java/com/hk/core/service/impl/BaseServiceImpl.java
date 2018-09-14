@@ -31,7 +31,7 @@ import java.util.Optional;
  *
  * @param <T>
  * @author kevin
- * @date 2017年9月27日下午2:16:24
+ * @date: 2017年9月27日下午2:16:24
  */
 @Transactional(rollbackFor = {Throwable.class})
 public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Serializable> implements BaseService<T, ID> {

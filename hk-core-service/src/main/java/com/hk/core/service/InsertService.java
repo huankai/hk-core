@@ -7,7 +7,7 @@ import java.util.Collection;
 
 /**
  * @author: kevin
- * @date 2018-07-04 09:40
+ * @date: 2018-07-04 09:40
  */
 public interface InsertService<T extends Persistable<ID>, ID extends Serializable> {
 

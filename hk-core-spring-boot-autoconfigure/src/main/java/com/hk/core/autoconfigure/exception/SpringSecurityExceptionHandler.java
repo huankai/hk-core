@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: kevin
- * @date 2018-09-10 14:17
+ * @date: 2018-09-10 14:17
  */
 @RestControllerAdvice
 public class SpringSecurityExceptionHandler extends AbstractExceptionHandler {

@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * @author: kevin
- * @date 2018-07-04 11:35
+ * @date: 2018-07-04 11:35
  */
 public interface BaseMapper<T> {
 

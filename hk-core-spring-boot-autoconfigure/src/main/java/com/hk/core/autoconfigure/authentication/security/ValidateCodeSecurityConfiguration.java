@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
  * 验证码校验配置
  *
  * @author: kevin
- * @date 2018-07-27 11:20
+ * @date: 2018-07-27 11:20
  */
 public class ValidateCodeSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 

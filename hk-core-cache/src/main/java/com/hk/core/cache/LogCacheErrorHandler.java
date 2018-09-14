@@ -12,7 +12,7 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
  * </p>
  *
  * @author: kevin
- * @date 2018-05-15 17:20
+ * @date: 2018-05-15 17:20
  */
 public class LogCacheErrorHandler implements CacheErrorHandler {
 

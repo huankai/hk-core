@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author: kevin
- * @date 2018-07-12 16:30
+ * @date: 2018-07-12 16:30
  */
 @Data
 @NoArgsConstructor

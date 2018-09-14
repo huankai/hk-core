@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
  * Email AuthenticationToken
  *
  * @author: kevin
- * @date 2018-07-26 16:37
+ * @date: 2018-07-26 16:37
  */
 @SuppressWarnings("serial")
 public class EmailAuthenticationToken extends AbstractAuthenticationToken {

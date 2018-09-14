@@ -33,7 +33,7 @@ import java.util.Locale;
 
 /**
  * @author: kevin
- * @date 2018-05-31 16:26
+ * @date: 2018-05-31 16:26
  */
 @Configuration
 @ServletComponentScan(basePackages = {"com.hk.core"})

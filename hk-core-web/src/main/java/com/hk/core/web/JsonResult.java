@@ -8,7 +8,7 @@ import com.hk.commons.util.StringUtils;
  * Json返回结果
  *
  * @author: kevin
- * @date 2017年9月27日上午11:09:08
+ * @date: 2017年9月27日上午11:09:08
  */
 public final class JsonResult {
 
@@ -87,7 +87,7 @@ public final class JsonResult {
     /**
      * 请求成功
      *
-     * @return
+     * @return JsonResult
      */
     public static JsonResult success() {
         return success(null);
@@ -100,7 +100,7 @@ public final class JsonResult {
     /**
      * 请求成功
      *
-     * @return
+     * @return JsonResult
      */
     public static JsonResult success(Object data) {
         return new JsonResult(data);
@@ -109,7 +109,7 @@ public final class JsonResult {
     /**
      * 请求失败
      *
-     * @return
+     * @return JsonResult
      */
     public static JsonResult failure() {
         return new JsonResult(Status.FAILURE);
@@ -119,27 +119,37 @@ public final class JsonResult {
      * 请求失败
      *
      * @param message 失败信息
-     * @return
+     * @return JsonResult
      */
     public static JsonResult failure(String message) {
         return new JsonResult(false, message);
     }
 
     /**
-     * 请求不正确
+     * 请求姿势不正确
      *
-     * @param message
-     * @return
+     * @param message message
+     * @return JsonResult
      */
     public static JsonResult badRequest(String message) {
         return new JsonResult(Status.BAD_REQUEST, message);
     }
 
     /**
+     * 用户未认证
+     *
+     * @param message message
+     * @return JsonResult
+     */
+    public static JsonResult unauthorized(String message) {
+        return new JsonResult(Status.UNAUTHORIZED, message);
+    }
+
+    /**
      * 访问拒绝
      *
      * @param message message
-     * @return
+     * @return JsonResult
      */
     public static JsonResult forbidden(String message) {
         return new JsonResult(Status.FORBIDDEN, message);
@@ -149,7 +159,7 @@ public final class JsonResult {
      * 请求失败
      *
      * @param data 失败数据
-     * @return
+     * @return JsonResult
      */
     public static JsonResult failure(Object data) {
         return new JsonResult(Status.FAILURE, data);
@@ -158,7 +168,7 @@ public final class JsonResult {
     /**
      * 请求错误
      *
-     * @return
+     * @return JsonResult
      */
     public static JsonResult error() {
         return new JsonResult(Status.SERVER_ERROR);
@@ -168,7 +178,7 @@ public final class JsonResult {
      * 请求错误
      *
      * @param message 错误信息
-     * @return
+     * @return JsonResult
      */
     public static JsonResult error(String message) {
         return new JsonResult(Status.SERVER_ERROR, message);
@@ -178,7 +188,7 @@ public final class JsonResult {
      * 请求重定向
      *
      * @param redirectUrl 重定向地址
-     * @return
+     * @return JsonResult
      */
     public static JsonResult redirect(String redirectUrl) {
         return new JsonResult(Status.REDIRECT, null, redirectUrl);

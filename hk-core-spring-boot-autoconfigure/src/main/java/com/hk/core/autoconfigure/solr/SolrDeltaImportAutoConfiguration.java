@@ -17,7 +17,7 @@ import org.springframework.data.solr.core.SolrTemplate;
  * Solr 增量导入自动配置
  *
  * @author: kevin
- * @date 2018-07-04 12:24
+ * @date: 2018-07-04 12:24
  */
 @Configuration
 @ConditionalOnClass(SolrDeltaImportUtils.class)

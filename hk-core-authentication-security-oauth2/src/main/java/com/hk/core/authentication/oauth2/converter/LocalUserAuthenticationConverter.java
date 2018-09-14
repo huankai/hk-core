@@ -16,7 +16,7 @@ import java.util.*;
  * 本地用户转换
  *
  * @author: kevin
- * @date 2018-08-21 13:07
+ * @date: 2018-08-21 13:07
  */
 public class LocalUserAuthenticationConverter implements UserAuthenticationConverter {
 

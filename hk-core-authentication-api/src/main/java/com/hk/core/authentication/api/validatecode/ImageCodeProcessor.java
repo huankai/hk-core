@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
  * 图片验证码生成器
  *
  * @author: kevin
- * @date 2018-07-27 14:46
+ * @date: 2018-07-27 14:46
  */
 public class ImageCodeProcessor extends AbstractValidateCodeProcessor<ImageCode> {
 

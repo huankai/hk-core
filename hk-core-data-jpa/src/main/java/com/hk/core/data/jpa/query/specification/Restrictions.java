@@ -11,7 +11,7 @@ import java.util.Collection;
 
 /**
  * @author kally
- * @date 2017年8月6日上午9:05:57
+ * @date: 2017年8月6日上午9:05:57
  */
 @SuppressWarnings("unchecked")
 public class Restrictions {

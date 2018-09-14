@@ -23,7 +23,7 @@ import java.util.Optional;
  * </p>
  *
  * @author: kevin
- * @date 2018-06-07 13:07
+ * @date: 2018-06-07 13:07
  */
 @EnableJpaAuditing
 @ConditionalOnClass(BaseRepository.class)

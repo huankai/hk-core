@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: kevin
- * @date 2018-08-03 10:00
+ * @date: 2018-08-03 10:00
  */
 @RestControllerAdvice
 public class SimpleExceptionHandler extends AbstractExceptionHandler {

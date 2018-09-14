@@ -16,7 +16,7 @@ import java.util.Collections;
  * 邮箱验证 Provider
  *
  * @author: kevin
- * @date 2018-07-26 16:41
+ * @date: 2018-07-26 16:41
  */
 public class EmailAuthenticationProvider implements AuthenticationProvider {
 

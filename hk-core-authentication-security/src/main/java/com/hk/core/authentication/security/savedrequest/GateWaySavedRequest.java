@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: kevin
- * @date 2018-08-28 10:28
+ * @date: 2018-08-28 10:28
  */
 public class GateWaySavedRequest extends DefaultSavedRequest {
 

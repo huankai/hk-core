@@ -10,7 +10,7 @@ import javax.persistence.criteria.Root;
 
 /**
  * @author: kevin
- * @date 2017年12月20日下午12:52:03
+ * @date: 2017年12月20日下午12:52:03
  */
 class PathUtils {
 

@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
  * 使用 QueryByExample 查询过滤String 类型属性值为 "" 的条件查询
  *
  * @author: kevin
- * @date 2018-07-10 17:50
+ * @date: 2018-07-10 17:50
  * @see org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder
  */
 public class QueryByExamplePredicateBuilder {

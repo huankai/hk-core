@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author: kevin
- * @date 2018-07-27 10:15
+ * @date: 2018-07-27 10:15
  */
 public abstract class AbstractSessionStrategy {
 

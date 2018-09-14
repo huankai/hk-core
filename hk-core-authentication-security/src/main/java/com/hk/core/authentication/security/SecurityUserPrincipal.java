@@ -18,7 +18,7 @@ import java.util.Set;
 
 /**
  * @author: kevin
- * @date 2017年12月21日下午5:45:54
+ * @date: 2017年12月21日下午5:45:54
  */
 @SuppressWarnings("serial")
 public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,CredentialsContainer {

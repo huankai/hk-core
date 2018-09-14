@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * 验证码
  *
  * @author: kevin
- * @date 2018-07-27 13:40
+ * @date: 2018-07-27 13:40
  */
 @SuppressWarnings("serial")
 public class ValidateCode implements Serializable {

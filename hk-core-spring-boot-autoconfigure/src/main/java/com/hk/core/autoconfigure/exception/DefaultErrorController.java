@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: kevin
- * @date 2018-08-17 12:28
+ * @date: 2018-08-17 12:28
  */
 @RestController
 @RequestMapping("${server.error.path:${error.path:/error}}")

@@ -22,7 +22,7 @@ import java.util.Map;
  * 认证成功Handler
  *
  * @author: kevin
- * @date 2018-07-26 17:28
+ * @date: 2018-07-26 17:28
  */
 public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 

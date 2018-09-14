@@ -10,7 +10,7 @@ import java.util.Set;
  * 当前登陆的用户
  *
  * @author: kevin
- * @date 2017年9月28日上午9:45:55
+ * @date: 2017年9月28日上午9:45:55
  */
 @Data
 public class UserPrincipal implements Serializable {

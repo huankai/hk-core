@@ -24,7 +24,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author: kevin
- * @date 2017年12月11日下午8:30:33
+ * @date: 2017年12月11日下午8:30:33
  */
 @MappedSuperclass
 @JsonFilter("fieldFilter")

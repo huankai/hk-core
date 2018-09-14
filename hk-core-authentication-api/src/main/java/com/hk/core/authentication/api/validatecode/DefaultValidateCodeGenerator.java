@@ -5,7 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * @author: kevin
- * @date 2018-07-27 13:48
+ * @date: 2018-07-27 13:48
  */
 public class DefaultValidateCodeGenerator implements ValidateCodeGenerator<ValidateCode> {
 

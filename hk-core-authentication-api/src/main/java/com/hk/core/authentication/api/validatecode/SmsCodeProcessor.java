@@ -9,7 +9,7 @@ import org.springframework.web.context.request.ServletWebRequest;
  * 短信验证码发送
  *
  * @author: kevin
- * @date 2018-07-27 14:38
+ * @date: 2018-07-27 14:38
  */
 public class SmsCodeProcessor extends AbstractValidateCodeProcessor<ValidateCode> {
 

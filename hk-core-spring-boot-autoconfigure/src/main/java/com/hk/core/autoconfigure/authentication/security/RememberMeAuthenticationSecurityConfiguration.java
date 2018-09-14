@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  * 记住我配置
  *
  * @author: kevin
- * @date 2018-07-27 16:09
+ * @date: 2018-07-27 16:09
  */
 public class RememberMeAuthenticationSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 

@@ -2,7 +2,7 @@ package com.hk.core.autoconfigure.solr;
 
 /**
  * @author: kevin
- * @date 2018-07-04 12:22
+ * @date: 2018-07-04 12:22
  */
 public class SolrProperties extends org.springframework.boot.autoconfigure.solr.SolrProperties {
 

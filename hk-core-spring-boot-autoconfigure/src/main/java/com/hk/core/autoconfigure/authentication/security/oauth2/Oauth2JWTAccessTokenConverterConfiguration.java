@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
  * Oauth2 返回信息封装到 {@link UserPrincipal } 对象中自动配置
  *
  * @author: kevin
- * @date 2018-08-01 16:29
+ * @date: 2018-08-01 16:29
  */
 @Configuration
 @ConditionalOnClass(Oauth2UserAuthenticationConverter.class)
