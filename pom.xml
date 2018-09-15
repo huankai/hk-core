@@ -30,6 +30,7 @@
         <module>hk-core-cache</module>
         <module>hk-core-i18n</module>
         <module>hk-swagger-ui</module>
+        <module>hk-core-test</module>
         <module>hk-core-spring-boot-autoconfigure</module>
         <module>hk-core-spring-boot-dependencies</module>
     </modules>

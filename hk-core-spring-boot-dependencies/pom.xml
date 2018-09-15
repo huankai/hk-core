@@ -180,6 +180,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${swagger.version}</version>
