@@ -21,6 +21,10 @@ import org.springframework.util.Assert;
  */
 public class AdminAccessWebSecurityExpressionHandler extends AbstractSecurityExpressionHandler<FilterInvocation> implements SecurityExpressionHandler<FilterInvocation> {
 
+    private AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
+
+    private String defaultRolePrefix = SecurityUserPrincipal.ROLE_PREFIX;
+
     @Override
     protected SecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, FilterInvocation fi) {
         AdminAccessSecurityExpressionRoot expressionRoot = new AdminAccessSecurityExpressionRoot(authentication);
@@ -30,10 +34,6 @@ public class AdminAccessWebSecurityExpressionHandler extends AbstractSecurityExp
         expressionRoot.setDefaultRolePrefix(defaultRolePrefix);
         return expressionRoot;
     }
-
-    private AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
-
-    private String defaultRolePrefix = SecurityUserPrincipal.ROLE_PREFIX;
 
     /**
      * Sets the {@link AuthenticationTrustResolver} to be used. The default is

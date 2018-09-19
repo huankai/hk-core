@@ -10,7 +10,7 @@ import com.hk.commons.util.StringUtils;
  * @author: kevin
  * @date: 2017年9月27日上午11:09:08
  */
-public final class JsonResult {
+public final class JsonResult<T> {
 
     public enum Status {
 
@@ -72,7 +72,7 @@ public final class JsonResult {
     /**
      * 返回数据
      */
-    private Object data;
+    private T data;
 
     /**
      * 返回状态
@@ -89,12 +89,12 @@ public final class JsonResult {
      *
      * @return JsonResult
      */
-    public static JsonResult success() {
+    public static JsonResult<Void> success() {
         return success(null);
     }
 
-    public static JsonResult success(String message) {
-        return new JsonResult(true, message);
+    public static JsonResult<Void> success(String message) {
+        return new JsonResult<>(true, message);
     }
 
     /**
@@ -102,8 +102,8 @@ public final class JsonResult {
      *
      * @return JsonResult
      */
-    public static JsonResult success(Object data) {
-        return new JsonResult(data);
+    public static <T> JsonResult<T> success(T data) {
+        return new JsonResult<>(data);
     }
 
     /**
@@ -111,8 +111,8 @@ public final class JsonResult {
      *
      * @return JsonResult
      */
-    public static JsonResult failure() {
-        return new JsonResult(Status.FAILURE);
+    public static JsonResult<Void> failure() {
+        return new JsonResult<>(Status.FAILURE);
     }
 
     /**
@@ -121,8 +121,8 @@ public final class JsonResult {
      * @param message 失败信息
      * @return JsonResult
      */
-    public static JsonResult failure(String message) {
-        return new JsonResult(false, message);
+    public static JsonResult<Void> failure(String message) {
+        return new JsonResult<>(false, message);
     }
 
     /**
@@ -131,8 +131,8 @@ public final class JsonResult {
      * @param message message
      * @return JsonResult
      */
-    public static JsonResult badRequest(String message) {
-        return new JsonResult(Status.BAD_REQUEST, message);
+    public static JsonResult<Void> badRequest(String message) {
+        return new JsonResult<>(Status.BAD_REQUEST, message);
     }
 
     /**
@@ -141,8 +141,8 @@ public final class JsonResult {
      * @param message message
      * @return JsonResult
      */
-    public static JsonResult unauthorized(String message) {
-        return new JsonResult(Status.UNAUTHORIZED, message);
+    public static JsonResult<Void> unauthorized(String message) {
+        return new JsonResult<>(Status.UNAUTHORIZED, message);
     }
 
     /**
@@ -151,8 +151,8 @@ public final class JsonResult {
      * @param message message
      * @return JsonResult
      */
-    public static JsonResult forbidden(String message) {
-        return new JsonResult(Status.FORBIDDEN, message);
+    public static JsonResult<Void> forbidden(String message) {
+        return new JsonResult<>(Status.FORBIDDEN, message);
     }
 
     /**
@@ -161,8 +161,8 @@ public final class JsonResult {
      * @param data 失败数据
      * @return JsonResult
      */
-    public static JsonResult failure(Object data) {
-        return new JsonResult(Status.FAILURE, data);
+    public static <T> JsonResult<T> failure(T data) {
+        return new JsonResult<>(Status.FAILURE, data);
     }
 
     /**
@@ -170,8 +170,8 @@ public final class JsonResult {
      *
      * @return JsonResult
      */
-    public static JsonResult error() {
-        return new JsonResult(Status.SERVER_ERROR);
+    public static JsonResult<Void> error() {
+        return new JsonResult<>(Status.SERVER_ERROR);
     }
 
     /**
@@ -180,8 +180,8 @@ public final class JsonResult {
      * @param message 错误信息
      * @return JsonResult
      */
-    public static JsonResult error(String message) {
-        return new JsonResult(Status.SERVER_ERROR, message);
+    public static JsonResult<Void> error(String message) {
+        return new JsonResult<>(Status.SERVER_ERROR, message);
     }
 
     /**
@@ -190,8 +190,8 @@ public final class JsonResult {
      * @param redirectUrl 重定向地址
      * @return JsonResult
      */
-    public static JsonResult redirect(String redirectUrl) {
-        return new JsonResult(Status.REDIRECT, null, redirectUrl);
+    public static JsonResult<String> redirect(String redirectUrl) {
+        return new JsonResult<>(Status.REDIRECT, null, redirectUrl);
     }
 
     public JsonResult() {
@@ -206,11 +206,11 @@ public final class JsonResult {
         this(success ? Status.SUCCESS : Status.FAILURE, message);
     }
 
-    public JsonResult(Object data) {
+    public JsonResult(T data) {
         this(Status.SUCCESS, data);
     }
 
-    public JsonResult(boolean success, Object data) {
+    public JsonResult(boolean success, T data) {
         this(success ? Status.SUCCESS : Status.FAILURE, null, data);
     }
 
@@ -222,17 +222,17 @@ public final class JsonResult {
         this(status, message, null);
     }
 
-    public JsonResult(Status status, Object data) {
+    public JsonResult(Status status, T data) {
         this(status, null, data);
     }
 
-    public JsonResult(Status status, String message, Object data) {
+    public JsonResult(Status status, String message, T data) {
         this.status = status;
         this.data = data;
         this.message = message;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
@@ -240,7 +240,7 @@ public final class JsonResult {
         return StringUtils.isEmpty(message) ? EnumDisplayUtils.getDisplayText(status.name(), Status.class) : message;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 

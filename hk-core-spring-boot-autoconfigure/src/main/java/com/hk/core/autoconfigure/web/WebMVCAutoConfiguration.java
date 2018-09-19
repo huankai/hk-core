@@ -7,6 +7,7 @@ import com.hk.commons.converters.*;
 import com.hk.commons.util.Contants;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
+import com.hk.core.authentication.api.SecurityContextUtils;
 import com.hk.core.web.ServletContextHolder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -19,14 +20,15 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +40,6 @@ import java.util.Locale;
 @Configuration
 @ServletComponentScan(basePackages = {"com.hk.core"})
 public class WebMVCAutoConfiguration implements WebMvcConfigurer {
-
 
     @Bean
     @ConditionalOnClass(SpringContextHolder.class)
@@ -97,11 +98,15 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        RequestInterceptor interceptor = new RequestInterceptor();
-//        interceptor.setSecurityContext(securityContext);
-//        Map<String, String> maps = Maps.newHashMap();
-//        interceptor.setProperties(maps);
-//        registry.addInterceptor(interceptor).addPathPatterns("/**");
+        registry.addInterceptor(new HandlerInterceptorAdapter() {
+            @Override
+            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+                if (SecurityContextUtils.isAuthenticated()) {
+                    request.setAttribute("currentUser", SecurityContextUtils.getPrincipal());
+                }
+                return true;
+            }
+        }).addPathPatterns("/**");
 
         /* ****************** 国际化支持******************* */
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();

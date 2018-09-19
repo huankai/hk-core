@@ -25,7 +25,7 @@ public class SpringSecurityExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = {AccessDeniedException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public JsonResult accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+    public JsonResult<Void> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return JsonResult.forbidden("您无权限访问，请与管理员联系！");
     }

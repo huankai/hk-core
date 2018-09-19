@@ -33,7 +33,6 @@ public class JpaAutoConfiguration {
     /**
      * jpa audit功能
      *
-     * @return
      */
     @Configuration
     @ConditionalOnClass(value = {SecurityContext.class})

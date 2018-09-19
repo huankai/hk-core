@@ -47,27 +47,4 @@ public class CacheRedisAutoConfiguration {
         return redisTemplate;
 
     }
-
-//    private static class GenericJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
-//
-//
-//        @Override
-//        public byte[] serialize(T t) throws SerializationException {
-//            if (null == t) {
-//                return new byte[0];
-//            }
-//            return JsonUtils.serialize(t).getBytes(Contants.CHARSET_UTF_8);
-//        }
-//
-//        @Override
-//        @SuppressWarnings("unchecked")
-//        public T deserialize(byte[] bytes) throws SerializationException {
-//            if (ArrayUtils.isEmpty(bytes)) {
-//                return null;
-//            }
-//            String jsonString = new String(bytes, Contants.CHARSET_UTF_8);
-//            return (T) JsonUtils.deserialize(jsonString, Object.class);
-////            return (T) Objects.requireNonNull(JsonUtils.deserialize(jsonString, JsonWraper.class), "Json String to Object is Null:" + jsonString).getValue();
-//        }
-//    }
 }

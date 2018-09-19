@@ -3,13 +3,8 @@ package com.hk.core.solr;
 import com.hk.commons.http.HttpExecutor;
 import com.hk.commons.http.get.SimpleGetHttpExecutor;
 import com.hk.commons.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,48 +16,35 @@ import java.util.Map;
  */
 public abstract class SolrDeltaImportUtils {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(SolrDeltaImportUtils.class);
-
     /**
-     * @param method   方法
      * @param hostUrl  solr host
-     * @param solrCore solrCore
-     * @throws IOException
+     * @param solrCore solr solrCore
+     * @param entity   entity
+     * @throws RuntimeException RuntimeException
      */
-    public static void simpleGetDeltaImport(Method method,
-                                            String hostUrl, String solrCore) {
-        deltaImport(new SimpleGetHttpExecutor(), method, hostUrl, solrCore);
+    public static String simpleGetDeltaImport(String hostUrl, String solrCore, String entity) {
+        return deltaImport(new SimpleGetHttpExecutor(), hostUrl, solrCore, entity);
     }
 
     /**
      * @param executor execoutor
-     * @param method   method
      * @param hostUrl  solr host
      * @param solrCore solrCore
-     * @throws IOException
+     * @param entity   solr entity
+     * @throws RuntimeException RuntimeException
      */
-    public static void deltaImport(HttpExecutor<String, Map<String, Object>> executor, Method method,
-                                   String hostUrl, String solrCore) {
-        SolrDeltaImport solrDeltaImport = AnnotationUtils.getAnnotation(method,
-                SolrDeltaImport.class);
-        if(null != solrDeltaImport){
-            String[] entities = solrDeltaImport.entities();
-            Arrays.stream(entities).forEach(item -> {
-                try {
-                    String response = executor.execute(getDataImportUrl(hostUrl, solrCore), getDeltaImportParams(item));
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Solr response result :{}", response);
-                    }
-                } catch (IOException e) {
-                    LOGGER.error(e.getMessage(), e);
-                }
-            });
+    public static <T> T deltaImport(HttpExecutor<T, Map<String, Object>> executor,
+                                    String hostUrl, String solrCore, String entity) {
+        try {
+            return executor.execute(getDataImportUrl(hostUrl, solrCore), getDeltaImportParams(entity));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     /**
-     * @param entity
-     * @return
+     * @param entity entity
+     * @return P
      */
     private static Map<String, Object> getDeltaImportParams(String entity) {
         Map<String, Object> params = new HashMap<>();
@@ -77,9 +59,9 @@ public abstract class SolrDeltaImportUtils {
     }
 
     /**
-     * @param hostUrl
-     * @param solrCore
-     * @return
+     * @param hostUrl  hostUrl
+     * @param solrCore solrCore
+     * @return solr dataImportUrl
      */
     private static String getDataImportUrl(String hostUrl, String solrCore) {
         if (!StringUtils.endsWith(hostUrl, "/")) {

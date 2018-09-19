@@ -15,7 +15,7 @@ Spring 默认需要在标记有缓存注解的方法上定义缓存名 、或在
 
 - hk-core-data-commons Dao commons 包
 
-- hk-core-data-jdbc  jdbc访问数据库，未实现
+- hk-core-data-jdbc  jdbc访问数据库，未实现，只添加删除 与查询操作，添加与修改使用 jpa 实现
 
 - hk-core-data-jpa  jpa访问数据库，已实现
 

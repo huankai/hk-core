@@ -152,6 +152,12 @@
 
             <dependency>
                 <groupId>com.hk</groupId>
+                <artifactId>hk-core-data-jdbc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.hk</groupId>
                 <artifactId>hk-core-data-solr</artifactId>
                 <version>${project.version}</version>
             </dependency>

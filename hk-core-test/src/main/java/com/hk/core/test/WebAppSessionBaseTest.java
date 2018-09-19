@@ -21,10 +21,10 @@ public abstract class WebAppSessionBaseTest extends LoginBaseTest {
     @Override
     public void before() throws Exception {
         super.before();
-        this.httpSession = (MockHttpSession) getOauth2LoginSession();
+        this.httpSession = (MockHttpSession) getLoginSession();
     }
 
-    private HttpSession getOauth2LoginSession() throws Exception {
+    private HttpSession getLoginSession() throws Exception {
         MvcResult result = getMockMvc()
                 .perform(MockMvcRequestBuilders.post(getLoginUrl())
                         .param("username", getUsername())

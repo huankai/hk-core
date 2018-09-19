@@ -1,11 +1,11 @@
 package com.hk.core.autoconfigure.solr;
 
 import com.hk.core.solr.SolrDeltaImportUtils;
+import com.hk.core.solr.aop.SolrDeltaImportMethodInterceptor;
 import org.apache.solr.client.solrj.SolrClient;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.aop.Advisor;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -32,7 +32,6 @@ public class SolrDeltaImportAutoConfiguration {
     /**
      * Aspect 自动配置
      */
-    @Aspect
     @Configuration
     @ConditionalOnClass(SolrDeltaImportUtils.class)
     @EnableConfigurationProperties(SolrProperties.class)
@@ -44,15 +43,14 @@ public class SolrDeltaImportAutoConfiguration {
             this.solrProperties = solrProperties;
         }
 
-        /**
-         * 后置增强
-         *
-         * @param joinPoint
-         */
-        @AfterReturning(pointcut = "@annotation(com.hk.core.solr.SolrDeltaImport)")
-        public void afterReturning(JoinPoint joinPoint) {
-            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-            SolrDeltaImportUtils.simpleGetDeltaImport(signature.getMethod(), solrProperties.getHost(), solrProperties.getSolrCore());
+        @Bean(value = "solrAdvisor")
+        public Advisor solrAdvisor() {
+            SolrDeltaImportMethodInterceptor interceptor = new SolrDeltaImportMethodInterceptor();
+            interceptor.setSolrCore(solrProperties.getSolrCore());
+            interceptor.setSolrUrl(solrProperties.getHost());
+            AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+            pointcut.setExpression("@annotation(com.hk.core.solr.SolrDeltaImport)");
+            return new DefaultPointcutAdvisor(pointcut, interceptor);
         }
     }
 

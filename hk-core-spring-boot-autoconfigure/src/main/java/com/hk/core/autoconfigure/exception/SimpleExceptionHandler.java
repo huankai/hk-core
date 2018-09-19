@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,7 +32,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = ServiceException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public JsonResult serviceException(ServiceException e, HttpServletRequest request) {
+    public JsonResult<Void> serviceException(ServiceException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return JsonResult.badRequest(e.getMessage());
     }
@@ -47,9 +48,9 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public JsonResult serviceException(NoHandlerFoundException e, HttpServletRequest request) {
+    public JsonResult<Void> serviceException(NoHandlerFoundException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return new JsonResult(JsonResult.Status.NOT_FOUND,
+        return new JsonResult<>(JsonResult.Status.NOT_FOUND,
                 String.format("%s %s %s ", EnumDisplayUtils.getDisplayText(JsonResult.Status.NOT_FOUND.name(), JsonResult.Status.class), e.getHttpMethod(), e.getRequestURL()));
     }
 
@@ -65,9 +66,9 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = {EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public JsonResult serviceException(EntityNotFoundException e, HttpServletRequest request) {
+    public JsonResult<Void> serviceException(EntityNotFoundException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return new JsonResult(JsonResult.Status.NOT_FOUND, "您访问的资源可能不存在!");
+        return new JsonResult<>(JsonResult.Status.NOT_FOUND, "您访问的资源可能不存在!");
     }
 
     /**
@@ -82,9 +83,26 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public JsonResult serviceException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
+    public JsonResult<Void> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return new JsonResult(JsonResult.Status.METHOD_NOT_ALLOWED, "您访问的资源不支持此方式 :" + e.getMethod());
+        return new JsonResult<>(JsonResult.Status.METHOD_NOT_ALLOWED, "您访问的资源不支持此方式 :" + e.getMethod());
+    }
+
+    /**
+     * <p>
+     * 客户端请求参数格式不正确或请求出错时，将抛出 ServletRequestBindingException.<br/>
+     * 响应状态码： 400
+     * </p>
+     *
+     * @param e       e
+     * @param request request
+     * @return jsonResult
+     */
+    @ExceptionHandler(value = {ServletRequestBindingException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public JsonResult<Void> servletRequestBindingException(ServletRequestBindingException e, HttpServletRequest request) {
+        error(e, e.getMessage(), request);
+        return JsonResult.badRequest("请求出错");
     }
 
     /**
@@ -95,7 +113,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = {DataAccessException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public JsonResult serviceException(DataAccessException e, HttpServletRequest request) {
+    public JsonResult<Void> dataAccessException(DataAccessException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return JsonResult.error("服务器开了点小差，请稍后再试！");
     }
@@ -109,7 +127,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public JsonResult throwable(MethodArgumentNotValidException e, HttpServletRequest request) {
+    public JsonResult<Void> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
         FieldError fieldError = e.getBindingResult().getFieldError();
         String message = fieldError.getField() + fieldError.getDefaultMessage();
         error(e, message, request);
@@ -124,7 +142,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = {Throwable.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public JsonResult throwable(Throwable e, HttpServletRequest request) {
+    public JsonResult<Void> throwable(Throwable e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return JsonResult.error(e.getMessage());
     }

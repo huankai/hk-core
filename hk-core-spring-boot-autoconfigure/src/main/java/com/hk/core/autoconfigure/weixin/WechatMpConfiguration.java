@@ -52,7 +52,7 @@ public class WechatMpConfiguration {
     static class WeixinMpCondition extends SpringBootCondition {
 
         public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            ConditionMessage.Builder message = ConditionMessage.forCondition("Weixin MP Condition", new Object[0]);
+            ConditionMessage.Builder message = ConditionMessage.forCondition("Weixin MP Condition");
             Environment environment = context.getEnvironment();
             String appId = environment.getProperty("wechat.mp.app-id");
             return StringUtils.isEmpty(appId) ?

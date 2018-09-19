@@ -4,12 +4,10 @@ import com.hk.commons.util.Contants;
 import com.hk.commons.util.FileUtils;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
-import org.springframework.core.Constants;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestAttributes;
@@ -19,7 +17,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -190,7 +191,7 @@ public abstract class Webs {
             URLConnection connection = url.openConnection();
             return toDownloadResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -205,7 +206,7 @@ public abstract class Webs {
         try {
             return toDownloadResponseEntity(fileName, resource.contentLength(), resource.getInputStream());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -219,7 +220,7 @@ public abstract class Webs {
         try {
             return toDownloadResponseEntity(null, MediaType.IMAGE_JPEG, resource.contentLength(), new InputStreamResource(resource.getInputStream()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -273,7 +274,7 @@ public abstract class Webs {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
         return encodeFileName;
     }
@@ -322,14 +323,14 @@ public abstract class Webs {
      * @param status   status
      * @param result   result
      */
-    public static void writeJson(HttpServletResponse response, int status, JsonResult result) {
+    public static <T> void writeJson(HttpServletResponse response, int status, JsonResult<T> result) {
         response.setCharacterEncoding(Contants.UTF_8);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try (PrintWriter writer = response.getWriter()) {
             response.setStatus(status);
             writer.write(JsonUtils.serialize(result));
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

@@ -19,6 +19,7 @@
         <module>hk-core-page</module>
         <module>hk-core-data-commons</module>
         <module>hk-core-web</module>
+        <module>hk-core-data-jdbc</module>
         <module>hk-core-data-jpa</module>
         <module>hk-core-data-mybatis</module>
         <module>hk-core-data-solr</module>

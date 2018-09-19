@@ -22,7 +22,7 @@ public class DefaultErrorController implements ErrorController {
     private String errorPath;
 
     @RequestMapping
-    public JsonResult error(HttpServletRequest request) {
+    public JsonResult<Void> error(HttpServletRequest request) {
         AuthenticationException exception = AuthenticationException.class.cast(request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION));
         if (null == exception) {
             exception = AuthenticationException.class.cast(request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION));

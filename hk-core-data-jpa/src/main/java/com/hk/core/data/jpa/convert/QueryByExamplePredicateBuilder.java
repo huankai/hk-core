@@ -1,22 +1,5 @@
 package com.hk.core.data.jpa.convert;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.SingularAttribute;
-
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -28,6 +11,12 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import javax.persistence.criteria.*;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.SingularAttribute;
+import java.util.*;
 
 /**
  * 使用 QueryByExample 查询过滤String 类型属性值为 "" 的条件查询
@@ -109,6 +98,9 @@ public class QueryByExamplePredicateBuilder {
             if (attributeValue instanceof CharSequence && ((CharSequence) attributeValue).length() == 0) {
                 continue;
             }
+            if (attributeValue instanceof Optional && !((Optional) attributeValue).isPresent()) {
+                continue;
+            }
 
             if (attribute.getPersistentAttributeType().equals(Attribute.PersistentAttributeType.EMBEDDED)) {
 
@@ -185,12 +177,12 @@ public class QueryByExamplePredicateBuilder {
     private static class PathNode {
 
         String name;
-        
+
         @Nullable
         QueryByExamplePredicateBuilder.PathNode parent;
-        
+
         List<QueryByExamplePredicateBuilder.PathNode> siblings = new ArrayList<>();
-        
+
         @Nullable
         Object value;
 
