@@ -24,14 +24,11 @@ public class LogicalCondition extends CompositeCondition {
      * @param conditions conditions
      */
     public LogicalCondition(Condition... conditions) {
-        setAndOr(AndOr.AND);
-        if (ArrayUtils.isNotEmpty(conditions)) {
-            CollectionUtils.addAllNotNull(getConditions(), conditions);
-        }
+        this(AndOr.AND, ArrayUtils.asList(conditions));
     }
 
     /**
-     * @param andOr andOr
+     * @param andOr      andOr
      * @param conditions conditions
      */
     public LogicalCondition(AndOr andOr, List<Condition> conditions) {

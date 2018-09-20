@@ -87,7 +87,7 @@ public class JdbcSession {
     public final <T> T queryForObject(SelectArguments arguments, Class<T> clazz) {
         SelectStatement statement = buildSelect(arguments);
         BeanPropertyRowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
-        rowMapper.setConversionService(ConverterUtils.getInstance().getConversionService());
+        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return jdbcTemplate.queryForObject(statement.selectSql.toString(), rowMapper, statement.parameters.toArray());
     }
 
@@ -101,7 +101,7 @@ public class JdbcSession {
      */
     public <T> ListResult<T> queryForList(SelectArguments arguments, boolean retriveRowCount, Class<T> clazz) {
         BeanPropertyRowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
-        rowMapper.setConversionService(ConverterUtils.getInstance().getConversionService());
+        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return queryForList(arguments, retriveRowCount, rowMapper);
     }
 
@@ -159,7 +159,7 @@ public class JdbcSession {
 
     private SelectStatement buildSelect(SelectArguments arguments) {
         AssertUtils.notNull(arguments, "arguments must not be null");
-        AssertUtils.notBlank(arguments.getFrom());
+        AssertUtils.notBlank(arguments.getFrom(), "查询表表名不能为空");
         StringBuilder sql = new StringBuilder();
         StringBuilder countSql = new StringBuilder();
 
@@ -175,7 +175,7 @@ public class JdbcSession {
         sql.append(fields);
         sql.append(" FROM ");
         String countField = arguments.getCountField();
-        countSql.append("count(").append(StringUtils.isEmpty(countField) ? "*" : countField).append(") FROM ");
+        countSql.append("COUNT(").append(StringUtils.isEmpty(countField) ? "*" : countField).append(") FROM ");
 
         sql.append(arguments.getFrom());
         countSql.append(arguments.getFrom());

@@ -2,6 +2,7 @@ package com.hk.core.data.jpa.util;
 
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
+import com.hk.core.data.commons.utils.SqlEscapeUtils;
 import com.hk.core.query.Order;
 import org.springframework.data.domain.Sort;
 
@@ -25,6 +26,7 @@ public abstract class OrderUtils {
         Sort sort = Sort.unsorted();
         if (CollectionUtils.isNotEmpty(orders)) {
             List<Sort.Order> orderList = orders.stream()
+                    .filter(order -> SqlEscapeUtils.escape(order.getField()) != null)
                     .map(order -> new Sort.Order(order.isDesc() ? Sort.Direction.DESC : Sort.Direction.ASC, order.getField()))
                     .collect(Collectors.toList());
             if (CollectionUtils.isNotEmpty(orderList)) {

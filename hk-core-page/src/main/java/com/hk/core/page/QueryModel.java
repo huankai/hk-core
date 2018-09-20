@@ -58,4 +58,5 @@ public class QueryModel<T> {
         return pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
     }
 
+
 }

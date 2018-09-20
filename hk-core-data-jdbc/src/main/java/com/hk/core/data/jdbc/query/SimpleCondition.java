@@ -1,5 +1,6 @@
 package com.hk.core.data.jdbc.query;
 
+import com.hk.commons.util.ObjectUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.data.commons.query.MatchMode;
 import com.hk.core.data.commons.query.Operator;
@@ -49,7 +50,7 @@ public class SimpleCondition implements Condition {
     }
 
     /**
-     * @param field field
+     * @param field        field
      * @param compareValue
      */
     public SimpleCondition(String field, Object compareValue) {
@@ -70,10 +71,7 @@ public class SimpleCondition implements Condition {
     @Override
     public String toSqlString(List<Object> parameters) {
         ComparableCondition c = getSubCondition(operator);
-        if (c != null) {
-            return c.toSqlString(field, operator, compareValue, parameters);
-        }
-        return null;
+        return null != c ? c.toSqlString(field, operator, compareValue, parameters) : null;
     }
 
     private ComparableCondition getSubCondition(Operator operator) {
@@ -206,6 +204,9 @@ public class SimpleCondition implements Condition {
 
         @Override
         String toSqlString(String field, Operator operator, Object compareValue, List<Object> parameters) {
+            if (ObjectUtils.isEmpty(compareValue)) {
+                return null;
+            }
             String sqlCompare = null;
             switch (operator) {
                 case EQ:
