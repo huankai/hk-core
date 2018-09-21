@@ -25,6 +25,10 @@ public class AdminAccessWebSecurityExpressionHandler extends AbstractSecurityExp
 
     private String defaultRolePrefix = SecurityUserPrincipal.ROLE_PREFIX;
 
+    public AdminAccessWebSecurityExpressionHandler() {
+        setPermissionEvaluator(new AdminAccessPermissionEvaluator());
+    }
+
     @Override
     protected SecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, FilterInvocation fi) {
         AdminAccessSecurityExpressionRoot expressionRoot = new AdminAccessSecurityExpressionRoot(authentication);

@@ -85,10 +85,10 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
      */
     @Override
     public boolean hasAnyAuthority(String... authorities) {
-        Object principal = authentication.getPrincipal();
-        if (!(principal instanceof UserPrincipal)) { // 为什么要这么判断，因为调用此方法时，用户可能是未登陆的用户
+        if (isAnonymous()) {// 为什么要这么判断，因为调用此方法时，用户可能是未登陆的用户
             return false;
         }
+        Object principal = authentication.getPrincipal();
         UserPrincipal userPrincipal = (UserPrincipal) principal;
         return userPrincipal.isAdministrator()
                 || userPrincipal.isProtectUser()
@@ -108,10 +108,10 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
      */
     @Override
     public final boolean hasAnyRole(String... roles) {
-        Object principal = authentication.getPrincipal();
-        if (!(principal instanceof UserPrincipal)) {
+        if (isAnonymous()) {// 为什么要这么判断，因为调用此方法时，用户可能是未登陆的用户
             return false;
         }
+        Object principal = authentication.getPrincipal();
         UserPrincipal userPrincipal = (UserPrincipal) principal;
         return userPrincipal.isAdministrator()
                 || userPrincipal.isProtectUser()

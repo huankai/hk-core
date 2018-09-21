@@ -76,6 +76,12 @@
             <artifactId>hk-swagger-ui</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-core-message-websocket</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>

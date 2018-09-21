@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -26,7 +27,7 @@ public abstract class OrderUtils {
         Sort sort = Sort.unsorted();
         if (CollectionUtils.isNotEmpty(orders)) {
             List<Sort.Order> orderList = orders.stream()
-                    .filter(order -> SqlEscapeUtils.escape(order.getField()) != null)
+                    .filter(order -> Objects.nonNull(SqlEscapeUtils.escape(order.getField())))
                     .map(order -> new Sort.Order(order.isDesc() ? Sort.Direction.DESC : Sort.Direction.ASC, order.getField()))
                     .collect(Collectors.toList());
             if (CollectionUtils.isNotEmpty(orderList)) {

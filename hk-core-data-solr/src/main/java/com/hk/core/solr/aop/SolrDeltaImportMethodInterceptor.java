@@ -39,7 +39,7 @@ public class SolrDeltaImportMethodInterceptor implements AfterReturningAdvice {
         SolrDeltaImport solrDeltaImport = AnnotationUtils.getAnnotation(method, SolrDeltaImport.class);
         String[] entities = solrDeltaImport.entities();
         if (ArrayUtils.isNotEmpty(entities)) {
-            Arrays.stream(entities).parallel().forEach(entity -> {
+            Arrays.stream(entities).forEach(entity -> {
                 String result = SolrDeltaImportUtils.simpleGetDeltaImport(solrUrl, solrCore, entity);
                 if (LOGGER.isInfoEnabled()) {
                     LOGGER.info(result);

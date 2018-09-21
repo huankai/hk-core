@@ -29,7 +29,11 @@
         <module>hk-core-authentication-security-oauth2</module>
         <module>hk-core-service</module>
         <module>hk-core-cache</module>
+        <module>hk-core-redis</module>
         <module>hk-core-i18n</module>
+        <module>hk-core-message-api</module>
+        <module>hk-core-message-websocket</module>
+        <module>hk-core-message-redis</module>
         <module>hk-swagger-ui</module>
         <module>hk-core-test</module>
         <module>hk-core-spring-boot-autoconfigure</module>

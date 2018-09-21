@@ -2,6 +2,7 @@ package com.hk.core.data.jpa.domain;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,7 @@ import java.io.Serializable;
  * @date: 2017年12月11日下午8:30:33
  */
 @MappedSuperclass
-@JsonFilter("fieldFilter")
+@JsonFilter(value = JsonUtils.IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID)
 @SuppressWarnings("serial")
 public abstract class AbstractUUIDPersistable implements Persistable<String>, Serializable {
 

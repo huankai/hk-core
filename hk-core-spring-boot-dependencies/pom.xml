@@ -173,10 +173,30 @@
                 <artifactId>hk-core-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-redis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.hk</groupId>
                 <artifactId>hk-core-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-message-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-message-websocket</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-message-redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
