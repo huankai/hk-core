@@ -23,16 +23,10 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
-    <properties>
-        <weixin.java.version>2.9.0</weixin.java.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-mp</artifactId>
-            <version>${weixin.java.version}</version>
         </dependency>
 
         <dependency>

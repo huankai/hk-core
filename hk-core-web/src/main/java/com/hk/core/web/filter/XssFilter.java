@@ -17,7 +17,7 @@ import java.io.IOException;
  * @date: 2018-06-07 17:18
  */
 @Order(1)
-@WebFilter(filterName = "xssFilter", urlPatterns = "/*")
+@WebFilter(filterName = "xssFilter", urlPatterns = "/*",asyncSupported = true)
 public class XssFilter extends AbstractFilter {
 
     @Override

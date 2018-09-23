@@ -1,4 +1,4 @@
-package com.hk.core.authentication.security.handler;
+package com.hk.core.authentication.security.handler.login;
 
 import com.hk.commons.util.AssertUtils;
 import com.hk.core.authentication.api.LoginResponseType;

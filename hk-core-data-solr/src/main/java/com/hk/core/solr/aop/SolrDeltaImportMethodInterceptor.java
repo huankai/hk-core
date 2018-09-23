@@ -33,8 +33,8 @@ public class SolrDeltaImportMethodInterceptor implements AfterReturningAdvice {
 
     @Override
     public synchronized void afterReturning(Object returnValue, Method method, Object[] args, Object target) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("增量同步索引...");
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("增量同步索引...");
         }
         SolrDeltaImport solrDeltaImport = AnnotationUtils.getAnnotation(method, SolrDeltaImport.class);
         String[] entities = solrDeltaImport.entities();

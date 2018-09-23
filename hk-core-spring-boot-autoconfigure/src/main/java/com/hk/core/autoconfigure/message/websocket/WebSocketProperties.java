@@ -1,4 +1,4 @@
-package com.hk.core.autoconfigure.websocket;
+package com.hk.core.autoconfigure.message.websocket;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,10 +15,12 @@ public class WebSocketProperties {
 
     private String userDestinationPrefix;
 
-    private String[] allowedOrigins;
+    private String[] allowedOrigins = new String[]{"*"};
 
     private String[] simpleBrokers;
 
     private String[] applicationDestinationPrefixes;
+
+    private boolean needLogin = true;
 
 }

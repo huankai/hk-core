@@ -24,6 +24,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-message-api</artifactId>
         </dependency>
@@ -31,6 +35,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
+
     </dependencies>
 
 </project>

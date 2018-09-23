@@ -20,6 +20,7 @@
         <lombok.version>1.18.0</lombok.version>
         <druid.version>1.1.10</druid.version>
         <swagger.version>2.9.2</swagger.version>
+        <weixin.java.version>2.9.0</weixin.java.version>
     </properties>
 
     <dependencyManagement>
@@ -196,6 +197,11 @@
             </dependency>
             <dependency>
                 <groupId>com.hk</groupId>
+                <artifactId>hk-core-message-weixin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
                 <artifactId>hk-core-message-redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -209,6 +215,12 @@
                 <groupId>com.hk</groupId>
                 <artifactId>hk-core-test</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-mp</artifactId>
+                <version>${weixin.java.version}</version>
             </dependency>
 
             <dependency>

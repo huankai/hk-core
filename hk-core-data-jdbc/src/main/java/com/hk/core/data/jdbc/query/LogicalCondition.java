@@ -1,7 +1,6 @@
 package com.hk.core.data.jdbc.query;
 
 import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.data.commons.query.AndOr;
 
@@ -38,29 +37,11 @@ public class LogicalCondition extends CompositeCondition {
 
     @Override
     public String toSqlString(List<Object> parameters) {
-        List<Condition> conditions = getConditions();
-        if (CollectionUtils.isEmpty(conditions)) {
-            return null;
-        }
+        String sql = super.toSqlString(parameters);
         AndOr andOr = getAndOr();
-        StringBuilder sb = new StringBuilder();
-        int index = 0;
-        for (Condition condition : conditions) {
-            if (null != condition) {
-                String sql = condition.toSqlString(parameters);
-                if (StringUtils.isNotEmpty(sql)) {
-                    if (index++ > 0) {
-                        sb.append(" ");
-                        sb.append(andOr.toSqlString());
-                        sb.append(" ");
-                    }
-                    sb.append(sql);
-                }
-            }
+        if (StringUtils.containsIgnoreCase(sql, andOr.toSqlString())) {
+            sql = String.format("(%s)", sql);
         }
-        if (sb.indexOf(andOr.toSqlString()) != -1) {
-            sb.insert(0, "(").append(")");
-        }
-        return sb.toString();
+        return sql;
     }
 }
