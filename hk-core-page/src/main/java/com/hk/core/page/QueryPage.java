@@ -12,28 +12,28 @@ public interface QueryPage<T> extends Serializable {
     /**
      * 返回当前页
      *
-     * @return
+     * @return pageIndex
      */
     int getPageIndex();
 
     /**
      * 返回当前页记录数
      *
-     * @return
+     * @return pageSize
      */
     int getPageSize();
 
     /**
      * 返回当前页数据
      *
-     * @return
+     * @return data
      */
     List<T> getData();
 
     /**
      * 返回总记录
      *
-     * @return
+     * @return totalRow
      */
     long getTotalRow();
 

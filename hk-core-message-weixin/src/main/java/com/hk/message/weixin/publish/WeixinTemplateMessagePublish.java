@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author huangkai
- * @date 2018-9-23 13:09
+ * @author: huangkai
+ * @date: 2018-9-23 13:09
  */
 public class WeixinTemplateMessagePublish implements MessagePublish {
 
@@ -38,7 +38,7 @@ public class WeixinTemplateMessagePublish implements MessagePublish {
             wxMpTemplateMsgService.sendTemplateMsg(messageSubject.getTemplateMessage());
         } catch (WxErrorException e) {
             if (LOGGER.isErrorEnabled()) {
-                LOGGER.error("发送魔板消息失败:", e);
+                LOGGER.error("发送模板消息失败:", e);
             }
 
         }

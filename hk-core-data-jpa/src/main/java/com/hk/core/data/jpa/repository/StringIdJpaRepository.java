@@ -5,10 +5,11 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 
 /**
- * 使用 Long 做为主键类型
+ * 使用String 做为主键类型
+ *
  * @param <T>
  */
 @NoRepositoryBean
-public interface LongRepository<T extends Persistable<Long>> extends BaseRepository<T, Long> {
+public interface StringIdJpaRepository<T extends Persistable<String>> extends JpaBaseRepository<T, String> {
 
 }

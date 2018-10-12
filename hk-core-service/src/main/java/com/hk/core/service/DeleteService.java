@@ -5,7 +5,6 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * @author: kevin
@@ -21,7 +20,11 @@ public interface DeleteService<T extends Persistable<ID>, ID extends Serializabl
     /**
      * @param ids ids
      */
-    void deleteByIds(Collection<ID> ids);
+    default void deleteByIds(Iterable<ID> ids) {
+        if (null != ids) {
+            ids.forEach(this::deleteById);
+        }
+    }
 
     /**
      * @param ids ids
@@ -41,5 +44,5 @@ public interface DeleteService<T extends Persistable<ID>, ID extends Serializabl
     /**
      * @param entities entities
      */
-    void delete(Collection<T> entities);
+    void delete(Iterable<T> entities);
 }

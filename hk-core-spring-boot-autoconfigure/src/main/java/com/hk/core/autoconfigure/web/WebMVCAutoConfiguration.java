@@ -59,8 +59,7 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
         converters.forEach(converter -> {
             if (converter instanceof StringHttpMessageConverter) {
                 ((StringHttpMessageConverter) converter).setDefaultCharset(Contants.CHARSET_UTF_8);
-            }
-            if (converter instanceof MappingJackson2HttpMessageConverter) {
+            } else if (converter instanceof MappingJackson2HttpMessageConverter) {
                 MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
                 ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
                         .json()
@@ -73,7 +72,6 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
                 List<MediaType> mediaTypeList = new ArrayList<>();
                 mediaTypeList.add(MediaType.APPLICATION_JSON_UTF8);
                 mappingJackson2HttpMessageConverter.setSupportedMediaTypes(mediaTypeList);
-
             }
         });
     }
@@ -112,9 +110,6 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
-
-//        不同应用切换当前用户信息
-//        registry.addInterceptor(new SecurityContextInterceptor(securityContext)).excludePathPatterns("/api/**");
     }
 
     /* ****************** 国际化支持******************* */

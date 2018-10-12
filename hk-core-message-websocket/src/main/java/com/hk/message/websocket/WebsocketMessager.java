@@ -7,7 +7,7 @@ import com.hk.message.websocket.publish.WebSocketMessagePublish;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /**
- * example
+ * example:
  * <pre>
  *     messager
  *     .publish(xxx)
@@ -15,7 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
  *     .send();
  * </pre>
  *
- * @author huangkai
+ * @author: huangkai
  */
 public class WebsocketMessager implements Messager {
 

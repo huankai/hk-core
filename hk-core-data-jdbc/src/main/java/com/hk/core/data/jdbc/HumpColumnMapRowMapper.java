@@ -1,0 +1,18 @@
+package com.hk.core.data.jdbc;
+
+import com.hk.commons.util.LinkedHumpMap;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
+
+import java.util.Map;
+
+/**
+ * @author: sjq-278
+ * @date: 2018-10-08 09:27
+ */
+public class HumpColumnMapRowMapper extends ColumnMapRowMapper {
+
+    @Override
+    protected Map<String, Object> createColumnMap(int columnCount) {
+        return new LinkedHumpMap<>(columnCount);
+    }
+}

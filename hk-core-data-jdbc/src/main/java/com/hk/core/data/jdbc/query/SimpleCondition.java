@@ -128,7 +128,7 @@ public class SimpleCondition implements Condition {
                 parameters.add(value);
             }
             if (index == 1) { //只有一个元素,使用 (xx = ?)
-                return String.format("(%s = ?)", field);
+                return String.format("(%s %s ?)", field, operator == Operator.IN ? "=" : "<>");
             }
             String inWhich = sb.toString();
             if (inWhich.length() == 0) {

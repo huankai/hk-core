@@ -1,5 +1,7 @@
 package com.hk.core.authentication.security.savedrequest;
 
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.web.savedrequest.Enumerator;
@@ -78,8 +80,7 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     @Override
     public String getHeader(String name) {
         List<String> values = savedRequest.getHeaderValues(name);
-
-        return values.isEmpty() ? null : values.get(0);
+        return CollectionUtils.getFirstOrDefault(values);
     }
 
     @Override
@@ -97,32 +98,24 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     @Override
     public int getIntHeader(String name) {
         String value = getHeader(name);
-
-        if (value == null) {
-            return -1;
-        } else {
-            return Integer.parseInt(value);
-        }
+        return Objects.isNull(value) ? -1 : Integer.parseInt(value);
     }
 
     @Override
     public Locale getLocale() {
         List<Locale> locales = savedRequest.getLocales();
-
-        return locales.isEmpty() ? Locale.getDefault() : locales.get(0);
+        return CollectionUtils.getFirstOrDefault(locales);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Enumeration getLocales() {
         List<Locale> locales = savedRequest.getLocales();
-
-        if (locales.isEmpty()) {
+        if (CollectionUtils.isEmpty(locales)) {
             // Fall back to default locale
             locales = new ArrayList<>(1);
             locales.add(Locale.getDefault());
         }
-
         return new Enumerator<>(locales);
     }
 
@@ -144,18 +137,11 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     @Override
     public String getParameter(String name) {
         String value = super.getParameter(name);
-
         if (value != null) {
             return value;
         }
-
         String[] values = savedRequest.getParameterValues(name);
-
-        if (values == null || values.length == 0) {
-            return null;
-        }
-
-        return values[0];
+        return ArrayUtils.getFirstOrDefault(values);
     }
 
     @Override
@@ -163,11 +149,9 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     public Map getParameterMap() {
         Set<String> names = getCombinedParameterNames();
         Map<String, String[]> parameterMap = new HashMap<>(names.size());
-
         for (String name : names) {
             parameterMap.put(name, getParameterValues(name));
         }
-
         return parameterMap;
     }
 
@@ -176,7 +160,6 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
         Set<String> names = new HashSet<>();
         names.addAll(super.getParameterMap().keySet());
         names.addAll(savedRequest.getParameterMap().keySet());
-
         return names;
     }
 

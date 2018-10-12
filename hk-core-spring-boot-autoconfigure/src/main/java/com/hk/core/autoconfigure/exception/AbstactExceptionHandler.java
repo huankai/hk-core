@@ -62,5 +62,6 @@ abstract class AbstractExceptionHandler {
 
         sb.append("<------------------------->");
         logger.error(sb.toString());
+        e.printStackTrace();
     }
 }

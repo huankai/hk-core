@@ -4,6 +4,8 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: kevin
@@ -25,6 +27,6 @@ public interface InsertService<T extends Persistable<ID>, ID extends Serializabl
      * @param entities entities
      * @return Collection
      */
-    Collection<T> batchInsert(Collection<T> entities);
+    Iterable<T> batchInsert(Iterable<T> entities);
 
 }

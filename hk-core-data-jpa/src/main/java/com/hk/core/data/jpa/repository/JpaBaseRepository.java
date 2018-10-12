@@ -2,7 +2,7 @@ package com.hk.core.data.jpa.repository;
 
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
-import com.hk.core.data.jpa.util.OrderUtils;
+import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author: kevin
  */
 @NoRepositoryBean
-public interface BaseRepository<T extends Persistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {
+public interface JpaBaseRepository<T extends Persistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {
 
     /**
      * 更新不为空的属性

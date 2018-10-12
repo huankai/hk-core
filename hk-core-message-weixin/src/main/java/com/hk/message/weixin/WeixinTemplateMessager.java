@@ -7,8 +7,8 @@ import com.hk.message.weixin.publish.WeixinTemplateMessagePublish;
 import me.chanjar.weixin.mp.api.WxMpService;
 
 /**
- * @author huangkai
- * @date 2018-9-23 13:19
+ * @author: huangkai
+ * @date: 2018-9-23 13:19
  */
 public class WeixinTemplateMessager implements Messager {
 

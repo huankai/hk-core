@@ -16,18 +16,7 @@
 
 package com.hk.core.cache.spring;
 
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.*;
 import org.springframework.cache.interceptor.CacheEvictOperation;
 import org.springframework.cache.interceptor.CacheOperation;
 import org.springframework.cache.interceptor.CachePutOperation;
@@ -36,16 +25,23 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Strategy implementation for parsing Spring's {@link Caching}, {@link Cacheable},
  * {@link CacheEvict}, and {@link CachePut} annotations.
  *
- * @author Costin Leau
- * @author Juergen Hoeller
- * @author Chris Beams
- * @author Phillip Webb
- * @author Stephane Nicoll
- * @author Sam Brannen
+ * @author: Costin Leau
+ * @author: Juergen Hoeller
+ * @author: Chris Beams
+ * @author: Phillip Webb
+ * @author: Stephane Nicoll
+ * @author: Sam Brannen
  * @since 3.1
  */
 @SuppressWarnings("serial")

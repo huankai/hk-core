@@ -1,6 +1,6 @@
 package com.hk.core.data.jpa;
 
-import com.hk.core.data.jpa.repository.BaseRepository;
+import com.hk.core.data.jpa.repository.JpaBaseRepository;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author: kevin
  * @date: 2018-06-07 13:49
  */
-public class BaseJpaRepositoryFactoryBean<T extends BaseRepository<S, ID>, S extends Persistable<ID>, ID extends Serializable> extends JpaRepositoryFactoryBean<T, S, ID> {
+public class BaseJpaRepositoryFactoryBean<T extends JpaBaseRepository<S, ID>, S extends Persistable<ID>, ID extends Serializable> extends JpaRepositoryFactoryBean<T, S, ID> {
 
     /**
      * Creates a new {@link JpaRepositoryFactoryBean} for the given repository interface.

@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author huangkai
- * @date 2018-9-22 20:42
+ * @author: huangkai
+ * @date: 2018-9-22 20:42
  */
 public class RedirectLogoutHandler implements LogoutHandler {
 
@@ -23,10 +23,6 @@ public class RedirectLogoutHandler implements LogoutHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(RedirectLogoutHandler.class);
 
     private String logoutSuccessUrl;
-
-    public RedirectLogoutHandler() {
-
-    }
 
     public RedirectLogoutHandler(String logoutSuccessUrl) {
         this.logoutSuccessUrl = logoutSuccessUrl;
@@ -42,7 +38,7 @@ public class RedirectLogoutHandler implements LogoutHandler {
             try {
                 response.sendRedirect(redirectUrl);
             } catch (IOException e) {
-                if (LOGGER.isDebugEnabled()) {
+                if (LOGGER.isErrorEnabled()) {
                     LOGGER.debug("重定向到 {} 失败", redirectUrl);
                 }
             }

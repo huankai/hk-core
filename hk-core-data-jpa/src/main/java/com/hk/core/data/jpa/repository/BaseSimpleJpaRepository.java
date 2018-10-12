@@ -22,8 +22,7 @@ import java.util.List;
  * @date: 2018-06-07 13:34
  * @see SimpleJpaRepository
  */
-public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements BaseRepository<T, ID> {
-
+public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements JpaBaseRepository<T, ID> {
 
     /**
      * Creates a new {@link BaseSimpleJpaRepository} to manage objects of the given domain type.
@@ -73,7 +72,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
      * {@link Example}.
      *
      * @param <T>
-     * @author kevin
+     * @author: kevin
      * @since 1.10
      */
     @SuppressWarnings("serial")

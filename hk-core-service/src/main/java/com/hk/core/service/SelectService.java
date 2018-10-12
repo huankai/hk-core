@@ -19,20 +19,7 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * @param id id
      * @return Optional
      */
-    Optional<T> findOne(ID id);
-
-    /**
-     * @param id id
-     * @return T
-     */
-    T getOne(ID id);
-
-    /**
-     * @param t t
-     * @return T
-     */
-    Optional<T> findOne(T t);
-
+    Optional<T> findById(ID id);
 
     /**
      * 查询所有
@@ -40,29 +27,20 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * @param orders 排序
      * @return
      */
-    List<T> findAll(Order... orders);
-
-    /**
-     * 条件查询
-     *
-     * @param t      条件
-     * @param orders 排序
-     * @return List
-     */
-    List<T> findAll(T t, Order... orders);
+    Iterable<T> findAll(Order... orders);
 
     /**
      * @param ids
      * @return Collection
      */
-    Collection<T> findByIds(Iterable<ID> ids);
+    Iterable<T> findByIds(Iterable<ID> ids);
 
     /**
      * @param ids ids
      * @return Collection
      */
     @SuppressWarnings("unchecked")
-    default Collection<T> findByIds(ID... ids) {
+    default Iterable<T> findByIds(ID... ids) {
         return ArrayUtils.isEmpty(ids) ? Collections.emptyList() : findByIds(Arrays.asList(ids));
     }
 
@@ -78,7 +56,7 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * @param id id
      * @return boolean
      */
-    boolean exists(ID id);
+    boolean existsById(ID id);
 
     /**
      * @param t t

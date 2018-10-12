@@ -11,7 +11,6 @@ import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
  * @author: kevin
  * @date: 2018-09-19 10:16
  */
-public class JdbcSession {
+public final class JdbcSession {
 
     private JdbcTemplate jdbcTemplate;
 
@@ -74,7 +73,7 @@ public class JdbcSession {
      * @return ListResult
      */
     public ListResult<Map<String, Object>> queryForList(SelectArguments arguments, boolean retriveRowCount) {
-        return queryForList(arguments, retriveRowCount, new ColumnMapRowMapper());
+        return queryForList(arguments, retriveRowCount, new HumpColumnMapRowMapper());
     }
 
     /**
@@ -89,6 +88,11 @@ public class JdbcSession {
         BeanPropertyRowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
         rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return jdbcTemplate.queryForObject(statement.selectSql.toString(), rowMapper, statement.parameters.toArray());
+    }
+
+    public long queryForCount(SelectArguments arguments) {
+        SelectStatement statement = buildSelect(arguments);
+        return queryForScalar(statement.countSql.toString(), Long.class, statement.parameters);
     }
 
     /**
@@ -159,7 +163,7 @@ public class JdbcSession {
 
     private SelectStatement buildSelect(SelectArguments arguments) {
         AssertUtils.notNull(arguments, "arguments must not be null");
-        AssertUtils.notBlank(arguments.getFrom(), "查询表表名不能为空");
+        AssertUtils.notBlank(arguments.getFrom(), "查询表名不能为空");
         StringBuilder sql = new StringBuilder();
         StringBuilder countSql = new StringBuilder();
 

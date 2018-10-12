@@ -29,7 +29,7 @@ public class ImageAuthenticationSecurityConfiguration extends SecurityConfigurer
     }
 
     @Override
-    public void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) {
         if (imageCodeProperties.isEnabled()) {
             ImageCodeGenerator imageCodeGenerator = new ImageCodeGenerator(imageCodeProperties.getWidth(), imageCodeProperties.getHeight(),
                     imageCodeProperties.getCodeLength(), imageCodeProperties.getCodeExpireIn());

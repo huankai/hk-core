@@ -4,7 +4,6 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,14 +14,15 @@ import java.util.List;
  * @author: kevin
  * @date: 2017年9月27日下午5:04:48
  */
-public interface BaseService<T extends Persistable<ID>, ID extends Serializable> extends InsertService<T, ID>, UpdateService<T, ID>, DeleteService<T, ID>, SelectService<T, ID> {
+public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
+        extends InsertService<T, ID>, UpdateService<T, ID>, DeleteService<T, ID>, SelectService<T, ID> {
 
     default T insertOrUpdate(T t) {
-        return t.isNew() ? insert(t) : updateByIdSelective(t);
+        return t.isNew() ? insert(t) : updateById(t);
     }
 
-    default Collection<T> insertOrUpdate(Collection<T> entities) {
-        List<T> result = new ArrayList<>(entities.size());
+    default List<T> insertOrUpdate(Iterable<T> entities) {
+        List<T> result = new ArrayList<>();
         entities.forEach(entity -> result.add(insertOrUpdate(entity)));
         return result;
     }

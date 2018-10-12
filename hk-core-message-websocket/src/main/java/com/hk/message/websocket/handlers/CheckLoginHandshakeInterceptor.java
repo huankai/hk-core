@@ -13,8 +13,8 @@ import java.util.Map;
 /**
  * 握手之前登陆检查，如果没有登陆，不能握手成功
  *
- * @author huangkai
- * @date 2018-9-21 21:26
+ * @author: huangkai
+ * @date: 2018-9-21 21:26
  */
 public class CheckLoginHandshakeInterceptor implements HandshakeInterceptor {
 

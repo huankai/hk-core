@@ -46,8 +46,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * used. If it is ever desirable to allow dynamic changing of cacheable
  * attributes (which is very unlikely), caching could be made configurable.
  *
- * @author Costin Leau
- * @author Juergen Hoeller
+ * @author: Costin Leau
+ * @author: Juergen Hoeller
  * @author: kevin
  * @see org.springframework.cache.interceptor.AbstractFallbackCacheOperationSource
  * @since 3.1

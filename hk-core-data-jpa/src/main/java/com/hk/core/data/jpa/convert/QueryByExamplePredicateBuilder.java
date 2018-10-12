@@ -172,7 +172,7 @@ public class QueryByExamplePredicateBuilder {
      * {@link org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder.PathNode} is used to dynamically grow a directed graph structure that allows to detect cycles within its
      * direct predecessor nodes by comparing parent node values using {@link System#identityHashCode(Object)}.
      *
-     * @author Christoph Strobl
+     * @author: Christoph Strobl
      */
     private static class PathNode {
 

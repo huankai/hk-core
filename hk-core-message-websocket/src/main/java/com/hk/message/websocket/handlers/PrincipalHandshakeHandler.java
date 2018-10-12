@@ -11,8 +11,8 @@ import java.security.Principal;
 import java.util.Map;
 
 /**
- * @author huangkai
- * @date 2018-9-21 20:30
+ * @author: huangkai
+ * @date: 2018-9-21 20:30
  */
 public class PrincipalHandshakeHandler extends DefaultHandshakeHandler {
 
@@ -25,17 +25,9 @@ public class PrincipalHandshakeHandler extends DefaultHandshakeHandler {
 
     private class WebSocketUserPrincipal implements Principal {
 
-        private String userId;
+        private final String userId;
 
         public WebSocketUserPrincipal(String userId) {
-            this.userId = userId;
-        }
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(String userId) {
             this.userId = userId;
         }
 

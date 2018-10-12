@@ -1,14 +1,11 @@
-package com.hk.core.data.jpa.util;
+package com.hk.core.data.commons.utils;
 
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
-import com.hk.core.data.commons.utils.SqlEscapeUtils;
 import com.hk.core.query.Order;
 import org.springframework.data.domain.Sort;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -46,5 +43,15 @@ public abstract class OrderUtils {
      */
     public static Sort toSort(Order... orders) {
         return ArrayUtils.isEmpty(orders) ? Sort.unsorted() : toSort(Arrays.asList(orders));
+    }
+
+    public static List<Order> toOrderList(Sort sort) {
+        List<Order> orders = new ArrayList<>();
+        Iterator<Sort.Order> iterator = sort.iterator();
+        while ((iterator.hasNext())) {
+            Sort.Order order = iterator.next();
+            orders.add(new Order(order.getProperty(), order.isDescending()));
+        }
+        return orders;
     }
 }

@@ -45,21 +45,11 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
         return StringUtils.isEmpty(getId());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (null == obj) {
@@ -75,11 +65,6 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
         return null != this.getId() && this.getId().equals(that.getId());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         int hashCode = 17;

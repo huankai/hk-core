@@ -30,5 +30,10 @@
             <groupId>com.hk</groupId>
             <artifactId>hk-core-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-core-data-jpa</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

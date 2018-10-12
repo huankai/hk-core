@@ -55,5 +55,4 @@ public class SimpleQueryPage<T> extends AbstractQueryPage<T> {
         setTotalRow(totalRow);
     }
 
-
 }
