@@ -18,8 +18,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 public class BaseJdbcRepositoryFactory extends JdbcRepositoryFactory {
 
     private final RelationalMappingContext context;
+
     private final RelationalConverter converter;
+
     private final ApplicationEventPublisher publisher;
+
     private final DataAccessStrategy accessStrategy;
 
 

@@ -1,5 +1,7 @@
 package com.hk.core.service.jdbc.impl;
 
+import com.hk.core.data.jdbc.SelectArguments;
+import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.repository.JdbcRepository;
 import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author: sjq-278
@@ -31,7 +34,19 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
+    public QueryPage<T> queryForPage(SelectArguments selectArguments) {
+        return getBaseRepository().queryForPage(selectArguments);
+    }
+
+    @Override
     public long count(T t) {
         return getBaseRepository().count(t);
     }
+
+    @Override
+    public List<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
+        return getBaseRepository().findAll(condition, groupBys, orders);
+    }
+
+
 }

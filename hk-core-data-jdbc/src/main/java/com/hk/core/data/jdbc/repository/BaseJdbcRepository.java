@@ -1,9 +1,11 @@
 package com.hk.core.data.jdbc.repository;
 
-import com.hk.commons.util.*;
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.BeanUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.data.commons.utils.OrderUtils;
-import com.hk.core.data.jdbc.JdbcSession;
-import com.hk.core.data.jdbc.SelectArguments;
+import com.hk.core.data.jdbc.*;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.query.SimpleCondition;
 import com.hk.core.page.QueryModel;
@@ -19,9 +21,10 @@ import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author: sjq-278
@@ -33,6 +36,8 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @NonNull
     private final PersistentEntity<T, ? extends PersistentProperty> entity;
+
+    private PersistenEntityMetadata persistenEntityMetadata = new JpaPersistenEntityMetadata();
 
     public BaseJdbcRepository(JdbcAggregateOperations entityOperations, PersistentEntity<T, ?> entity) {
         super(entityOperations, entity);
@@ -49,102 +54,90 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     @Override
     public List<T> findAll(T t, Order... orders) {
         Class<T> type = entity.getType();
-        PersistentProperty<?> idProperty = entity.getRequiredIdProperty();
-        Iterable<? extends PersistentProperty> persistentProperties = entity.getPersistentProperties(Column.class);
-        Map<String, String> propertyColumns = new LinkedHashMap<>();
-        propertyColumns.put(idProperty.getName(), idProperty.getName());
-        persistentProperties.forEach(item -> propertyColumns.put(item.getName(), ((Column) item.getRequiredAnnotation(Column.class)).name()));
-
+        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setFrom(entity.getRequiredAnnotation(Table.class).name());
         selectArguments.setOrders(ArrayUtils.asList(orders));
-        selectArguments.setFields(new HashSet<>(propertyColumns.values()));
-        CompositeCondition conditions = selectArguments.getConditions();
-        Map<String, Object> propertyMap = BeanUtils.beanToMap(t, "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate");
+        fillSelectArguments(selectArguments, persistentEntityInfo, t);
+        return getJdbcSession().queryForList(selectArguments, false, type).getResult();
+    }
+
+    private void fillSelectArguments(SelectArguments arguments, PersistentEntityInfo persistentEntityInfo, T t) {
+        arguments.setFrom(persistentEntityInfo.getTableName());
+        arguments.setFields(new LinkedHashSet<>(persistentEntityInfo.getPropertyColumns().values()));
+        CompositeCondition conditions = arguments.getConditions();
+        Map<String, Object> propertyMap = BeanUtils.beanToMap(t);
         for (Map.Entry<String, Object> entry : propertyMap.entrySet()) {
-            String column = propertyColumns.get(entry.getKey());
-            if (null != column) {
-                conditions.addCondition(new SimpleCondition(column, entry.getValue()));
+            if (ArrayUtils.noContains(persistentEntityInfo.getIgnoreConditionFields(), entry.getKey())) {
+                String column = persistentEntityInfo.getPropertyColumns().get(entry.getKey());
+                if (null != column) {
+                    conditions.addCondition(new SimpleCondition(column, entry.getValue()));
+                }
             }
         }
-        return getJdbcSession().queryForList(selectArguments, false, type).getResult();
     }
 
     @Override
     public QueryPage<T> queryForPage(QueryModel<T> query) {
         Class<T> type = entity.getType();
-        PersistentProperty<?> idProperty = entity.getRequiredIdProperty();
-        Iterable<? extends PersistentProperty> persistentProperties = entity.getPersistentProperties(Column.class);
-        Map<String, String> propertyColumns = new LinkedHashMap<>();
-        propertyColumns.put(idProperty.getName(), idProperty.getName());
-        persistentProperties.forEach(item -> propertyColumns.put(item.getName(), ((Column) item.getRequiredAnnotation(Column.class)).name()));
-
+        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setFrom(entity.getRequiredAnnotation(Table.class).name());
         selectArguments.setOrders(query.getOrders());
-        selectArguments.setFields(new HashSet<>(propertyColumns.values()));
-        CompositeCondition conditions = selectArguments.getConditions();
-        Map<String, Object> propertyMap = BeanUtils.beanToMap(query.getParam(), "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate");
-        for (Map.Entry<String, Object> entry : propertyMap.entrySet()) {
-            String column = propertyColumns.get(entry.getKey());
-            if (null != column) {
-                conditions.addCondition(new SimpleCondition(column, entry.getValue()));
-            }
-        }
+        selectArguments.setCountField(persistentEntityInfo.getIdField());
+        fillSelectArguments(selectArguments, persistentEntityInfo, query.getParam());
         return getJdbcSession().queryForPage(selectArguments, type);
     }
 
     @Override
-    public long count(T t) {
-        PersistentProperty<?> idProperty = entity.getRequiredIdProperty();
-        Iterable<? extends PersistentProperty> persistentProperties = entity.getPersistentProperties(Column.class);
-        Map<String, String> propertyColumns = new LinkedHashMap<>();
-        propertyColumns.put(idProperty.getName(), idProperty.getName());
-        persistentProperties.forEach(item -> propertyColumns.put(item.getName(), ((Column) item.getRequiredAnnotation(Column.class)).name()));
-        SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setFrom(entity.getRequiredAnnotation(Table.class).name());
-        selectArguments.setFields(new HashSet<>(propertyColumns.values()));
-        selectArguments.setCountField(idProperty.getName());
-        CompositeCondition conditions = selectArguments.getConditions();
-        Map<String, Object> propertyMap = BeanUtils.beanToMap(t, "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate");
-        for (Map.Entry<String, Object> entry : propertyMap.entrySet()) {
-            String column = propertyColumns.get(entry.getKey());
-            if (null != column) {
-                conditions.addCondition(new SimpleCondition(column, entry.getValue()));
-            }
+    public QueryPage<T> queryForPage(SelectArguments arguments) {
+        Class<T> type = entity.getType();
+        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        arguments.setFrom(persistentEntityInfo.getTableName());
+        if (CollectionUtils.isEmpty(arguments.getFields())) {
+            arguments.setFields(new LinkedHashSet<>(persistentEntityInfo.getPropertyColumns().values()));
         }
+        arguments.setCountField(persistentEntityInfo.getIdField());
+        return getJdbcSession().queryForPage(arguments, type);
+    }
+
+    @Override
+    public List<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
+        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        SelectArguments selectArguments = new SelectArguments();
+        fillSelectArguments(selectArguments, persistentEntityInfo, null);
+        selectArguments.setConditions(condition);
+        selectArguments.setGroupBy(groupBys);
+        selectArguments.setOrders(ArrayUtils.asList(orders));
+        return getJdbcSession().queryForList(selectArguments, false, entity.getType()).getResult();
+    }
+
+    @Override
+    public long count(T t) {
+        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        SelectArguments selectArguments = new SelectArguments();
+        selectArguments.setCountField(persistentEntityInfo.getIdField());
+        fillSelectArguments(selectArguments, persistentEntityInfo, t);
         return getJdbcSession().queryForCount(selectArguments);
     }
 
     @Override
     public Iterable<T> findAll(Sort sort) {
         PersistentProperty<?> idProperty = entity.getRequiredIdProperty();
-        Iterable<? extends PersistentProperty> persistentProperties = entity.getPersistentProperties(Column.class);
-        Map<String, String> propertyColumns = new LinkedHashMap<>();
-        propertyColumns.put(idProperty.getName(), idProperty.getName());
-        persistentProperties.forEach(item -> propertyColumns.put(item.getName(), ((Column) item.getRequiredAnnotation(Column.class)).name()));
+        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setFrom(entity.getRequiredAnnotation(Table.class).name());
-        selectArguments.setFields(new HashSet<>(propertyColumns.values()));
-
+        fillSelectArguments(selectArguments, persistentEntityInfo, null);
         selectArguments.setOrders(OrderUtils.toOrderList(sort));
         return getJdbcSession().queryForList(selectArguments, false, entity.getType()).getResult();
     }
 
     @Override
     public Page<T> findAll(Pageable pageable) {
-        PersistentProperty<?> idProperty = entity.getRequiredIdProperty();
-        Iterable<? extends PersistentProperty> persistentProperties = entity.getPersistentProperties(Column.class);
-        Map<String, String> propertyColumns = new LinkedHashMap<>();
-        propertyColumns.put(idProperty.getName(), idProperty.getName());
-        persistentProperties.forEach(item -> propertyColumns.put(item.getName(), ((Column) item.getRequiredAnnotation(Column.class)).name()));
+        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setFrom(entity.getRequiredAnnotation(Table.class).name());
-        selectArguments.setFields(new HashSet<>(propertyColumns.values()));
-        selectArguments.setCountField(idProperty.getName());
+        selectArguments.setCountField(persistentEntityInfo.getIdField());
         selectArguments.setStartRowIndex(pageable.getPageNumber());
         selectArguments.setPageSize(pageable.getPageSize());
         selectArguments.setOrders(OrderUtils.toOrderList(pageable.getSort()));
+        fillSelectArguments(selectArguments, persistentEntityInfo, null);
         QueryPage<T> page = getJdbcSession().queryForPage(selectArguments, entity.getType());
         return new PageImpl<>(page.getData(), pageable, page.getTotalRow());
     }
