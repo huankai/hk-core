@@ -44,7 +44,6 @@ public class SolrDeltaImportMethodInterceptor implements AfterReturningAdvice {
                 if (LOGGER.isInfoEnabled()) {
                     LOGGER.info(result);
                 }
-
             });
         }
     }

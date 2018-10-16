@@ -2,10 +2,13 @@ package com.hk.core.autoconfigure.data.jdbc;
 
 import com.hk.commons.util.IDGenerator;
 import com.hk.core.data.jdbc.JdbcSession;
+import com.hk.core.data.jdbc.JpaPersistentEntityMetadata;
+import com.hk.core.data.jdbc.PersistentEntityMetadata;
 import com.hk.core.data.jdbc.dialect.Dialect;
 import com.hk.core.data.jdbc.dialect.MysqlDialect;
 import com.hk.core.data.jdbc.domain.AbstractUUIDPersistable;
 import com.hk.core.data.jdbc.BaseJdbcRepositoryFactoryBean;
+import com.hk.core.data.jdbc.repository.BaseJdbcRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationListener;
@@ -39,6 +42,15 @@ public class JdbcAutoConfiguration {
     @ConditionalOnMissingBean(Dialect.class)
     public Dialect mysqlDialect() {
         return new MysqlDialect();
+    }
+
+    /**
+     * @see BaseJdbcRepository#getPersistentEntityMetadata()
+     */
+    @Bean
+    @ConditionalOnMissingBean(PersistentEntityMetadata.class)
+    public PersistentEntityMetadata persistentEntityMetadata() {
+        return new JpaPersistentEntityMetadata();
     }
 
     /**

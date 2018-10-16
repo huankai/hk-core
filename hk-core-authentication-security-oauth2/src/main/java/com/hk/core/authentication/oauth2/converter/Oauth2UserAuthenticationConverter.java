@@ -1,8 +1,8 @@
 package com.hk.core.authentication.oauth2.converter;
 
+import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.api.ClientAppInfo;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.authentication.security.SecurityUserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,35 +40,10 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
     @SuppressWarnings("unchecked")
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
-            Map<String, Object> m = (Map<String, Object>) map;
-            UserPrincipal principal = new UserPrincipal(CollectionUtils.getStringValue(m, "userId"),
-                    CollectionUtils.getStringValue(m, "account", CollectionUtils.getStringValue(m, USERNAME)),
-                    CollectionUtils.getBooleanValue(m, "isProtect", false),
-                    CollectionUtils.getStringValue(m, "realName"),
-                    CollectionUtils.getByteValue(m, "userType"),
-                    CollectionUtils.getStringValue(m, "phone"),
-                    CollectionUtils.getStringValue(m, "email"),
-                    CollectionUtils.getByteValue(m, "sex"),
-                    CollectionUtils.getStringValue(m, "iconPath"));
-            principal.setSexChinese(CollectionUtils.getStringValue(m, "sexChinese"));
-            principal.setOrgId(CollectionUtils.getStringValue(m, "orgId"));
-            principal.setOrgName(CollectionUtils.getStringValue(m, "orgName"));
-            principal.setDeptId(CollectionUtils.getStringValue(m, "deptId"));
-            principal.setDeptName(CollectionUtils.getStringValue(m, "deptName"));
-
-            Map<String, Object> clientAppInfo = CollectionUtils.getMapValue(m, "clientApp");
-            if (null != clientAppInfo) {
-                principal.setAppInfo(new ClientAppInfo(CollectionUtils.getStringValue(clientAppInfo, "appId"),
-                        CollectionUtils.getStringValue(clientAppInfo, "appCode"),
-                        CollectionUtils.getStringValue(clientAppInfo, "appName"),
-                        CollectionUtils.getStringValue(clientAppInfo, "appIcon")));
-            }
-
+            UserPrincipal userPrincipal = BeanUtils.mapToBean(map, UserPrincipal.class);
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            List<String> roleList = CollectionUtils.getValue(m, "roles", List.class);
-            if (null != roleList) {
-                Set<String> roleSet = new HashSet<>(roleList);
-                principal.setRoleSet(roleSet);
+            Set<String> roleSet = userPrincipal.getRoleSet();
+            if (CollectionUtils.isNotEmpty(roleSet)) {
                 roleSet.forEach(role -> {
                     if (!StringUtils.startsWith(role, SecurityUserPrincipal.ROLE_PREFIX)) {
                         role = SecurityUserPrincipal.ROLE_PREFIX + role;
@@ -76,14 +51,55 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                     authorities.add(new SimpleGrantedAuthority(role));
                 });
             }
-
-            List<String> permissionList = CollectionUtils.getValue(m, "permissions", List.class);
-            if (null != permissionList) {
-                Set<String> permissionSet = new HashSet<>(permissionList);
-                principal.setPermissionSet(permissionSet);
-                permissionSet.forEach(permissionName -> authorities.add(new SimpleGrantedAuthority(permissionName)));
+            Set<String> permissionList = userPrincipal.getPermissionSet();
+            if (CollectionUtils.isNotEmpty(permissionList)) {
+                permissionList.forEach(permissionName -> authorities.add(new SimpleGrantedAuthority(permissionName)));
             }
-            return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
+
+//            Map<String, Object> m = (Map<String, Object>) map;
+//            UserPrincipal principal = new UserPrincipal(CollectionUtils.getStringValue(m, "userId"),
+//                    CollectionUtils.getStringValue(m, "account", CollectionUtils.getStringValue(m, USERNAME)),
+//                    CollectionUtils.getBooleanValue(m, "isProtect", false),
+//                    CollectionUtils.getStringValue(m, "realName"),
+//                    CollectionUtils.getByteValue(m, "userType"),
+//                    CollectionUtils.getStringValue(m, "phone"),
+//                    CollectionUtils.getStringValue(m, "email"),
+//                    CollectionUtils.getByteValue(m, "sex"),
+//                    CollectionUtils.getStringValue(m, "iconPath"));
+//            principal.setSexChinese(CollectionUtils.getStringValue(m, "sexChinese"));
+//            principal.setOrgId(CollectionUtils.getStringValue(m, "orgId"));
+//            principal.setOrgName(CollectionUtils.getStringValue(m, "orgName"));
+//            principal.setDeptId(CollectionUtils.getStringValue(m, "deptId"));
+//            principal.setDeptName(CollectionUtils.getStringValue(m, "deptName"));
+//
+//            Map<String, Object> clientAppInfo = CollectionUtils.getMapValue(m, "clientApp");
+//            if (null != clientAppInfo) {
+//                principal.setAppInfo(new ClientAppInfo(CollectionUtils.getStringValue(clientAppInfo, "appId"),
+//                        CollectionUtils.getStringValue(clientAppInfo, "appCode"),
+//                        CollectionUtils.getStringValue(clientAppInfo, "appName"),
+//                        CollectionUtils.getStringValue(clientAppInfo, "appIcon")));
+//            }
+//
+//            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+//            List<String> roleList = CollectionUtils.getValue(m, "roles", List.class);
+//            if (null != roleList) {
+//                Set<String> roleSet = new HashSet<>(roleList);
+//                principal.setRoleSet(roleSet);
+//                roleSet.forEach(role -> {
+//                    if (!StringUtils.startsWith(role, SecurityUserPrincipal.ROLE_PREFIX)) {
+//                        role = SecurityUserPrincipal.ROLE_PREFIX + role;
+//                    }
+//                    authorities.add(new SimpleGrantedAuthority(role));
+//                });
+//            }
+//
+//            List<String> permissionList = CollectionUtils.getValue(m, "permissions", List.class);
+//            if (null != permissionList) {
+//                Set<String> permissionSet = new HashSet<>(permissionList);
+//                principal.setPermissionSet(permissionSet);
+//                permissionSet.forEach(permissionName -> authorities.add(new SimpleGrantedAuthority(permissionName)));
+//            }
+            return new UsernamePasswordAuthenticationToken(userPrincipal, "N/A", authorities);
         }
         return null;
     }

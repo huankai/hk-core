@@ -25,7 +25,6 @@ public class BaseJdbcRepositoryFactory extends JdbcRepositoryFactory {
 
     private final DataAccessStrategy accessStrategy;
 
-
     /**
      * Creates a new {@link JdbcRepositoryFactory} for the given {@link DataAccessStrategy},
      * {@link RelationalMappingContext} and {@link ApplicationEventPublisher}.

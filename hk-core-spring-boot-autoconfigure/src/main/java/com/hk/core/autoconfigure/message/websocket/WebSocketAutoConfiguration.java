@@ -33,13 +33,10 @@ import java.util.List;
 @EnableConfigurationProperties(WebSocketProperties.class)
 public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
 
-    private ApplicationContext applicationContext;
-
     private WebSocketProperties webSocketProperties;
 
-    public WebSocketAutoConfiguration(WebSocketProperties webSocketProperties, ApplicationContext applicationContext) {
+    public WebSocketAutoConfiguration(WebSocketProperties webSocketProperties) {
         this.webSocketProperties = webSocketProperties;
-        this.applicationContext = applicationContext;
     }
 
     @Bean("websocketMessager")
@@ -51,8 +48,7 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         List<HandshakeInterceptor> interceptorList = new ArrayList<>();
         if (webSocketProperties.isNeedLogin()) {
-            SecurityContext securityContext = applicationContext.getBean(SecurityContext.class);
-            interceptorList.add(new CheckLoginHandshakeInterceptor(securityContext));
+            interceptorList.add(new CheckLoginHandshakeInterceptor());
         }
         HandshakeInterceptor[] interceptors = interceptorList.toArray(new HandshakeInterceptor[]{});
 

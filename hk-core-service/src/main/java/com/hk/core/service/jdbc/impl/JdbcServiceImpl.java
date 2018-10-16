@@ -3,6 +3,7 @@ package com.hk.core.service.jdbc.impl;
 import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.repository.JdbcRepository;
+import com.hk.core.page.ListResult;
 import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
@@ -11,7 +12,6 @@ import com.hk.core.service.jdbc.JdbcBaseService;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,7 +24,7 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     protected abstract JdbcRepository<T, ID> getBaseRepository();
 
     @Override
-    public List<T> findAll(T t, Order... orders) {
+    public ListResult<T> findAll(T t, Order... orders) {
         return getBaseRepository().findAll(t, orders);
     }
 
@@ -44,7 +44,7 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
-    public List<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
+    public ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
         return getBaseRepository().findAll(condition, groupBys, orders);
     }
 

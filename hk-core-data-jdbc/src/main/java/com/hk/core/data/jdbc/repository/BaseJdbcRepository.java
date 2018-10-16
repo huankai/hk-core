@@ -5,9 +5,13 @@ import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.data.commons.utils.OrderUtils;
-import com.hk.core.data.jdbc.*;
+import com.hk.core.data.jdbc.JdbcSession;
+import com.hk.core.data.jdbc.PersistentEntityInfo;
+import com.hk.core.data.jdbc.PersistentEntityMetadata;
+import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.query.SimpleCondition;
+import com.hk.core.page.ListResult;
 import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
@@ -22,7 +26,6 @@ import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +40,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     @NonNull
     private final PersistentEntity<T, ? extends PersistentProperty> entity;
 
-    private PersistenEntityMetadata persistenEntityMetadata = new JpaPersistenEntityMetadata();
+    private PersistentEntityMetadata persistentEntityMetadata;
 
     public BaseJdbcRepository(JdbcAggregateOperations entityOperations, PersistentEntity<T, ?> entity) {
         super(entityOperations, entity);
@@ -51,14 +54,21 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         return jdbcSession;
     }
 
+    private PersistentEntityMetadata getPersistentEntityMetadata() {
+        if (null == persistentEntityMetadata) {
+            persistentEntityMetadata = SpringContextHolder.getBean(PersistentEntityMetadata.class);
+        }
+        return persistentEntityMetadata;
+    }
+
     @Override
-    public List<T> findAll(T t, Order... orders) {
+    public ListResult<T> findAll(T t, Order... orders) {
         Class<T> type = entity.getType();
-        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         selectArguments.setOrders(ArrayUtils.asList(orders));
         fillSelectArguments(selectArguments, persistentEntityInfo, t);
-        return getJdbcSession().queryForList(selectArguments, false, type).getResult();
+        return getJdbcSession().queryForList(selectArguments, false, type);
     }
 
     private void fillSelectArguments(SelectArguments arguments, PersistentEntityInfo persistentEntityInfo, T t) {
@@ -79,7 +89,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     @Override
     public QueryPage<T> queryForPage(QueryModel<T> query) {
         Class<T> type = entity.getType();
-        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         selectArguments.setOrders(query.getOrders());
         selectArguments.setCountField(persistentEntityInfo.getIdField());
@@ -90,7 +100,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     @Override
     public QueryPage<T> queryForPage(SelectArguments arguments) {
         Class<T> type = entity.getType();
-        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         arguments.setFrom(persistentEntityInfo.getTableName());
         if (CollectionUtils.isEmpty(arguments.getFields())) {
             arguments.setFields(new LinkedHashSet<>(persistentEntityInfo.getPropertyColumns().values()));
@@ -100,19 +110,19 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     }
 
     @Override
-    public List<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
-        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+    public ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
+        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, null);
         selectArguments.setConditions(condition);
         selectArguments.setGroupBy(groupBys);
         selectArguments.setOrders(ArrayUtils.asList(orders));
-        return getJdbcSession().queryForList(selectArguments, false, entity.getType()).getResult();
+        return getJdbcSession().queryForList(selectArguments, false, entity.getType());
     }
 
     @Override
     public long count(T t) {
-        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         selectArguments.setCountField(persistentEntityInfo.getIdField());
         fillSelectArguments(selectArguments, persistentEntityInfo, t);
@@ -121,8 +131,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @Override
     public Iterable<T> findAll(Sort sort) {
-        PersistentProperty<?> idProperty = entity.getRequiredIdProperty();
-        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, null);
         selectArguments.setOrders(OrderUtils.toOrderList(sort));
@@ -131,7 +140,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @Override
     public Page<T> findAll(Pageable pageable) {
-        PersistentEntityInfo persistentEntityInfo = persistenEntityMetadata.getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         selectArguments.setCountField(persistentEntityInfo.getIdField());
         selectArguments.setStartRowIndex(pageable.getPageNumber());

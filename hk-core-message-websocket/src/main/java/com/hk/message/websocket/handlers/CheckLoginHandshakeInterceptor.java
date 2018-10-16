@@ -2,6 +2,7 @@ package com.hk.message.websocket.handlers;
 
 import com.hk.commons.util.AssertUtils;
 import com.hk.core.authentication.api.SecurityContext;
+import com.hk.core.authentication.api.SecurityContextUtils;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.lang.Nullable;
@@ -18,16 +19,9 @@ import java.util.Map;
  */
 public class CheckLoginHandshakeInterceptor implements HandshakeInterceptor {
 
-    private final SecurityContext securityContext;
-
-    public CheckLoginHandshakeInterceptor(SecurityContext securityContext) {
-        AssertUtils.notNull(securityContext, "securityContext must not be null");
-        this.securityContext = securityContext;
-    }
-
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        return securityContext.isAuthenticated();
+        return SecurityContextUtils.isAuthenticated();
     }
 
     @Override

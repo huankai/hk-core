@@ -34,10 +34,6 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-authentication-api</artifactId>
-        </dependency>
     </dependencies>
 
 

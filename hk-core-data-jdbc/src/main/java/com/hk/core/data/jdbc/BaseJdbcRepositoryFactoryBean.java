@@ -1,6 +1,5 @@
 package com.hk.core.data.jdbc;
 
-import com.hk.core.data.jdbc.BaseJdbcRepositoryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -52,6 +51,7 @@ public class BaseJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
     }
 
     /**
+     * 创建自定义的 BaseJdbcRepositoryFactory
      * Creates the actual {@link RepositoryFactorySupport} instance.
      */
     @Override
@@ -96,11 +96,6 @@ public class BaseJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
         this.converter = converter;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#afterPropertiesSet()
-     */
-    @Override
     public void afterPropertiesSet() {
 
         Assert.state(this.mappingContext != null, "MappingContext is required and must not be null!");

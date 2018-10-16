@@ -2,6 +2,7 @@ package com.hk.core.service.jdbc;
 
 import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
+import com.hk.core.page.ListResult;
 import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
@@ -9,7 +10,6 @@ import com.hk.core.service.SelectService;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,7 +24,7 @@ public interface JdbcSelectService<T extends Persistable<ID>, ID extends Seriali
      * @param orders orders
      * @return List
      */
-    List<T> findAll(T t, Order... orders);
+    ListResult<T> findAll(T t, Order... orders);
 
     /**
      * @param query query
@@ -40,9 +40,9 @@ public interface JdbcSelectService<T extends Persistable<ID>, ID extends Seriali
      */
     long count(T t);
 
-    default List<T> findAll(CompositeCondition condition, Order... orders) {
+    default ListResult<T> findAll(CompositeCondition condition, Order... orders) {
         return findAll(condition, null, orders);
     }
 
-    List<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders);
+    ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders);
 }

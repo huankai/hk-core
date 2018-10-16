@@ -1,5 +1,6 @@
 package com.hk.core.web;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.annotations.EnumDisplay;
 import com.hk.commons.util.EnumDisplayUtils;
 import com.hk.commons.util.StringUtils;
@@ -77,6 +78,7 @@ public final class JsonResult<T> {
     /**
      * 返回状态
      */
+    @JsonIgnore
     private Status status;
 
     /**
