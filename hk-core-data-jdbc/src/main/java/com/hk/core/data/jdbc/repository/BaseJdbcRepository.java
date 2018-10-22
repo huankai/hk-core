@@ -6,8 +6,8 @@ import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.data.jdbc.JdbcSession;
-import com.hk.core.data.jdbc.PersistentEntityInfo;
-import com.hk.core.data.jdbc.PersistentEntityMetadata;
+import com.hk.core.data.jdbc.metadata.PersistentEntityInfo;
+import com.hk.core.data.jdbc.metadata.PersistentEntityMetadata;
 import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.query.SimpleCondition;
@@ -88,25 +88,23 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @Override
     public QueryPage<T> queryForPage(QueryModel<T> query) {
-        Class<T> type = entity.getType();
         PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         selectArguments.setOrders(query.getOrders());
         selectArguments.setCountField(persistentEntityInfo.getIdField());
         fillSelectArguments(selectArguments, persistentEntityInfo, query.getParam());
-        return getJdbcSession().queryForPage(selectArguments, type);
+        return getJdbcSession().queryForPage(selectArguments, entity.getType());
     }
 
     @Override
     public QueryPage<T> queryForPage(SelectArguments arguments) {
-        Class<T> type = entity.getType();
         PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         arguments.setFrom(persistentEntityInfo.getTableName());
         if (CollectionUtils.isEmpty(arguments.getFields())) {
             arguments.setFields(new LinkedHashSet<>(persistentEntityInfo.getPropertyColumns().values()));
         }
         arguments.setCountField(persistentEntityInfo.getIdField());
-        return getJdbcSession().queryForPage(arguments, type);
+        return getJdbcSession().queryForPage(arguments, entity.getType());
     }
 
     @Override

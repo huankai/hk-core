@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.persistence.EntityNotFoundException;
+
 /**
  * @author: kevin
  * @date: 2018-09-10 14:38
@@ -18,6 +20,17 @@ public class ExceptionHandlerConfiguration {
     }
 
     @Configuration
+    @ConditionalOnClass(EntityNotFoundException.class)
+    public class JpaExceptionHandlerConfiguration {
+
+        @Bean
+        public JpaExceptionHandler jpaExceptionHandler() {
+            return new JpaExceptionHandler();
+        }
+
+    }
+
+    @Configuration
     @ConditionalOnClass(SpringSecurityContext.class)
     public class SpringSecurityExceptionHandlerConfiguration {
 
@@ -25,6 +38,5 @@ public class ExceptionHandlerConfiguration {
         public SpringSecurityExceptionHandler springSecurityExceptionHandler() {
             return new SpringSecurityExceptionHandler();
         }
-
     }
 }

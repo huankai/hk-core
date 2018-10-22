@@ -1,4 +1,4 @@
-package com.hk.core.data.jdbc;
+package com.hk.core.data.jdbc.metadata;
 
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;

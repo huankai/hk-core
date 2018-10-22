@@ -1,4 +1,4 @@
-package com.hk.core.data.jdbc;
+package com.hk.core.data.jdbc.core;
 
 import com.hk.commons.util.LinkedHumpMap;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
