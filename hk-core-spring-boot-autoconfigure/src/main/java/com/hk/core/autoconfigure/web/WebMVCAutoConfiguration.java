@@ -15,7 +15,6 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -29,7 +28,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,9 +67,6 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
                 JsonUtils.configure(objectMapper);
                 mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
                 mappingJackson2HttpMessageConverter.setDefaultCharset(Contants.CHARSET_UTF_8);
-                List<MediaType> mediaTypeList = new ArrayList<>();
-                mediaTypeList.add(MediaType.APPLICATION_JSON_UTF8);
-                mappingJackson2HttpMessageConverter.setSupportedMediaTypes(mediaTypeList);
             }
         });
     }

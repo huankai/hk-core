@@ -25,19 +25,19 @@ public abstract class AbstractPersistentEntityMetadata implements PersistentEnti
     public PersistentEntityInfo getPersistentEntityInfo(PersistentEntity<?, ? extends PersistentProperty> persistentEntity) {
         PersistentEntityInfo entityInfo = cache.get(persistentEntity.getType().getName(), PersistentEntityInfo.class);
         if (null == entityInfo) {
-            PersistentEntityInfo info = new PersistentEntityInfo();
+            entityInfo = new PersistentEntityInfo();
             PersistentProperty<?> idProperty = persistentEntity.getRequiredIdProperty();
-            info.setIdField(idProperty.getName());
+            entityInfo.setIdField(idProperty.getName());
             Iterable<? extends PersistentProperty> persistentProperties = getPersistentProperties(persistentEntity);
             Map<String, String> propertyColumns = new LinkedHashMap<>();
             propertyColumns.put(idProperty.getName(), idProperty.getName());
             persistentProperties.forEach(item -> propertyColumns.put(item.getName(), getColumnName(item)));
-            info.setTableName(getTableName(persistentEntity));
-            info.setPropertyColumns(propertyColumns);
+            entityInfo.setTableName(getTableName(persistentEntity));
+            entityInfo.setPropertyColumns(propertyColumns);
             if (Auditable.class.isAssignableFrom(persistentEntity.getType())) {
-                info.setIgnoreConditionFields(new String[]{"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"});
+                entityInfo.setIgnoreConditionFields(new String[]{"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"});
             }
-            cache.put(persistentEntity.getType().getName(), info);
+            cache.put(persistentEntity.getType().getName(), entityInfo);
         }
         return entityInfo;
     }

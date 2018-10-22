@@ -53,4 +53,8 @@ public final class Order implements Serializable {
         return new Order(field, true);
     }
 
+    @Override
+    public String toString() {
+        return field + (desc ? " DESC" : " ASC");
+    }
 }

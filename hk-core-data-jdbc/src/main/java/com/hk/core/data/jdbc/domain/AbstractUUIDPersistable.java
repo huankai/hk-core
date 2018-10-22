@@ -1,8 +1,10 @@
 package com.hk.core.data.jdbc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.util.StringUtils;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
 
@@ -18,14 +20,25 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
     @Setter
     private String id;
 
+    @Transient
+    @JsonIgnore
+    private transient boolean isNew = false;
+
     @Override
     public String getId() {
         return id;
     }
 
     @Override
+    @JsonIgnore
+    @Transient
     public boolean isNew() {
-        return StringUtils.isEmpty(id);
+        return isNew || StringUtils.isEmpty(id);
+    }
+
+    public final void generateId(String id) {
+        isNew = true;
+        this.id = id;
     }
 
     @Override
