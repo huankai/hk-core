@@ -27,7 +27,7 @@ public class PrincipalHandshakeHandler extends DefaultHandshakeHandler {
 
         private final String userId;
 
-        public WebSocketUserPrincipal(String userId) {
+        WebSocketUserPrincipal(String userId) {
             this.userId = userId;
         }
 

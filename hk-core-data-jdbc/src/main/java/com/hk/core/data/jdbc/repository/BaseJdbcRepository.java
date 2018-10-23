@@ -6,9 +6,10 @@ import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.data.jdbc.JdbcSession;
+import com.hk.core.data.jdbc.SelectArguments;
+import com.hk.core.data.jdbc.exception.EntityNotFoundException;
 import com.hk.core.data.jdbc.metadata.PersistentEntityInfo;
 import com.hk.core.data.jdbc.metadata.PersistentEntityMetadata;
-import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.query.SimpleCondition;
 import com.hk.core.page.ListResult;
@@ -105,6 +106,11 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         }
         arguments.setCountField(persistentEntityInfo.getIdField());
         return getJdbcSession().queryForPage(arguments, entity.getType());
+    }
+
+    @Override
+    public T getById(ID id) {
+        return findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

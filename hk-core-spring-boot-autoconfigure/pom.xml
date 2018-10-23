@@ -40,6 +40,11 @@
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
+            <artifactId>hk-core-data-jdbc</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.hk</groupId>
             <artifactId>hk-core-authentication-weixin-mp</artifactId>
             <optional>true</optional>
         </dependency>

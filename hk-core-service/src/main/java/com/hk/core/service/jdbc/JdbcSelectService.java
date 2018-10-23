@@ -1,5 +1,6 @@
 package com.hk.core.service.jdbc;
 
+import com.hk.commons.util.CollectionUtils;
 import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.page.ListResult;
@@ -10,6 +11,7 @@ import com.hk.core.service.SelectService;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -25,6 +27,14 @@ public interface JdbcSelectService<T extends Persistable<ID>, ID extends Seriali
      * @return List
      */
     ListResult<T> findAll(T t, Order... orders);
+
+    T getById(ID id);
+
+
+    default Optional<T> findOne(T t) {
+        ListResult<T> result = findAll(t);
+        return CollectionUtils.getFirstOrDefault(result.getResult());
+    }
 
     /**
      * @param query query

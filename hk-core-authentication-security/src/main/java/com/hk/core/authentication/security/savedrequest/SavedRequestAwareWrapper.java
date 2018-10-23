@@ -80,7 +80,7 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     @Override
     public String getHeader(String name) {
         List<String> values = savedRequest.getHeaderValues(name);
-        return CollectionUtils.getFirstOrDefault(values);
+        return CollectionUtils.getFirstOrDefault(values).orElse(null);
     }
 
     @Override
@@ -104,7 +104,7 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     @Override
     public Locale getLocale() {
         List<Locale> locales = savedRequest.getLocales();
-        return CollectionUtils.getFirstOrDefault(locales);
+        return CollectionUtils.getFirstOrDefault(locales).orElse(Locale.getDefault());
     }
 
     @Override

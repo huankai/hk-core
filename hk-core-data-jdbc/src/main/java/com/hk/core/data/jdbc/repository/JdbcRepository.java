@@ -33,6 +33,8 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
 
     QueryPage<T> queryForPage(SelectArguments arguments);
 
+    T getById(ID id);
+
     /**
      * @param t t
      * @return count

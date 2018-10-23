@@ -39,6 +39,11 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
+    public T getById(ID id) {
+        return getBaseRepository().getById(id);
+    }
+
+    @Override
     public long count(T t) {
         return getBaseRepository().count(t);
     }

@@ -72,7 +72,7 @@ public class UserPrincipal implements Serializable {
      * protectUser
      */
     @JsonIgnore
-    private final boolean protectUser;
+    private boolean protectUser;
 
     /**
      * orgId
@@ -105,6 +105,10 @@ public class UserPrincipal implements Serializable {
      */
     @JsonIgnore
     private Set<String> permissionSet;
+
+    public UserPrincipal() {
+
+    }
 
     public UserPrincipal(String userId, String account, boolean protectUser, String realName,
                          Byte userType, String phone, String email,

@@ -1,7 +1,5 @@
 package com.hk.message.websocket.handlers;
 
-import com.hk.commons.util.AssertUtils;
-import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.SecurityContextUtils;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -20,7 +18,7 @@ import java.util.Map;
 public class CheckLoginHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
         return SecurityContextUtils.isAuthenticated();
     }
 
