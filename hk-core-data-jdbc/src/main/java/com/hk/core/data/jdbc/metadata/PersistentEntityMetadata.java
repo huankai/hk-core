@@ -1,4 +1,4 @@
-package com.hk.core.data.jdbc;
+package com.hk.core.data.jdbc.metadata;
 
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;

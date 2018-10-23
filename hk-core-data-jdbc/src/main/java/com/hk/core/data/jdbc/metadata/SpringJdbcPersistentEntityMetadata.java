@@ -1,4 +1,4 @@
-package com.hk.core.data.jdbc;
+package com.hk.core.data.jdbc.metadata;
 
 import com.hk.commons.util.StringUtils;
 import org.springframework.data.mapping.PersistentEntity;
@@ -15,7 +15,7 @@ public class SpringJdbcPersistentEntityMetadata extends AbstractPersistentEntity
     @Override
     protected String getTableName(PersistentEntity<?, ? extends PersistentProperty> persistentEntity) {
         Table table = persistentEntity.findAnnotation(Table.class);
-        return null != table ? table.value() : StringUtils.substringAfterLast(persistentEntity.getName(), ".");
+        return null != table ? table.value() : StringUtils.substringAfterLast(persistentEntity.getName(), ".").toLowerCase();
     }
 
     @Override

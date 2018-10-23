@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -54,22 +53,6 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
                 String.format("%s %s %s ", EnumDisplayUtils.getDisplayText(JsonResult.Status.NOT_FOUND.name(), JsonResult.Status.class), e.getHttpMethod(), e.getRequestURL()));
     }
 
-    /**
-     * <p>
-     * getOne(String id) 无此记录时，将抛出 EntityNotFoundException.<br/>
-     * 响应状态码： 404
-     * </p>
-     *
-     * @param e       e
-     * @param request request
-     * @return jsonResult
-     */
-    @ExceptionHandler(value = {EntityNotFoundException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public JsonResult<Void> serviceException(EntityNotFoundException e, HttpServletRequest request) {
-        error(e, e.getMessage(), request);
-        return new JsonResult<>(JsonResult.Status.NOT_FOUND, "您访问的资源可能不存在!");
-    }
 
     /**
      * <p>

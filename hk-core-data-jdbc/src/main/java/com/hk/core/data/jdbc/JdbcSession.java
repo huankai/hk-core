@@ -4,6 +4,7 @@ import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.ConverterUtils;
 import com.hk.commons.util.StringUtils;
+import com.hk.core.data.jdbc.core.HumpColumnMapRowMapper;
 import com.hk.core.data.jdbc.dialect.Dialect;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.page.ListResult;

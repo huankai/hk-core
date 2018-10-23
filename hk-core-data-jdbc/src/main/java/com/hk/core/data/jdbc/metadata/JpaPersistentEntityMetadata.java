@@ -1,7 +1,6 @@
-package com.hk.core.data.jdbc;
+package com.hk.core.data.jdbc.metadata;
 
 import com.hk.commons.util.StringUtils;
-import javafx.scene.control.Tab;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 

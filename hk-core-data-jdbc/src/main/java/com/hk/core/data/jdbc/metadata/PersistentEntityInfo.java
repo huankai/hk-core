@@ -1,4 +1,4 @@
-package com.hk.core.data.jdbc;
+package com.hk.core.data.jdbc.metadata;
 
 import lombok.Data;
 
@@ -11,7 +11,6 @@ import java.util.Map;
  */
 @Data
 public class PersistentEntityInfo {
-
 
     private Map<String, String> propertyColumns = new LinkedHashMap<>();
 

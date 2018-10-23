@@ -1,6 +1,7 @@
 package com.hk.core.data.commons.utils;
 
 import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.StringUtils;
 
 /**
  * @author: kevin
@@ -12,6 +13,7 @@ abstract class SqlEscapeUtils {
             "INSERT", "UPDATE", "DELETE", "DROP", "ALTER", "GRANT", "EXECUTE", "EXEC"};
 
     static String escape(String args) {
-        return ArrayUtils.contains(SQL_KEY_WORD, args.trim().toUpperCase()) ? null : args;
+        return (StringUtils.isEmpty(args) || ArrayUtils.contains(SQL_KEY_WORD, args.trim().toUpperCase()))
+                ? null : args;
     }
 }
