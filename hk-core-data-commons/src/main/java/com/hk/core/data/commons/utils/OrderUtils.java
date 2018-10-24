@@ -42,16 +42,13 @@ public abstract class OrderUtils {
      * @return Sort
      */
     public static Sort toSort(Order... orders) {
-        return ArrayUtils.isEmpty(orders) ? Sort.unsorted() : toSort(Arrays.asList(orders));
+        return toSort(ArrayUtils.asList(orders));
     }
 
     public static List<Order> toOrderList(Sort sort) {
         List<Order> orders = new ArrayList<>();
         Iterator<Sort.Order> iterator = sort.iterator();
-        while ((iterator.hasNext())) {
-            Sort.Order order = iterator.next();
-            orders.add(new Order(order.getProperty(), order.isDescending()));
-        }
+        iterator.forEachRemaining(item -> orders.add(new Order(item.getProperty(), item.isDescending())));
         return orders;
     }
 }
