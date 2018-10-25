@@ -60,9 +60,19 @@ public final class JdbcSession {
      * @param sql       sql
      * @param arguments arguments
      */
-    public boolean delete(String sql, Map<String, ?> arguments) {
+    public boolean update(String sql, Map<String, ?> arguments) {
         return namedParameterJdbcTemplate.update(sql, arguments) > 0;
     }
+
+
+    /**
+     * todo 未完成
+     */
+//    public void batchInsert(PersistentEntityInfo persistentEntityInfo, SqlParameterSource[] parameterSources) {
+////        SqlParameterSourceUtils.createBatch()
+//        namedParameterJdbcTemplate.batchUpdate(String.format("INSERT INTO %s(%s) VALUES (%s)",
+//                persistentEntityInfo.getTableName(), "", ""), parameterSources);
+//    }
 
     /**
      * @param arguments       arguments
@@ -87,9 +97,15 @@ public final class JdbcSession {
         return jdbcTemplate.queryForObject(statement.selectSql.toString(), rowMapper, statement.parameters.toArray());
     }
 
+    /**
+     * count 查询
+     *
+     * @param arguments arguments
+     * @return 记录数
+     */
     public long queryForCount(SelectArguments arguments) {
         SelectStatement statement = buildSelect(arguments);
-        return queryForScalar(statement.countSql.toString(), Long.class, statement.parameters);
+        return queryForScalar(statement.countSql.toString(), Long.class, statement.parameters.toArray());
     }
 
     /**

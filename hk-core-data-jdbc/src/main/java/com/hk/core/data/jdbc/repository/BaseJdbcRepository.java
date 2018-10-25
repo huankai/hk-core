@@ -26,6 +26,7 @@ import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -67,14 +68,14 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         Class<T> type = entity.getType();
         PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setOrders(ArrayUtils.asList(orders));
+        selectArguments.setOrders(ArrayUtils.asArrayList(orders));
         fillSelectArguments(selectArguments, persistentEntityInfo, t);
         return getJdbcSession().queryForList(selectArguments, false, type);
     }
 
     private void fillSelectArguments(SelectArguments arguments, PersistentEntityInfo persistentEntityInfo, T t) {
         arguments.setFrom(persistentEntityInfo.getTableName());
-        arguments.setFields(new LinkedHashSet<>(persistentEntityInfo.getPropertyColumns().values()));
+        arguments.setFields(new HashSet<>(persistentEntityInfo.getPropertyColumns().values()));
         CompositeCondition conditions = arguments.getConditions();
         Map<String, Object> propertyMap = BeanUtils.beanToMap(t);
         for (Map.Entry<String, Object> entry : propertyMap.entrySet()) {
@@ -125,7 +126,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         fillSelectArguments(selectArguments, persistentEntityInfo, null);
         selectArguments.setConditions(condition);
         selectArguments.setGroupBy(groupBys);
-        selectArguments.setOrders(ArrayUtils.asList(orders));
+        selectArguments.setOrders(ArrayUtils.asArrayList(orders));
         return getJdbcSession().queryForList(selectArguments, false, entity.getType());
     }
 

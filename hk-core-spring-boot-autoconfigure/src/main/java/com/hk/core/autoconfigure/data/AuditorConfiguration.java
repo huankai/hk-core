@@ -1,5 +1,6 @@
 package com.hk.core.autoconfigure.data;
 
+import com.hk.commons.util.Contants;
 import com.hk.core.authentication.api.SecurityContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -35,7 +36,8 @@ public class AuditorConfiguration {
 
         @Override
         public Optional<String> getCurrentAuditor() {
-            return Optional.of(securityContext.isAuthenticated() ? securityContext.getPrincipal().getUserId() : "0");
+            return Optional.of(securityContext.isAuthenticated() ? securityContext.getPrincipal().getUserId()
+                    : Contants.DEFAULT_VALUE);
         }
     }
 }
