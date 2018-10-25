@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <mysql.version>5.1.45</mysql.version>
+        <mysql.version>5.1.46</mysql.version>
         <hk.commons.version>2.0.5.RELEASE</hk.commons.version>
         <spring.boot.version>2.0.5.RELEASE</spring.boot.version>
         <spring.data.jdbc.version>1.0.0.RELEASE</spring.data.jdbc.version>
@@ -62,7 +62,7 @@
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
             </dependency>
-            <!-- spring boot 2.0.5使用的是 mysql 5.1.47，好像在使用 spring-data-jdbc保存时会有空指针异常 ，这里改为 5.1.45-->
+            <!-- spring boot 2.0.5使用的是 mysql 5.1.47，好像在使用 spring-data-jdbc保存时会有空指针异常 ，这里改为 5.1.46-->
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>

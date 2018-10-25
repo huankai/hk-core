@@ -88,6 +88,11 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     }
 
     @Override
+    public long count() {
+        return count(null);
+    }
+
+    @Override
     public QueryPage<T> queryForPage(QueryModel<T> query) {
         PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
@@ -109,7 +114,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     }
 
     @Override
-    public T getById(ID id) {
+    public T getById(ID id) throws EntityNotFoundException {
         return findById(id).orElseThrow(EntityNotFoundException::new);
     }
 

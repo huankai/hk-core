@@ -1,6 +1,7 @@
 package com.hk.core.data.jdbc.repository;
 
 import com.hk.core.data.jdbc.SelectArguments;
+import com.hk.core.data.jdbc.exception.EntityNotFoundException;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.page.ListResult;
 import com.hk.core.page.QueryModel;
@@ -31,9 +32,21 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
      */
     QueryPage<T> queryForPage(QueryModel<T> query);
 
+    /**
+     * 分页查询
+     *
+     * @param arguments arguments
+     * @return QueryPage
+     */
     QueryPage<T> queryForPage(SelectArguments arguments);
 
-    T getById(ID id);
+    /**
+     * 必须返回一条记录，不可能为空
+     *
+     * @param id id
+     * @return T
+     */
+    T getById(ID id) throws EntityNotFoundException;
 
     /**
      * @param t t
@@ -41,6 +54,14 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
      */
     long count(T t);
 
+    /**
+     * 查询
+     *
+     * @param condition condition
+     * @param groupBys  groupBys
+     * @param orders    orders
+     * @return ListResult
+     */
     ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders);
 
 

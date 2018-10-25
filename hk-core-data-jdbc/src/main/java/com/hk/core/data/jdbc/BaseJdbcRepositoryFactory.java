@@ -35,7 +35,7 @@ public class BaseJdbcRepositoryFactory extends JdbcRepositoryFactory {
      * @param publisher          must not be {@literal null}.
      * @param operations         must not be {@literal null}.
      */
-    public BaseJdbcRepositoryFactory(DataAccessStrategy dataAccessStrategy, RelationalMappingContext context, RelationalConverter converter, ApplicationEventPublisher publisher, NamedParameterJdbcOperations operations) {
+    BaseJdbcRepositoryFactory(DataAccessStrategy dataAccessStrategy, RelationalMappingContext context, RelationalConverter converter, ApplicationEventPublisher publisher, NamedParameterJdbcOperations operations) {
         super(dataAccessStrategy, context, converter, publisher, operations);
         this.context = context;
         this.converter = converter;

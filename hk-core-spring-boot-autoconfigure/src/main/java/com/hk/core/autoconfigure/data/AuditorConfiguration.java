@@ -35,7 +35,7 @@ public class AuditorConfiguration {
 
         @Override
         public Optional<String> getCurrentAuditor() {
-            return Optional.of(securityContext.getPrincipal().getUserId());
+            return Optional.of(securityContext.isAuthenticated() ? securityContext.getPrincipal().getUserId() : "0");
         }
     }
 }

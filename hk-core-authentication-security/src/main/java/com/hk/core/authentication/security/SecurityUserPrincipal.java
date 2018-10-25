@@ -64,7 +64,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
         }
         Set<String> permissionSet = getPermissionSet();
         if (CollectionUtils.isNotEmpty(permissionSet)) {
-            roleSet.forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission)));
+            permissionSet.forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission)));
         }
         return authorityList;
     }

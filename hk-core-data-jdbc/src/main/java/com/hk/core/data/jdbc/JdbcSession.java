@@ -40,10 +40,6 @@ public final class JdbcSession {
         this.dialect = dialect;
     }
 
-    public Dialect getDialect() {
-        return dialect;
-    }
-
     /**
      * Delete
      *

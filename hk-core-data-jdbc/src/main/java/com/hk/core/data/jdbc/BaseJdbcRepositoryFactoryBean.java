@@ -27,10 +27,15 @@ public class BaseJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
         extends TransactionalRepositoryFactoryBeanSupport<T, S, ID> implements ApplicationEventPublisherAware {
 
     private ApplicationEventPublisher publisher;
+
     private RelationalMappingContext mappingContext;
+
     private RelationalConverter converter;
+
     private DataAccessStrategy dataAccessStrategy;
+
     private RowMapperMap rowMapperMap = RowMapperMap.EMPTY;
+
     private NamedParameterJdbcOperations operations;
 
     /**
@@ -64,7 +69,6 @@ public class BaseJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
 
     @Autowired
     protected void setMappingContext(RelationalMappingContext mappingContext) {
-
         super.setMappingContext(mappingContext);
         this.mappingContext = mappingContext;
     }

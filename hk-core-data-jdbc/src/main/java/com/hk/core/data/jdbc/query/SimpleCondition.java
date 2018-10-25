@@ -51,16 +51,16 @@ public class SimpleCondition implements Condition {
 
     /**
      * @param field        field
-     * @param compareValue
+     * @param compareValue compareValue
      */
     public SimpleCondition(String field, Object compareValue) {
         this(field, Operator.EQ, compareValue);
     }
 
     /**
-     * @param field
-     * @param operator
-     * @param compareValue
+     * @param field field
+     * @param operator operator
+     * @param compareValue compareValue
      */
     public SimpleCondition(String field, Operator operator, Object compareValue) {
         this.field = field;
@@ -81,12 +81,12 @@ public class SimpleCondition implements Condition {
         return conditions.get(operator);
     }
 
-    static abstract class ComparableCondition {
+    private static abstract class ComparableCondition {
 
         abstract String toSqlString(String field, Operator operator, Object compareValue, List<Object> parameters);
     }
 
-    static class BetweenCondition extends ComparableCondition {
+    private static class BetweenCondition extends ComparableCondition {
 
         @Override
         String toSqlString(String field, Operator operator, Object compareValue, List<Object> parameters) {
@@ -104,7 +104,7 @@ public class SimpleCondition implements Condition {
 
     }
 
-    static class InCondition extends ComparableCondition {
+    private static class InCondition extends ComparableCondition {
 
         @Override
         String toSqlString(String field, Operator operator, Object compareValue, List<Object> parameters) {
@@ -146,7 +146,7 @@ public class SimpleCondition implements Condition {
 
     }
 
-    static abstract class BaseLikeCondition extends ComparableCondition {
+    private static abstract class BaseLikeCondition extends ComparableCondition {
 
         protected abstract MatchMode getLikeMatchMode();
 
@@ -164,7 +164,7 @@ public class SimpleCondition implements Condition {
         }
     }
 
-    static class LikeStartCondition extends BaseLikeCondition {
+    private static class LikeStartCondition extends BaseLikeCondition {
 
         @Override
         protected MatchMode getLikeMatchMode() {
@@ -173,7 +173,7 @@ public class SimpleCondition implements Condition {
 
     }
 
-    static class LikeEndCondition extends BaseLikeCondition {
+    private static class LikeEndCondition extends BaseLikeCondition {
 
         @Override
         protected MatchMode getLikeMatchMode() {
@@ -182,7 +182,7 @@ public class SimpleCondition implements Condition {
 
     }
 
-    static class LikeAnywhereCondition extends BaseLikeCondition {
+    private static class LikeAnywhereCondition extends BaseLikeCondition {
 
         @Override
         protected MatchMode getLikeMatchMode() {
@@ -191,7 +191,7 @@ public class SimpleCondition implements Condition {
 
     }
 
-    static class LikeExactCondition extends BaseLikeCondition {
+    private static class LikeExactCondition extends BaseLikeCondition {
 
         @Override
         protected MatchMode getLikeMatchMode() {
@@ -200,7 +200,7 @@ public class SimpleCondition implements Condition {
 
     }
 
-    static final class BinaryCondition extends ComparableCondition {
+    private static final class BinaryCondition extends ComparableCondition {
 
         @Override
         String toSqlString(String field, Operator operator, Object compareValue, List<Object> parameters) {
@@ -236,7 +236,7 @@ public class SimpleCondition implements Condition {
 
     }
 
-    static class NotEqCondition extends ComparableCondition {
+    private static class NotEqCondition extends ComparableCondition {
 
         @Override
         String toSqlString(String field, Operator operator, Object compareValue, List<Object> parameters) {
@@ -246,7 +246,7 @@ public class SimpleCondition implements Condition {
 
     }
 
-    static class IsNullCondition extends ComparableCondition {
+    private static class IsNullCondition extends ComparableCondition {
 
         @Override
         String toSqlString(String field, Operator operator, Object compareValue, List<Object> parameters) {
@@ -254,7 +254,7 @@ public class SimpleCondition implements Condition {
         }
     }
 
-    static class IsNotNullCondition extends ComparableCondition {
+    private static class IsNotNullCondition extends ComparableCondition {
 
         @Override
         String toSqlString(String field, Operator operator, Object compareValue, List<Object> parameters) {

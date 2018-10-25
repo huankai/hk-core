@@ -1,7 +1,8 @@
 package com.hk.core.autoconfigure.data.jdbc;
 
 import com.hk.commons.util.IDGenerator;
-import com.hk.core.data.jdbc.*;
+import com.hk.core.data.jdbc.BaseJdbcRepositoryFactoryBean;
+import com.hk.core.data.jdbc.JdbcSession;
 import com.hk.core.data.jdbc.dialect.Dialect;
 import com.hk.core.data.jdbc.dialect.MysqlDialect;
 import com.hk.core.data.jdbc.domain.AbstractUUIDPersistable;
@@ -44,6 +45,8 @@ public class JdbcAutoConfiguration {
     }
 
     /**
+     * 如果是使用 spring data common中的注解映射表名和字段名，配置此bean，默认会配置
+     *
      * @see BaseJdbcRepository#getPersistentEntityMetadata()
      */
     @Bean
@@ -51,6 +54,20 @@ public class JdbcAutoConfiguration {
     public PersistentEntityMetadata persistentEntityMetadata() {
         return new SpringJdbcPersistentEntityMetadata();
     }
+
+
+    /* ************如果是使用 jpa 注解映射表名和字段名，配置下面两个 bean(JpaPersistentEntityMetadata) 和 (JpaAnnotationNamingStrategy),*************** */
+
+//    @Bean
+//    public PersistentEntityMetadata jpaPersistentEntityMetadata() {
+//        return new JpaPersistentEntityMetadata();
+//    }
+//
+//    @Bean
+//    public JpaAnnotationNamingStrategy namingStrategy() {
+//        return new JpaAnnotationNamingStrategy();
+//    }
+
 
     /**
      * 保存之前生成主键Id监听器
