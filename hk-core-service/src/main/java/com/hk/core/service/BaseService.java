@@ -17,6 +17,10 @@ import java.util.List;
 public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
         extends InsertService<T, ID>, UpdateService<T, ID>, DeleteService<T, ID>, SelectService<T, ID> {
 
+    default T insertOrUpdateSelective(T t) {
+        return t.isNew() ? insert(t) : updateByIdSelective(t);
+    }
+
     default T insertOrUpdate(T t) {
         return t.isNew() ? insert(t) : updateById(t);
     }

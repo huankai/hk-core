@@ -44,8 +44,9 @@ public class CompositeCondition implements Condition {
      *
      * @param condition condition
      */
-    public void addCondition(Condition condition) {
+    public CompositeCondition addCondition(Condition condition) {
         conditions.add(condition);
+        return this;
     }
 
     /**
@@ -53,8 +54,9 @@ public class CompositeCondition implements Condition {
      *
      * @param conditions conditions
      */
-    public void addConditions(Condition... conditions) {
+    public CompositeCondition addConditions(Condition... conditions) {
         CollectionUtils.addAllNotNull(this.conditions, conditions);
+        return this;
     }
 
     /**
@@ -62,8 +64,9 @@ public class CompositeCondition implements Condition {
      *
      * @param condition condition
      */
-    public void removeCondition(Condition condition) {
+    public CompositeCondition removeCondition(Condition condition) {
         conditions.remove(condition);
+        return this;
     }
 
     /**
@@ -71,8 +74,9 @@ public class CompositeCondition implements Condition {
      *
      * @param index index
      */
-    public void removeCondition(int index) {
+    public CompositeCondition removeCondition(int index) {
         conditions.remove(index);
+        return this;
     }
 
     /**

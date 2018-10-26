@@ -1,7 +1,9 @@
 package com.hk.core.data.jdbc;
 
 import com.hk.core.data.jdbc.query.CompositeCondition;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 删除参数
@@ -10,6 +12,8 @@ import lombok.Data;
  * @date: 2018-09-19 14:01
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeleteArguments {
 
     /**

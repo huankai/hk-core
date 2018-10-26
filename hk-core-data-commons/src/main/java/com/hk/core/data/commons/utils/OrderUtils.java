@@ -42,7 +42,7 @@ public abstract class OrderUtils {
      * @return Sort
      */
     public static Sort toSort(Order... orders) {
-        return toSort(ArrayUtils.asList(orders));
+        return toSort(ArrayUtils.asArrayList(orders));
     }
 
     public static List<Order> toOrderList(Sort sort) {

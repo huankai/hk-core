@@ -55,6 +55,14 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
     long count(T t);
 
     /**
+     * 更新不能空的值
+     *
+     * @param t t
+     * @return 更新后的实体
+     */
+    T updateByIdSelective(T t);
+
+    /**
      * 查询
      *
      * @param condition condition
@@ -65,4 +73,10 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
     ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders);
 
 
+    /**
+     * 根据条件删除
+     *
+     * @param conditions conditions
+     */
+    boolean delete(CompositeCondition conditions);
 }

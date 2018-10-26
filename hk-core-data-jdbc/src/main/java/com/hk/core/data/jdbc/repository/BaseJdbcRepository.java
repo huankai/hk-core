@@ -1,10 +1,8 @@
 package com.hk.core.data.jdbc.repository;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.BeanUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.SpringContextHolder;
+import com.hk.commons.util.*;
 import com.hk.core.data.commons.utils.OrderUtils;
+import com.hk.core.data.jdbc.DeleteArguments;
 import com.hk.core.data.jdbc.JdbcSession;
 import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.exception.EntityNotFoundException;
@@ -17,16 +15,12 @@ import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import lombok.NonNull;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -65,17 +59,16 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @Override
     public ListResult<T> findAll(T t, Order... orders) {
-        Class<T> type = entity.getType();
         PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setOrders(ArrayUtils.asArrayList(orders));
         fillSelectArguments(selectArguments, persistentEntityInfo, t);
-        return getJdbcSession().queryForList(selectArguments, false, type);
+        selectArguments.setOrders(ArrayUtils.asArrayList(orders));
+        return getJdbcSession().queryForList(selectArguments, false, entity.getType());
     }
 
     private void fillSelectArguments(SelectArguments arguments, PersistentEntityInfo persistentEntityInfo, T t) {
         arguments.setFrom(persistentEntityInfo.getTableName());
-        arguments.setFields(new HashSet<>(persistentEntityInfo.getPropertyColumns().values()));
+        arguments.setFields(persistentEntityInfo.getPropertyColumns().values());
         CompositeCondition conditions = arguments.getConditions();
         Map<String, Object> propertyMap = BeanUtils.beanToMap(t);
         for (Map.Entry<String, Object> entry : propertyMap.entrySet()) {
@@ -94,12 +87,25 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public final T updateByIdSelective(T t) {
+        if (t instanceof Persistable) {
+            Persistable<ID> persistable = (Persistable<ID>) t;
+            AssertUtils.isTrue(!persistable.isNew(), "更新主键值不能为空");
+            T find = getById(persistable.getId());
+            BeanUtils.copyNotNullProperties(t, find);
+            return save(find);
+        }
+        throw new IllegalArgumentException("不能识别的实体");
+    }
+
+    @Override
     public QueryPage<T> queryForPage(QueryModel<T> query) {
         PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setOrders(query.getOrders());
-        selectArguments.setCountField(persistentEntityInfo.getIdField());
         fillSelectArguments(selectArguments, persistentEntityInfo, query.getParam());
+        selectArguments.setCountField(persistentEntityInfo.getIdField());
+        selectArguments.setOrders(query.getOrders());
         return getJdbcSession().queryForPage(selectArguments, entity.getType());
     }
 
@@ -131,11 +137,17 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     }
 
     @Override
+    public boolean delete(CompositeCondition conditions) {
+        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
+        return getJdbcSession().delete(new DeleteArguments(persistentEntityInfo.getTableName(), conditions));
+    }
+
+    @Override
     public long count(T t) {
         PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
-        selectArguments.setCountField(persistentEntityInfo.getIdField());
         fillSelectArguments(selectArguments, persistentEntityInfo, t);
+        selectArguments.setCountField(persistentEntityInfo.getIdField());
         return getJdbcSession().queryForCount(selectArguments);
     }
 
@@ -152,11 +164,11 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     public Page<T> findAll(Pageable pageable) {
         PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
+        fillSelectArguments(selectArguments, persistentEntityInfo, null);
         selectArguments.setCountField(persistentEntityInfo.getIdField());
         selectArguments.setStartRowIndex(pageable.getPageNumber());
         selectArguments.setPageSize(pageable.getPageSize());
         selectArguments.setOrders(OrderUtils.toOrderList(pageable.getSort()));
-        fillSelectArguments(selectArguments, persistentEntityInfo, null);
         QueryPage<T> page = getJdbcSession().queryForPage(selectArguments, entity.getType());
         return new PageImpl<>(page.getData(), pageable, page.getTotalRow());
     }

@@ -4,6 +4,7 @@ import com.hk.commons.util.CollectionUtils;
 import com.hk.core.query.Order;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.*;
 
@@ -12,6 +13,7 @@ import java.util.*;
  * @date: 2018-09-19 10:48
  */
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class SelectArguments extends DeleteArguments {
 
@@ -23,7 +25,7 @@ public class SelectArguments extends DeleteArguments {
     /**
      * 查询字段
      */
-    private Set<String> fields;
+    private Collection<String> fields;
 
     /**
      * 分组
@@ -54,7 +56,7 @@ public class SelectArguments extends DeleteArguments {
 
     public SelectArguments fields(String... fields) {
         if (null == this.fields) {
-            this.fields = new HashSet<>();
+            this.fields = new LinkedHashSet<>();
         }
         CollectionUtils.addAllNotNull(this.fields, fields);
         return this;

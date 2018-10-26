@@ -1,7 +1,5 @@
 package com.hk.core.data.jpa.repository;
 
-import com.hk.commons.util.BeanUtils;
-import com.hk.commons.util.ObjectUtils;
 import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
@@ -26,22 +24,6 @@ import java.util.List;
 public interface JpaBaseRepository<T extends Persistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {
 
     /**
-     * 更新不为空的属性
-     *
-     * @param t t
-     * @return T
-     */
-    default T updateByIdSelective(T t) {
-        ID id = t.getId();
-        if (ObjectUtils.isEmpty(id)) {
-            throw new IllegalArgumentException("更新id不能为空！");
-        }
-        T find = getOne(id);
-        BeanUtils.copyNotNullProperties(t, find);
-        return save(find);
-    }
-
-    /**
      * 查询排序
      *
      * @param example example
@@ -52,6 +34,7 @@ public interface JpaBaseRepository<T extends Persistable<ID>, ID extends Seriali
         return findAll(example, OrderUtils.toSort(orders));
     }
 
+    T updateByIdSelective(T t);
 
     /**
      * 分页查询

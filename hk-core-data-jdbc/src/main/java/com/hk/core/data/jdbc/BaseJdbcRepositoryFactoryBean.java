@@ -1,11 +1,11 @@
 package com.hk.core.data.jdbc;
 
+import com.hk.core.data.jdbc.core.CustomDataAccessStrategy;
+import com.hk.core.data.jdbc.core.SqlGeneratorSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.jdbc.core.DataAccessStrategy;
-import org.springframework.data.jdbc.core.DefaultDataAccessStrategy;
-import org.springframework.data.jdbc.core.SqlGeneratorSource;
 import org.springframework.data.jdbc.repository.RowMapperMap;
 import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactoryBean;
 import org.springframework.data.relational.core.conversion.RelationalConverter;
@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
+
 
 /**
  * @author: sjq-278
@@ -105,9 +106,8 @@ public class BaseJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
         Assert.state(this.mappingContext != null, "MappingContext is required and must not be null!");
         Assert.state(this.converter != null, "RelationalConverter is required and must not be null!");
         if (dataAccessStrategy == null) {
-
             SqlGeneratorSource sqlGeneratorSource = new SqlGeneratorSource(mappingContext);
-            this.dataAccessStrategy = new DefaultDataAccessStrategy(sqlGeneratorSource, mappingContext, converter,
+            this.dataAccessStrategy = new CustomDataAccessStrategy(sqlGeneratorSource, mappingContext, converter,
                     operations);
         }
 

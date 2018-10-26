@@ -16,10 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -180,7 +177,7 @@ public final class JdbcSession {
         StringBuilder sql = new StringBuilder();
         StringBuilder countSql = new StringBuilder();
 
-        Set<String> fieldSet = arguments.getFields();
+        Collection<String> fieldSet = arguments.getFields();
         String fields = CollectionUtils.isEmpty(fieldSet) ? "*"
                 : fieldSet.stream().collect(Collectors.joining(","));
         sql.append("SELECT ");

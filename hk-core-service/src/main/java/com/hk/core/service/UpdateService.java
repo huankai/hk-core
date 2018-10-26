@@ -20,13 +20,13 @@ public interface UpdateService<T extends Persistable<ID>, ID extends Serializabl
      */
     T updateById(T t);
 
-//    /**
-//     * 根据主键只更新不为空的字段
-//     *
-//     * @param t t
-//     * @return t
-//     */
-//    T updateByIdSelective(T t);
+    /**
+     * 根据主键只更新不为空的字段
+     *
+     * @param t t
+     * @return t
+     */
+    T updateByIdSelective(T t);
 
     /**
      * 批量更新

@@ -17,7 +17,7 @@
         <mysql.version>5.1.46</mysql.version>
         <hk.commons.version>2.0.5.RELEASE</hk.commons.version>
         <spring.boot.version>2.0.5.RELEASE</spring.boot.version>
-        <spring.data.jdbc.version>1.0.0.RELEASE</spring.data.jdbc.version>
+        <spring.data.jdbc.version>1.0.1.RELEASE</spring.data.jdbc.version>
         <spring.boot.admin.version>2.0.3</spring.boot.admin.version>
         <spring.cloud.version>Finchley.RELEASE</spring.cloud.version>
         <lombok.version>1.18.0</lombok.version>

@@ -1,19 +1,17 @@
 package com.hk.core.cache.service;
 
-import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
-import com.hk.core.page.ListResult;
-import com.hk.core.page.QueryModel;
-import com.hk.core.page.QueryPage;
-import com.hk.core.query.Order;
 import com.hk.core.service.jdbc.impl.JdbcServiceImpl;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Service implementation Enable Cache.
@@ -26,120 +24,110 @@ import java.util.Set;
 public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JdbcServiceImpl<T, PK> {
 
     @Override
-    public ListResult<T> findAll(CompositeCondition condition, Order... orders) {
-        return super.findAll(condition, orders);
+    @Cacheable(key = "'id'+#root.args[0]")
+    public T getById(PK pk) {
+        return super.getById(pk);
     }
 
     @Override
-    public Iterable<T> findByIds(PK... pks) {
-        return super.findByIds(pks);
+    @CacheEvict(allEntries = true)
+    public boolean delete(CompositeCondition conditions) {
+        return super.delete(conditions);
     }
 
     @Override
-    public ListResult<T> findAll(T t, Order... orders) {
-        return super.findAll(t, orders);
-    }
-
-    @Override
-    public QueryPage<T> queryForPage(QueryModel<T> query) {
-        return super.queryForPage(query);
-    }
-
-    @Override
-    public QueryPage<T> queryForPage(SelectArguments selectArguments) {
-        return super.queryForPage(selectArguments);
-    }
-
-    @Override
-    public long count(T t) {
-        return super.count(t);
-    }
-
-    @Override
-    public ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
-        return super.findAll(condition, groupBys, orders);
-    }
-
-    @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(key = "'id'+#id"),
+                    @CacheEvict(key = "'count'")
+            }
+    )
     public void deleteById(PK pk) {
         super.deleteById(pk);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void delete(T entity) {
         super.delete(entity);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void delete(Iterable<T> entities) {
         super.delete(entities);
     }
 
     @Override
-    public T insert(T t) {
-        return super.insert(t);
-    }
-
-    @Override
-    public Iterable<T> batchInsert(Iterable<T> entities) {
-        return super.batchInsert(entities);
-    }
-
-    @Override
+    @Cacheable(key = "'id'+#root.args[0]")
     public Optional<T> findById(PK pk) {
         return super.findById(pk);
     }
 
-    @Override
-    public Iterable<T> findAll(Order... orders) {
-        return super.findAll(orders);
-    }
+//    @Override
+//    @Cacheable(key = "'id'+#root.args[0]")
+//    public Iterable<T> findByIds(Iterable<PK> pks) {
+//        return super.findByIds(pks);
+//    }
+//
+//    @Override
+//    @Cacheable(key = "'id'+#root.args")
+//    public Iterable<T> findByIds(PK... pks) {
+//        return super.findByIds(pks);
+//    }
 
     @Override
-    public Iterable<T> findByIds(Iterable<PK> pks) {
-        return super.findByIds(pks);
-    }
-
-    @Override
-    public boolean existsById(PK pk) {
-        return super.existsById(pk);
-    }
-
-    @Override
-    public boolean exists(T t) {
-        return super.exists(t);
-    }
-
-    @Override
+    @Cacheable(key = "'count'")
     public long count() {
         return super.count();
     }
 
     @Override
+    @CachePut(key = "'id'+#root.args[0].id")
     public T updateById(T t) {
         return super.updateById(t);
     }
 
     @Override
+    @CachePut(key = "'id'+#root.args[0].id")
+    public T updateByIdSelective(T t) {
+        return super.updateByIdSelective(t);
+    }
+
+    @Override
+    @Caching(put = @CachePut(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null"))
     public T insertOrUpdate(T t) {
         return super.insertOrUpdate(t);
     }
 
+    @Caching(put = @CachePut(key = "'id'+#root.args[0].id", condition = "#root.args[0].id != null"))
+    public T insertOrUpdateSelective(T t) {
+        return super.insertOrUpdateSelective(t);
+    }
+
     @Override
+    @CacheEvict(allEntries = true)
     public List<T> insertOrUpdate(Iterable<T> entities) {
         return super.insertOrUpdate(entities);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void deleteByIds(Iterable<PK> pks) {
         super.deleteByIds(pks);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
+    public void deleteByIds(PK... pks) {
+        super.deleteByIds(pks);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
     public List<T> batchUpdate(Iterable<T> entities) {
         return super.batchUpdate(entities);
     }
-
 
 //    @Override
 //    @Cacheable(key = "'id'+#root.args[0]")

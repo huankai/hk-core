@@ -44,6 +44,11 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
+    public T updateByIdSelective(T t) {
+        return getBaseRepository().updateByIdSelective(t);
+    }
+
+    @Override
     public long count(T t) {
         return getBaseRepository().count(t);
     }
@@ -53,5 +58,8 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
         return getBaseRepository().findAll(condition, groupBys, orders);
     }
 
-
+    @Override
+    public boolean delete(CompositeCondition conditions) {
+        return getBaseRepository().delete(conditions);
+    }
 }

@@ -12,6 +12,8 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 
 /**
+ * 构建自定义的 JdbcRepository
+ *
  * @author: sjq-278
  * @date: 2018-10-11 14:17
  */

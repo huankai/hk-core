@@ -15,5 +15,4 @@ public interface JpaBaseService<T extends Persistable<ID>, ID extends Serializab
 
     List<T> findAll(T t, Order... orders);
 
-    T updateByIdSelective(T t);
 }

@@ -59,7 +59,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     public T insert(T t) {
-        return getBaseRepository().save(t);
+        return getBaseRepository().save(saveBefore(t));
     }
 
     @Override
@@ -101,6 +101,18 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     public T updateById(T t) {
         AssertUtils.isTrue(!t.isNew(), "更新主键值不能为空");
         return getBaseRepository().save(t);
+    }
+
+    /**
+     * <pre>
+     *     在保存或更新实体之前
+     *     可设置参数默认值，验证数据有效性
+     * </pre>
+     *
+     * @param entity entity
+     */
+    protected T saveBefore(T entity) {
+        return entity;
     }
 
 }

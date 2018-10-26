@@ -9,6 +9,6 @@ import java.io.Serializable;
  * @author: sjq-278
  * @date: 2018-10-11 14:45
  */
-public interface JdbcBaseService<T extends Persistable<ID>, ID extends Serializable> extends BaseService<T, ID>, JdbcSelectService<T, ID> {
+public interface JdbcBaseService<T extends Persistable<ID>, ID extends Serializable> extends BaseService<T, ID>, JdbcSelectService<T, ID>, JdbcDeleteService<T, ID> {
 
 }

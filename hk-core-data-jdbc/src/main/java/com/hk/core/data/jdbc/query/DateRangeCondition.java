@@ -2,6 +2,8 @@ package com.hk.core.data.jdbc.query;
 
 import com.hk.commons.annotations.EnumDisplay;
 import com.hk.commons.util.date.DateTimeUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Calendar;
 import java.util.List;
@@ -56,69 +58,21 @@ public class DateRangeCondition implements Condition {
         CUSTOM
     }
 
+    @Getter
+    @Setter
     private DateRange range;
 
+    @Getter
+    @Setter
     private String field;
 
+    @Getter
+    @Setter
     private Calendar start;
 
+    @Getter
+    @Setter
     private Calendar end;
-
-    /**
-     * @return the range
-     */
-    public DateRange getRange() {
-        return range;
-    }
-
-    /**
-     * @param range the range to set
-     */
-    public void setRange(DateRange range) {
-        this.range = range;
-    }
-
-    /**
-     * @return the field
-     */
-    public String getField() {
-        return field;
-    }
-
-    /**
-     * @param field the field to set
-     */
-    public void setField(String field) {
-        this.field = field;
-    }
-
-    /**
-     * @return the start
-     */
-    public Calendar getStart() {
-        return start;
-    }
-
-    /**
-     * @param start the start to set
-     */
-    public void setStart(Calendar start) {
-        this.start = start;
-    }
-
-    /**
-     * @return the end
-     */
-    public Calendar getEnd() {
-        return end;
-    }
-
-    /**
-     * @param end the end to set
-     */
-    public void setEnd(Calendar end) {
-        this.end = end;
-    }
 
     @Override
     public String toSqlString(List<Object> parameters) {

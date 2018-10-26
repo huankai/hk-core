@@ -23,7 +23,7 @@ public class LogicalCondition extends CompositeCondition {
      * @param conditions conditions
      */
     public LogicalCondition(Condition... conditions) {
-        this(AndOr.AND, ArrayUtils.asList(conditions));
+        this(AndOr.AND, ArrayUtils.asArrayList(conditions));
     }
 
     /**

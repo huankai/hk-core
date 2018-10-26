@@ -3,7 +3,6 @@ package com.hk.core.service.jpa.impl;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.data.jpa.repository.JpaBaseRepository;
-import com.hk.core.exception.ServiceException;
 import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
@@ -65,7 +64,6 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
         return getBaseRepository().getOne(id);
     }
 
-
     @Override
     public List<T> findAll(T t, Order... orders) {
         return getBaseRepository().findAll(Example.of(checkNull(t), ofExampleMatcher()), orders);
@@ -97,18 +95,6 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
     @Override
     public T updateByIdSelective(T t) {
         return getBaseRepository().updateByIdSelective(t);
-    }
-
-    /**
-     * <pre>
-     *     在保存或更新实体之前
-     *     可设置参数默认值，验证数据有效性
-     * </pre>
-     *
-     * @param entity entity
-     */
-    protected T saveBefore(T entity) throws ServiceException {
-        return entity;
     }
 
 }

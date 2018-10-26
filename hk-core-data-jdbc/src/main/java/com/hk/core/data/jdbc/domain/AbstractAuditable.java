@@ -1,10 +1,7 @@
 package com.hk.core.data.jdbc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.*;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.relational.core.mapping.Column;
 
@@ -49,6 +46,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
     @CreatedDate
     @JsonIgnore
     @Column(value = "created_date")
+    @ReadOnlyProperty
     private LocalDateTime createdDate;
 
     /**
@@ -68,15 +66,18 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
     private LocalDateTime lastModifiedDate;
 
     @Override
+    @ReadOnlyProperty
     public Optional<String> getCreatedBy() {
         return Optional.ofNullable(createdBy);
     }
 
+    @ReadOnlyProperty
     public void setCreatedBy(Optional<String> createByOpt) {
         this.createdBy = createByOpt.orElse(null);
     }
 
     @Override
+    @ReadOnlyProperty
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }

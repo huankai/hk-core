@@ -250,7 +250,7 @@ public final class JsonResult<T> {
         this.message = message;
     }
 
-    public int getStatus() {
+    public int getStatusCode() {
         return EnumDisplayUtils.getDisplayOrder(status);
     }
 
