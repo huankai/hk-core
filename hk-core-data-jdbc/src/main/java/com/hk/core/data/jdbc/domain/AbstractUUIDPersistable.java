@@ -2,6 +2,7 @@ package com.hk.core.data.jdbc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.util.StringUtils;
+import com.hk.core.data.jdbc.annotations.NonUpdate;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -18,6 +19,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
 
     @Id
     @Setter
+    @NonUpdate
     private String id;
 
     @Transient

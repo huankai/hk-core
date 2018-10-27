@@ -1,7 +1,6 @@
 package com.hk.core.data.jdbc.core;
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
+import com.hk.core.data.jdbc.annotations.NonUpdate;
 import org.springframework.data.mapping.PersistentPropertyPath;
 import org.springframework.data.mapping.PropertyHandler;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
@@ -12,7 +11,6 @@ import org.springframework.data.util.StreamUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -84,11 +82,9 @@ class SqlGenerator {
                 columnNames.add(p.getColumnName());
                 if (!entity.isIdProperty(p)) {
                     nonIdColumnNames.add(p.getColumnName());
-                    Field field = p.getField();
-                    //过滤CreateBy 和 CreateDate注解标识的字段，不需要 update
-                    if (field.getDeclaredAnnotation(CreatedBy.class) == null && field.getDeclaredAnnotation(CreatedDate.class) == null) {
-                        updateColumnNames.add(p.getColumnName());
-                    }
+                }
+                if (!p.isAnnotationPresent(NonUpdate.class)) {
+                    updateColumnNames.add(p.getColumnName());
                 }
             }
         });

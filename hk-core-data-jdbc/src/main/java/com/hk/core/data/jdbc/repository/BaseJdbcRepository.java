@@ -20,6 +20,7 @@ import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
+import org.springframework.data.util.Lazy;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -31,39 +32,25 @@ import java.util.Set;
  */
 public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> implements JdbcRepository<T, ID> {
 
-    private JdbcSession jdbcSession;
-
     @NonNull
     private final PersistentEntity<T, ? extends PersistentProperty> entity;
 
-    private PersistentEntityMetadata persistentEntityMetadata;
+    private Lazy<JdbcSession> jdbcSession = Lazy.of(() -> SpringContextHolder.getBean(JdbcSession.class));
+
+    private Lazy<PersistentEntityMetadata> persistentEntityMetadata = Lazy.of(() -> SpringContextHolder.getBean(PersistentEntityMetadata.class));
 
     public BaseJdbcRepository(JdbcAggregateOperations entityOperations, PersistentEntity<T, ?> entity) {
         super(entityOperations, entity);
         this.entity = entity;
     }
 
-    private JdbcSession getJdbcSession() {
-        if (null == jdbcSession) {
-            jdbcSession = SpringContextHolder.getBean(JdbcSession.class);
-        }
-        return jdbcSession;
-    }
-
-    private PersistentEntityMetadata getPersistentEntityMetadata() {
-        if (null == persistentEntityMetadata) {
-            persistentEntityMetadata = SpringContextHolder.getBean(PersistentEntityMetadata.class);
-        }
-        return persistentEntityMetadata;
-    }
-
     @Override
     public ListResult<T> findAll(T t, Order... orders) {
-        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, t);
         selectArguments.setOrders(ArrayUtils.asArrayList(orders));
-        return getJdbcSession().queryForList(selectArguments, false, entity.getType());
+        return jdbcSession.get().queryForList(selectArguments, false, entity.getType());
     }
 
     private void fillSelectArguments(SelectArguments arguments, PersistentEntityInfo persistentEntityInfo, T t) {
@@ -101,23 +88,23 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @Override
     public QueryPage<T> queryForPage(QueryModel<T> query) {
-        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, query.getParam());
         selectArguments.setCountField(persistentEntityInfo.getIdField());
         selectArguments.setOrders(query.getOrders());
-        return getJdbcSession().queryForPage(selectArguments, entity.getType());
+        return jdbcSession.get().queryForPage(selectArguments, entity.getType());
     }
 
     @Override
     public QueryPage<T> queryForPage(SelectArguments arguments) {
-        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         arguments.setFrom(persistentEntityInfo.getTableName());
         if (CollectionUtils.isEmpty(arguments.getFields())) {
             arguments.setFields(new LinkedHashSet<>(persistentEntityInfo.getPropertyColumns().values()));
         }
         arguments.setCountField(persistentEntityInfo.getIdField());
-        return getJdbcSession().queryForPage(arguments, entity.getType());
+        return jdbcSession.get().queryForPage(arguments, entity.getType());
     }
 
     @Override
@@ -127,49 +114,49 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @Override
     public ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
-        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, null);
         selectArguments.setConditions(condition);
         selectArguments.setGroupBy(groupBys);
         selectArguments.setOrders(ArrayUtils.asArrayList(orders));
-        return getJdbcSession().queryForList(selectArguments, false, entity.getType());
+        return jdbcSession.get().queryForList(selectArguments, false, entity.getType());
     }
 
     @Override
     public boolean delete(CompositeCondition conditions) {
-        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
-        return getJdbcSession().delete(new DeleteArguments(persistentEntityInfo.getTableName(), conditions));
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
+        return jdbcSession.get().delete(new DeleteArguments(persistentEntityInfo.getTableName(), conditions));
     }
 
     @Override
     public long count(T t) {
-        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, t);
         selectArguments.setCountField(persistentEntityInfo.getIdField());
-        return getJdbcSession().queryForCount(selectArguments);
+        return jdbcSession.get().queryForCount(selectArguments);
     }
 
     @Override
     public Iterable<T> findAll(Sort sort) {
-        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, null);
         selectArguments.setOrders(OrderUtils.toOrderList(sort));
-        return getJdbcSession().queryForList(selectArguments, false, entity.getType()).getResult();
+        return jdbcSession.get().queryForList(selectArguments, false, entity.getType()).getResult();
     }
 
     @Override
     public Page<T> findAll(Pageable pageable) {
-        PersistentEntityInfo persistentEntityInfo = getPersistentEntityMetadata().getPersistentEntityInfo(entity);
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, null);
         selectArguments.setCountField(persistentEntityInfo.getIdField());
         selectArguments.setStartRowIndex(pageable.getPageNumber());
         selectArguments.setPageSize(pageable.getPageSize());
         selectArguments.setOrders(OrderUtils.toOrderList(pageable.getSort()));
-        QueryPage<T> page = getJdbcSession().queryForPage(selectArguments, entity.getType());
+        QueryPage<T> page = jdbcSession.get().queryForPage(selectArguments, entity.getType());
         return new PageImpl<>(page.getData(), pageable, page.getTotalRow());
     }
 }
