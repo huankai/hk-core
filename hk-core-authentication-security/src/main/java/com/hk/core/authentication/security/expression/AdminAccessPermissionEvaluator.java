@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import java.io.Serializable;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-14 11:05
  */
 public class AdminAccessPermissionEvaluator implements PermissionEvaluator {

@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.util.*;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-19 11:00
  */
 public class SimpleCondition implements Condition {

@@ -4,7 +4,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-10 10:16
  */
 @NoRepositoryBean

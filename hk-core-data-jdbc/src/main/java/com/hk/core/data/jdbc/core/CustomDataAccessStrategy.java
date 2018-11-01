@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-26 13:38
  * @see org.springframework.data.jdbc.core.DefaultDataAccessStrategy
  */

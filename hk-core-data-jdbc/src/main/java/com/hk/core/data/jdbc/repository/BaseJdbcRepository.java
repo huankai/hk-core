@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-11 13:21
  */
 public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> implements JdbcRepository<T, ID> {
@@ -101,7 +101,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         arguments.setFrom(persistentEntityInfo.getTableName());
         if (CollectionUtils.isEmpty(arguments.getFields())) {
-            arguments.setFields(new LinkedHashSet<>(persistentEntityInfo.getPropertyColumns().values()));
+            arguments.setFields(persistentEntityInfo.getPropertyColumns().values());
         }
         arguments.setCountField(persistentEntityInfo.getIdField());
         return jdbcSession.get().queryForPage(arguments, entity.getType());

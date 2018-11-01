@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-19 11:02
  */
 public class RangeCondition<T> implements Condition {

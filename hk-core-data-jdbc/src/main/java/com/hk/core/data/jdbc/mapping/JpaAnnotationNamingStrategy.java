@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * 只有使用Jpa注解表名与字段映射，需要注入此bean
  *
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-25 12:37
  * @see JdbcConfiguration#jdbcMappingContext(Optional)
  */

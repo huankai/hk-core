@@ -12,7 +12,7 @@ import org.springframework.util.ClassUtils;
 import java.io.Serializable;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-10 16:32
  */
 public abstract class AbstractUUIDPersistable implements Persistable<String>, Serializable {

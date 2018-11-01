@@ -7,7 +7,7 @@ import com.hk.core.data.commons.query.AndOr;
 import java.util.List;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-19 11:07
  */
 public class LogicalCondition extends CompositeCondition {

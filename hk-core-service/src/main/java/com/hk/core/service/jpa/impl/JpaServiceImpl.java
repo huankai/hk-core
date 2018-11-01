@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-10 10:30
  */
 public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Serializable> extends BaseServiceImpl<T, ID> implements JpaBaseService<T, ID> {

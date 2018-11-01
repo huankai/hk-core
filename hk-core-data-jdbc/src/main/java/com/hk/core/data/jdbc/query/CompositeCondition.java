@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-19 11:03
  */
 public class CompositeCondition implements Condition {

@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-11 14:46
  */
 public interface JdbcSelectService<T extends Persistable<ID>, ID extends Serializable> extends SelectService<T, ID> {

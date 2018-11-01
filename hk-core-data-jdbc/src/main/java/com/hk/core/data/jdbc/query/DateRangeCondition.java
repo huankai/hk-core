@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-19 11:05
  */
 public class DateRangeCondition implements Condition {

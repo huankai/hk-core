@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-10 10:32
  */
 public interface JpaSelectService<T extends Persistable<ID>, ID extends Serializable> extends SelectService<T, ID> {

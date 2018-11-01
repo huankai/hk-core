@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-14 15:28
  */
 @RunWith(SpringJUnit4ClassRunner.class)

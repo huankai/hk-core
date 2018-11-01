@@ -3,7 +3,7 @@ package com.hk.core.data.jdbc.query;
 import java.util.List;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-19 10:59
  */
 public interface Condition {

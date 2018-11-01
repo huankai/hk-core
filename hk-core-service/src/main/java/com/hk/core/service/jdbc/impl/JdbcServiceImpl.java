@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-11 14:37
  */
 public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Serializable> extends BaseServiceImpl<T, ID> implements JdbcBaseService<T, ID> {

@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-11 13:29
  * @see JdbcRepositoryFactoryBean
  */

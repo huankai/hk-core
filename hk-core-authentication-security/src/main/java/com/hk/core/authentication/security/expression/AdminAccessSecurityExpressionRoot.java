@@ -22,7 +22,7 @@ import java.util.Set;
  * 如果当前登陆的用户是 administrator或 是保护的用户，拥有所有的权限
  * </p>
  *
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-09-14 10:59
  * @see org.springframework.security.access.expression.SecurityExpressionRoot
  */

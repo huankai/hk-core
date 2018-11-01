@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.ColumnMapRowMapper;
 import java.util.Map;
 
 /**
- * @author: sjq-278
+ * @author: kevin
  * @date: 2018-10-08 09:27
  */
 public class HumpColumnMapRowMapper extends ColumnMapRowMapper {
