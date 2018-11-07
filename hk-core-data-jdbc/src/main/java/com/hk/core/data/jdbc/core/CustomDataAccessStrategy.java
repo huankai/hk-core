@@ -5,6 +5,7 @@ import com.hk.commons.util.CollectionUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.jdbc.core.DataAccessStrategy;
+import org.springframework.data.jdbc.core.DefaultDataAccessStrategy;
 import org.springframework.data.jdbc.core.EntityRowMapper;
 import org.springframework.data.jdbc.support.JdbcUtil;
 import org.springframework.data.mapping.PersistentPropertyAccessor;
@@ -31,7 +32,7 @@ import java.util.stream.StreamSupport;
 /**
  * @author: kevin
  * @date: 2018-10-26 13:38
- * @see org.springframework.data.jdbc.core.DefaultDataAccessStrategy
+ * @see DefaultDataAccessStrategy
  */
 public class CustomDataAccessStrategy implements DataAccessStrategy {
 

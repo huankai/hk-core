@@ -29,4 +29,6 @@ public class BaseJpaRepositoryFactory extends JpaRepositoryFactory {
     protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
         return BaseSimpleJpaRepository.class;
     }
+
+
 }

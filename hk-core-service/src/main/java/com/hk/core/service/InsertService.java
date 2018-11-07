@@ -1,11 +1,8 @@
 package com.hk.core.service;
 
-import org.springframework.data.domain.Persistable;
-
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Persistable;
 
 /**
  * @author: kevin

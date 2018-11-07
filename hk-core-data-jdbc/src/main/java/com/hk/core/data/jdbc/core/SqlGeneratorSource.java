@@ -14,7 +14,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SqlGeneratorSource {
 
-    private final Map<Class, SqlGenerator> sqlGeneratorCache = new HashMap<>();
+    private final Map<Class<?>, SqlGenerator> sqlGeneratorCache = new HashMap<>();
 
     private final RelationalMappingContext context;
 
