@@ -127,4 +127,17 @@
         </plugins>
     </build>
 
+    <!-- kafka 的包需要使用spring 仓库下载
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    -->
 </project>

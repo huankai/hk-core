@@ -66,13 +66,14 @@
                 <scope>provided</scope>
             </dependency>
             <!-- spring boot 2.1.0使用的是 mysql 5.1.47，好像在使用 spring-data-jdbc保存时会有空指针异常
-                ，这里改为 5.1.46 -->
+                ，这里改为 5.1.46
+
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
-
+                -->
             <dependency>
                 <groupId>com.hk</groupId>
                 <artifactId>hk-commons-util</artifactId>
