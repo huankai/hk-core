@@ -12,7 +12,8 @@ import com.hk.core.service.jdbc.JdbcBaseService;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author: kevin
@@ -44,6 +45,16 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
+    public Optional<T> findOne(T t) {
+        return getBaseRepository().findOne(t);
+    }
+
+    @Override
+    public Optional<T> findOne(CompositeCondition condition) {
+        return getBaseRepository().findOne(condition);
+    }
+
+    @Override
     public T updateByIdSelective(T t) {
         return getBaseRepository().updateByIdSelective(t);
     }
@@ -54,7 +65,7 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
-    public ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
+    public ListResult<T> findAll(CompositeCondition condition, Collection<String> groupBys, Order... orders) {
         return getBaseRepository().findAll(condition, groupBys, orders);
     }
 

@@ -5,6 +5,7 @@ import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.data.jdbc.DeleteArguments;
 import com.hk.core.data.jdbc.JdbcSession;
 import com.hk.core.data.jdbc.SelectArguments;
+import com.hk.core.data.jdbc.domain.AbstractUUIDPersistable;
 import com.hk.core.data.jdbc.exception.EntityNotFoundException;
 import com.hk.core.data.jdbc.metadata.PersistentEntityInfo;
 import com.hk.core.data.jdbc.metadata.PersistentEntityMetadata;
@@ -22,9 +23,9 @@ import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.util.Lazy;
 
-import java.util.LinkedHashSet;
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 /**
  * @author: kevin
@@ -67,6 +68,17 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
             }
         }
     }
+
+//    @Override
+//    public <S extends T> S save(S instance) {
+//        if (instance instanceof AbstractUUIDPersistable) {
+//            AbstractUUIDPersistable persistable = (AbstractUUIDPersistable) instance;
+//            if (persistable.isNew()) {
+//                persistable.generateId(IDGenerator.STRING_UUID.generate());
+//            }
+//        }
+//        return super.save(instance);
+//    }
 
     @Override
     public long count() {
@@ -113,7 +125,24 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     }
 
     @Override
-    public ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders) {
+    public Optional<T> findOne(T t) {
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
+        SelectArguments selectArguments = new SelectArguments();
+        fillSelectArguments(selectArguments, persistentEntityInfo, t);
+        return jdbcSession.get().queryForOne(selectArguments, entity.getType());
+    }
+
+    @Override
+    public Optional<T> findOne(CompositeCondition condition) {
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
+        SelectArguments selectArguments = new SelectArguments();
+        fillSelectArguments(selectArguments, persistentEntityInfo, null);
+        selectArguments.setConditions(condition);
+        return jdbcSession.get().queryForOne(selectArguments, entity.getType());
+    }
+
+    @Override
+    public ListResult<T> findAll(CompositeCondition condition, Collection<String> groupBys, Order... orders) {
         PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
         SelectArguments selectArguments = new SelectArguments();
         fillSelectArguments(selectArguments, persistentEntityInfo, null);

@@ -127,7 +127,7 @@
         </plugins>
     </build>
 
-    <!-- kafka 的包需要使用spring 仓库下载
+    <!-- kafka 的包需要使用spring 仓库下载 -->
 
     <repositories>
         <repository>
@@ -139,5 +139,4 @@
             </snapshots>
         </repository>
     </repositories>
-    -->
 </project>

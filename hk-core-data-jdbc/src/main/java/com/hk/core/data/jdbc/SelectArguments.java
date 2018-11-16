@@ -30,7 +30,7 @@ public class SelectArguments extends DeleteArguments {
     /**
      * 分组
      */
-    private Set<String> groupBy = new LinkedHashSet<>();
+    private Collection<String> groupBy = new LinkedHashSet<>();
 
     /**
      * Select count(*) || select count(id)

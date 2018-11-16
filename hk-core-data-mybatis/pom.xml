@@ -11,7 +11,7 @@
     <artifactId>hk-core-data-mybatis</artifactId>
 
     <properties>
-        <pagehelper.mapper.version>1.2.5</pagehelper.mapper.version>
+        <pagehelper.mapper.version>1.2.9</pagehelper.mapper.version>
     </properties>
 
     <dependencyManagement>
