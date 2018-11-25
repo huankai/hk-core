@@ -47,12 +47,12 @@
         <repository>
             <id>nexus</id>
             <name>Releases</name>
-            <url>http://192.168.64.150:8081/repository/maven-releases</url>
+            <url>http://47.107.245.220:8081/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
             <id>nexus</id>
             <name>Snapshot</name>
-            <url>http://192.168.64.150:8081/repository/maven-snapshots</url>
+            <url>http://47.107.245.220:8081/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -127,4 +127,17 @@
         </plugins>
     </build>
 
+    <!-- kafka 的包需要使用spring 仓库下载 
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    -->
 </project>

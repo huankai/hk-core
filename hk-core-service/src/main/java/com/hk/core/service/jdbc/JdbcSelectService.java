@@ -1,6 +1,5 @@
 package com.hk.core.service.jdbc;
 
-import com.hk.commons.util.CollectionUtils;
 import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.page.ListResult;
@@ -11,8 +10,8 @@ import com.hk.core.service.SelectService;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author: kevin
@@ -31,10 +30,21 @@ public interface JdbcSelectService<T extends Persistable<ID>, ID extends Seriali
     T getById(ID id);
 
 
-    default Optional<T> findOne(T t) {
-        ListResult<T> result = findAll(t);
-        return CollectionUtils.getFirstOrDefault(result.getResult());
-    }
+    /**
+     * 查询唯一，如果查询有多条记录，只会返回第一条
+     *
+     * @param t t
+     * @return T
+     */
+    Optional<T> findOne(T t);
+
+    /**
+     * 查询唯一，如果查询有多条记录，只会返回第一条
+     *
+     * @param condition condition
+     * @return t
+     */
+    Optional<T> findOne(CompositeCondition condition);
 
     /**
      * @param query query
@@ -42,6 +52,12 @@ public interface JdbcSelectService<T extends Persistable<ID>, ID extends Seriali
      */
     QueryPage<T> queryForPage(QueryModel<T> query);
 
+    /**
+     * 查询分页
+     *
+     * @param selectArguments selectArguments
+     * @return QueryPage
+     */
     QueryPage<T> queryForPage(SelectArguments selectArguments);
 
     /**
@@ -54,5 +70,5 @@ public interface JdbcSelectService<T extends Persistable<ID>, ID extends Seriali
         return findAll(condition, null, orders);
     }
 
-    ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders);
+    ListResult<T> findAll(CompositeCondition condition, Collection<String> groupBys, Order... orders);
 }

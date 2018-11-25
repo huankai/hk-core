@@ -160,6 +160,25 @@ public final class JdbcSession {
         return jdbcTemplate.queryForObject(sql, clazz, args);
     }
 
+    /**
+     * 只查询一条记录
+     * <p>
+     * select fields from table_name where condition1 = ? and condition2 = ? limit 0 ,1
+     * </p>
+     *
+     * @param arguments arguments
+     * @param clazz     clazz
+     * @param <T>       T
+     * @return T
+     */
+    public <T> Optional<T> queryForOne(SelectArguments arguments, Class<T> clazz) {
+        BeanPropertyRowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
+        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
+        SelectStatement stmt = buildSelect(arguments);
+        String sql = dialect.getLimitSql(stmt.selectSql.toString(), 0, 1);
+        return CollectionUtils.getFirstOrDefault(queryForList(sql, rowMapper, stmt.parameters.toArray()));
+    }
+
     private <T> List<T> queryForList(String sql, RowMapper<T> rowMapper, int offset, int rows, Object... args) {
         if (offset >= 0 && rows > 0) {
             sql = dialect.getLimitSql(sql, offset, rows);
@@ -205,7 +224,7 @@ public final class JdbcSession {
                 countSql.append(conditionSql);
             }
         }
-        Set<String> groupBys = arguments.getGroupBy();
+        Collection<String> groupBys = arguments.getGroupBy();
         if (CollectionUtils.isNotEmpty(groupBys)) {
             String groupBySql = groupBys.stream().collect(Collectors.joining(StringUtils.COMMA_SEPARATE));
             sql.append(" GROUP BY ");

@@ -47,7 +47,6 @@ public class JdbcAutoConfiguration {
     /**
      * 如果是使用 spring data common中的注解映射表名和字段名，配置此bean，默认会配置
      *
-     * @see BaseJdbcRepository#getPersistentEntityMetadata()
      */
     @Bean
     @ConditionalOnMissingBean(PersistentEntityMetadata.class)

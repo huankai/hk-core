@@ -10,7 +10,8 @@ import com.hk.core.query.Order;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.Set;
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author: kevin
@@ -25,6 +26,12 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
      * @return List
      */
     ListResult<T> findAll(T t, Order... orders);
+
+
+    Optional<T> findOne(CompositeCondition condition);
+
+
+    Optional<T> findOne(T t);
 
     /**
      * @param query query
@@ -70,7 +77,7 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
      * @param orders    orders
      * @return ListResult
      */
-    ListResult<T> findAll(CompositeCondition condition, Set<String> groupBys, Order... orders);
+    ListResult<T> findAll(CompositeCondition condition, Collection<String> groupBys, Order... orders);
 
 
     /**
