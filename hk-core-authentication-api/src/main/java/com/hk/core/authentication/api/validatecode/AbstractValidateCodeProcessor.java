@@ -37,10 +37,11 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     }
 
     @Override
-    public void create(ServletWebRequest request) throws Exception {
+    public String create(ServletWebRequest request) throws Exception {
         C validateCode = doCreate(request);
         saveValidateCode(validateCode, request);
         send(validateCode, request);
+        return validateCode.getCode();
     }
 
     /**
