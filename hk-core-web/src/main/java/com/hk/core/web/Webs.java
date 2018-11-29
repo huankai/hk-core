@@ -334,4 +334,8 @@ public abstract class Webs {
         }
     }
 
+    public static String getClearContextPathUri(HttpServletRequest request) {
+        String contextPath = request.getContextPath();
+        return StringUtils.isEmpty(contextPath) ? request.getRequestURI() : StringUtils.substring(request.getRequestURI(), contextPath.length());
+    }
 }

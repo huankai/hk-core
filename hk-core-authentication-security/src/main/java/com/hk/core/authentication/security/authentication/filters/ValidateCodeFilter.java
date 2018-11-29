@@ -3,6 +3,7 @@ package com.hk.core.authentication.security.authentication.filters;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.validatecode.ValidateCodeException;
 import com.hk.core.authentication.api.validatecode.ValidateCodeProcessor;
+import com.hk.core.web.Webs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -44,6 +45,9 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
      */
     public ValidateCodeFilter(ValidateCodeProcessor validateCodeProcessor, String processingUri) {
         this.validateCodeProcessor = validateCodeProcessor;
+        if (!StringUtils.startsWith(processingUri, "/")) {
+            processingUri = "/" + processingUri;
+        }
         this.processingUri = processingUri;
     }
 
@@ -58,10 +62,10 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String method = request.getMethod().toUpperCase();
-        String requestURI = request.getRequestURI();
-        if (StringUtils.equals(requestURI, processingUri)) {
+        String requestUri = Webs.getClearContextPathUri(request);
+        if (StringUtils.equals(requestUri, processingUri)) {
             if (postOnly && StringUtils.notEquals(method, "POST")) {
-                throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+                throw new AuthenticationServiceException("Authentication method not supported: " + method);
             }
             try {
                 validate(new ServletWebRequest(request, response));
@@ -72,7 +76,6 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-
     }
 
     private void validate(ServletWebRequest request) throws ValidateCodeException {
