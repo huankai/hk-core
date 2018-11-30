@@ -4,13 +4,17 @@ package com.hk.core.autoconfigure.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hk.commons.converters.*;
+import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.Contants;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.authentication.api.SecurityContextUtils;
 import com.hk.core.web.ServletContextHolder;
+import com.hk.core.web.interceptors.GlobalPropertyInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +41,7 @@ import java.util.Locale;
  */
 @Configuration
 @ServletComponentScan(basePackages = {"com.hk.core"})
+@EnableConfigurationProperties(GlobalPropertyInterceptor.RequestPropertyProperties.class)
 public class WebMVCAutoConfiguration implements WebMvcConfigurer {
 
     @Bean
@@ -51,6 +56,9 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
     public ServletContextHolder servletContextHolder() {
         return new ServletContextHolder();
     }
+
+    @Autowired
+    private GlobalPropertyInterceptor.RequestPropertyProperties requestProperty;
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
@@ -100,6 +108,11 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
                 return true;
             }
         }).addPathPatterns("/**");
+        if (CollectionUtils.isNotEmpty(requestProperty.getProperty())) {
+            GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
+            propertyInterceptor.setProperty(requestProperty.getProperty());
+            registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
+        }
 
         /* ****************** 国际化支持******************* */
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
