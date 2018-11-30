@@ -1,7 +1,7 @@
 package com.hk.core.authentication.security.handler.logout;
 
 import com.hk.commons.util.StringUtils;
-import com.hk.core.web.JsonResult;
+import com.hk.commons.JsonResult;
 import com.hk.core.web.Webs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

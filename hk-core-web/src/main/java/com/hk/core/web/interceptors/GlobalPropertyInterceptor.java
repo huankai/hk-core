@@ -10,11 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author: sjq-278
+ * 属性拦截器，将Map 属性保存到request中
+ *
+ * @author: huangkai
  * @date: 2018-11-30 09:27
  */
 public class GlobalPropertyInterceptor extends HandlerInterceptorAdapter {
 
+    /**
+     * request 中的属性
+     *
+     * @see RequestPropertyProperties#property
+     */
     private Map<String, Object> property = new HashMap<>();
 
     public void setProperty(Map<String, Object> property) {
@@ -24,7 +31,7 @@ public class GlobalPropertyInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         property.forEach(request::setAttribute);
         return true;
     }

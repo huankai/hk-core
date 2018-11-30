@@ -32,7 +32,7 @@ public class NoBearerMatcher implements RequestMatcher {
         Enumeration<String> headers = request.getHeaders("Authorization");
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
-            if ((value.toLowerCase().startsWith(OAuth2AccessToken.BEARER_TYPE.toLowerCase()))) {
+            if (StringUtils.startsWithIgnoreCase(value, OAuth2AccessToken.BEARER_TYPE)) {
                 String authHeaderValue = value.substring(OAuth2AccessToken.BEARER_TYPE.length()).trim();
                 return StringUtils.isEmpty(authHeaderValue);
             }
