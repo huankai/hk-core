@@ -8,6 +8,7 @@ import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +21,8 @@ import org.springframework.data.solr.core.SolrTemplate;
  * @date: 2018-07-04 12:24
  */
 @Configuration
-@ConditionalOnClass(SolrDeltaImportUtils.class)
-public class SolrDeltaImportAutoConfiguration {
+@ConditionalOnClass(SolrClient.class)
+public class SolrAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(SolrTemplate.class)
@@ -33,6 +34,7 @@ public class SolrDeltaImportAutoConfiguration {
      * Aspect 自动配置
      */
     @Configuration
+    @ConditionalOnProperty(prefix = "spring.data.solr", name = "enable-delta-import", havingValue = "true")
     @ConditionalOnClass(SolrDeltaImportUtils.class)
     @EnableConfigurationProperties(SolrProperties.class)
     static class SolrDeltaImportAspectAutoConfiguration {

@@ -11,7 +11,7 @@ com.hk.core.autoconfigure.exception.ExceptionHandlerConfiguration,\
 com.hk.core.autoconfigure.data.AuditorConfiguration,\
 com.hk.core.autoconfigure.data.jpa.JpaAutoConfiguration,\
 com.hk.core.autoconfigure.data.jdbc.JdbcAutoConfiguration,\
-com.hk.core.autoconfigure.solr.SolrDeltaImportAutoConfiguration,\
+com.hk.core.autoconfigure.solr.SolrAutoConfiguration,\
 com.hk.core.autoconfigure.message.websocket.WebSocketAutoConfiguration,\
 com.hk.core.autoconfigure.message.weixin.WeixinMessageAutoConfiguration,\
 com.hk.core.autoconfigure.weixin.WechatMpConfiguration,\

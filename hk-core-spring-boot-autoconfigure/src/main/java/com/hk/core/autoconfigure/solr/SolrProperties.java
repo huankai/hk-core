@@ -4,15 +4,22 @@ package com.hk.core.autoconfigure.solr;
  * @author: kevin
  * @date: 2018-07-04 12:22
  */
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class SolrProperties extends org.springframework.boot.autoconfigure.solr.SolrProperties {
 
     private String solrCore;
 
-    public String getSolrCore() {
-        return solrCore;
-    }
+    /**
+     * 是否使用Delta 导入，默认为false
+     */
+    @Builder.Default
+    protected boolean enableDeltaImport = false;
 
-    public void setSolrCore(String solrCore) {
-        this.solrCore = solrCore;
-    }
+
 }
