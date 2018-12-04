@@ -1,4 +1,4 @@
-package com.hk.core.autoconfigure.solr;
+package com.hk.core.autoconfigure.data.solr;
 
 /**
  * @author: kevin

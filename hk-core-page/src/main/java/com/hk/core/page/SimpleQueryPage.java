@@ -25,6 +25,9 @@ public class SimpleQueryPage<T> extends AbstractQueryPage<T> {
      */
     private int pageSize;
 
+    public SimpleQueryPage() {
+    }
+
     /**
      * @param query  query
      * @param result result

@@ -1,7 +1,8 @@
-package com.hk.core.autoconfigure.solr;
+package com.hk.core.autoconfigure.data.solr;
 
 import com.hk.core.solr.SolrDeltaImportUtils;
 import com.hk.core.solr.aop.SolrDeltaImportMethodInterceptor;
+import com.hk.core.solr.respoitory.BaseSolrRepositoryFactoryBean;
 import org.apache.solr.client.solrj.SolrClient;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
@@ -13,6 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 
 /**
  * Solr 增量导入自动配置
@@ -22,6 +24,7 @@ import org.springframework.data.solr.core.SolrTemplate;
  */
 @Configuration
 @ConditionalOnClass(SolrClient.class)
+@EnableSolrRepositories(basePackages = {"com.hk.**.repository.solr"}, repositoryFactoryBeanClass = BaseSolrRepositoryFactoryBean.class)
 public class SolrAutoConfiguration {
 
     @Bean

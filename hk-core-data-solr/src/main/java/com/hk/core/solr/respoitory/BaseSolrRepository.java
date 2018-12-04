@@ -1,16 +1,24 @@
 package com.hk.core.solr.respoitory;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.solr.core.SolrTemplate;
+import com.hk.core.page.QueryModel;
+import com.hk.core.page.QueryPage;
+import com.hk.core.query.Order;
+import com.hk.core.solr.query.Condition;
+import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.solr.repository.SolrCrudRepository;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: kevin
  * @date: 2018-07-04 13:01
  */
-public abstract class BaseSolrRepository {
+@NoRepositoryBean
+public interface BaseSolrRepository<T extends Serializable, ID extends Serializable> extends SolrCrudRepository<T, ID> {
 
-    @Autowired
-    protected SolrTemplate solrTemplate;
+    QueryPage<T> findByPage(QueryModel<T> queryModel);
 
+    QueryPage<T> findByPage(List<Condition> conditions, int pageIndex, int pageSize, Order... orders);
 
 }

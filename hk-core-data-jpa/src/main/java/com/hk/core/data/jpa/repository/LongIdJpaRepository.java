@@ -9,6 +9,6 @@ import org.springframework.data.repository.NoRepositoryBean;
  * @param <T>
  */
 @NoRepositoryBean
-public interface LongIdJpaRepository<T extends Persistable<Long>> extends JpaBaseRepository<T, Long> {
+public interface LongIdJpaRepository<T extends Persistable<Long>> extends BaseJpaRepository<T, Long> {
 
 }

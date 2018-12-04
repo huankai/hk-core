@@ -21,7 +21,7 @@ import java.util.List;
  * @author: kevin
  */
 @NoRepositoryBean
-public interface JpaBaseRepository<T extends Persistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {
+public interface BaseJpaRepository<T extends Persistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {
 
     /**
      * 查询排序

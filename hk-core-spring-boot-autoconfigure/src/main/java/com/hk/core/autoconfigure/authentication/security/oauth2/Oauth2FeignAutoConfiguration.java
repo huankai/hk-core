@@ -1,6 +1,7 @@
 package com.hk.core.autoconfigure.authentication.security.oauth2;
 
 import feign.RequestInterceptor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.security.oauth2.client.feign.OAuth2FeignRequestInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
  */
 @Configuration
 @ConditionalOnClass(RequestInterceptor.class)
+@ConditionalOnBean(OAuth2ClientContext.class)
 public class Oauth2FeignAutoConfiguration {
 
     @Bean

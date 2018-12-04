@@ -1,10 +1,9 @@
-package com.hk.core.data.jdbc;
+package com.hk.core.data.jdbc.repository;
 
-import com.hk.core.data.jdbc.repository.BaseJdbcRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jdbc.core.DataAccessStrategy;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
-import org.springframework.data.jdbc.repository.support.*;
+import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory;
 import org.springframework.data.relational.core.conversion.RelationalConverter;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 import org.springframework.data.repository.core.RepositoryInformation;

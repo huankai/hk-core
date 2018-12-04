@@ -2,7 +2,7 @@ package com.hk.core.service.jpa.impl;
 
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
-import com.hk.core.data.jpa.repository.JpaBaseRepository;
+import com.hk.core.data.jpa.repository.BaseJpaRepository;
 import com.hk.core.page.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Serializable> extends BaseServiceImpl<T, ID> implements JpaBaseService<T, ID> {
 
     @Override
-    protected abstract JpaBaseRepository<T, ID> getBaseRepository();
+    protected abstract BaseJpaRepository<T, ID> getBaseRepository();
 
     private Class<T> domainClass;
 

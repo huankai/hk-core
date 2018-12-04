@@ -8,7 +8,6 @@ import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.Contants;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
-import com.hk.core.authentication.api.SecurityContextUtils;
 import com.hk.core.web.ServletContextHolder;
 import com.hk.core.web.interceptors.GlobalPropertyInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +25,9 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,6 +67,7 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
                         .json()
                         .defaultUseWrapper(true)
                         .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                        .modules(JsonUtils.getJavaTimeModule())
                         .build();
                 JsonUtils.configure(objectMapper);
                 mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
@@ -99,15 +96,7 @@ public class WebMVCAutoConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new HandlerInterceptorAdapter() {
-            @Override
-            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-                if (SecurityContextUtils.isAuthenticated()) {
-                    request.setAttribute("currentUser", SecurityContextUtils.getPrincipal());
-                }
-                return true;
-            }
-        }).addPathPatterns("/**");
+        registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
         if (CollectionUtils.isNotEmpty(requestProperty.getProperty())) {
             GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
             propertyInterceptor.setProperty(requestProperty.getProperty());
