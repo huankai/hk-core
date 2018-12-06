@@ -1,6 +1,7 @@
 package com.hk.core.page;
 
 
+import com.hk.core.query.QueryModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,6 +25,9 @@ public class SimpleQueryPage<T> extends AbstractQueryPage<T> {
      * 每页显示记录数
      */
     private int pageSize;
+
+    public SimpleQueryPage() {
+    }
 
     /**
      * @param query  query

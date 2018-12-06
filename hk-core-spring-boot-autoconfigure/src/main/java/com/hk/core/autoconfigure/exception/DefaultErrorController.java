@@ -1,6 +1,6 @@
 package com.hk.core.autoconfigure.exception;
 
-import com.hk.core.web.JsonResult;
+import com.hk.commons.JsonResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.security.core.AuthenticationException;

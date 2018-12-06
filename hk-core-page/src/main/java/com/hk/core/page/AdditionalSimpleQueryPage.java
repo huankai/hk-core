@@ -1,5 +1,6 @@
 package com.hk.core.page;
 
+import com.hk.core.query.QueryModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +20,9 @@ public class AdditionalSimpleQueryPage<T> extends SimpleQueryPage<T> {
      * 其它扩展参数
      */
     private Object additional;
+
+    public AdditionalSimpleQueryPage() {
+    }
 
     public AdditionalSimpleQueryPage(QueryModel<?> query, ListResult<T> result, Object additional) {
         this(query, result.getResult(), result.getTotalRowCount(), additional);

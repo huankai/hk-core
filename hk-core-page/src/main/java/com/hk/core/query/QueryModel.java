@@ -1,7 +1,6 @@
-package com.hk.core.page;
+package com.hk.core.query;
 
 
-import com.hk.core.query.Order;
 import lombok.Data;
 
 import java.util.ArrayList;

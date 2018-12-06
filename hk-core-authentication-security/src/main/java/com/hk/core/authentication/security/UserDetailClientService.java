@@ -13,7 +13,7 @@ public interface UserDetailClientService extends UserDetailsService {
 
     @Override
     default UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AssertUtils.notBlank(username, "username must not be null");
+        AssertUtils.notBlank(username, "用户名不能为空");
         return loadUserByLoginUsername(username);
     }
 

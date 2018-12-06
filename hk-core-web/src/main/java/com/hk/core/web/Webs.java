@@ -1,5 +1,6 @@
 package com.hk.core.web;
 
+import com.hk.commons.JsonResult;
 import com.hk.commons.util.Contants;
 import com.hk.commons.util.FileUtils;
 import com.hk.commons.util.JsonUtils;
@@ -334,4 +335,8 @@ public abstract class Webs {
         }
     }
 
+    public static String getClearContextPathUri(HttpServletRequest request) {
+        String contextPath = request.getContextPath();
+        return StringUtils.isEmpty(contextPath) ? request.getRequestURI() : StringUtils.substring(request.getRequestURI(), contextPath.length());
+    }
 }

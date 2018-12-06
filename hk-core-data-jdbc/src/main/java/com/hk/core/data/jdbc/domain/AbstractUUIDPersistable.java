@@ -1,6 +1,7 @@
 package com.hk.core.data.jdbc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.data.jdbc.annotations.NonUpdate;
 import lombok.Setter;
@@ -39,6 +40,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
     }
 
     public final void generateId(String id) {
+        AssertUtils.state(!isNew(), "id已存在,this id :" + this.id + ",args id:" + id);
         isNew = true;
         this.id = id;
     }

@@ -1,9 +1,9 @@
 package com.hk.core.authentication.security.handler.login;
 
+import com.hk.commons.JsonResult;
 import com.hk.commons.util.AssertUtils;
 import com.hk.core.authentication.api.LoginResponseType;
 import com.hk.core.authentication.security.SecurityUserPrincipal;
-import com.hk.core.web.JsonResult;
 import com.hk.core.web.Webs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

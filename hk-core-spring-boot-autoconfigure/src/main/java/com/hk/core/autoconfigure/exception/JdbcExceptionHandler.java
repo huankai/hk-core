@@ -1,7 +1,7 @@
 package com.hk.core.autoconfigure.exception;
 
 import com.hk.core.data.jdbc.exception.EntityNotFoundException;
-import com.hk.core.web.JsonResult;
+import com.hk.commons.JsonResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

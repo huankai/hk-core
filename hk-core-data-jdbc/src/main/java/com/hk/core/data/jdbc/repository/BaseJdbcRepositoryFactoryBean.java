@@ -1,4 +1,4 @@
-package com.hk.core.data.jdbc;
+package com.hk.core.data.jdbc.repository;
 
 import com.hk.core.data.jdbc.core.CustomDataAccessStrategy;
 import com.hk.core.data.jdbc.core.SqlGeneratorSource;
