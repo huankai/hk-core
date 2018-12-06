@@ -32,6 +32,11 @@
             <artifactId>hk-core-message-api</artifactId>
         </dependency>
         <dependency>
+        	<groupId>com.hk</groupId>
+        	<artifactId>hk-core-web</artifactId>
+        	<optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-authentication-api</artifactId>
         </dependency>

@@ -3,7 +3,7 @@ package com.hk.core.service.jdbc;
 import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.page.ListResult;
-import com.hk.core.page.QueryModel;
+import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.service.SelectService;

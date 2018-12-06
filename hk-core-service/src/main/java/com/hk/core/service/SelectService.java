@@ -1,7 +1,7 @@
 package com.hk.core.service;
 
 import com.hk.commons.util.ArrayUtils;
-import com.hk.core.page.QueryModel;
+import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import org.springframework.data.domain.Persistable;

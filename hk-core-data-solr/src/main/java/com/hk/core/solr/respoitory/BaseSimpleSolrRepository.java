@@ -3,7 +3,7 @@ package com.hk.core.solr.respoitory;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.data.commons.utils.OrderUtils;
-import com.hk.core.page.QueryModel;
+import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;

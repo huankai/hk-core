@@ -34,6 +34,7 @@ public class CacheRedisAutoConfiguration {
                 .json()
                 .defaultUseWrapper(true)
                 .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                .modules(JsonUtils.getJavaTimeModule())
                 .build();
         JsonUtils.configure(objectMapper);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);

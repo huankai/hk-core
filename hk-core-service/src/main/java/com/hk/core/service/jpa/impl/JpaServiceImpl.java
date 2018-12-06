@@ -3,7 +3,7 @@ package com.hk.core.service.jpa.impl;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.data.jpa.repository.BaseJpaRepository;
-import com.hk.core.page.QueryModel;
+import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.service.impl.BaseServiceImpl;
