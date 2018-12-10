@@ -12,14 +12,14 @@ public class DefaultValidateCodeGenerator implements ValidateCodeGenerator<Valid
     /**
      * 生成长度
      */
-    private byte codeLength;
+    private int codeLength;
 
     /**
      * 过期时间
      */
     private int expireIn;
 
-    public DefaultValidateCodeGenerator(byte codeLength, int expireIn) {
+    public DefaultValidateCodeGenerator(int codeLength, int expireIn) {
         AssertUtils.isTrue(codeLength > 0, "生成的验证码长度必须大于0");
         this.codeLength = codeLength;
         this.expireIn = expireIn;

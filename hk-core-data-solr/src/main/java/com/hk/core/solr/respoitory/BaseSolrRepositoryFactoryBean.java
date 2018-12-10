@@ -39,7 +39,7 @@ public class BaseSolrRepositoryFactoryBean<T extends BaseSolrRepository<S, ID>, 
      *
      * @param repositoryInterface must not be {@literal null}.
      */
-    public BaseSolrRepositoryFactoryBean(Class repositoryInterface) {
+    public BaseSolrRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
     }
 

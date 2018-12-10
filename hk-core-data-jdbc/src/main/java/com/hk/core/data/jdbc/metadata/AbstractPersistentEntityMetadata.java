@@ -22,13 +22,13 @@ public abstract class AbstractPersistentEntityMetadata implements PersistentEnti
     }
 
     @Override
-    public PersistentEntityInfo getPersistentEntityInfo(PersistentEntity<?, ? extends PersistentProperty> persistentEntity) {
+    public PersistentEntityInfo getPersistentEntityInfo(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity) {
         PersistentEntityInfo entityInfo = cache.get(persistentEntity.getType().getName(), PersistentEntityInfo.class);
         if (null == entityInfo) {
             entityInfo = new PersistentEntityInfo();
             PersistentProperty<?> idProperty = persistentEntity.getRequiredIdProperty();
             entityInfo.setIdField(idProperty.getName());
-            Iterable<? extends PersistentProperty> persistentProperties = getPersistentProperties(persistentEntity);
+            Iterable<? extends PersistentProperty<?>> persistentProperties = getPersistentProperties(persistentEntity);
             Map<String, String> propertyColumns = new LinkedHashMap<>();
             propertyColumns.put(idProperty.getName(), idProperty.getName());
             persistentProperties.forEach(item -> propertyColumns.put(item.getName(), getColumnName(item)));
@@ -42,9 +42,9 @@ public abstract class AbstractPersistentEntityMetadata implements PersistentEnti
         return entityInfo;
     }
 
-    protected abstract String getTableName(PersistentEntity<?, ? extends PersistentProperty> persistentEntity);
+    protected abstract String getTableName(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity);
 
     protected abstract String getColumnName(PersistentProperty<?> persistentProperty);
 
-    protected abstract Iterable<? extends PersistentProperty> getPersistentProperties(PersistentEntity<?, ? extends PersistentProperty> persistentEntity);
+    protected abstract Iterable<? extends PersistentProperty<?>> getPersistentProperties(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity);
 }

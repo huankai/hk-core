@@ -13,7 +13,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class SpringJdbcPersistentEntityMetadata extends AbstractPersistentEntityMetadata {
 
     @Override
-    protected String getTableName(PersistentEntity<?, ? extends PersistentProperty> persistentEntity) {
+    protected String getTableName(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity) {
         Table table = persistentEntity.findAnnotation(Table.class);
         return null != table ? table.value() : StringUtils.substringAfterLast(persistentEntity.getName(), ".").toLowerCase();
     }
@@ -24,7 +24,7 @@ public class SpringJdbcPersistentEntityMetadata extends AbstractPersistentEntity
     }
 
     @Override
-    protected Iterable<? extends PersistentProperty> getPersistentProperties(PersistentEntity<?, ? extends PersistentProperty> persistentEntity) {
+    protected Iterable<? extends PersistentProperty<?>> getPersistentProperties(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity) {
         return persistentEntity.getPersistentProperties(Column.class);
     }
 }

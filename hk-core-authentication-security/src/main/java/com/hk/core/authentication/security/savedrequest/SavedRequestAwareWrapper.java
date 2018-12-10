@@ -84,14 +84,12 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Enumeration getHeaderNames() {
+    public Enumeration<String> getHeaderNames() {
         return new Enumerator<>(savedRequest.getHeaderNames());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Enumeration getHeaders(String name) {
+    public Enumeration<String> getHeaders(String name) {
         return new Enumerator<>(savedRequest.getHeaderValues(name));
     }
 
@@ -108,8 +106,7 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Enumeration getLocales() {
+    public Enumeration<Locale> getLocales() {
         List<Locale> locales = savedRequest.getLocales();
         if (CollectionUtils.isEmpty(locales)) {
             // Fall back to default locale
@@ -145,8 +142,7 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Map getParameterMap() {
+    public Map<String, String[]> getParameterMap() {
         Set<String> names = getCombinedParameterNames();
         Map<String, String[]> parameterMap = new HashMap<>(names.size());
         for (String name : names) {
@@ -155,7 +151,6 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
         return parameterMap;
     }
 
-    @SuppressWarnings("unchecked")
     private Set<String> getCombinedParameterNames() {
         Set<String> names = new HashSet<>();
         names.addAll(super.getParameterMap().keySet());
@@ -164,9 +159,8 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Enumeration getParameterNames() {
-        return new Enumerator(getCombinedParameterNames());
+    public Enumeration<String> getParameterNames() {
+        return new Enumerator<>(getCombinedParameterNames());
     }
 
     @Override

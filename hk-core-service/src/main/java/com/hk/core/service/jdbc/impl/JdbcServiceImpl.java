@@ -45,6 +45,11 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
+    public T getOne(T t) {
+        return getBaseRepository().getOne(t);
+    }
+
+    @Override
     public Optional<T> findOne(T t) {
         return getBaseRepository().findOne(t);
     }
@@ -52,6 +57,11 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     public Optional<T> findOne(CompositeCondition condition) {
         return getBaseRepository().findOne(condition);
+    }
+
+    @Override
+    public T getOne(CompositeCondition condition) {
+        return getBaseRepository().getOne(condition);
     }
 
     @Override

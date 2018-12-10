@@ -128,7 +128,7 @@ public class DateRangeCondition implements Condition {
                 end = this.end;
                 break;
         }
-        RangeCondition<Calendar> condition = new RangeCondition<Calendar>(field, start, end, true, false);
+        RangeCondition<Calendar> condition = new RangeCondition<>(field, start, end, true, false);
         if (end != null) {
             end.add(Calendar.DATE, 1);
             condition.setEnd(end);

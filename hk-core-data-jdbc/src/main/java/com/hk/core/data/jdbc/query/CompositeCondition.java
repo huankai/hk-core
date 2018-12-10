@@ -26,8 +26,8 @@ public class CompositeCondition implements Condition {
     /**
      *
      */
-    public CompositeCondition() {
-        this.andOr = AndOr.AND;
+    public CompositeCondition(Condition... conditions) {
+        this(AndOr.AND, conditions);
     }
 
     /**
@@ -37,6 +37,15 @@ public class CompositeCondition implements Condition {
     public CompositeCondition(AndOr andOr, List<Condition> conditions) {
         this.andOr = andOr;
         this.conditions = conditions;
+    }
+
+    /**
+     * @param andOr      andOr
+     * @param conditions conditions
+     */
+    public CompositeCondition(AndOr andOr, Condition... conditions) {
+        this.andOr = andOr;
+        CollectionUtils.addAllNotNull(this.conditions, conditions);
     }
 
     /**
@@ -95,9 +104,7 @@ public class CompositeCondition implements Condition {
                 String sql = c.toSqlString(parameters);
                 if (StringUtils.isNotEmpty(sql)) {
                     if (index++ > 0) {
-                        sb.append(" ");
-                        sb.append(andOr.toSqlString());
-                        sb.append(" ");
+                        sb.append(" ").append(andOr.toSqlString()).append(" ");
                     }
                     sb.append(sql);
                 }

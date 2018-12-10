@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 public class GateWaySavedRequest extends DefaultSavedRequest {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5777948680216763455L;
+	
+	/**
      *
      */
     private final String gateWayUrl;

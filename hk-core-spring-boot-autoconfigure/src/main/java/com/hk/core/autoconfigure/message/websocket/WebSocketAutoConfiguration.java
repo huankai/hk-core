@@ -2,14 +2,12 @@ package com.hk.core.autoconfigure.message.websocket;
 
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.api.SecurityContext;
 import com.hk.message.websocket.WebsocketMessager;
 import com.hk.message.websocket.handlers.CheckLoginHandshakeInterceptor;
 import com.hk.message.websocket.handlers.PrincipalHandshakeHandler;
 import com.hk.message.websocket.publish.WebSocketMessagePublish;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

@@ -22,7 +22,7 @@ public interface InsertService<T extends Persistable<ID>, ID extends Serializabl
      * 实体批量保存
      *
      * @param entities entities
-     * @return Collection
+     * @return {@link Iterable}
      */
     Iterable<T> batchInsert(Iterable<T> entities);
 

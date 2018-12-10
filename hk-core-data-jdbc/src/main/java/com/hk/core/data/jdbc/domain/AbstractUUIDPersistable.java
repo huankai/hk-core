@@ -16,6 +16,7 @@ import java.io.Serializable;
  * @author: kevin
  * @date: 2018-10-10 16:32
  */
+@SuppressWarnings("serial")
 public abstract class AbstractUUIDPersistable implements Persistable<String>, Serializable {
 
     @Id
@@ -40,7 +41,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
     }
 
     public final void generateId(String id) {
-        AssertUtils.state(!isNew(), "id已存在,this id :" + this.id + ",args id:" + id);
+        AssertUtils.state(isNew(), "id已存在,this id :" + this.id + ",args id:" + id);
         isNew = true;
         this.id = id;
     }

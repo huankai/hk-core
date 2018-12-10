@@ -11,6 +11,7 @@ import lombok.Data;
  */
 @Data
 @Builder
+@SuppressWarnings("serial")
 public class OnLineUserMessage implements Message {
 
     private int onLineUser;

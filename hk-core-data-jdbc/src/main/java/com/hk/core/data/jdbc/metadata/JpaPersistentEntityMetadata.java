@@ -17,7 +17,7 @@ import javax.persistence.Table;
 public class JpaPersistentEntityMetadata extends AbstractPersistentEntityMetadata {
 
     @Override
-    protected String getTableName(PersistentEntity<?, ? extends PersistentProperty> persistentEntity) {
+    protected String getTableName(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity) {
         Table table = persistentEntity.findAnnotation(Table.class);
         if (table != null) {
             return table.name();
@@ -35,7 +35,7 @@ public class JpaPersistentEntityMetadata extends AbstractPersistentEntityMetadat
     }
 
     @Override
-    protected Iterable<? extends PersistentProperty> getPersistentProperties(PersistentEntity<?, ? extends PersistentProperty> persistentEntity) {
+    protected Iterable<? extends PersistentProperty<?>> getPersistentProperties(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity) {
         return persistentEntity.getPersistentProperties(Column.class);
     }
 
