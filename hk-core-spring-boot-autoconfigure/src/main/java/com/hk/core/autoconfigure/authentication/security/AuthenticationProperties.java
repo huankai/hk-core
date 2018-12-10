@@ -233,7 +233,7 @@ public class AuthenticationProperties {
         /**
          * 生成的验证码长度
          */
-        private byte codeLength = 4;
+        private int codeLength = 4;
 
         /**
          * 验证码过期时间,单位:秒

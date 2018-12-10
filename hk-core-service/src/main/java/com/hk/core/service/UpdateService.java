@@ -32,7 +32,7 @@ public interface UpdateService<T extends Persistable<ID>, ID extends Serializabl
      * 批量更新
      *
      * @param entities entities
-     * @return Iterable
+     * @return {@link List}
      */
     default List<T> batchUpdate(Iterable<T> entities) {
         List<T> result = new ArrayList<>();

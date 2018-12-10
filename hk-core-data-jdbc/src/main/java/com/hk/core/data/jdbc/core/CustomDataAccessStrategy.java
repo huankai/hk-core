@@ -37,9 +37,9 @@ import java.util.stream.StreamSupport;
 public class CustomDataAccessStrategy implements DataAccessStrategy {
 
 
-    private static final String ENTITY_NEW_AFTER_INSERT = "Entity [%s] still 'new' after insert. Please set either"
-            + " the id property in a BeforeInsert event handler, or ensure the database creates a value and your "
-            + "JDBC driver returns it.";
+//    private static final String ENTITY_NEW_AFTER_INSERT = "Entity [%s] still 'new' after insert. Please set either"
+//            + " the id property in a BeforeInsert event handler, or ensure the database creates a value and your "
+//            + "JDBC driver returns it.";
 
     @NonNull
     private final SqlGeneratorSource sqlGeneratorSource;

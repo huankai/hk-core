@@ -17,7 +17,7 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
 
     /**
      * @param id id
-     * @return Optional
+     * @return {@link Optional}
      */
     Optional<T> findById(ID id);
 
@@ -25,19 +25,19 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * 查询所有
      *
      * @param orders 排序
-     * @return
+     * @return {@link Iterable}
      */
     Iterable<T> findAll(Order... orders);
 
     /**
      * @param ids
-     * @return Collection
+     * @return {@link Iterable}
      */
     Iterable<T> findByIds(Iterable<ID> ids);
 
     /**
      * @param ids ids
-     * @return Collection
+     * @return {@link Iterable}
      */
     @SuppressWarnings("unchecked")
     default Iterable<T> findByIds(ID... ids) {
@@ -48,7 +48,7 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      * 分页查询
      *
      * @param query 查询参数
-     * @return 查询结果
+     * @return {@link QueryPage}
      */
     QueryPage<T> queryForPage(QueryModel<T> query);
 

@@ -28,16 +28,20 @@ public interface DeleteService<T extends Persistable<ID>, ID extends Serializabl
     /**
      * @param ids ids
      */
-    default void deleteByIds(ID... ids) {
+    default void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
         deleteByIds(ArrayUtils.asArrayList(ids));
     }
 
     /**
+     * 会根据 实体 id 删除 ， 实体id 不能为空
+     *
      * @param entity entity
      */
     void delete(T entity);
 
     /**
+     * 会根据 实体 id 删除，实体id 不能为空
+     *
      * @param entities entities
      */
     void delete(Iterable<T> entities);

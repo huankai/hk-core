@@ -9,5 +9,5 @@ import org.springframework.data.mapping.PersistentProperty;
  */
 public interface PersistentEntityMetadata {
 
-    PersistentEntityInfo getPersistentEntityInfo(PersistentEntity<?, ? extends PersistentProperty> persistentEntity);
+    PersistentEntityInfo getPersistentEntityInfo(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity);
 }

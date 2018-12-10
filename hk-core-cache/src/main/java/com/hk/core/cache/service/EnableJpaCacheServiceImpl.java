@@ -118,7 +118,7 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(PK... pks) {
+    public void deleteByIds(@SuppressWarnings("unchecked") PK... pks) {
         super.deleteByIds(pks);
     }
 
@@ -128,8 +128,8 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
         return super.batchUpdate(entities);
     }
 
-
-    protected final EnableJpaCacheServiceImpl<T, PK> getCurrentProxy() {
+    @SuppressWarnings("unchecked")
+	protected final EnableJpaCacheServiceImpl<T, PK> getCurrentProxy() {
         return (EnableJpaCacheServiceImpl<T, PK>) AopContext.currentProxy();
     }
 

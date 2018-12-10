@@ -38,7 +38,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 
     @Override
     public String create(ServletWebRequest request) throws Exception {
-        C validateCode = doCreate(request);
+        C validateCode = doCreate();
         saveValidateCode(validateCode, request);
         send(validateCode, request);
         return validateCode.getCode();
@@ -79,10 +79,9 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     /**
      * 创建验证码
      *
-     * @param request request
      * @return 生成的验证码
      */
-    protected C doCreate(ServletWebRequest request) {
+    protected C doCreate() {
         return validateCodeGenerator.generate();
     }
 

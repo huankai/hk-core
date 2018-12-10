@@ -16,14 +16,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DeleteArguments {
 
-    /**
-     * 要删除的表名
-     */
-    private String from;
+	/**
+	 * 要删除的表名
+	 */
+	private String from;
 
-    /**
-     * 删除的条件
-     * where conditions
-     */
-    private CompositeCondition conditions = new CompositeCondition();
+	/**
+	 * 删除的条件 where conditions
+	 */
+	private CompositeCondition conditions = new CompositeCondition();
 }

@@ -5,7 +5,6 @@ package com.hk.core.autoconfigure.data.solr;
  * @date: 2018-07-04 12:22
  */
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,13 +12,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SolrProperties extends org.springframework.boot.autoconfigure.solr.SolrProperties {
 
-    private String solrCore;
+	private String solrCore;
 
-    /**
-     * 是否使用Delta 导入，默认为false
-     */
-    @Builder.Default
-    protected boolean enableDeltaImport = false;
-
+	/**
+	 * 是否使用Delta 导入，默认为false
+	 */
+	protected boolean enableDeltaImport;
 
 }

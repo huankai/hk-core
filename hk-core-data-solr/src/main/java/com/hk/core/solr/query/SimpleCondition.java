@@ -32,7 +32,8 @@ public class SimpleCondition implements Condition {
         this.value = value;
     }
 
-    @Override
+	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
     public Criteria toSolrCriteria() {
         if (StringUtils.isEmpty(field) || null == value) {
             return null;

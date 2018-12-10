@@ -33,7 +33,7 @@ import java.util.Optional;
 public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> implements JdbcRepository<T, ID> {
 
     @NonNull
-    private final PersistentEntity<T, ? extends PersistentProperty> entity;
+    private final PersistentEntity<T, ? extends PersistentProperty<?>> entity;
 
     private Lazy<JdbcSession> jdbcSession = Lazy.of(() -> SpringContextHolder.getBean(JdbcSession.class));
 
@@ -104,6 +104,8 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         fillSelectArguments(selectArguments, persistentEntityInfo, query.getParam());
         selectArguments.setCountField(persistentEntityInfo.getIdField());
         selectArguments.setOrders(query.getOrders());
+        selectArguments.setStartRowIndex(query.getStartRowIndex());
+        selectArguments.setPageSize(query.getPageSize());
         return jdbcSession.get().queryForPage(selectArguments, entity.getType());
     }
 

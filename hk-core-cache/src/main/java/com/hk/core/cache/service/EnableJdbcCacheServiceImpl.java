@@ -119,7 +119,7 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(PK... pks) {
+    public void deleteByIds(@SuppressWarnings("unchecked") PK... pks) {
         super.deleteByIds(pks);
     }
 

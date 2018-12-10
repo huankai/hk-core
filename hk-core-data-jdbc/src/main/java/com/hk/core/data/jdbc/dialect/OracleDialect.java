@@ -10,7 +10,7 @@ public class OracleDialect implements Dialect {
 
     @Override
     public String getLimitSql(String sql, int offset, int rows) {
-        return getLimitString(sql, offset, Integer.toString(offset), Integer.toString(rows));
+        return getLimitString(sql, offset, rows);
     }
 
     /**
@@ -21,16 +21,14 @@ public class OracleDialect implements Dialect {
      * select * from user limit :offset,:limit
      * </pre>
      *
-     * @param sql               实际SQL语句
-     * @param offset            分页开始纪录条数
-     * @param offsetPlaceholder 分页开始纪录条数－占位符号
-     * @param limitPlaceholder  分页纪录条数占位符号
+     * @param sql    实际SQL语句
+     * @param offset 分页开始纪录条数
      * @return 包含占位符的分页sql
      */
-    private String getLimitString(String sql, int offset, String offsetPlaceholder, String limitPlaceholder) {
+    private String getLimitString(String sql, int offset, int rows) {
         sql = sql.trim();
         boolean isForUpdate = false;
-        if (StringUtils.endsWithIgnoreCase(sql.toLowerCase(), " for update")) {
+        if (StringUtils.endsWithIgnoreCase(sql, " FOR UPDATE")) {
             sql = sql.substring(0, sql.length() - 11);
             isForUpdate = true;
         }
@@ -43,10 +41,10 @@ public class OracleDialect implements Dialect {
         }
         pagingSelect.append(sql);
         if (offset > 0) {
-            String endString = offsetPlaceholder + "+" + limitPlaceholder;
-            pagingSelect.append(" ) row_ WHERE rownum <= ").append(endString).append(") WHERE rownum_ > ").append(offsetPlaceholder);
+            String endString = offset + "+" + rows;
+            pagingSelect.append(" ) row_ WHERE rownum <= ").append(endString).append(") WHERE rownum_ > ").append(offset);
         } else {
-            pagingSelect.append(" ) WHERE rownum <= ").append(limitPlaceholder);
+            pagingSelect.append(" ) WHERE rownum <= ").append(rows);
         }
 
         if (isForUpdate) {

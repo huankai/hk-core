@@ -25,6 +25,12 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
         return t.isNew() ? insert(t) : updateById(t);
     }
 
+    /**
+     * 保存或更新
+     *
+     * @param entities entitys
+     * @return {@link List}
+     */
     default List<T> insertOrUpdate(Iterable<T> entities) {
         List<T> result = new ArrayList<>();
         entities.forEach(entity -> result.add(insertOrUpdate(entity)));

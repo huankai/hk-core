@@ -227,10 +227,9 @@ public final class JdbcSession {
         Collection<String> groupBys = arguments.getGroupBy();
         if (CollectionUtils.isNotEmpty(groupBys)) {
             String groupBySql = groupBys.stream().collect(Collectors.joining(StringUtils.COMMA_SEPARATE));
-            sql.append(" GROUP BY ");
-            sql.append(groupBySql);
-            countSql.append(" GROUP BY ");
-            countSql.append(groupBySql);
+            sql.append(" GROUP BY ").append(groupBySql);
+            countSql.append(" GROUP BY ").append(groupBySql).append(") result_");
+            countSql.insert(0, "SELECT COUNT(*) FROM (");
         }
 
         List<Order> orders = arguments.getOrders();

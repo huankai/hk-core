@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
+@SuppressWarnings("serial")
 public class ChatMessage implements Message {
 
     private String formUser;

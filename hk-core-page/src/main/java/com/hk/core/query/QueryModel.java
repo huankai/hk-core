@@ -4,6 +4,7 @@ package com.hk.core.query;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -55,6 +56,11 @@ public class QueryModel<T> {
      */
     public final int getPageSize() {
         return pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
+    }
+
+    public QueryModel<T> addOrders(Order... orders) {
+        this.orders.addAll(Arrays.asList(orders));
+        return this;
     }
 
 

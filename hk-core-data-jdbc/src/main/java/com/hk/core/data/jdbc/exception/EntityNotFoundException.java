@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
  * @author: kevin
  * @date: 2018-10-23 11:36
  */
+@SuppressWarnings("serial")
 public class EntityNotFoundException extends DataAccessException {
 
     public EntityNotFoundException() {
