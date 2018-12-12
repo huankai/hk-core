@@ -57,6 +57,9 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
 
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationPair);
+//        RedisCacheManager redisCacheManager = new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
+//        redisCacheManager.setTransactionAware(true);
+//        return redisCacheManager;
         return new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
     }
 

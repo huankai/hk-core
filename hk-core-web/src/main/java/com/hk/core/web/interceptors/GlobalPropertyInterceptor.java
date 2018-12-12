@@ -41,7 +41,7 @@ public class GlobalPropertyInterceptor extends HandlerInterceptorAdapter {
      */
     @ConfigurationProperties(prefix = "hk.request")
     public static class RequestPropertyProperties {
-
+    	
         private Map<String, Object> property;
 
         public Map<String, Object> getProperty() {
