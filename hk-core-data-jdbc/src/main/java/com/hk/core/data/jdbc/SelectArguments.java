@@ -43,7 +43,6 @@ public class SelectArguments extends DeleteArguments {
      */
     private List<Order> orders = new ArrayList<>();
 
-
     /**
      * 分页参数
      */

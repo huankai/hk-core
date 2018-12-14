@@ -10,7 +10,6 @@ import com.hk.core.data.jdbc.metadata.PersistentEntityInfo;
 import com.hk.core.data.jdbc.metadata.PersistentEntityMetadata;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.query.SimpleCondition;
-import com.hk.core.page.ListResult;
 import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;

@@ -1,6 +1,7 @@
 package com.hk.core.page;
 
 
+import com.hk.commons.util.ListResult;
 import com.hk.core.query.QueryModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

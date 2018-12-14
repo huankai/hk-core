@@ -1,12 +1,12 @@
 package com.hk.core.data.jdbc.repository;
 
+import com.hk.commons.util.ListResult;
 import com.hk.core.data.jdbc.SelectArguments;
 import com.hk.core.data.jdbc.exception.EntityNotFoundException;
 import com.hk.core.data.jdbc.query.CompositeCondition;
-import com.hk.core.page.ListResult;
-import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
+import com.hk.core.query.QueryModel;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -27,7 +27,12 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
      */
     ListResult<T> findAll(T t, Order... orders);
 
-
+    /**
+     * findOne
+     *
+     * @param condition condition
+     * @return T
+     */
     Optional<T> findOne(CompositeCondition condition);
 
     /**
@@ -52,7 +57,10 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
         return findOne(t).orElseThrow(EntityNotFoundException::new);
     }
 
-
+    /**
+     * @param t t
+     * @return T
+     */
     Optional<T> findOne(T t);
 
     /**
@@ -106,7 +114,7 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
     ListResult<T> findAll(CompositeCondition condition, Collection<String> groupBys, Order... orders);
 
     /**
-     * 根据条件删除，如果一个条件也没有，可能会删除所有
+     * 根据条件删除，如果一个条件也没有，会删除所有
      *
      * @param conditions conditions
      */

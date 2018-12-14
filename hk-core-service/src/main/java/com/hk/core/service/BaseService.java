@@ -17,10 +17,20 @@ import java.util.List;
 public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
         extends InsertService<T, ID>, UpdateService<T, ID>, DeleteService<T, ID>, SelectService<T, ID> {
 
+	/**
+	 * 保存或更新，在更新时，只更新不为 null 的字段
+	 * @param t T
+	 * @return T
+	 */
     default T insertOrUpdateSelective(T t) {
         return t.isNew() ? insert(t) : updateByIdSelective(t);
     }
 
+    /**
+	 * 保存或更新，在更新时，更新不为 null 的字段
+	 * @param t T
+	 * @return T
+	 */
     default T insertOrUpdate(T t) {
         return t.isNew() ? insert(t) : updateById(t);
     }

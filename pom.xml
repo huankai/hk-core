@@ -25,6 +25,7 @@
         <module>hk-core-data-solr</module>
         <module>hk-core-authentication-api</module>
         <module>hk-core-authentication-security</module>
+        <module>hk-core-authentication-shiro</module>
         <module>hk-core-authentication-weixin-mp</module>
         <module>hk-core-authentication-security-oauth2</module>
         <module>hk-core-service</module>
@@ -47,12 +48,12 @@
         <repository>
             <id>nexus</id>
             <name>Releases</name>
-            <url>http://47.107.245.220:8081/repository/maven-releases</url>
+            <url>http://182.61.40.18:8081/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
             <id>nexus</id>
             <name>Snapshot</name>
-            <url>http://47.107.245.220:8081/repository/maven-snapshots</url>
+            <url>http://182.61.40.18:8081/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 /**
  * <pre>
- * 此类实现 jpa 的审核功能
+ * 此类实现 jdbc 的审核功能
  * 所有继承于此类的实体都要有以下几个字段
  * created_by 创建记录人，新增时会保存
  * created_date 创建时间，新增时会保存

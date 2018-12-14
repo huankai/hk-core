@@ -1,13 +1,9 @@
 package com.hk.core.data.jdbc;
 
-import com.hk.commons.util.AssertUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.ConverterUtils;
-import com.hk.commons.util.StringUtils;
+import com.hk.commons.util.*;
 import com.hk.core.data.jdbc.core.HumpColumnMapRowMapper;
 import com.hk.core.data.jdbc.dialect.Dialect;
 import com.hk.core.data.jdbc.query.CompositeCondition;
-import com.hk.core.page.ListResult;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
@@ -61,6 +57,9 @@ public final class JdbcSession {
         return namedParameterJdbcTemplate.update(sql, arguments) > 0;
     }
 
+    public boolean batchUpdate(String sql, List<Object[]> args) {
+        return jdbcTemplate.batchUpdate(sql, args).length > 0;
+    }
 
     /**
      * todo 未完成
