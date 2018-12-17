@@ -11,8 +11,8 @@ import org.springframework.data.solr.core.query.SimpleQuery;
 import java.util.List;
 
 /**
- * @author: sjq-278
- * @date: 2018-12-03 17:25
+ * @author sjq-278
+ * @date 2018-12-03 17:25
  */
 public class CompositeCondition implements Condition {
 

@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
    *   邮箱登陆过滤器
  *
- * @author: kevin
- * @date: 2018-07-26 16:21
+ * @author kevin
+ * @date 2018-07-26 16:21
  */
 public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 

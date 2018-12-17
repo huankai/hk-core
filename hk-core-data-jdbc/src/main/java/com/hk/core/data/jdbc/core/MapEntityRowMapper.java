@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author: kevin
- * @date: 2018-10-26 13:41
+ * @author kevin
+ * @date 2018-10-26 13:41
  * @see org.springframework.data.jdbc.core.MapEntityRowMapper
  */
 class MapEntityRowMapper<T> implements RowMapper<Map.Entry<Object, T>> {

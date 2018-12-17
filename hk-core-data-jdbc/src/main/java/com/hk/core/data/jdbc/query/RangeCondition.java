@@ -7,8 +7,8 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 11:02
+ * @author kevin
+ * @date 2018-09-19 11:02
  */
 @Data
 public class RangeCondition<T> implements Condition {

@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author: huangkai
- * @date: 2018-9-23 13:09
+ * @author huangkai
+ * @date 2018-9-23 13:09
  */
 public class WeixinTemplateMessagePublish implements MessagePublish {
 

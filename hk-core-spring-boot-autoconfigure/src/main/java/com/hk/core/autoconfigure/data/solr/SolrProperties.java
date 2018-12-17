@@ -1,8 +1,8 @@
 package com.hk.core.autoconfigure.data.solr;
 
 /**
- * @author: kevin
- * @date: 2018-07-04 12:22
+ * @author kevin
+ * @date 2018-07-04 12:22
  */
 
 import lombok.Data;

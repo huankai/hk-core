@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 短信登陆过滤器
  *
- * @author: kevin
- * @date: 2018-07-26 16:21
+ * @author kevin
+ * @date 2018-07-26 16:21
  */
 public class SMSAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 

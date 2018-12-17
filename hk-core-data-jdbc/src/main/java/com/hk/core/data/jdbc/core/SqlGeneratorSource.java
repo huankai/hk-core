@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author: kevin
- * @date: 2018-10-26 13:27
+ * @author kevin
+ * @date 2018-10-26 13:27
  * @see org.springframework.data.jdbc.core.SqlGeneratorSource
  */
 @RequiredArgsConstructor

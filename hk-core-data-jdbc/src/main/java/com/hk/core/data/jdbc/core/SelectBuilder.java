@@ -8,8 +8,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @author: kevin
- * @date: 2018-10-26 13:30
+ * @author kevin
+ * @date 2018-10-26 13:30
  * @see org.springframework.data.jdbc.core.SelectBuilder
  */
 class SelectBuilder {

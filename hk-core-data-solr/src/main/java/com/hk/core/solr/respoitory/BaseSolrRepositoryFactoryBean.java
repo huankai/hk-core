@@ -13,8 +13,8 @@ import org.springframework.util.Assert;
 import java.io.Serializable;
 
 /**
- * @author: sjq-278
- * @date: 2018-12-03 13:09
+ * @author sjq-278
+ * @date 2018-12-03 13:09
  * @see SolrRepositoryFactoryBean
  */
 public class BaseSolrRepositoryFactoryBean<T extends BaseSolrRepository<S, ID>, S extends Serializable, ID extends Serializable> extends TransactionalRepositoryFactoryBeanSupport<T, S, ID> {

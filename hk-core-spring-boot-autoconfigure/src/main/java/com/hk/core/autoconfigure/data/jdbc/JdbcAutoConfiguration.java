@@ -22,8 +22,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 
 /**
- * @author: kevin
- * @date: 2018-09-19 10:18
+ * @author kevin
+ * @date 2018-09-19 10:18
  */
 @Configuration
 @EnableJdbcAuditing

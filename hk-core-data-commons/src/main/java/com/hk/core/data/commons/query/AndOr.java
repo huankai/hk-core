@@ -4,7 +4,7 @@ package com.hk.core.data.commons.query;
 /**
  * And Or
  *
- * @author: kevin
+ * @author kevin
  */
 public enum AndOr {
 

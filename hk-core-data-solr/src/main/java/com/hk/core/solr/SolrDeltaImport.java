@@ -5,8 +5,8 @@ import java.lang.annotation.*;
 /**
  * Solr Delta Import
  *
- * @author: kevin
- * @date: 2018-07-04 12:17
+ * @author kevin
+ * @date 2018-07-04 12:17
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
@@ -16,7 +16,7 @@ public @interface SolrDeltaImport {
     /**
      * entities
      *
-     * @return
+     * @return solr dataImport entity name
      */
     String[] entities();
 }

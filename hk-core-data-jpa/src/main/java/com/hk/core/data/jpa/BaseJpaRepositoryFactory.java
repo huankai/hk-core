@@ -7,8 +7,8 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import javax.persistence.EntityManager;
 
 /**
- * @author: kevin
- * @date: 2018-06-07 13:48
+ * @author kevin
+ * @date 2018-06-07 13:48
  */
 public class BaseJpaRepositoryFactory extends JpaRepositoryFactory {
 

@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 /**
  * 删除参数
  *
- * @author: kevin
- * @date: 2018-09-19 14:01
+ * @author kevin
+ * @date 2018-09-19 14:01
  */
 @Data
 @NoArgsConstructor

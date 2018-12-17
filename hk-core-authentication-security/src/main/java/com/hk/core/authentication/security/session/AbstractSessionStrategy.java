@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author: kevin
- * @date: 2018-07-27 10:15
+ * @author kevin
+ * @date 2018-07-27 10:15
  */
 public abstract class AbstractSessionStrategy {
 

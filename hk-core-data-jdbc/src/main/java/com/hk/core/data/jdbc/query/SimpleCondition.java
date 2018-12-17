@@ -9,8 +9,8 @@ import lombok.Getter;
 import java.util.*;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 11:00
+ * @author kevin
+ * @date 2018-09-19 11:00
  */
 public class SimpleCondition implements Condition {
 

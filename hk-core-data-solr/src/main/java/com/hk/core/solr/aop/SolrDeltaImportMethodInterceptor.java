@@ -14,8 +14,8 @@ import java.util.Arrays;
 /**
  * Solr 增量导入 Aop 拦截器
  *
- * @author: kevin
- * @date: 2018-09-19 09:36
+ * @author kevin
+ * @date 2018-09-19 09:36
  */
 public class SolrDeltaImportMethodInterceptor implements AfterReturningAdvice {
 

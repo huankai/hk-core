@@ -31,8 +31,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.List;
 
 /**
- * @author: huangkai
- * @date: 2018-05-31 16:26
+ * @author huangkai
+ * @date 2018-05-31 16:26
  */
 @Configuration
 @ServletComponentScan(basePackages = { "com.hk.core" })

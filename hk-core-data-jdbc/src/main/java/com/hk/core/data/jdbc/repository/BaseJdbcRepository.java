@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @author: kevin
- * @date: 2018-10-11 13:21
+ * @author kevin
+ * @date 2018-10-11 13:21
  */
 public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> implements JdbcRepository<T, ID> {
 

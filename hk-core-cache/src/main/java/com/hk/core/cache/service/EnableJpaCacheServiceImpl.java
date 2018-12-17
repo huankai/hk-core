@@ -15,8 +15,8 @@ import java.util.Optional;
 /**
  * //TODO 未实现 Service implementation Enable Cache.
  *
- * @author: kevin
- * @date: 2018-05-16 09:58
+ * @author kevin
+ * @date 2018-05-16 09:58
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
  * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */

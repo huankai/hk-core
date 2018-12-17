@@ -12,8 +12,8 @@ import java.util.Map;
 /**
  * 属性拦截器，将Map 属性保存到request中
  *
- * @author: huangkai
- * @date: 2018-11-30 09:27
+ * @author huangkai
+ * @date 2018-11-30 09:27
  */
 public class GlobalPropertyInterceptor extends HandlerInterceptorAdapter {
 

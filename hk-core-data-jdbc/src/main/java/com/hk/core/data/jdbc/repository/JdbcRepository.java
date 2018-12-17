@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * @author: kevin
- * @date: 2018-10-10 10:09
+ * @author kevin
+ * @date 2018-10-10 10:09
  */
 @NoRepositoryBean
 public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID> {

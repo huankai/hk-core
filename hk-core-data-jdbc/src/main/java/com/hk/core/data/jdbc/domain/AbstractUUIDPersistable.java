@@ -13,8 +13,8 @@ import org.springframework.util.ClassUtils;
 import java.io.Serializable;
 
 /**
- * @author: kevin
- * @date: 2018-10-10 16:32
+ * @author kevin
+ * @date 2018-10-10 16:32
  */
 @SuppressWarnings("serial")
 public abstract class AbstractUUIDPersistable implements Persistable<String>, Serializable {

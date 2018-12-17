@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
- * @author: kevin
+ * @author kevin
  */
 public interface UserDetailClientService extends UserDetailsService {
 

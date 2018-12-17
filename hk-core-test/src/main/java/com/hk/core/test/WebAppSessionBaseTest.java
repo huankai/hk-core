@@ -10,8 +10,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import javax.servlet.http.HttpSession;
 
 /**
- * @author: kevin
- * @date: 2018-09-14 15:33
+ * @author kevin
+ * @date 2018-09-14 15:33
  */
 @WebAppConfiguration
 public abstract class WebAppSessionBaseTest extends LoginBaseTest {

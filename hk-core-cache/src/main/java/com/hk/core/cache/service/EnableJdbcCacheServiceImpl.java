@@ -16,8 +16,8 @@ import java.util.Optional;
 /**
  * Service implementation Enable Cache.
  *
- * @author: kevin
- * @date: 2018-05-16 09:58
+ * @author kevin
+ * @date 2018-05-16 09:58
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
  * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */

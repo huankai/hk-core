@@ -3,8 +3,8 @@ package com.hk.core.data.jdbc.dialect;
 import com.hk.commons.util.StringUtils;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 10:06
+ * @author kevin
+ * @date 2018-09-19 10:06
  */
 public class OracleDialect implements Dialect {
 

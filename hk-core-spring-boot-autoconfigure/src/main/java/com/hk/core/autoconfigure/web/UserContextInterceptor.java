@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 将当前用户信息放入request
  *
- * @author: sjq-278
- * @date: 2018-12-03 15:00
+ * @author sjq-278
+ * @date 2018-12-03 15:00
  */
 public class UserContextInterceptor extends HandlerInterceptorAdapter {
 

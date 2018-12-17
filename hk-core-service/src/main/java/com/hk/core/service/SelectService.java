@@ -10,8 +10,8 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * @author: kevin
- * @date: 2018-07-04 09:40
+ * @author kevin
+ * @date 2018-07-04 09:40
  */
 public interface SelectService<T extends Persistable<ID>, ID extends Serializable> {
 

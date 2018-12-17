@@ -3,8 +3,8 @@ package com.hk.core.data.jdbc.query;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 10:59
+ * @author kevin
+ * @date 2018-09-19 10:59
  */
 public interface Condition {
 

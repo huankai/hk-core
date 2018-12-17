@@ -19,8 +19,8 @@ import java.util.stream.Stream;
  * Spring Data JDBC sql 生成器类，
  * 在执行更新(update )操作时，主键字段(id)、 @CreateBy(createdBy) 和 @CreateDate(createdDate)标识的字段不需要update
  *
- * @author: kevin
- * @date: 2018-10-26 13:28
+ * @author kevin
+ * @date 2018-10-26 13:28
  * @see com.hk.core.data.jdbc.domain.AbstractAuditable#createdBy
  * @see com.hk.core.data.jdbc.domain.AbstractAuditable#createdDate
  * @see org.springframework.data.jdbc.core.SqlGenerator

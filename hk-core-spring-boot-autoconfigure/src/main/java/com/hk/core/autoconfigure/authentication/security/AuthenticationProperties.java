@@ -10,8 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author: kevin
- * @date: 2018-07-26 16:59
+ * @author kevin
+ * @date 2018-07-26 16:59
  */
 @Data
 @ConfigurationProperties(prefix = "hk.authentication")

@@ -16,8 +16,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 10:16
+ * @author kevin
+ * @date 2018-09-19 10:16
  */
 public final class JdbcSession {
 

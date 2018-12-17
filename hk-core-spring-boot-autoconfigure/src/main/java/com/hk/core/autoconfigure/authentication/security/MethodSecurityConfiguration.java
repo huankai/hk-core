@@ -17,8 +17,8 @@ import org.springframework.security.core.Authentication;
 /**
  * 开启注解权限控制
  *
- * @author: kevin
- * @date: 2018-05-16 15:57
+ * @author kevin
+ * @date 2018-05-16 15:57
  */
 @Configuration
 @ConditionalOnClass(SpringSecurityContext.class)

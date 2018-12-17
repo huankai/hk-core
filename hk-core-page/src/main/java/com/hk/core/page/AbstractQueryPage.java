@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018年1月24日上午10:10:42
+ * @author kevin
+ * @date 2018年1月24日上午10:10:42
  */
 @Data
 @SuppressWarnings("serial")

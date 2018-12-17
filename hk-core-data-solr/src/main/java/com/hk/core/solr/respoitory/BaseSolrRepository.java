@@ -11,8 +11,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018-07-04 13:01
+ * @author kevin
+ * @date 2018-07-04 13:01
  */
 @NoRepositoryBean
 public interface BaseSolrRepository<T extends Serializable, ID extends Serializable> extends SolrCrudRepository<T, ID> {

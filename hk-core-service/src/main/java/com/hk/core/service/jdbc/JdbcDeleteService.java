@@ -7,8 +7,8 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 
 /**
- * @author: kevin
- * @date: 2018-10-26 10:25
+ * @author kevin
+ * @date 2018-10-26 10:25
  */
 public interface JdbcDeleteService<T extends Persistable<ID>, ID extends Serializable> extends DeleteService<T, ID> {
 

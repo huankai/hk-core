@@ -14,8 +14,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 
 /**
- * @author: kevin
- * @date: 2018-05-31 17:45
+ * @author kevin
+ * @date 2018-05-31 17:45
  */
 @Configuration
 @ConditionalOnClass(RedisTemplate.class)

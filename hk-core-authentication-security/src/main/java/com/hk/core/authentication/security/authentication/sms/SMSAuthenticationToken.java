@@ -8,8 +8,8 @@ import java.util.Collection;
 /**
  * SMS AuthenticationToken
  *
- * @author: kevin
- * @date: 2018-07-26 16:37
+ * @author kevin
+ * @date 2018-07-26 16:37
  */
 @SuppressWarnings("serial")
 public class SMSAuthenticationToken extends AbstractAuthenticationToken {

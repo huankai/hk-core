@@ -10,8 +10,8 @@ import org.springframework.util.StringUtils;
 import java.util.Collection;
 
 /**
- * @author: kally
- * @date: 2017年8月6日上午9:05:57
+ * @author kally
+ * @date 2017年8月6日上午9:05:57
  */
 public class Restrictions {
 

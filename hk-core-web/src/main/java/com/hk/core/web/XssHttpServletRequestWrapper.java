@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * @author: kevin
- * @date: 2018-06-07 17:19
+ * @author kevin
+ * @date 2018-06-07 17:19
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 

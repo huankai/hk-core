@@ -10,8 +10,8 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018-07-04 11:35
+ * @author kevin
+ * @date 2018-07-04 11:35
  */
 public interface BaseMapper<T> {
 

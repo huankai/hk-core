@@ -16,8 +16,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * @author: kevin
- * @date: 2018-10-11 14:37
+ * @author kevin
+ * @date 2018-10-11 14:37
  */
 public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Serializable> extends BaseServiceImpl<T, ID> implements JdbcBaseService<T, ID> {
 

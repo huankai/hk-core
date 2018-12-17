@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.*;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 10:48
+ * @author kevin
+ * @date 2018-09-19 10:48
  */
 @Data
 @NoArgsConstructor

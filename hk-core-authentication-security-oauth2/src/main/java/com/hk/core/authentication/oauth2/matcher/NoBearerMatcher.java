@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
 /**
- * @author: kevin
- * @date: 2018-08-27 13:52
+ * @author kevin
+ * @date 2018-08-27 13:52
  */
 public class NoBearerMatcher implements RequestMatcher {
 

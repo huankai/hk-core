@@ -21,8 +21,8 @@ import java.io.IOException;
 /**
  * 验证码验证
  *
- * @author: kevin
- * @date: 2018-07-26 15:35
+ * @author kevin
+ * @date 2018-07-26 15:35
  */
 public class ValidateCodeFilter extends OncePerRequestFilter {
 

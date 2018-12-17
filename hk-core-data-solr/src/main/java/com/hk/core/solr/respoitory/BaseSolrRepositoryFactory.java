@@ -7,8 +7,8 @@ import org.springframework.data.solr.core.convert.SolrConverter;
 import org.springframework.data.solr.repository.support.SolrRepositoryFactory;
 
 /**
- * @author: sjq-278
- * @date: 2018-12-03 13:16
+ * @author sjq-278
+ * @date 2018-12-03 13:16
  */
 public class BaseSolrRepositoryFactory extends SolrRepositoryFactory {
 

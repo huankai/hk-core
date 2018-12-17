@@ -8,8 +8,8 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 /**
- * @author: kevin
- * @date: 2018-08-17 12:15
+ * @author kevin
+ * @date 2018-08-17 12:15
  */
 public class OAuth2ClientAuthenticationConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 

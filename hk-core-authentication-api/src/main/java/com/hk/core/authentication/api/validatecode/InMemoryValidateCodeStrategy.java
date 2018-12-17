@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author: kevin
- * @date: 2018-07-27 14:09
+ * @author kevin
+ * @date 2018-07-27 14:09
  */
 public class InMemoryValidateCodeStrategy implements ValidateCodeStrategy {
 

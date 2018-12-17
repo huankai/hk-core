@@ -7,8 +7,8 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 /**
- * @author: kevin
- * @date: 2018-07-27 13:44
+ * @author kevin
+ * @date 2018-07-27 13:44
  */
 public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> implements ValidateCodeProcessor {
 

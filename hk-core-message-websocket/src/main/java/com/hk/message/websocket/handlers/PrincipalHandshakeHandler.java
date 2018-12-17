@@ -11,8 +11,8 @@ import java.security.Principal;
 import java.util.Map;
 
 /**
- * @author: huangkai
- * @date: 2018-9-21 20:30
+ * @author huangkai
+ * @date 2018-9-21 20:30
  */
 public class PrincipalHandshakeHandler extends DefaultHandshakeHandler {
 

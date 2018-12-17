@@ -4,8 +4,8 @@ import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.StringUtils;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 23:26
+ * @author kevin
+ * @date 2018-09-19 23:26
  */
 abstract class SqlEscapeUtils {
 

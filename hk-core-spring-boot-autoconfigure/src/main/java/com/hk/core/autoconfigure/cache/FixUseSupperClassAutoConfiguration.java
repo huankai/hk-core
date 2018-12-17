@@ -27,7 +27,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
- * @author: kevin
+ * @author kevin
  */
 @Configuration
 @EnableCaching

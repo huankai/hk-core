@@ -10,8 +10,8 @@ import javax.persistence.EntityNotFoundException;
 /**
  * 异常处理器配置
  *
- * @author: kevin
- * @date: 2018-09-10 14:38
+ * @author kevin
+ * @date 2018-09-10 14:38
  */
 @Configuration
 public class ExceptionHandlerConfiguration {

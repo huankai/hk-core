@@ -6,8 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @author: kevin
- * @date: 2018-10-12 13:55
+ * @author kevin
+ * @date 2018-10-12 13:55
  */
 @Data
 public class PersistentEntityInfo {

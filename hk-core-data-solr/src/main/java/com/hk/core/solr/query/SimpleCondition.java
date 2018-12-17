@@ -7,8 +7,8 @@ import lombok.Data;
 import org.springframework.data.solr.core.query.Criteria;
 
 /**
- * @author: sjq-278
- * @date: 2018-12-03 16:49
+ * @author sjq-278
+ * @date 2018-12-03 16:49
  */
 @Data
 public class SimpleCondition implements Condition {

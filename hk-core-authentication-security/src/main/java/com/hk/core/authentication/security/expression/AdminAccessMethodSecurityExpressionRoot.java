@@ -4,8 +4,8 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.core.Authentication;
 
 /**
- * @author: kevin
- * @date: 2018-09-14 11:04
+ * @author kevin
+ * @date 2018-09-14 11:04
  */
 public class AdminAccessMethodSecurityExpressionRoot extends AdminAccessSecurityExpressionRoot implements MethodSecurityExpressionOperations {
 

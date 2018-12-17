@@ -5,8 +5,8 @@ import org.springframework.web.context.request.RequestAttributes;
 /**
  * 验证码存储器
  *
- * @author: kevin
- * @date: 2018-07-27 14:06
+ * @author kevin
+ * @date 2018-07-27 14:06
  */
 public interface ValidateCodeStrategy {
 

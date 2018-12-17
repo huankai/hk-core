@@ -15,8 +15,8 @@ import org.springframework.util.Assert;
 /**
  * 拥有 admin 角色 或 admin 权限的用户，或者是保护用户可以直接访问
  *
- * @author: kevin
- * @date: 2018-09-14 10:58
+ * @author kevin
+ * @date 2018-09-14 10:58
  * @see DefaultWebSecurityExpressionHandler
  */
 public class AdminAccessWebSecurityExpressionHandler extends AbstractSecurityExpressionHandler<FilterInvocation> implements SecurityExpressionHandler<FilterInvocation> {

@@ -7,8 +7,8 @@ import java.util.Random;
 /**
  * 图片验证码
  *
- * @author: kevin
- * @date: 2018-07-27 14:53
+ * @author kevin
+ * @date 2018-07-27 14:53
  */
 public class ImageCodeGenerator implements ValidateCodeGenerator<ImageCode> {
 

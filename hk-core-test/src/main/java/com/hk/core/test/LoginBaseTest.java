@@ -9,8 +9,8 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.Filter;
 
 /**
- * @author: kevin
- * @date: 2018-09-14 15:57
+ * @author kevin
+ * @date 2018-09-14 15:57
  */
 public abstract class LoginBaseTest extends BaseTest {
 
@@ -30,8 +30,9 @@ public abstract class LoginBaseTest extends BaseTest {
         return mockMvc;
     }
 
-    @Before
+    @Override
     public void before() throws Exception {
+        super.before();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .addFilters(springSecurityFilterChain)
                 .build();

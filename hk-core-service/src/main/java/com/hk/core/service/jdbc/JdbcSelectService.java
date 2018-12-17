@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * @author: kevin
- * @date: 2018-10-11 14:46
+ * @author kevin
+ * @date 2018-10-11 14:46
  */
 public interface JdbcSelectService<T extends Persistable<ID>, ID extends Serializable> extends SelectService<T, ID> {
 

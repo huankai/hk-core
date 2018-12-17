@@ -42,8 +42,8 @@ import java.util.Map;
  * </pre>
  * 
  *
- * @author: huangkai
- * @date: 2018-12-11 13:39
+ * @author huangkai
+ * @date 2018-12-11 13:39
  * @see https://www.jianshu.com/p/5574cb427140
  */
 public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMapping {

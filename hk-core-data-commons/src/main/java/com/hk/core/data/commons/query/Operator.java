@@ -2,7 +2,7 @@ package com.hk.core.data.commons.query;
 
 
 /**
- * @author: kevin
+ * @author kevin
  */
 public enum Operator {
 

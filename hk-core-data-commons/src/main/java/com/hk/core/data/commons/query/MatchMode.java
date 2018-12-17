@@ -4,7 +4,7 @@ package com.hk.core.data.commons.query;
 /**
  * Sql 查询匹配模式
  *
- * @author: kevin
+ * @author kevin
  */
 public enum MatchMode {
 

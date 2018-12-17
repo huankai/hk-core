@@ -13,8 +13,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 /**
  * 构建自定义的 JdbcRepository
  *
- * @author: kevin
- * @date: 2018-10-11 14:17
+ * @author kevin
+ * @date 2018-10-11 14:17
  */
 public class BaseJdbcRepositoryFactory extends JdbcRepositoryFactory {
 
