@@ -8,7 +8,7 @@ import org.apache.shiro.SecurityUtils;
  * @author: sjq-278
  * @date: 2018-12-14 17:45
  */
-public class ShiroUserPrincipal implements SecurityContext {
+public class ShiroSecurityContext implements SecurityContext {
 
     @Override
     public UserPrincipal getPrincipal() {
