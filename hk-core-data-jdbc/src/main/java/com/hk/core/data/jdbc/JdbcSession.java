@@ -2,6 +2,7 @@ package com.hk.core.data.jdbc;
 
 import com.hk.commons.util.*;
 import com.hk.core.data.jdbc.core.HumpColumnMapRowMapper;
+import com.hk.core.data.jdbc.core.namedparam.SqlParameterSourceUtils;
 import com.hk.core.data.jdbc.dialect.Dialect;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.page.QueryPage;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,6 +61,21 @@ public final class JdbcSession {
 
     public boolean batchUpdate(String sql, List<Object[]> args) {
         return jdbcTemplate.batchUpdate(sql, args).length > 0;
+    }
+
+
+    /**
+     * 批量更新
+     *
+     * @param sql  sql
+     * @param args args
+     * @param <T>  T
+     * @return true
+     */
+    public <T> boolean batchUpdate(String sql, Collection<T> args) {
+        SqlParameterSource[] parameterSources = SqlParameterSourceUtils.createBatch(args);
+        namedParameterJdbcTemplate.batchUpdate(sql, parameterSources);
+        return true;
     }
 
     /**

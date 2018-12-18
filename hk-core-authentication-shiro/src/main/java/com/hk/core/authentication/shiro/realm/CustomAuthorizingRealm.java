@@ -14,11 +14,11 @@ import org.apache.shiro.subject.PrincipalCollection;
  * @date 2018年12月17日 下午2:31:56
  * @since V2.1.0
  */
-public class ShiroRealm extends AuthorizingRealm {
+public class CustomAuthorizingRealm extends AuthorizingRealm {
 
     private UserDetailsService userDetailsService;
 
-    public ShiroRealm(UserDetailsService userDetailsService) {
+    public CustomAuthorizingRealm(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
