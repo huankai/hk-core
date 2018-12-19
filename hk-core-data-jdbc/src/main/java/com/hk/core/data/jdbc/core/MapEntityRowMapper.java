@@ -23,7 +23,6 @@ class MapEntityRowMapper<T> implements RowMapper<Map.Entry<Object, T>> {
      * @param keyColumn the name of the key column.
      */
     MapEntityRowMapper(RowMapper<T> delegate, String keyColumn) {
-
         this.delegate = delegate;
         this.keyColumn = keyColumn;
     }

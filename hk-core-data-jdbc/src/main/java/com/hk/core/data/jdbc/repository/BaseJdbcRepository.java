@@ -67,17 +67,6 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         }
     }
 
-//    @Override
-//    public <S extends T> S save(S instance) {
-//        if (instance instanceof AbstractUUIDPersistable) {
-//            AbstractUUIDPersistable persistable = (AbstractUUIDPersistable) instance;
-//            if (persistable.isNew()) {
-//                persistable.generateId(IDGenerator.STRING_UUID.generate());
-//            }
-//        }
-//        return super.save(instance);
-//    }
-
     @Override
     public long count() {
         return count(null);

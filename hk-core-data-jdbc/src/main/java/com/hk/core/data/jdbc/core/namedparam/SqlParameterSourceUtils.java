@@ -45,11 +45,10 @@ public abstract class SqlParameterSourceUtils extends org.springframework.jdbc.c
          *
          * @param paramName paramName
          * @return 对象属性值
-         * @throws IllegalArgumentException
          */
         @Nullable
         @Override
-        public Object getValue(String paramName) throws IllegalArgumentException {
+        public Object getValue(String paramName) {
             Object value = super.getValue(paramName);
             if (value instanceof Optional) {
                 value = ((Optional<?>) value).orElse(null);

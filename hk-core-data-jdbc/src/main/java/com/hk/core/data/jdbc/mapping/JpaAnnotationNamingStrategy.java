@@ -30,7 +30,7 @@ public class JpaAnnotationNamingStrategy implements NamingStrategy {
         if (StringUtils.isEmpty(tableName)) {
             Table table = type.getAnnotation(Table.class);
             if (null != table) {
-                return table.name();
+                tableName = table.name();
             }
         }
         if (StringUtils.isEmpty(tableName)) {
