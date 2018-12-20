@@ -52,7 +52,7 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
                 .defaultUseWrapper(true)
                 .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .build();
-        JsonUtils.configure(objectMapper);
+        JsonUtils.configure(objectMapper, true);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));

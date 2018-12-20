@@ -34,9 +34,9 @@ public class CacheRedisAutoConfiguration {
                 .json()
                 .defaultUseWrapper(true)
                 .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-                .modules(JsonUtils.getJavaTimeModule())
+                .modules(JsonUtils.modules())
                 .build();
-        JsonUtils.configure(objectMapper);
+        JsonUtils.configure(objectMapper, true);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 
         GenericJackson2JsonRedisSerializer redisSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);

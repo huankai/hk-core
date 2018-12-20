@@ -19,9 +19,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @date 2018-09-14 12:39
  */
 @Configuration
-@ConditionalOnClass(Docket.class)
 @EnableSwagger2
-@ConditionalOnProperty(prefix = "hk.swagger",value = "enable",havingValue = "true")
+@ConditionalOnClass(Docket.class)
+@ConditionalOnProperty(prefix = "hk.swagger", value = "enable", havingValue = "true")
 @EnableConfigurationProperties(SwaggerProperties.class)
 public class Swagger2AutoConfiguration {
 
@@ -30,7 +30,7 @@ public class Swagger2AutoConfiguration {
     public Swagger2AutoConfiguration(SwaggerProperties properties) {
         this.swaggerProperties = properties;
     }
-    
+
     @Bean
     public Docket controllerApi() {
         return new Docket(DocumentationType.SWAGGER_2)

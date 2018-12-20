@@ -23,7 +23,7 @@ public class WeixinMessageAutoConfiguration {
         this.wxMpService = wxMpService;
     }
 
-    @Bean("weixinTemplateMessager")
+    @Bean(value = "weixinTemplateMessager")
     public WeixinTemplateMessager WeixinTemplateMessager() {
         return new WeixinTemplateMessager(wxMpService);
     }

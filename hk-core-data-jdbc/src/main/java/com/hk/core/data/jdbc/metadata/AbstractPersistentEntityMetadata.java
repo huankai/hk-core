@@ -1,5 +1,6 @@
 package com.hk.core.data.jdbc.metadata;
 
+import com.hk.core.data.commons.audit.AuditField;
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.data.domain.Auditable;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @author huangkai
  * @date 2018-10-13 11:03
  */
-public abstract class AbstractPersistentEntityMetadata implements PersistentEntityMetadata {
+public abstract class AbstractPersistentEntityMetadata implements PersistentEntityMetadata, AuditField {
 
     private Cache cache = new ConcurrentMapCache("PERSISTENT_ENTITY_METADATA", false);
 
@@ -35,7 +36,7 @@ public abstract class AbstractPersistentEntityMetadata implements PersistentEnti
             entityInfo.setTableName(getTableName(persistentEntity));
             entityInfo.setPropertyColumns(propertyColumns);
             if (Auditable.class.isAssignableFrom(persistentEntity.getType())) {
-                entityInfo.setIgnoreConditionFields(new String[]{"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"});
+                entityInfo.setIgnoreConditionFields(new String[]{CREATED_BY, CREATED_DATE, LAST_MODIFIED_BY, LAST_MODIFIED_DATE});
             }
             cache.put(persistentEntity.getType().getName(), entityInfo);
         }

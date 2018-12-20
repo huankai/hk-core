@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Import;
 /**
  * Shiro Auto configuration
  *
- * @author sjq-278
+ * @author huangkai
  * @date 2018-12-17 15:23
  */
 @Configuration
