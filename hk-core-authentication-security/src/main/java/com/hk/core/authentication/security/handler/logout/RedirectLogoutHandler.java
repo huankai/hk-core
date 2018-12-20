@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author: huangkai
- * @date: 2018-9-22 20:42
+ * @author huangkai
+ * @date 2018-9-22 20:42
  */
 public class RedirectLogoutHandler implements LogoutHandler {
 

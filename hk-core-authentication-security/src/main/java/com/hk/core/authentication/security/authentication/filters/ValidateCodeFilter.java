@@ -21,64 +21,67 @@ import java.io.IOException;
 /**
  * 验证码验证
  *
- * @author: kevin
- * @date: 2018-07-26 15:35
+ * @author kevin
+ * @date 2018-07-26 15:35
  */
 public class ValidateCodeFilter extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ValidateCodeFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ValidateCodeFilter.class);
 
-    /**
-     * 验证处理器
-     */
-    private final ValidateCodeProcessor validateCodeProcessor;
+	/**
+	 * 验证处理器
+	 */
+	private final ValidateCodeProcessor validateCodeProcessor;
 
-    private boolean postOnly = true;
+	private boolean postOnly = true;
 
-    private String processingUri;
+	private String processingUri;
 
-    private AuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler("/login?error");
+	private AuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler(
+			"/login?error");
 
-    /**
-     * @param validateCodeProcessor 验证处理器
-     * @param processingUri         处理URI
-     */
-    public ValidateCodeFilter(ValidateCodeProcessor validateCodeProcessor, String processingUri) {
-        this.validateCodeProcessor = validateCodeProcessor;
-        if (!StringUtils.startsWith(processingUri, "/")) {
-            processingUri = "/" + processingUri;
-        }
-        this.processingUri = processingUri;
-    }
+	/**
+	 * @param validateCodeProcessor 验证处理器
+	 * @param processingUri         处理URI
+	 */
+	public ValidateCodeFilter(ValidateCodeProcessor validateCodeProcessor, String processingUri) {
+		this.validateCodeProcessor = validateCodeProcessor;
+		if (!StringUtils.startsWith(processingUri, "/")) {
+			processingUri = "/" + processingUri;
+		}
+		this.processingUri = processingUri;
+	}
 
-    public void setPostOnly(boolean postOnly) {
-        this.postOnly = postOnly;
-    }
+	public void setPostOnly(boolean postOnly) {
+		this.postOnly = postOnly;
+	}
 
-    public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
-        this.authenticationFailureHandler = authenticationFailureHandler;
-    }
+	public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
+		this.authenticationFailureHandler = authenticationFailureHandler;
+	}
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String method = request.getMethod().toUpperCase();
-        String requestUri = Webs.getClearContextPathUri(request);
-        if (StringUtils.equals(requestUri, processingUri)) {
-            if (postOnly && StringUtils.notEquals(method, "POST")) {
-                throw new AuthenticationServiceException("Authentication method not supported: " + method);
-            }
-            try {
-                validate(new ServletWebRequest(request, response));
-            } catch (ValidateCodeException e) {
-                LOGGER.error(e.getMessage(), e);
-                authenticationFailureHandler.onAuthenticationFailure(request, response, new AuthenticationServiceException(e.getMessage(), e));
-                return;
-            }
-        }
-        filterChain.doFilter(request, response);
-    }
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws IOException, ServletException {
+		String method = request.getMethod().toUpperCase();
+		String requestUri = Webs.getClearContextPathUri(request);
+		if (StringUtils.equals(requestUri, processingUri)) {
+			if (postOnly && StringUtils.notEquals(method, "POST")) {
+				throw new AuthenticationServiceException("Authentication method not supported: " + method);
+			}
+			try {
+				validate(new ServletWebRequest(request, response));
+			} catch (ValidateCodeException e) {
+				LOGGER.error(e.getMessage(), e);
+				authenticationFailureHandler.onAuthenticationFailure(request, response,
+						new AuthenticationServiceException(e.getMessage(), e));
+				return;
+			}
+		}
+		filterChain.doFilter(request, response);
+	}
 
-    private void validate(ServletWebRequest request) throws ValidateCodeException {
-        validateCodeProcessor.validate(request);
-    }
+	private void validate(ServletWebRequest request) throws ValidateCodeException {
+		validateCodeProcessor.validate(request);
+	}
 }

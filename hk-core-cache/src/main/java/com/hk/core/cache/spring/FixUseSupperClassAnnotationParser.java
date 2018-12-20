@@ -36,12 +36,12 @@ import java.util.Collection;
  * Strategy implementation for parsing Spring's {@link Caching}, {@link Cacheable},
  * {@link CacheEvict}, and {@link CachePut} annotations.
  *
- * @author: Costin Leau
- * @author: Juergen Hoeller
- * @author: Chris Beams
- * @author: Phillip Webb
- * @author: Stephane Nicoll
- * @author: Sam Brannen
+ * @author Costin Leau
+ * @author Juergen Hoeller
+ * @author Chris Beams
+ * @author Phillip Webb
+ * @author Stephane Nicoll
+ * @author Sam Brannen
  * @since 3.1
  */
 @SuppressWarnings("serial")

@@ -7,8 +7,8 @@ import java.io.Serializable;
 /**
  * Order
  *
- * @author: kevin
- * @date: 2018年2月5日下午12:49:44
+ * @author kevin
+ * @date 2018年2月5日下午12:49:44
  */
 @Data
 @SuppressWarnings("serial")

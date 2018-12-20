@@ -24,8 +24,8 @@ import java.io.Serializable;
  * JsonFilter : 过滤某一些字段
  * </p>
  *
- * @author: kevin
- * @date: 2017年12月11日下午8:30:33
+ * @author kevin
+ * @date 2017年12月11日下午8:30:33
  */
 @MappedSuperclass
 @JsonFilter(value = JsonUtils.IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID)

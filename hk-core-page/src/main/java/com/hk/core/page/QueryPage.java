@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018年1月24日上午9:56:21
+ * @author kevin
+ * @date 2018年1月24日上午9:56:21
  */
 public interface QueryPage<T> extends Serializable {
 

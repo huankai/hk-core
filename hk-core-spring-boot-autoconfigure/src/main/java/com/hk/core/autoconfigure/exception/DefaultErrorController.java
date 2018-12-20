@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author: kevin
- * @date: 2018-08-17 12:28
+ * @author kevin
+ * @date 2018-08-17 12:28
  */
 @RestController
 @RequestMapping("${server.error.path:${error.path:/error}}")

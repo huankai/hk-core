@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * @author: kevin
- * @date: 2018-10-26 13:38
+ * @author kevin
+ * @date 2018-10-26 13:38
  * @see DefaultDataAccessStrategy
  */
 public class CustomDataAccessStrategy implements DataAccessStrategy {

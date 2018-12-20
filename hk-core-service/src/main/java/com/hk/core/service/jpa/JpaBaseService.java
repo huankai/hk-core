@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018-10-10 12:58
+ * @author kevin
+ * @date 2018-10-10 12:58
  */
 public interface JpaBaseService<T extends Persistable<ID>, ID extends Serializable> extends BaseService<T, ID>, JpaSelectService<T, ID> {
 

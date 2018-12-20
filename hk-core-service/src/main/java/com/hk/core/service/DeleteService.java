@@ -6,8 +6,8 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 
 /**
- * @author: kevin
- * @date: 2018-07-04 09:47
+ * @author kevin
+ * @date 2018-07-04 09:47
  */
 public interface DeleteService<T extends Persistable<ID>, ID extends Serializable> {
 

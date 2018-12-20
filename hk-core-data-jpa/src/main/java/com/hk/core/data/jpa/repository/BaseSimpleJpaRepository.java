@@ -20,8 +20,8 @@ import java.util.List;
 
 
 /**
- * @author: kevin
- * @date: 2018-06-07 13:34
+ * @author kevin
+ * @date 2018-06-07 13:34
  * @see SimpleJpaRepository
  */
 public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements BaseJpaRepository<T, ID> {
@@ -92,7 +92,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
      * {@link Example}.
      *
      * @param <T>
-     * @author: kevin
+     * @author kevin
      * @since 1.10
      */
     @SuppressWarnings("serial")

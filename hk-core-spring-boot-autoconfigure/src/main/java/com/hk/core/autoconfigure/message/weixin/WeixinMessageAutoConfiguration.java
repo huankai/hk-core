@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author: huangkai
- * @date: 2018-9-23 14:47
+ * @author huangkai
+ * @date 2018-9-23 14:47
  */
 @Configuration
 @ConditionalOnClass(WeixinTemplateMessager.class)
@@ -23,7 +23,7 @@ public class WeixinMessageAutoConfiguration {
         this.wxMpService = wxMpService;
     }
 
-    @Bean("weixinTemplateMessager")
+    @Bean(value = "weixinTemplateMessager")
     public WeixinTemplateMessager WeixinTemplateMessager() {
         return new WeixinTemplateMessager(wxMpService);
     }

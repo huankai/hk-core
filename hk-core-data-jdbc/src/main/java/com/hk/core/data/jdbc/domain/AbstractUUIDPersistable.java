@@ -13,8 +13,8 @@ import org.springframework.util.ClassUtils;
 import java.io.Serializable;
 
 /**
- * @author: kevin
- * @date: 2018-10-10 16:32
+ * @author kevin
+ * @date 2018-10-10 16:32
  */
 @SuppressWarnings("serial")
 public abstract class AbstractUUIDPersistable implements Persistable<String>, Serializable {
@@ -25,7 +25,6 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
     private String id;
 
     @Transient
-    @JsonIgnore
     private transient boolean isNew = false;
 
     @Override
@@ -34,8 +33,8 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
     }
 
     @Override
-    @JsonIgnore
     @Transient
+    @JsonIgnore
     public boolean isNew() {
         return isNew || StringUtils.isEmpty(id);
     }

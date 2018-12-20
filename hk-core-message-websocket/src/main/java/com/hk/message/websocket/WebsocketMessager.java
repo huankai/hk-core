@@ -15,7 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
  *     .send();
  * </pre>
  *
- * @author: huangkai
+ * @author huangkai
  */
 public class WebsocketMessager implements Messager {
 

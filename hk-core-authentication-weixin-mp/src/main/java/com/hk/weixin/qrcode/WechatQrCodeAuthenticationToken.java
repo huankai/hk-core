@@ -12,8 +12,8 @@ import java.util.Collection;
 /**
  * Wechat 二维码认证 Token
  * 
- * @author: kevin
- * @date: 2018年2月8日上午11:14:18
+ * @author kevin
+ * @date 2018年2月8日上午11:14:18
  */
 public class WechatQrCodeAuthenticationToken extends AbstractAuthenticationToken {
 

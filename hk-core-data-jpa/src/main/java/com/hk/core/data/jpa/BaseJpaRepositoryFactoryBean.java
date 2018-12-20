@@ -9,8 +9,8 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
- * @author: kevin
- * @date: 2018-06-07 13:49
+ * @author kevin
+ * @date 2018-06-07 13:49
  */
 public class BaseJpaRepositoryFactoryBean<T extends BaseJpaRepository<S, ID>, S extends Persistable<ID>, ID extends Serializable> extends JpaRepositoryFactoryBean<T, S, ID> {
 

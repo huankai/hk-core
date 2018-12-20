@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author: kevin
- * @date: 2017年12月21日下午5:45:54
+ * @author kevin
+ * @date 2017年12月21日下午5:45:54
  */
 @SuppressWarnings("serial")
-public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,CredentialsContainer {
+public class SecurityUserPrincipal extends UserPrincipal implements UserDetails, CredentialsContainer {
 
     public static final String ROLE_PREFIX = "ROLE_";
 
@@ -125,9 +125,9 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
     @Override
     public void eraseCredentials() {
-    	password = null;
+        password = null;
     }
-    
+
     @Override
     public String toString() {
         return toJsonString();

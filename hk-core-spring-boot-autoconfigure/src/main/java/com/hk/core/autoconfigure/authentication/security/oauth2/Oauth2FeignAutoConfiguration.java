@@ -10,8 +10,8 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 
 /**
- * @author: kevin
- * @date: 2018-08-09 10:29
+ * @author kevin
+ * @date 2018-08-09 10:29
  */
 @Configuration
 @ConditionalOnClass(RequestInterceptor.class)

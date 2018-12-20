@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 11:03
+ * @author kevin
+ * @date 2018-09-19 11:03
  */
 public class CompositeCondition implements Condition {
 

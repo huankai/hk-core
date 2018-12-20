@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 微信二维码回调过滤器
  *
- * @author: kevin
- * @date: 2018年2月8日上午11:18:31
+ * @author kevin
+ * @date 2018年2月8日上午11:18:31
  */
 public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 

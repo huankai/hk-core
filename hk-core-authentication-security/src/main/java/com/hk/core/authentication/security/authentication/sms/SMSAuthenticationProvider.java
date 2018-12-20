@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 /**
  * 短信验证 Provider
  *
- * @author: kevin
- * @date: 2018-07-26 16:41
+ * @author kevin
+ * @date 2018-07-26 16:41
  */
 public class SMSAuthenticationProvider implements AuthenticationProvider {
 

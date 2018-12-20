@@ -21,8 +21,8 @@ import java.util.*;
 /**
  * 使用 QueryByExample 查询过滤String 类型属性值为 "" 的条件查询
  *
- * @author: kevin
- * @date: 2018-07-10 17:50
+ * @author kevin
+ * @date 2018-07-10 17:50
  * @see org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder
  */
 public class QueryByExamplePredicateBuilder {
@@ -172,7 +172,7 @@ public class QueryByExamplePredicateBuilder {
      * {@link org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder.PathNode} is used to dynamically grow a directed graph structure that allows to detect cycles within its
      * direct predecessor nodes by comparing parent node values using {@link System#identityHashCode(Object)}.
      *
-     * @author: Christoph Strobl
+     * @author Christoph Strobl
      */
     private static class PathNode {
 

@@ -1,8 +1,8 @@
 package com.hk.core.data.jdbc.dialect;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 12:25
+ * @author kevin
+ * @date 2018-09-19 12:25
  */
 public class PostgreSqlDialect implements Dialect {
 

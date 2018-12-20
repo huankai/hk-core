@@ -11,8 +11,8 @@ import java.util.Map;
 /**
  * Solr 增量导入
  *
- * @author: kevin
- * @date: 2018-07-04 12:40
+ * @author kevin
+ * @date 2018-07-04 12:40
  */
 public abstract class SolrDeltaImportUtils {
 

@@ -6,8 +6,8 @@ import lombok.Data;
 /**
  * 在线用户数消息
  *
- * @author: huangkai
- * @date: 2018-9-23 11:47
+ * @author huangkai
+ * @date 2018-9-23 11:47
  */
 @Data
 @Builder

@@ -28,6 +28,10 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-commons-util</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

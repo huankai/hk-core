@@ -1,8 +1,12 @@
 package com.hk.core.data.jdbc.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hk.core.data.commons.audit.AuditField;
 import com.hk.core.data.jdbc.annotations.NonUpdate;
-import org.springframework.data.annotation.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.relational.core.mapping.Column;
 
@@ -11,7 +15,7 @@ import java.util.Optional;
 
 /**
  * <pre>
- * 此类实现 jpa 的审核功能
+ * 此类实现 jdbc 的审核功能
  * 所有继承于此类的实体都要有以下几个字段
  * created_by 创建记录人，新增时会保存
  * created_date 创建时间，新增时会保存
@@ -19,10 +23,11 @@ import java.util.Optional;
  * last_modified_date 更新时间，新增时会保存,每次更新时会修改
  * </pre>
  *
- * @author: kevin
+ * @author kevin
  */
 @SuppressWarnings("serial")
-public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String, LocalDateTime> {
+@JsonIgnoreProperties(value = {"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"})
+public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String, LocalDateTime>, AuditField {
 
     /**
      * <pre>
@@ -36,26 +41,22 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * </pre>
      */
     @CreatedBy
-    @JsonIgnore
-    @Column(value = "created_by")
+    @Column(value = CREATED_BY)
     @NonUpdate
     private String createdBy;
-
 
     /**
      * 创建时间
      */
     @CreatedDate
-    @JsonIgnore
-    @Column(value = "created_date")
+    @Column(value = CREATED_DATE)
     @NonUpdate
     private LocalDateTime createdDate;
 
     /**
      * 最后更新用户
      */
-    @Column(value = "last_modified_by")
-    @JsonIgnore
+    @Column(value = LAST_MODIFIED_BY)
     @LastModifiedBy
     private String lastModifiedBy;
 
@@ -63,17 +64,12 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * 最后更新时间
      */
     @LastModifiedDate
-    @JsonIgnore
-    @Column(value = "last_modified_date")
+    @Column(value = LAST_MODIFIED_DATE)
     private LocalDateTime lastModifiedDate;
 
     @Override
     public Optional<String> getCreatedBy() {
         return Optional.ofNullable(createdBy);
-    }
-
-    public void setCreatedBy(Optional<String> createByOpt) {
-        this.createdBy = createByOpt.orElse(null);
     }
 
     @Override
@@ -91,10 +87,6 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
         this.createdDate = creationDate;
     }
 
-    public void setCreatedDate(Optional<LocalDateTime> creationDateOpt) {
-        this.createdDate = creationDateOpt.orElse(null);
-    }
-
     @Override
     public Optional<String> getLastModifiedBy() {
         return Optional.ofNullable(lastModifiedBy);
@@ -103,10 +95,6 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
     @Override
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(Optional<String> lastModifiedByOpt) {
-        this.lastModifiedBy = lastModifiedByOpt.orElse(null);
     }
 
     @Override
@@ -119,7 +107,4 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Optional<LocalDateTime> lastModifiedDateOpt) {
-        this.lastModifiedDate = lastModifiedDateOpt.orElse(null);
-    }
 }

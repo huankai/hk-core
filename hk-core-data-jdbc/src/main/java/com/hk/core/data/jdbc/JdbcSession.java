@@ -1,17 +1,17 @@
 package com.hk.core.data.jdbc;
 
-import com.hk.commons.util.AssertUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.ConverterUtils;
-import com.hk.commons.util.StringUtils;
+import com.hk.commons.util.*;
+import com.hk.core.data.jdbc.core.CustomBeanPropertyRowMapper;
 import com.hk.core.data.jdbc.core.HumpColumnMapRowMapper;
+import com.hk.core.data.jdbc.core.namedparam.SqlParameterSourceUtils;
 import com.hk.core.data.jdbc.dialect.Dialect;
+import com.hk.core.data.jdbc.exception.NonUniqueResultException;
 import com.hk.core.data.jdbc.query.CompositeCondition;
-import com.hk.core.page.ListResult;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,10 +20,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 10:16
+ * @author kevin
+ * @date 2018-09-19 10:16
  */
 public final class JdbcSession {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcSession.class);
 
     private JdbcTemplate jdbcTemplate;
 
@@ -54,6 +56,8 @@ public final class JdbcSession {
     }
 
     /**
+     * 更新
+     *
      * @param sql       sql
      * @param arguments arguments
      */
@@ -61,20 +65,36 @@ public final class JdbcSession {
         return namedParameterJdbcTemplate.update(sql, arguments) > 0;
     }
 
-
     /**
-     * todo 未完成
+     * 批量更新
+     *
+     * @param sql  sql
+     * @param args 参数
+     * @return true or false
      */
-//    public void batchInsert(PersistentEntityInfo persistentEntityInfo, SqlParameterSource[] parameterSources) {
-////        SqlParameterSourceUtils.createBatch()
-//        namedParameterJdbcTemplate.batchUpdate(String.format("INSERT INTO %s(%s) VALUES (%s)",
-//                persistentEntityInfo.getTableName(), "", ""), parameterSources);
-//    }
+    public boolean batchUpdate(String sql, List<Object[]> args) {
+        return jdbcTemplate.batchUpdate(sql, args).length > 0;
+    }
 
     /**
+     * 批量更新
+     *
+     * @param sql  sql
+     * @param args args
+     * @param <T>  T
+     * @return true
+     */
+    public <T> boolean batchUpdate(String sql, Collection<T> args) {
+        namedParameterJdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(args));
+        return true;
+    }
+
+    /**
+     * 集合查询
+     *
      * @param arguments       arguments
      * @param retriveRowCount retriveRowCount
-     * @return ListResult
+     * @return {@link ListResult}
      */
     public ListResult<Map<String, Object>> queryForList(SelectArguments arguments, boolean retriveRowCount) {
         return queryForList(arguments, retriveRowCount, new HumpColumnMapRowMapper());
@@ -89,7 +109,7 @@ public final class JdbcSession {
      */
     public final <T> T queryForObject(SelectArguments arguments, Class<T> clazz) {
         SelectStatement statement = buildSelect(arguments);
-        BeanPropertyRowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
+        CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
         rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return jdbcTemplate.queryForObject(statement.selectSql.toString(), rowMapper, statement.parameters.toArray());
     }
@@ -111,10 +131,10 @@ public final class JdbcSession {
      * @param arguments       arguments
      * @param retriveRowCount retriveRowCount
      * @param clazz           clazz
-     * @return ListResult
+     * @return {@link ListResult}
      */
     public <T> ListResult<T> queryForList(SelectArguments arguments, boolean retriveRowCount, Class<T> clazz) {
-        BeanPropertyRowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
+        CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
         rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return queryForList(arguments, retriveRowCount, rowMapper);
     }
@@ -125,7 +145,7 @@ public final class JdbcSession {
      * @param arguments arguments
      * @param clazz     clazz
      * @param <T>       <T>
-     * @return QueryPage<T>
+     * @return {@link QueryPage}
      */
     public <T> QueryPage<T> queryForPage(SelectArguments arguments, Class<T> clazz) {
         ListResult<T> result = queryForList(arguments, true, clazz);
@@ -133,10 +153,12 @@ public final class JdbcSession {
     }
 
     /**
+     * 集合查询
+     *
      * @param arguments       arguments
      * @param retriveRowCount retriveRowCount
      * @param rowMapper       rowMapper
-     * @return ListResult
+     * @return {@link ListResult}
      */
     private <T> ListResult<T> queryForList(SelectArguments arguments, boolean retriveRowCount, RowMapper<T> rowMapper) {
         SelectStatement stmt = buildSelect(arguments);
@@ -151,6 +173,8 @@ public final class JdbcSession {
     }
 
     /**
+     * 查询
+     *
      * @param sql   sql
      * @param clazz clazz
      * @param args  args
@@ -170,13 +194,26 @@ public final class JdbcSession {
      * @param clazz     clazz
      * @param <T>       T
      * @return T
+     * @throws NonUniqueResultException 查询返回多条记录时抛出异常
      */
     public <T> Optional<T> queryForOne(SelectArguments arguments, Class<T> clazz) {
-        BeanPropertyRowMapper<T> rowMapper = BeanPropertyRowMapper.newInstance(clazz);
+        CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
         rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         SelectStatement stmt = buildSelect(arguments);
-        String sql = dialect.getLimitSql(stmt.selectSql.toString(), 0, 1);
-        return CollectionUtils.getFirstOrDefault(queryForList(sql, rowMapper, stmt.parameters.toArray()));
+        String originalSql = stmt.selectSql.toString();
+        String sql = dialect.getLimitSql(originalSql, 0, 2); // 分页两条,如果返回有多条记录,抛出异常
+        List<T> result = queryForList(sql, rowMapper, stmt.parameters.toArray());
+        if (result.size() > 1) {
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("查询结果不唯一,返回多条记录: SQL : {},args:{}", originalSql, stmt.parameters);
+                List<Object> parameters = stmt.parameters;
+                if (CollectionUtils.isNotEmpty(parameters)) {
+                    LOGGER.error("args:{}", parameters);
+                }
+            }
+            throw new NonUniqueResultException("查询结果不唯一,SQL:" + originalSql);
+        }
+        return CollectionUtils.getFirstOrDefault(result);
     }
 
     private <T> List<T> queryForList(String sql, RowMapper<T> rowMapper, int offset, int rows, Object... args) {

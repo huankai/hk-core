@@ -20,8 +20,8 @@ import java.io.Serializable;
 
 
 /**
- * @author: kevin
- * @date: 2018-10-11 13:29
+ * @author kevin
+ * @date 2018-10-11 13:29
  * @see JdbcRepositoryFactoryBean
  */
 public class BaseJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>

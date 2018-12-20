@@ -12,39 +12,40 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 短信登陆过滤器
+   *   邮箱登陆过滤器
  *
- * @author: kevin
- * @date: 2018-07-26 16:21
+ * @author kevin
+ * @date 2018-07-26 16:21
  */
 public class EmailAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final String emailParameter;
+	private final String emailParameter;
 
-    private final boolean postOnly;
+	private final boolean postOnly;
 
-    public EmailAuthenticationFilter(String emailParameter,String requestUrl,boolean postOnly) {
-        super(new AntPathRequestMatcher(requestUrl, HttpMethod.POST.name()));
-        this.emailParameter = emailParameter;
-        this.postOnly = postOnly;
-    }
+	public EmailAuthenticationFilter(String emailParameter, String requestUrl, boolean postOnly) {
+		super(new AntPathRequestMatcher(requestUrl, HttpMethod.POST.name()));
+		this.emailParameter = emailParameter;
+		this.postOnly = postOnly;
+	}
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (postOnly && StringUtils.notEquals(HttpMethod.POST.name(), request.getMethod())) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
-        }
-        String mobile = StringUtils.trimToEmpty(obtainEmail(request));
-        EmailAuthenticationToken authenticationToken = new EmailAuthenticationToken(mobile);
-        setDetails(request, authenticationToken);
-        return getAuthenticationManager().authenticate(authenticationToken);
-    }
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException {
+		if (postOnly && StringUtils.notEquals(HttpMethod.POST.name(), request.getMethod())) {
+			throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+		}
+		String mobile = StringUtils.trimToEmpty(obtainEmail(request));
+		EmailAuthenticationToken authenticationToken = new EmailAuthenticationToken(mobile);
+		setDetails(request, authenticationToken);
+		return getAuthenticationManager().authenticate(authenticationToken);
+	}
 
-    private String obtainEmail(HttpServletRequest request) {
-        return request.getParameter(emailParameter);
-    }
+	private String obtainEmail(HttpServletRequest request) {
+		return request.getParameter(emailParameter);
+	}
 
-    private void setDetails(HttpServletRequest request, EmailAuthenticationToken authRequest) {
-        authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
-    }
+	private void setDetails(HttpServletRequest request, EmailAuthenticationToken authRequest) {
+		authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
+	}
 }

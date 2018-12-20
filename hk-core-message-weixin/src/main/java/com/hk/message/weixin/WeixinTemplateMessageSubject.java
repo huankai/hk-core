@@ -5,8 +5,8 @@ import lombok.Data;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 
 /**
- * @author: huangkai
- * @date: 2018-9-23 13:12
+ * @author huangkai
+ * @date 2018-9-23 13:12
  */
 @Data
 public class WeixinTemplateMessageSubject implements MessageSubject {

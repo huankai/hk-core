@@ -13,8 +13,8 @@ import java.util.Optional;
 /**
  * Jpa、JDBC auditor
  *
- * @author: kevin
- * @date: 2018-10-10 10:11
+ * @author kevin
+ * @date 2018-10-10 10:11
  */
 @Configuration
 @ConditionalOnClass(value = {SecurityContext.class})

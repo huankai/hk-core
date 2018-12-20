@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author: kevin
- * @date: 2018-06-07 17:17
+ * @author kevin
+ * @date 2018-06-07 17:17
  */
 public abstract class AbstractFilter implements Filter {
 

@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018-09-21 13:14
+ * @author kevin
+ * @date 2018-09-21 13:14
  */
 @Configuration
 @ConditionalOnClass(WebSocketMessagePublish.class)

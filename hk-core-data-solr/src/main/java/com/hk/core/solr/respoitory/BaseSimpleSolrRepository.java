@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * @author: huangkai
- * @date: 2018-12-03 14:13
+ * @author huangkai
+ * @date 2018-12-03 14:13
  * @see SimpleSolrRepository
  */
 public class BaseSimpleSolrRepository<T extends Serializable, ID extends Serializable> extends SimpleSolrRepository<T, ID> implements BaseSolrRepository<T, ID> {

@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 /**
  * 图片验证码
  *
- * @author: kevin
- * @date: 2018-07-26 15:08
+ * @author kevin
+ * @date 2018-07-26 15:08
  */
 @SuppressWarnings("serial")
 public class ImageCode extends ValidateCode {

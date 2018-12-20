@@ -11,8 +11,8 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
  * Spring 使用默认的 CacheErrorHandler 是 {@link org.springframework.cache.interceptor.SimpleCacheErrorHandler}
  * </p>
  *
- * @author: kevin
- * @date: 2018-05-15 17:20
+ * @author kevin
+ * @date 2018-05-15 17:20
  */
 public class LogCacheErrorHandler implements CacheErrorHandler {
 

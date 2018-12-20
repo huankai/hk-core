@@ -9,8 +9,8 @@ import com.hk.message.api.subject.UserMessageSubject;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /**
- * @author: kevin
- * @date: 2018-09-21 08:42
+ * @author kevin
+ * @date 2018-09-21 08:42
  */
 public class WebSocketMessagePublish implements MessagePublish {
 

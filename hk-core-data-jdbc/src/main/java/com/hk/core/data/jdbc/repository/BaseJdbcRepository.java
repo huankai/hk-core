@@ -10,7 +10,6 @@ import com.hk.core.data.jdbc.metadata.PersistentEntityInfo;
 import com.hk.core.data.jdbc.metadata.PersistentEntityMetadata;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.query.SimpleCondition;
-import com.hk.core.page.ListResult;
 import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
@@ -27,8 +26,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * @author: kevin
- * @date: 2018-10-11 13:21
+ * @author kevin
+ * @date 2018-10-11 13:21
  */
 public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> implements JdbcRepository<T, ID> {
 
@@ -67,17 +66,6 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
             }
         }
     }
-
-//    @Override
-//    public <S extends T> S save(S instance) {
-//        if (instance instanceof AbstractUUIDPersistable) {
-//            AbstractUUIDPersistable persistable = (AbstractUUIDPersistable) instance;
-//            if (persistable.isNew()) {
-//                persistable.generateId(IDGenerator.STRING_UUID.generate());
-//            }
-//        }
-//        return super.save(instance);
-//    }
 
     @Override
     public long count() {

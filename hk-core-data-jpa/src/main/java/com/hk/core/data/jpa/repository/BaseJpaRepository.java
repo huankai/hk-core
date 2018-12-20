@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @param <T>
  * @param <ID>
- * @author: kevin
+ * @author kevin
  */
 @NoRepositoryBean
 public interface BaseJpaRepository<T extends Persistable<ID>, ID extends Serializable> extends JpaRepository<T, ID> {

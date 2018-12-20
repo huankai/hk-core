@@ -1,6 +1,7 @@
 package com.hk.core.page;
 
 
+import com.hk.commons.util.ListResult;
 import com.hk.core.query.QueryModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,8 +9,8 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018年1月24日上午9:58:21
+ * @author kevin
+ * @date 2018年1月24日上午9:58:21
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

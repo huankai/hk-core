@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.*;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 10:48
+ * @author kevin
+ * @date 2018-09-19 10:48
  */
 @Data
 @NoArgsConstructor
@@ -42,7 +42,6 @@ public class SelectArguments extends DeleteArguments {
      * 排序
      */
     private List<Order> orders = new ArrayList<>();
-
 
     /**
      * 分页参数

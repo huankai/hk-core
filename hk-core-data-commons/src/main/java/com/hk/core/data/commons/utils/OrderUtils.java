@@ -9,8 +9,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author: kevin
- * @date: 2018-07-24 16:37
+ * 排序工具类
+ *
+ * @author kevin
+ * @date 2018-07-24 16:37
  */
 public abstract class OrderUtils {
 
@@ -18,7 +20,7 @@ public abstract class OrderUtils {
      * 转换为Spring Data Sort
      *
      * @param orders orders
-     * @return Sort
+     * @return {@link Sort}
      */
     public static Sort toSort(List<Order> orders) {
         Sort sort = Sort.unsorted();
@@ -34,17 +36,22 @@ public abstract class OrderUtils {
         return sort;
     }
 
-
     /**
      * 转换为Spring Data Sort
      *
      * @param orders orders
-     * @return Sort
+     * @return {@link Sort}
      */
     public static Sort toSort(Order... orders) {
         return toSort(ArrayUtils.asArrayList(orders));
     }
 
+    /**
+     * Sort 转换为  Order
+     *
+     * @param sort {@link Sort}
+     * @return 排序字段
+     */
     public static List<Order> toOrderList(Sort sort) {
         List<Order> orders = new ArrayList<>();
         Iterator<Sort.Order> iterator = sort.iterator();

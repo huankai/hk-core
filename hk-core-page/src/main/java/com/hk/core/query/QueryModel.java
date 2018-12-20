@@ -4,8 +4,9 @@ package com.hk.core.query;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import com.hk.commons.util.ArrayUtils;
 
 
 /**
@@ -59,7 +60,7 @@ public class QueryModel<T> {
     }
 
     public QueryModel<T> addOrders(Order... orders) {
-        this.orders.addAll(Arrays.asList(orders));
+        this.orders.addAll(ArrayUtils.asArrayList(orders));
         return this;
     }
 

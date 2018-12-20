@@ -17,8 +17,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author: kevin
- * @date: 2018-08-03 10:00
+ * @author kevin
+ * @date 2018-08-03 10:00
  */
 @RestControllerAdvice
 public class SimpleExceptionHandler extends AbstractExceptionHandler {

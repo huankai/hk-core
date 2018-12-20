@@ -7,8 +7,8 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
 /**
- * @author: kevin
- * @date: 2018-07-27 13:44
+ * @author kevin
+ * @date 2018-07-27 13:44
  */
 public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> implements ValidateCodeProcessor {
 
@@ -104,7 +104,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
         } catch (ServletRequestBindingException e) {
             throw new ValidateCodeException("获取验证码的值失败");
         }
-        if (StringUtils.isBlank(codeInRequest)) {
+        if (StringUtils.isEmpty(codeInRequest)) {
             throw new ValidateCodeException("验证码不能为空");
         }
         if (inStoreValidateCode.isExpired()) {

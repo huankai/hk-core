@@ -1,6 +1,8 @@
 package com.hk.core.data.jpa.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hk.core.data.commons.audit.AuditField;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -24,12 +26,13 @@ import java.util.Optional;
  * last_modified_date 更新时间，新增时会保存,每次更新时会修改
  * </pre>
  *
- * @author: kevin
+ * @author kevin
  */
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
 @SuppressWarnings("serial")
-public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String, LocalDateTime> {
+@JsonIgnoreProperties(value = {"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"})
+public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String, LocalDateTime>, AuditField {
 
     /**
      * <pre>
@@ -46,7 +49,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      */
     @CreatedBy
     @JsonIgnore
-    @Column(name = "created_by", updatable = false)
+    @Column(name = CREATED_BY, updatable = false)
     private String createdBy;
 
     /**
@@ -54,13 +57,13 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      */
     @CreatedDate
     @JsonIgnore
-    @Column(name = "created_date", updatable = false)
+    @Column(name = CREATED_DATE, updatable = false)
     private LocalDateTime createdDate;
 
     /**
      * 最后更新用户
      */
-    @Column(name = "last_modified_by")
+    @Column(name = LAST_MODIFIED_BY)
     @JsonIgnore
     @LastModifiedBy
     private String lastModifiedBy;
@@ -70,7 +73,7 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      */
     @LastModifiedDate
     @JsonIgnore
-    @Column(name = "last_modified_date")
+    @Column(name = LAST_MODIFIED_DATE)
     private LocalDateTime lastModifiedDate;
 
     @Override

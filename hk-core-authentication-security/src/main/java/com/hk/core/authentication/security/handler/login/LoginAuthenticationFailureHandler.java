@@ -18,8 +18,8 @@ import java.io.IOException;
 /**
  * 认证失败Handler
  *
- * @author: kevin
- * @date: 2018-07-26 17:29
+ * @author kevin
+ * @date 2018-07-26 17:29
  */
 public class LoginAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 

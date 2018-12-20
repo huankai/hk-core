@@ -9,8 +9,8 @@ import java.io.IOException;
 /**
  * Session 失效策略
  *
- * @author: kevin
- * @date: 2018-07-27 10:19
+ * @author kevin
+ * @date 2018-07-27 10:19
  */
 public class DefaultInvalidSessionStrategy extends AbstractSessionStrategy implements InvalidSessionStrategy {
 

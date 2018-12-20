@@ -27,7 +27,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 /**
- * @author: kevin
+ * @author kevin
  */
 @Configuration
 @EnableCaching
@@ -52,11 +52,14 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
                 .defaultUseWrapper(true)
                 .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .build();
-        JsonUtils.configure(objectMapper);
+        JsonUtils.configure(objectMapper, true);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationPair);
+//        RedisCacheManager redisCacheManager = new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
+//        redisCacheManager.setTransactionAware(true);
+//        return redisCacheManager;
         return new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
     }
 

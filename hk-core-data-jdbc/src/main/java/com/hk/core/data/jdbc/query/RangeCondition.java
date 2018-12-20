@@ -1,35 +1,26 @@
 package com.hk.core.data.jdbc.query;
 
 import com.hk.core.data.commons.query.Operator;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.Data;
 
 import java.util.List;
 
 /**
- * @author: kevin
- * @date: 2018-09-19 11:02
+ * @author kevin
+ * @date 2018-09-19 11:02
  */
+@Data
 public class RangeCondition<T> implements Condition {
 
-    @Getter
-    @Setter
     private String field;
 
-    @Getter
-    @Setter
     private T start;
 
-    @Getter
-    @Setter
     private T end;
 
-    @Getter
-    @Setter
     private boolean includeStart;
 
-    @Getter
-    @Setter
     private boolean includeEnd;
 
     /**

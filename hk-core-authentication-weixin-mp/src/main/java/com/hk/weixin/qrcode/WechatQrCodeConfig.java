@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 /**
  * 微信二维码扫码参数
  *
- * @author: kevin
- * @date: 2018年2月8日下午3:50:15
+ * @author kevin
+ * @date 2018年2月8日下午3:50:15
  */
 @Configuration
 @ConfigurationProperties(prefix = "wechat.qrcode")

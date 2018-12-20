@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * @author: kevin
- * @date: 2018-09-10 14:14
+ * @author kevin
+ * @date 2018-09-10 14:14
  */
 abstract class AbstractExceptionHandler {
 

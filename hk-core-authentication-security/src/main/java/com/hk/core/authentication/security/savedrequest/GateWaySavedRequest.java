@@ -7,8 +7,8 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author: kevin
- * @date: 2018-08-28 10:28
+ * @author kevin
+ * @date 2018-08-28 10:28
  */
 public class GateWaySavedRequest extends DefaultSavedRequest {
 
