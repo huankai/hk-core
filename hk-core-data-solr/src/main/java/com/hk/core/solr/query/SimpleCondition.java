@@ -32,8 +32,8 @@ public class SimpleCondition implements Condition {
         this.value = value;
     }
 
-	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Criteria toSolrCriteria() {
         if (StringUtils.isEmpty(field) || null == value) {
             return null;
@@ -52,12 +52,12 @@ public class SimpleCondition implements Condition {
                 if (value instanceof String[]) {
                     return Criteria.where(field).contains((String[]) value);
                 } else {
-                    return Criteria.where(field).contains(ConverterUtils.getInstance().convert(value, String.class));
+                    return Criteria.where(field).contains(ConverterUtils.defaultConvert(value, String.class));
                 }
             case LIKESTART:
-                return Criteria.where(field).endsWith(ConverterUtils.getInstance().convert(value, String.class));
+                return Criteria.where(field).endsWith(ConverterUtils.defaultConvert(value, String.class));
             case LIKEEND:
-                return Criteria.where(field).startsWith(ConverterUtils.getInstance().convert(value, String.class));
+                return Criteria.where(field).startsWith(ConverterUtils.defaultConvert(value, String.class));
             case GT:
                 return Criteria.where(field).greaterThan(value);
             case GTE:
