@@ -13,7 +13,7 @@
     </parent>
 
     <properties>
-        <shiro.version>1.4.0</shiro.version>
+        <shiro.version>1.4.0-RC2</shiro.version>
     </properties>
 
     <dependencyManagement>
@@ -46,10 +46,9 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring</artifactId>
+            <artifactId>shiro-spring-boot-starter</artifactId>
             <version>${shiro.version}</version>
         </dependency>
         <dependency>

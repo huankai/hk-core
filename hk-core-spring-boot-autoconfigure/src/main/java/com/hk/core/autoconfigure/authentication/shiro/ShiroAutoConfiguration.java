@@ -8,7 +8,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.realm.Realm;
-import org.apache.shiro.spring.config.ShiroConfiguration;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
@@ -27,7 +26,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @ConditionalOnClass(value = {SecurityUtils.class})
-@Import(value = {ShiroConfiguration.class, ShiroWebConfiguration.class, ShiroWebFilterConfiguration.class})
+@Import(value = {ShiroWebConfiguration.class,ShiroWebFilterConfiguration.class})
 public class ShiroAutoConfiguration {
 
     /**
