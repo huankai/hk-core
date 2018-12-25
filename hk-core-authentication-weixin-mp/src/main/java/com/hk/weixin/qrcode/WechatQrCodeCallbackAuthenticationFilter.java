@@ -24,18 +24,39 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
+    /**
+     * <pre>
+     *
+     * 微信扫码登陆返回参数 code
+     *
+     * 查看文档 ：https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=b2aec2aaa65154f7df33d39101e4aedb61d8fef3&lang=zh_CN
+     * </pre>
+     */
     private static final String CODE_PARAM_NAME = "code";
 
+    /**
+     * <pre>
+     * 微信扫码登陆返回参数 state
+     *     如果用户有配置了此参数，微信会返回
+     *     如果没有配置，则为空
+     *     可防止csrf攻击（跨站请求伪造攻击）
+     * 查看文档 ：https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=b2aec2aaa65154f7df33d39101e4aedb61d8fef3&lang=zh_CN
+     * </pre>
+     */
     private static final String STATE_PARAM_NAME = "state";
 
+    /**
+     * 微信 MpService
+     */
     private final WxMpService wxService;
 
+    /**
+     * 配置
+     */
     private final WechatQrCodeConfig config;
 
     public WechatQrCodeCallbackAuthenticationFilter(WxMpService wxMpService, WechatQrCodeConfig config) {
-        /*
-         * 处理 微信回调的url请求
-         */
+        /* 处理 微信回调的url请求  */
         super(new AntPathRequestMatcher(config.getCallbackUrl()));
         this.wxService = wxMpService;
         this.config = config;
@@ -44,16 +65,10 @@ public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthentica
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        /*
-         * 微信二维码回调会有两个参数返回:
-         * code 与 state
-         * 查看文档 ：https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=b2aec2aaa65154f7df33d39101e4aedb61d8fef3&lang=zh_CN
-         */
         final String code = request.getParameter(CODE_PARAM_NAME);
         final String state = request.getParameter(STATE_PARAM_NAME);
         if (StringUtils.isNotEmpty(config.getState()) && StringUtils.notEquals(config.getState(), state)) {
-            //csrf攻击（跨站请求伪造攻击）
-            throw new AuthenticationServiceException("登录失败！");
+            throw new AuthenticationServiceException("登录失败，跨站请求伪造攻击");
         }
         if (StringUtils.isNotEmpty(code)) { // 用户同意授权
             try {

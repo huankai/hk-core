@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.hk.weixin.qrcode;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
