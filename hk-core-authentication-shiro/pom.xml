@@ -14,6 +14,7 @@
 
     <properties>
         <shiro.version>1.4.0-RC2</shiro.version>
+        <jbcrypt.version>0.4</jbcrypt.version>
     </properties>
 
     <dependencyManagement>
@@ -51,6 +52,14 @@
             <artifactId>shiro-spring-boot-starter</artifactId>
             <version>${shiro.version}</version>
         </dependency>
+
+        <!-- Shiro bcrypt加密-->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>${jbcrypt.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-web</artifactId>
