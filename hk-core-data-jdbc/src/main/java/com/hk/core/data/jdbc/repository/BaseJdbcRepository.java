@@ -77,7 +77,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     public final T updateByIdSelective(T t) {
         if (t instanceof Persistable) {
             Persistable<ID> persistable = (Persistable<ID>) t;
-            AssertUtils.isTrue(!persistable.isNew(), "更新主键值不能为空");
+            AssertUtils.isTrue(!persistable.isNew(), "update.id.notEmpty");
             T find = getById(persistable.getId());
             BeanUtils.copyNotNullProperties(t, find);
             return save(find);

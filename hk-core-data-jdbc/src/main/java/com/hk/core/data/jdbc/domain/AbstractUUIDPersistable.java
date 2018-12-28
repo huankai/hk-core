@@ -40,7 +40,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
     }
 
     public final void generateId(String id) {
-        AssertUtils.state(isNew(), "id已存在,this id :" + this.id + ",args id:" + id);
+        AssertUtils.isTrue(isNew(), "id已存在,this id :" + this.id + ",args id:" + id);
         isNew = true;
         this.id = id;
     }

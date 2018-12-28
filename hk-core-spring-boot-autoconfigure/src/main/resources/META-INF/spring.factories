@@ -3,6 +3,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.hk.core.autoconfigure.authentication.security.MethodSecurityConfiguration,\
 com.hk.core.autoconfigure.authentication.security.SecurityAuthenticationAutoConfiguration,\
 com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2FeignAutoConfiguration,\
+com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2AutoConfiguration,\
 com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2JWTAccessTokenConverterConfiguration,\
 com.hk.core.autoconfigure.authentication.shiro.ShiroAutoConfiguration,\
 com.hk.core.autoconfigure.cache.redis.CacheRedisAutoConfiguration,\

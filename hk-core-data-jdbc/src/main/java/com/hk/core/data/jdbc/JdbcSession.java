@@ -45,7 +45,7 @@ public final class JdbcSession {
      * @param arguments arguments
      */
     public boolean delete(DeleteArguments arguments) {
-        AssertUtils.hasText(arguments.getFrom(), "delete From must not be null");
+        AssertUtils.isTrue(StringUtils.isNotEmpty(arguments.getFrom()), "delete From must not be null");
         StringBuilder sql = new StringBuilder("DELETE FROM ").append(arguments.getFrom());
         List<Object> params = new ArrayList<>();
         String conditionSql = arguments.getConditions().toSqlString(params);
@@ -187,7 +187,7 @@ public final class JdbcSession {
     /**
      * 只查询一条记录
      * <p>
-     * select fields from table_name where condition1 = ? and condition2 = ? limit 0 ,1
+     * select fields from table_name where condition1 = ? and condition2 = ? limit 0 ,2
      * </p>
      *
      * @param arguments arguments
@@ -200,7 +200,7 @@ public final class JdbcSession {
         CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
         rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         SelectStatement stmt = buildSelect(arguments);
-        String originalSql = stmt.selectSql.toString();
+        final String originalSql = stmt.selectSql.toString();
         String sql = dialect.getLimitSql(originalSql, 0, 2); // 分页两条,如果返回有多条记录,抛出异常
         List<T> result = queryForList(sql, rowMapper, stmt.parameters.toArray());
         if (result.size() > 1) {
@@ -228,7 +228,7 @@ public final class JdbcSession {
     }
 
     private SelectStatement buildSelect(SelectArguments arguments) {
-        AssertUtils.notNull(arguments, "arguments must not be null");
+        AssertUtils.isTrue(Objects.nonNull(arguments), "arguments must not be null");
         AssertUtils.notBlank(arguments.getFrom(), "查询表名不能为空");
         StringBuilder sql = new StringBuilder();
         StringBuilder countSql = new StringBuilder();

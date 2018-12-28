@@ -1,5 +1,6 @@
 package com.hk.core.data.jpa.repository;
 
+import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.data.jpa.convert.QueryByExamplePredicateBuilder;
@@ -73,9 +74,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     @Override
     public T updateByIdSelective(T t) {
         ID id = t.getId();
-        if (ObjectUtils.isEmpty(id)) {
-            throw new IllegalArgumentException("更新id不能为空！");
-        }
+        AssertUtils.isTrue(ObjectUtils.isNotEmpty(id), "update.id.notEmpty");
         T find = getOne(id);
         BeanUtils.copyNotNullProperties(t, find);
         return save(find);
