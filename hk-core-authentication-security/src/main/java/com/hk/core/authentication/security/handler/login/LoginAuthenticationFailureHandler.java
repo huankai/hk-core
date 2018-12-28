@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 认证失败Handler
@@ -28,7 +29,7 @@ public class LoginAuthenticationFailureHandler extends SimpleUrlAuthenticationFa
     private final LoginResponseType responseType;
 
     public LoginAuthenticationFailureHandler(LoginResponseType responseType) {
-        AssertUtils.notNull(responseType, "ResponseType must not be null.");
+        AssertUtils.isTrue(Objects.nonNull(responseType), "ResponseType must not be null.");
         this.responseType = responseType;
     }
 

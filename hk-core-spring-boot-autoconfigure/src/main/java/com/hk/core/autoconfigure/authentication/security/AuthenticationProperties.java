@@ -42,10 +42,10 @@ public class AuthenticationProperties {
     /**
      * 默认失败页面
      *
-     * @see com.hk.core.autoconfigure.exception.DefaultErrorController
+     * @see com.hk.core.autoconfigure.exception.Oauth2ErrorController
      * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#defaultFailureUrl
      */
-    private String defaultFailureUrl = "/error";
+    private String defaultFailureUrl = "/oauth2-error";
 
     /**
      * 是否请求重定向

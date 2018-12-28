@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 认证成功Handler
@@ -31,7 +32,7 @@ public class LoginAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
     private final LoginResponseType responseType;
 
     public LoginAuthenticationSuccessHandler(LoginResponseType responseType) {
-        AssertUtils.notNull(responseType, "ResponseType must not be null.");
+        AssertUtils.isTrue(Objects.nonNull(responseType), "ResponseType must not be null.");
         this.responseType = responseType;
     }
 

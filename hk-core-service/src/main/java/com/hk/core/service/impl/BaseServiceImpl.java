@@ -1,6 +1,7 @@
 package com.hk.core.service.impl;
 
 import com.hk.commons.util.AssertUtils;
+import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.data.commons.utils.OrderUtils;
@@ -33,6 +34,29 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     protected final UserPrincipal getPrincipal() {
         return securityContext.getPrincipal();
+    }
+
+    /**
+     * 国际化消息
+     *
+     * @param messageCode 国际化消息编号
+     * @param args        国际化消息参数
+     * @return 国际化消息
+     */
+    protected final String getMessage(String messageCode, Object... args) {
+        return getMessage(messageCode, null, args);
+    }
+
+    /**
+     * 国际化消息
+     *
+     * @param messageCode    国际化消息编号
+     * @param defaultMessage 国际化默认消息
+     * @param args           国际化消息参数
+     * @return 国际化消息
+     */
+    protected final String getMessage(String messageCode, String defaultMessage, Object... args) {
+        return SpringContextHolder.getMessageWithDefault(messageCode, defaultMessage, args);
     }
 
     /**
@@ -99,7 +123,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     public T updateById(T t) {
-        AssertUtils.isTrue(!t.isNew(), "更新主键值不能为空");
+        AssertUtils.isTrue(!t.isNew(), "update.id.notEmpty");
         return getBaseRepository().save(t);
     }
 

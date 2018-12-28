@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 /**
  * @author kevin
  * @date 2018-08-17 12:15
+ * @see org.springframework.boot.autoconfigure.security.oauth2.client.SsoSecurityConfigurer.OAuth2ClientAuthenticationConfigurer
  */
 public class OAuth2ClientAuthenticationConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 

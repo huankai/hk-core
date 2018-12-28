@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.authentication.security;
 
-import com.hk.core.authentication.security.SpringSecurityContext;
 import com.hk.core.authentication.security.expression.AdminAccessMethodSecurityExpressionRoot;
 import com.hk.core.authentication.security.expression.AdminAccessPermissionEvaluator;
 import org.aopalliance.intercept.MethodInvocation;
@@ -21,7 +20,7 @@ import org.springframework.security.core.Authentication;
  * @date 2018-05-16 15:57
  */
 @Configuration
-@ConditionalOnClass(SpringSecurityContext.class)
+@ConditionalOnClass(AdminAccessMethodSecurityExpressionRoot.class)
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class MethodSecurityConfiguration extends GlobalMethodSecurityConfiguration {
 
