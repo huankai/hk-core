@@ -12,6 +12,7 @@ import org.springframework.data.domain.Persistable;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Service implementation Enable Cache.
@@ -109,6 +110,24 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
     @CacheEvict(allEntries = true)
     public List<T> insertOrUpdate(Iterable<T> entities) {
         return super.insertOrUpdate(entities);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public List<T> insertOrUpdate(Iterable<T> entities, Function<T, T> function) {
+        return super.insertOrUpdate(entities, function);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public List<T> insertOrUpdateSelective(Iterable<T> entities) {
+        return super.insertOrUpdateSelective(entities);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public List<T> insertOrUpdateSelective(Iterable<T> entities, Function<T, T> function) {
+        return super.insertOrUpdateSelective(entities, function);
     }
 
     @Override

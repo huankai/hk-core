@@ -16,30 +16,37 @@ import javax.servlet.http.HttpSession;
 @WebAppConfiguration
 public abstract class WebAppSessionBaseTest extends LoginBaseTest {
 
-    protected MockHttpSession httpSession;
+	protected MockHttpSession httpSession;
 
-    @Override
-    public void before() throws Exception {
-        super.before();
-        this.httpSession = (MockHttpSession) getLoginSession();
-    }
+	@Override
+	public void before() throws Exception {
+		super.before();
+		this.httpSession = (MockHttpSession) getLoginSession();
+	}
 
-    private HttpSession getLoginSession() throws Exception {
-        MvcResult result = getMockMvc()
-                .perform(MockMvcRequestBuilders.post(getLoginUrl())
-                        .param("username", getUsername())
-                        .param("password", getPassword()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn();
-        return result.getRequest().getSession();
-    }
+	private HttpSession getLoginSession() throws Exception {
+		MvcResult result = getMockMvc()
+				.perform(MockMvcRequestBuilders.post(getLoginUrl())
+						.param(getUsernameParamter(), getUsername())
+						.param(getPasswordParamter(),
+						getPassword()))
+				.andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
+		return result.getRequest().getSession();
+	}
 
-    protected String getLoginUrl() {
-        return "/login";
-    }
+	protected String getLoginUrl() {
+		return "/login";
+	}
 
-    protected abstract String getUsername();
+	protected String getUsernameParamter() {
+		return "username";
+	}
+	
+	protected String getPasswordParamter() {
+		return "password";
+	}
 
-    protected abstract String getPassword();
+	protected abstract String getUsername();
+
+	protected abstract String getPassword();
 }

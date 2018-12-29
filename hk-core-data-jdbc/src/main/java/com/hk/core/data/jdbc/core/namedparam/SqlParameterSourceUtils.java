@@ -20,7 +20,8 @@ public abstract class SqlParameterSourceUtils extends org.springframework.jdbc.c
      * @return {@link SqlParameterSource}
      * @see org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils#createBatch(Collection)
      */
-    public static SqlParameterSource[] createBatch(Collection<?> candidates) {
+    @SuppressWarnings("unchecked")
+	public static SqlParameterSource[] createBatch(Collection<?> candidates) {
         SqlParameterSource[] batch = new SqlParameterSource[candidates.size()];
         int i = 0;
         for (Object candidate : candidates) {
