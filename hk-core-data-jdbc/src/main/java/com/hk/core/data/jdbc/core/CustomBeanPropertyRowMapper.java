@@ -259,6 +259,7 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
      * @see java.sql.ResultSetMetaData
      */
     @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public T mapRow(ResultSet rs, int rowNumber) throws SQLException {
         Assert.state(this.mappedClass != null, "Mapped class was not specified");
         T mappedObject = BeanUtils.instantiateClass(this.mappedClass);
@@ -302,7 +303,7 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
                             "Unable to map column '" + column + "' to property '" + pd.getName() + "'", ex);
                 }
             } else if (mappedObject instanceof Auditable) {
-                Auditable auditable = (Auditable) mappedObject;
+				Auditable auditable = (Auditable) mappedObject;
                 if (com.hk.commons.util.StringUtils.equals(field, AuditField.CREATED_BY)) {
                     auditable.setCreatedBy(getColumnValue(rs, index, String.class));
                 } else if (com.hk.commons.util.StringUtils.equals(field, AuditField.CREATED_DATE)) {
@@ -366,9 +367,10 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
         return getColumnValue(rs, index, pd.getPropertyType());
     }
 
-    @Nullable
-    protected <T> T getColumnValue(ResultSet rs, int index, Class<T> clazz) throws SQLException {
-        return (T) getResultSetValue(rs, index, clazz);
+	@Nullable
+	@SuppressWarnings("unchecked")
+    protected <E> E getColumnValue(ResultSet rs, int index, Class<E> clazz) throws SQLException {
+        return (E) getResultSetValue(rs, index, clazz);
     }
 
     /**

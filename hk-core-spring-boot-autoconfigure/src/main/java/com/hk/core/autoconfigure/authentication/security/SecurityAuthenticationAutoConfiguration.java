@@ -52,9 +52,9 @@ public class SecurityAuthenticationAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "hk.authentication.browser", name = "gate-way-host")
+    @ConditionalOnProperty(prefix = "hk.authentication.login", name = "gate-way-host")
     public RequestCache requestCache() {
-        return new GateWayHttpSessionRequestCache(properties.getBrowser().getGateWayHost());
+        return new GateWayHttpSessionRequestCache(properties.getLogin().getGateWayHost());
     }
 
 //    /**

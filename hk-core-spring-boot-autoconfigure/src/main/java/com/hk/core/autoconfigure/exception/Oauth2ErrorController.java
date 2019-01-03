@@ -2,6 +2,7 @@ package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.JsonResult;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,10 +30,18 @@ public class Oauth2ErrorController {
         if (null == exception) {
             exception = AuthenticationException.class.cast(request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION));
         }
-        //为什么错误信息要这么拿，因为Spring 封装了两层Exception，可通过源码查看
-        // OAuth2AccessTokenSupport.retrieveToken(AccessTokenRequest, OAuth2ProtectedResourceDetails, MultiValueMap<String, String>, HttpHeaders) 方法中的 OAuth2Exception 捕捉后封装为 OAuth2AccessDeniedException 一层
-        // OAuth2ClientAuthenticationProcessingFilter.attemptAuthentication(HttpServletRequest, HttpServletResponse) 方法中的 OAuth2Exception 捕捉后封装为 BadCredentialsException 一层
-//        return JsonResult.failure(null == exception ? "未知错误！" : exception.getCause().getCause().getMessage());
-        return JsonResult.failure(null == exception ? "登陆失败" : exception.getCause().getCause().getMessage());
+        if (exception != null) {
+            //为什么错误信息要这么拿，因为Spring 封装了三层Exception，可通过源码查看
+            // OAuth2AccessTokenSupport.retrieveToken(AccessTokenRequest, OAuth2ProtectedResourceDetails, MultiValueMap<String, String>, HttpHeaders) 方法中的 OAuth2Exception 捕捉后封装为 OAuth2AccessDeniedException 一层
+            // OAuth2ClientAuthenticationProcessingFilter.attemptAuthentication(HttpServletRequest, HttpServletResponse) 方法中的 OAuth2Exception 捕捉后封装为 BadCredentialsException 一层
+            Throwable cause = exception.getCause().getCause();
+            if (cause instanceof OAuth2Exception) {
+                return JsonResult.failure(((OAuth2Exception) cause).getAdditionalInformation().get("message"));
+            } else {
+                return JsonResult.failure(cause.getMessage());
+            }
+        } else {
+            return JsonResult.failure("未知错误！");
+        }
     }
 }
