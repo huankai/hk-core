@@ -25,10 +25,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-data-commons</artifactId>
         </dependency>

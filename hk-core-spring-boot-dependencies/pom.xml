@@ -20,8 +20,6 @@
         <spring.boot.admin.version>2.1.0</spring.boot.admin.version>
 
         <!-- <spring.cloud.version>Fishtown.RC1</spring.cloud.version> -->
-
-        <lombok.version>1.18.0</lombok.version>
         <druid.version>1.1.10</druid.version>
         <swagger.version>2.9.2</swagger.version>
         <weixin.java.version>2.9.0</weixin.java.version>
@@ -63,13 +61,6 @@
                         <artifactId>spring-boot-starter-tomcat</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
             </dependency>
 
             <dependency>

@@ -23,9 +23,9 @@ public class AuthenticationProperties {
     private SMSProperties sms = new SMSProperties();
 
     /**
-     * 浏览器参数配置
+     * 登陆参数配置
      */
-    private BrowserProperties browser = new BrowserProperties();
+    private LoginProperties login = new LoginProperties();
 
     /**
      * 图片验证码
@@ -63,10 +63,10 @@ public class AuthenticationProperties {
     /* ******************************************************************* */
 
     /**
-     * 浏览器登陆处理
+     * 登陆处理
      */
     @Data
-    public static class BrowserProperties {
+    public static class LoginProperties {
 
         /**
          * Get 登陆页面URL
@@ -86,12 +86,7 @@ public class AuthenticationProperties {
         /**
          * POST 登陆处理URL
          */
-        private String loginProcessingUrl = "/login";
-
-        /**
-         * Session 失效/过期URL
-         */
-        private String sessionInvalidUrl = "/login";
+        private String loginProcessingUrl = getLoginUrl();
 
         /**
          * 退出地址
@@ -104,11 +99,16 @@ public class AuthenticationProperties {
         private String logoutSuccessUrl = "/";
 
         /**
+         * Session 失效/过期URL
+         */
+        private String sessionInvalidUrl = "/login";
+
+        /**
          * <p>
          * 不需要登陆授权的URL
          * </p>
          */
-        private Set<PermitMatcher> permitAllMatchers = new HashSet<>();
+        private Set<PermitMatcher> permitMatchers = new HashSet<>();
 
         /**
          * 同一个用户在系统中的最大session数，默认1
