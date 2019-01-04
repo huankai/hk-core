@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Service CRUD操作
@@ -82,8 +83,8 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
-    public T insert(T t) {
-        return getBaseRepository().save(saveBefore(t));
+    public T insert(T t, Function<T, T> function) {
+        return getBaseRepository().save(function.apply(t));
     }
 
     @Override
@@ -122,21 +123,9 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
-    public T updateById(T t) {
+    public T updateById(T t, Function<T, T> function) {
         AssertUtils.isTrue(!t.isNew(), "update.id.notEmpty");
-        return getBaseRepository().save(t);
-    }
-
-    /**
-     * <pre>
-     *     在保存或更新实体之前
-     *     可设置参数默认值，验证数据有效性
-     * </pre>
-     *
-     * @param entity entity
-     */
-    protected T saveBefore(T entity) {
-        return entity;
+        return getBaseRepository().save(function.apply(t));
     }
 
 }

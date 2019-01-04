@@ -4,6 +4,7 @@ import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
@@ -44,7 +45,7 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @param entities entitys
      * @return {@link List}
      */
-    default List<T> insertOrUpdate(Iterable<T> entities) {
+    default List<T> insertOrUpdate(Collection<T> entities) {
         return insertOrUpdate(entities, Function.identity());
     }
 
@@ -55,8 +56,8 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @param function 每条记录执行器
      * @return {@link List}
      */
-    default List<T> insertOrUpdate(Iterable<T> entities, Function<T, T> function) {
-        List<T> result = new ArrayList<>();
+    default List<T> insertOrUpdate(Collection<T> entities, Function<T, T> function) {
+        List<T> result = new ArrayList<>(entities.size());
         entities.forEach(entity -> result.add(insertOrUpdate(function.apply(entity))));
         return result;
     }
@@ -68,7 +69,7 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @param function 每条记录执行器
      * @return {@link List}
      */
-    default List<T> insertOrUpdateSelective(Iterable<T> entities) {
+    default List<T> insertOrUpdateSelective(Collection<T> entities) {
         return insertOrUpdateSelective(entities, Function.identity());
     }
 
@@ -80,8 +81,8 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @param function 每条记录执行器
      * @return {@link List}
      */
-    default List<T> insertOrUpdateSelective(Iterable<T> entities, Function<T, T> function) {
-        List<T> result = new ArrayList<>();
+    default List<T> insertOrUpdateSelective(Collection<T> entities, Function<T, T> function) {
+        List<T> result = new ArrayList<>(entities.size());
         entities.forEach(entity -> result.add(insertOrUpdateSelective(function.apply(entity))));
         return result;
     }

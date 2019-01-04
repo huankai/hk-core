@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -91,6 +92,12 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
 
     @Override
     @CachePut(key = "'id'+#root.args[0].id")
+    public T updateById(T t, Function<T, T> function) {
+        return super.updateById(t, function);
+    }
+
+    @Override
+    @CachePut(key = "'id'+#root.args[0].id")
     public T updateByIdSelective(T t) {
         return super.updateByIdSelective(t);
     }
@@ -108,25 +115,25 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
 
     @Override
     @CacheEvict(allEntries = true)
-    public List<T> insertOrUpdate(Iterable<T> entities) {
+    public List<T> insertOrUpdate(Collection<T> entities) {
         return super.insertOrUpdate(entities);
     }
 
     @Override
     @CacheEvict(allEntries = true)
-    public List<T> insertOrUpdate(Iterable<T> entities, Function<T, T> function) {
+    public List<T> insertOrUpdate(Collection<T> entities, Function<T, T> function) {
         return super.insertOrUpdate(entities, function);
     }
 
     @Override
     @CacheEvict(allEntries = true)
-    public List<T> insertOrUpdateSelective(Iterable<T> entities) {
+    public List<T> insertOrUpdateSelective(Collection<T> entities) {
         return super.insertOrUpdateSelective(entities);
     }
 
     @Override
     @CacheEvict(allEntries = true)
-    public List<T> insertOrUpdateSelective(Iterable<T> entities, Function<T, T> function) {
+    public List<T> insertOrUpdateSelective(Collection<T> entities, Function<T, T> function) {
         return super.insertOrUpdateSelective(entities, function);
     }
 
@@ -144,7 +151,7 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
 
     @Override
     @CacheEvict(allEntries = true)
-    public List<T> batchUpdate(Iterable<T> entities) {
+    public List<T> batchUpdate(Collection<T> entities) {
         return super.batchUpdate(entities);
     }
 

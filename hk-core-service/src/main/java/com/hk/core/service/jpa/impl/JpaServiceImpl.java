@@ -15,6 +15,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,7 +89,7 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    public List<T> batchUpdate(Iterable<T> entities) {
+    public List<T> batchUpdate(Collection<T> entities) {
         return getBaseRepository().saveAll(entities);
     }
 
