@@ -1,8 +1,9 @@
 package com.hk.core.service;
 
-import java.io.Serializable;
-
 import org.springframework.data.domain.Persistable;
+
+import java.io.Serializable;
+import java.util.function.Function;
 
 /**
  * @author kevin
@@ -16,7 +17,11 @@ public interface InsertService<T extends Persistable<ID>, ID extends Serializabl
      * @param t t
      * @return T
      */
-    T insert(T t);
+    default T insert(T t) {
+        return insert(t, Function.identity());
+    }
+
+    T insert(T t, Function<T, T> function);
 
     /**
      * 实体批量保存
