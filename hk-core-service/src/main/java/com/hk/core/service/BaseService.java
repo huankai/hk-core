@@ -66,7 +66,6 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * 批量保存或更新，在更新时，只更新不为 null 的字段
      *
      * @param entities entitys
-     * @param function 每条记录执行器
      * @return {@link List}
      */
     default List<T> insertOrUpdateSelective(Collection<T> entities) {
