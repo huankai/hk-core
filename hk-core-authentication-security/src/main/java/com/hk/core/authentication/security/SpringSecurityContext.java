@@ -23,6 +23,11 @@ public final class SpringSecurityContext implements SecurityContext {
         return UserPrincipal.class.cast(authentication.getPrincipal());
     }
 
+    /**
+     * 当前用户是否有登陆，不包括匿名用户
+     *
+     * @return 登陆返回true, 否则返回false
+     */
     @Override
     public boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

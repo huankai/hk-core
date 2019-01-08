@@ -2,7 +2,6 @@ package com.hk.core.authentication.api.validatecode;
 
 import com.hk.commons.sms.SmsCodeSender;
 import com.hk.commons.util.AssertUtils;
-import com.hk.commons.util.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -31,7 +30,7 @@ public class SmsCodeProcessor extends AbstractValidateCodeProcessor<ValidateCode
     @Override
     protected void send(ValidateCode validateCode, ServletWebRequest request) throws ServletRequestBindingException {
         String phone = ServletRequestUtils.getRequiredStringParameter(request.getRequest(), mobileParamName);
-        AssertUtils.isTrue(StringUtils.isNotEmpty(phone), "手机号不能为空");
+        AssertUtils.notEmpty(phone, "手机号不能为空");
         smsCodeSender.send(phone, validateCode.getCode(), validateCode.getExpireSecond());
     }
 }

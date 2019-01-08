@@ -229,7 +229,7 @@ public final class JdbcSession {
 
     private SelectStatement buildSelect(SelectArguments arguments) {
         AssertUtils.isTrue(Objects.nonNull(arguments), "arguments must not be null");
-        AssertUtils.notBlank(arguments.getFrom(), "查询表名不能为空");
+        AssertUtils.notEmpty(arguments.getFrom(), "查询表名不能为空");
         StringBuilder sql = new StringBuilder();
         StringBuilder countSql = new StringBuilder();
 
