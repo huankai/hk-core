@@ -3,7 +3,8 @@ package com.hk.weixin.qrcode;
 import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.UserPrincipal;
-import me.chanjar.weixin.common.exception.WxErrorException;
+
+import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
@@ -75,7 +76,7 @@ public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthentica
                 WxMpOAuth2AccessToken accessToken = wxService.oauth2getAccessToken(code);
                 WxMpUser mpUser = wxService.oauth2getUserInfo(accessToken, null);
                 UserPrincipal principal = new UserPrincipal(mpUser.getOpenId(), mpUser.getNickname(), false, mpUser.getNickname(), ByteConstants.ZERO, null, null,
-                        Byte.valueOf(String.valueOf(mpUser.getSexId())), mpUser.getHeadImgUrl());
+                        Byte.valueOf(String.valueOf(mpUser.getSex())), mpUser.getHeadImgUrl());
                 WechatQrCodeAuthenticationToken authenticationToken = new WechatQrCodeAuthenticationToken(principal);
                 setDetails(request, authenticationToken);
                 return getAuthenticationManager().authenticate(authenticationToken);
