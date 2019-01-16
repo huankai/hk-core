@@ -36,6 +36,7 @@
         <module>hk-core-message-websocket</module>
         <module>hk-core-message-weixin</module>
         <module>hk-core-message-redis</module>
+        <module>hk-core-stream-rabbitmq</module>
         <module>hk-core-stream-kafka</module>
         <module>hk-swagger-ui</module>
         <module>hk-core-test</module>
