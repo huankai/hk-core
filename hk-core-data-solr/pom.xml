@@ -24,20 +24,16 @@
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-commons-util</artifactId>
+            <artifactId>hk-commons-httpclient</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-commons-httpclient</artifactId>
+            <artifactId>hk-core-data-commons</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-solr</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-data-commons</artifactId>
         </dependency>
     </dependencies>
 </project>

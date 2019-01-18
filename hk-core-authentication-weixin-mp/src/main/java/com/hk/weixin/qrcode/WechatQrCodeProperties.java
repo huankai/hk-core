@@ -1,8 +1,10 @@
 package com.hk.weixin.qrcode;
 
 import com.hk.commons.util.StringUtils;
+
+import lombok.Data;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 import javax.validation.constraints.NotNull;
 
@@ -12,9 +14,9 @@ import javax.validation.constraints.NotNull;
  * @author kevin
  * @date 2018年2月8日下午3:50:15
  */
-@Configuration
+@Data
 @ConfigurationProperties(prefix = "wechat.qrcode")
-public class WechatQrCodeConfig {
+public class WechatQrCodeProperties {
 
     /**
      * 二维码扫码回调
@@ -30,13 +32,6 @@ public class WechatQrCodeConfig {
     private String state;
 
     /**
-     * @return the callbackUrl
-     */
-    public String getCallbackUrl() {
-        return callbackUrl;
-    }
-
-    /**
      * @param callbackUrl the callbackUrl to set
      */
     public void setCallbackUrl(String callbackUrl) {
@@ -45,33 +40,4 @@ public class WechatQrCodeConfig {
         }
         this.callbackUrl = callbackUrl;
     }
-
-    /**
-     * @return the callHost
-     */
-    public String getCallHost() {
-        return callHost;
-    }
-
-    /**
-     * @param callHost the callHost to set
-     */
-    public void setCallHost(String callHost) {
-        this.callHost = callHost;
-    }
-
-    /**
-     * @return the state
-     */
-    public String getState() {
-        return state;
-    }
-
-    /**
-     * @param state the state to set
-     */
-    public void setState(String state) {
-        this.state = state;
-    }
-
 }

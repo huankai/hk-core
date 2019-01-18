@@ -32,7 +32,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-commons-util</artifactId>
+            <artifactId>hk-core-authentication-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
@@ -40,25 +40,19 @@
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-core-authentication-api</artifactId>
+            <artifactId>hk-core-web</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring-boot-starter</artifactId>
             <version>${shiro.version}</version>
         </dependency>
-
         <!-- Shiro bcrypt加密-->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-web</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 

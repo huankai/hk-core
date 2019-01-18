@@ -4,9 +4,10 @@
 package com.hk.core.autoconfigure.weixin.authentication.qrcode;
 
 
-import com.hk.weixin.qrcode.WechatQrCodeAuthenticationProvider;
-import com.hk.weixin.qrcode.WechatQrCodeCallbackAuthenticationFilter;
-import com.hk.weixin.qrcode.WechatQrCodeConfig;
+import com.hk.weixin.qrcode.WechatQrCodeProperties;
+import com.hk.weixin.qrcode.security.WechatQrCodeAuthenticationProvider;
+import com.hk.weixin.qrcode.security.WechatQrCodeCallbackAuthenticationFilter;
+
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -24,11 +25,11 @@ public class WechatQrcodeAuthenticationSecurityConfigurer extends SecurityConfig
 
     private WxMpService wxMpService;
 
-    private WechatQrCodeConfig config;
+    private WechatQrCodeProperties qrCodeProperties;
 
-    public WechatQrcodeAuthenticationSecurityConfigurer(WxMpService wxMpService, WechatQrCodeConfig qrCodeConfig) {
+    public WechatQrcodeAuthenticationSecurityConfigurer(WxMpService wxMpService, WechatQrCodeProperties qrCodeProperties) {
         this.wxMpService = wxMpService;
-        this.config = qrCodeConfig;
+        this.qrCodeProperties = qrCodeProperties;
     }
 
     /**
@@ -36,7 +37,7 @@ public class WechatQrcodeAuthenticationSecurityConfigurer extends SecurityConfig
      */
     @Override
     public void configure(HttpSecurity http) {
-        WechatQrCodeCallbackAuthenticationFilter filter = new WechatQrCodeCallbackAuthenticationFilter(wxMpService, config);
+        WechatQrCodeCallbackAuthenticationFilter filter = new WechatQrCodeCallbackAuthenticationFilter(wxMpService, qrCodeProperties);
         filter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
         WechatQrCodeAuthenticationProvider provider = new WechatQrCodeAuthenticationProvider();
         http.authenticationProvider(provider).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);

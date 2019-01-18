@@ -1,4 +1,4 @@
-package com.hk.core.exception;
+package com.hk.core.service.exception;
 
 /**
  * @author kevin

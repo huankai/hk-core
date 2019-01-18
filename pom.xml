@@ -15,7 +15,6 @@
     </properties>
 
     <modules>
-        <module>hk-core-exception</module>
         <module>hk-core-page</module>
         <module>hk-core-data-commons</module>
         <module>hk-core-web</module>

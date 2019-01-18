@@ -1,4 +1,4 @@
-package com.hk.weixin.qrcode;
+package com.hk.weixin.qrcode.security;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

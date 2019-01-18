@@ -26,6 +26,12 @@
         <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-commons-util</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<groupId>commons-io</groupId>
+            		<artifactId>commons-io</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

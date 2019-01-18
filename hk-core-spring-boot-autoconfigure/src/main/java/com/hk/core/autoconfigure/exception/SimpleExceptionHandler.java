@@ -1,7 +1,7 @@
 package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.util.EnumDisplayUtils;
-import com.hk.core.exception.ServiceException;
+import com.hk.core.service.exception.ServiceException;
 import com.hk.commons.JsonResult;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
