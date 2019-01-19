@@ -27,7 +27,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  */
 @Configuration
 @EnableJdbcAuditing
-@EnableJdbcRepositories(basePackages = {"com.hk.**.repository.jdbc"}, repositoryFactoryBeanClass = BaseJdbcRepositoryFactoryBean.class)
+@EnableJdbcRepositories(basePackages = {"**.repository.jdbc"}, repositoryFactoryBeanClass = BaseJdbcRepositoryFactoryBean.class)
 @ConditionalOnClass(JdbcSession.class)
 @Import(JdbcConfiguration.class)
 public class JdbcAutoConfiguration {

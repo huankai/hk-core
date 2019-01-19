@@ -1,6 +1,7 @@
 package com.hk.core.service.exception;
 
 /**
+ * Http Status Code ：400
  * @author kevin
  * @date 2018-08-03 09:52
  */
