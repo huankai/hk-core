@@ -5,6 +5,7 @@ import com.hk.commons.util.ListResult;
 import com.hk.core.query.QueryModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @SuppressWarnings("serial")
 public class SimpleQueryPage<T> extends AbstractQueryPage<T> {
 
@@ -26,9 +28,6 @@ public class SimpleQueryPage<T> extends AbstractQueryPage<T> {
      * 每页显示记录数
      */
     private int pageSize;
-
-    public SimpleQueryPage() {
-    }
 
     /**
      * @param query  query
