@@ -1,5 +1,7 @@
-package com.hk.core.cache.service;
+package com.hk.core.cache.service.impl;
 
+import com.hk.core.cache.service.CacheInvalidService;
+import com.hk.core.service.jpa.JpaBaseService;
 import com.hk.core.service.jpa.impl.JpaServiceImpl;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,7 +24,7 @@ import java.util.function.Function;
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
  * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */
-public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JpaServiceImpl<T, PK> {
+public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JpaServiceImpl<T, PK> implements JpaBaseService<T, PK>, CacheInvalidService {
 
     @Override
     @Cacheable(key = "'id'+#root.args[0]")
@@ -152,6 +154,12 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
     @CacheEvict(allEntries = true)
     public List<T> batchUpdate(Collection<T> entities) {
         return super.batchUpdate(entities);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    public void cleanCache() {
+
     }
 
     @SuppressWarnings("unchecked")

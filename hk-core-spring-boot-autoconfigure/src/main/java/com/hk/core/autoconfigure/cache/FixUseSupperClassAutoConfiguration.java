@@ -26,6 +26,8 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+import java.time.Duration;
+
 /**
  * @author kevin
  */
@@ -57,6 +59,7 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
 
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationPair);
+//        redisCacheConfiguration = redisCacheConfiguration.entryTtl(Duration.ofHours(2));//缓存过期时间，默认为2小时
 //        RedisCacheManager redisCacheManager = new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
 //        redisCacheManager.setTransactionAware(true);
 //        return redisCacheManager;

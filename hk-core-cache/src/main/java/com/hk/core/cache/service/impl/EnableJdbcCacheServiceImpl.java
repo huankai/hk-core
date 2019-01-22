@@ -1,6 +1,8 @@
-package com.hk.core.cache.service;
+package com.hk.core.cache.service.impl;
 
+import com.hk.core.cache.service.CacheInvalidService;
 import com.hk.core.data.jdbc.query.CompositeCondition;
+import com.hk.core.service.jdbc.JdbcBaseService;
 import com.hk.core.service.jdbc.impl.JdbcServiceImpl;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,7 +25,7 @@ import java.util.function.Function;
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
  * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */
-public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JdbcServiceImpl<T, PK> {
+public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JdbcServiceImpl<T, PK> implements JdbcBaseService<T, PK>, CacheInvalidService {
 
     @Override
     @Cacheable(key = "'id'+#root.args[0]")
@@ -155,7 +157,13 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
         return super.batchUpdate(entities);
     }
 
-//    @Override
+    @Override
+    @CacheEvict(allEntries = true)
+    public void cleanCache() {
+
+    }
+
+    //    @Override
 //    @Cacheable(key = "'id'+#root.args[0]")
 //    public Optional<T> findById(PK pk) {
 //        return super.findById(pk);

@@ -2,6 +2,7 @@ package com.hk.core.authentication.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.Set;
  * @date 2017年9月28日上午9:45:55
  */
 @Data
+@NoArgsConstructor
 public class UserPrincipal implements Serializable {
 
     /**
@@ -105,10 +107,6 @@ public class UserPrincipal implements Serializable {
      */
     @JsonIgnore
     private Set<String> permissionSet;
-
-    public UserPrincipal() {
-
-    }
 
     public UserPrincipal(String userId, String account, boolean protectUser, String realName,
                          Byte userType, String phone, String email,

@@ -26,7 +26,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -103,7 +102,7 @@ public class FixUseSupperClassAnnotationParser implements FixUseSupperClassCache
         return ops;
     }
 
-    private <T extends Annotation> Collection<CacheOperation> lazyInit(Collection<CacheOperation> ops) {
+    private Collection<CacheOperation> lazyInit(Collection<CacheOperation> ops) {
         return (ops != null ? ops : new ArrayList<>(1));
     }
 

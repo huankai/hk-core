@@ -38,6 +38,8 @@ public abstract class Webs {
 
     private static final String MSIE_USER_AGENT_HEADER_VALUE = "MSIE";
 
+    private static final String EDGE_USER_AGENT_HEADER_VALUE = "Edge";
+
     private static final String TRIDENT_USER_AGENT_HEADER_VALUE = "Trident";
 
     private static final String MOZILLA_USER_AGENT_HEADER_VALUE = "Mozilla";
@@ -268,7 +270,9 @@ public abstract class Webs {
         try {
             String agent = request.getHeader(USER_AGENT_HEADER_NAME);
             if (StringUtils.isNotEmpty(agent)) {
-                if (agent.contains(MSIE_USER_AGENT_HEADER_VALUE) || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {//IE
+                if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) ||
+                        agent.contains(MSIE_USER_AGENT_HEADER_VALUE) ||
+                        agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {//IE
                     encodeFileName = URLEncoder.encode(fileName, Contants.UTF_8);
                 } else if (agent.contains(MOZILLA_USER_AGENT_HEADER_VALUE)) {//火狐,谷歌
                     encodeFileName = StringUtils.newStringIso8859_1(StringUtils.getByteUtf8(fileName));
