@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.authentication.security;
 
-import com.hk.core.authentication.api.LoginResponseType;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpMethod;
@@ -31,13 +30,6 @@ public class AuthenticationProperties {
      * 图片验证码
      */
     private ImageCodeProperties imageCode = new ImageCodeProperties();
-
-    /**
-     * 暂时未使用此属性登陆返回的类型
-     */
-    @Deprecated
-    private LoginResponseType responseType = LoginResponseType.JSON;
-
 
     /**
      * 默认失败页面

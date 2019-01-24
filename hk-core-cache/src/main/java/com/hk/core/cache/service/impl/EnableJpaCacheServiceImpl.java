@@ -122,20 +122,8 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
 
     @Override
     @CacheEvict(allEntries = true)
-    public List<T> insertOrUpdate(Collection<T> entities, Function<T, T> function) {
-        return super.insertOrUpdate(entities, function);
-    }
-
-    @Override
-    @CacheEvict(allEntries = true)
     public List<T> insertOrUpdateSelective(Collection<T> entities) {
         return super.insertOrUpdateSelective(entities);
-    }
-
-    @Override
-    @CacheEvict(allEntries = true)
-    public List<T> insertOrUpdateSelective(Collection<T> entities, Function<T, T> function) {
-        return super.insertOrUpdateSelective(entities, function);
     }
 
     @Override

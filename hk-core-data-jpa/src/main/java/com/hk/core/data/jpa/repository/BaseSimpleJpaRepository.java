@@ -74,7 +74,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     @Override
     public T updateByIdSelective(T t) {
         ID id = t.getId();
-        AssertUtils.isTrue(ObjectUtils.isNotEmpty(id), "update.id.notEmpty");
+        AssertUtils.isTrueWithI18n(ObjectUtils.isNotEmpty(id), "update.id.notEmpty");
         T find = getOne(id);
         BeanUtils.copyNotNullProperties(t, find);
         return save(find);
