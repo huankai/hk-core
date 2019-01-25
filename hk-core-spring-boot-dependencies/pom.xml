@@ -97,17 +97,22 @@
             </dependency>
             <dependency>
                 <groupId>com.hk</groupId>
+                <artifactId>hk-core-authentication-security-cas</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-authentication-security-oauth2</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
                 <artifactId>hk-core-authentication-shiro</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.hk</groupId>
                 <artifactId>hk-core-page</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.hk</groupId>
-                <artifactId>hk-core-authentication-security-oauth2</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
