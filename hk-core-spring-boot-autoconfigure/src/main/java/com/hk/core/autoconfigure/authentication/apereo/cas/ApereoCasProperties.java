@@ -1,7 +1,9 @@
 package com.hk.core.autoconfigure.authentication.apereo.cas;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.security.cas.authentication.CasAuthenticationProvider;
+
+import lombok.Data;
 
 /**
  * @author huangkai
@@ -10,6 +12,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "hk.authentication.cas")
 public class ApereoCasProperties {
+	
+	/**
+	 * @see CasAuthenticationProvider#setKey(String)
+	 */
+	private String key;
 
     /**
      * @see org.springframework.security.cas.ServiceProperties#service
@@ -29,12 +36,17 @@ public class ApereoCasProperties {
     /**
      * @see org.jasig.cas.client.validation.Cas30ServiceTicketValidator#casServerUrlPrefix
      */
-    private String ticketValidatorUrl = getCasServerUrlPrefix();
+    private String ticketValidatorUrl;
 
     /**
-     * @see org.springframework.security.web.authentication.logout.LogoutFilter#logoutSuccessHandler
      */
     private String casServerUrlPrefix;
+    
+    /**
+     * 
+     * @see org.springframework.security.web.authentication.logout.LogoutFilter#logoutSuccessHandler
+     */
+    private String casServerLogoutUrl;
 
 
 }

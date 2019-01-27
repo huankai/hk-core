@@ -1,7 +1,6 @@
 package com.hk.core.autoconfigure.authentication.apereo.cas;
 
-import com.hk.commons.util.ByteConstants;
-import com.hk.core.authentication.security.SecurityUserPrincipal;
+import com.hk.authentication.security.cas.userdetails.CustomGrantedAuthorityFromAssertionAttributesUserDetailsService;
 import com.hk.core.autoconfigure.authentication.security.AuthenticationProperties;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
@@ -21,14 +20,15 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 import javax.servlet.http.HttpSessionEvent;
+import java.util.Collections;
 
 /**
  * @author huangkai
  * @date 2019-01-25 17:42
  */
 @Configuration
-@ConditionalOnClass(value = {CasAuthenticationProvider.class, AuthenticationProperties.class})
-@EnableConfigurationProperties(ApereoCasProperties.class)
+@ConditionalOnClass(value = {CasAuthenticationProvider.class})
+@EnableConfigurationProperties({ApereoCasProperties.class, AuthenticationProperties.class})
 public class SecurityCasConfiguration {
 
     private final ApereoCasProperties apereoCasProperties;
@@ -70,11 +70,8 @@ public class SecurityCasConfiguration {
         CasAuthenticationProvider provider = new CasAuthenticationProvider();
         provider.setServiceProperties(serviceProperties());
         provider.setTicketValidator(ticketValidator());
-        provider.setUserDetailsService(s ->
-                new SecurityUserPrincipal(s, s, true, "0", ByteConstants.ZERO,
-                        "0", "0", ByteConstants.ZERO, "0", "", ByteConstants.ONE)
-        );
-        provider.setKey("CAS_PROVIDER_LOCALHOST_8123");
+        provider.setAuthenticationUserDetailsService(new CustomGrantedAuthorityFromAssertionAttributesUserDetailsService(Collections.emptySet(), Collections.emptySet()));
+        provider.setKey(apereoCasProperties.getKey());
         return provider;
     }
 
@@ -86,7 +83,7 @@ public class SecurityCasConfiguration {
 
     @Bean
     public LogoutFilter logoutFilter() {
-        LogoutFilter logoutFilter = new LogoutFilter(apereoCasProperties.getCasServerUrlPrefix(),
+        LogoutFilter logoutFilter = new LogoutFilter(apereoCasProperties.getCasServerLogoutUrl(),
                 securityContextLogoutHandler());
         logoutFilter.setFilterProcessesUrl(authenticationProperties.getLogin().getLogoutUrl());
         return logoutFilter;
