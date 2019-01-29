@@ -1,10 +1,12 @@
 package com.hk.core.solr.query;
 
+import org.springframework.data.solr.core.query.Criteria;
+
 import com.hk.commons.util.ConverterUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.data.commons.query.Operator;
+
 import lombok.Data;
-import org.springframework.data.solr.core.query.Criteria;
 
 /**
  * @author sjq-278
@@ -87,7 +89,9 @@ public class SimpleCondition implements Condition {
             case BETWEEN:
                 if (value instanceof Object[]) {
                     Object[] valueArr = (Object[]) value;
-                    return Criteria.where(field).between(valueArr[0], valueArr[1]);
+                    if(valueArr.length == 2) {
+                    	return Criteria.where(field).between(valueArr[0], valueArr[1]);
+                    }
                 }
                 return null;
         }

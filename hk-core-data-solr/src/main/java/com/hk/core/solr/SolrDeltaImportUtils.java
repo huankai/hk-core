@@ -1,12 +1,12 @@
 package com.hk.core.solr;
 
-import com.hk.commons.http.HttpExecutor;
-import com.hk.commons.http.get.SimpleGetHttpExecutor;
-import com.hk.commons.util.StringUtils;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.hk.commons.http.HttpExecutor;
+import com.hk.commons.http.get.SimpleGetHttpExecutor;
+import com.hk.commons.util.StringUtils;
 
 /**
  * Solr 增量导入
@@ -52,7 +52,7 @@ public abstract class SolrDeltaImportUtils {
         params.put("command", "delta-import");
         params.put("clean", "false");
         params.put("commit", "true");
-        if (StringUtils.isNotBlank(entity)) {
+        if (StringUtils.isNotEmpty(entity)) {
             params.put("entity", entity);
         }
         return params;

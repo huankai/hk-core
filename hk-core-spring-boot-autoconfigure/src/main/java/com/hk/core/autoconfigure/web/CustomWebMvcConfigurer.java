@@ -29,6 +29,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author huangkai
@@ -56,7 +57,6 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     private GlobalPropertyInterceptor.RequestPropertyProperties requestProperty;
 
     /**
-     * @return
      * @see org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.EnableWebMvcConfiguration#mvcRegistrations
      */
     @Bean
@@ -111,9 +111,10 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
-        if (CollectionUtils.isNotEmpty(requestProperty.getProperty())) {
+        Map<String, Object> property = requestProperty.getProperty();
+        if (CollectionUtils.isNotEmpty(property)) {
             GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
-            propertyInterceptor.setProperty(requestProperty.getProperty());
+            propertyInterceptor.setProperty(property);
             registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
         }
 

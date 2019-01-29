@@ -3,6 +3,8 @@ package com.hk.core.autoconfigure.authentication.apereo.cas;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.cas.authentication.CasAuthenticationProvider;
 
+import com.hk.commons.util.IDGenerator;
+
 import lombok.Data;
 
 /**
@@ -16,7 +18,7 @@ public class ApereoCasProperties {
 	/**
 	 * @see CasAuthenticationProvider#setKey(String)
 	 */
-	private String key;
+	private String key = IDGenerator.STRING_UUID.generate();
 
     /**
      * @see org.springframework.security.cas.ServiceProperties#service

@@ -50,7 +50,6 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                     CollectionUtils.getStringValue(m, "email"),
                     CollectionUtils.getByteValue(m, "sex"),
                     CollectionUtils.getStringValue(m, "iconPath"));
-            principal.setSexChinese(CollectionUtils.getStringValue(m, "sexChinese"));
             principal.setOrgId(CollectionUtils.getStringValue(m, "orgId"));
             principal.setOrgName(CollectionUtils.getStringValue(m, "orgName"));
             principal.setDeptId(CollectionUtils.getStringValue(m, "deptId"));

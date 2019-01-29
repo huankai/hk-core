@@ -1,6 +1,7 @@
 package com.hk.core.authentication.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hk.commons.util.CollectionUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -56,8 +57,6 @@ public class UserPrincipal implements Serializable {
      * 用户性别
      */
     private Byte sex;
-
-    private String sexChinese;
 
     /**
      * 用户头像
@@ -122,6 +121,22 @@ public class UserPrincipal implements Serializable {
         this.iconPath = iconPath;
     }
 
+    /**
+     * 判断用户是否有权限
+     * @param permissionName 权限名
+     */
+    public final boolean hasPermission(String permissionName) {
+    	return isAdministrator() || CollectionUtils.contains(permissionSet, permissionName);
+    }
+    
+    /**
+     * 判断用户是否有角色
+     * @param roleName 角色名
+     */
+    public final boolean hasRole(String roleName) {
+    	return isAdministrator() || CollectionUtils.contains(roleSet, roleName);
+    }
+    
     /**
      * 是否为管理员
      *

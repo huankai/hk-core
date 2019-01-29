@@ -98,7 +98,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     @Override
     @JsonIgnore
     public boolean isAccountNonLocked() {
-        return ByteConstants.ONE.equals(userStatus);
+        return ByteConstants.TWO.equals(userStatus);
     }
 
     /**
@@ -120,7 +120,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-        return ByteConstants.ONE.equals(userStatus);
+        return ByteConstants.TWO.equals(userStatus);
     }
 
     @Override

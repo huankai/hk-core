@@ -38,7 +38,7 @@ public class LocalUserAuthenticationConverter implements UserAuthenticationConve
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
             Map<String, Object> m = new HashMap<>(map);
-            String principal = CollectionUtils.getValue(m, USERNAME, String.class);
+            String principal = CollectionUtils.getStringValue(m, USERNAME);
             UserPrincipal user = UserPrincipal.class.cast(userDetailClientService.loadUserByUsername(principal));
             user.setAppInfo(userDetailClientService.getClientInfoById(CollectionUtils.getStringValue(m, "client_id")));
             List<GrantedAuthority> authorities = new ArrayList<>();

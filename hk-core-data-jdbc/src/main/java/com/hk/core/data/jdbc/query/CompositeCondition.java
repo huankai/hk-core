@@ -1,13 +1,14 @@
 package com.hk.core.data.jdbc.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.data.commons.query.AndOr;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author kevin
@@ -104,7 +105,7 @@ public class CompositeCondition implements Condition {
                 String sql = c.toSqlString(parameters);
                 if (StringUtils.isNotEmpty(sql)) {
                     if (index++ > 0) {
-                        sb.append(" ").append(andOr.toSqlString()).append(" ");
+                        sb.append(StringUtils.SPACE).append(andOr.toSqlString()).append(StringUtils.SPACE);
                     }
                     sb.append(sql);
                 }

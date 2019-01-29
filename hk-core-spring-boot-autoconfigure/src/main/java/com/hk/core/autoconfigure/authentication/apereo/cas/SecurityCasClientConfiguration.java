@@ -29,13 +29,13 @@ import java.util.Collections;
 @Configuration
 @ConditionalOnClass(value = {CasAuthenticationProvider.class})
 @EnableConfigurationProperties({ApereoCasProperties.class, AuthenticationProperties.class})
-public class SecurityCasConfiguration {
+public class SecurityCasClientConfiguration {
 
     private final ApereoCasProperties apereoCasProperties;
 
     private final AuthenticationProperties authenticationProperties;
 
-    public SecurityCasConfiguration(ApereoCasProperties apereoCasProperties, AuthenticationProperties authenticationProperties) {
+    public SecurityCasClientConfiguration(ApereoCasProperties apereoCasProperties, AuthenticationProperties authenticationProperties) {
         this.apereoCasProperties = apereoCasProperties;
         this.authenticationProperties = authenticationProperties;
     }
