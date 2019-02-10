@@ -1,5 +1,7 @@
 package com.hk.core.solr.query;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.solr.core.query.Criteria;
 
 import com.hk.commons.util.ConverterUtils;
@@ -13,6 +15,8 @@ import lombok.Data;
  * @date 2018-12-03 16:49
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SimpleCondition implements Condition {
 
     private String field;
@@ -21,23 +25,14 @@ public class SimpleCondition implements Condition {
 
     private Object value;
 
-    public SimpleCondition() {
-    }
-
     public SimpleCondition(String field, Object value) {
         this(field, Operator.EQ, value);
-    }
-
-    public SimpleCondition(String field, Operator operator, Object value) {
-        this.field = field;
-        this.operator = operator;
-        this.value = value;
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Criteria toSolrCriteria() {
-        if (StringUtils.isEmpty(field) || null == value) {
+        if (StringUtils.isEmpty(field)) {
             return null;
         }
         if (operator == null) {
@@ -89,8 +84,8 @@ public class SimpleCondition implements Condition {
             case BETWEEN:
                 if (value instanceof Object[]) {
                     Object[] valueArr = (Object[]) value;
-                    if(valueArr.length == 2) {
-                    	return Criteria.where(field).between(valueArr[0], valueArr[1]);
+                    if (valueArr.length == 2) {
+                        return Criteria.where(field).between(valueArr[0], valueArr[1]);
                     }
                 }
                 return null;
