@@ -1,14 +1,13 @@
 package com.hk.core.data.jdbc.query;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.data.commons.query.AndOr;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author kevin
@@ -111,6 +110,6 @@ public class CompositeCondition implements Condition {
                 }
             }
         }
-        return sb.length() > 0 ? sb.toString() : null;
+        return sb.toString();
     }
 }
