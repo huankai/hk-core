@@ -13,21 +13,9 @@
     </parent>
 
     <properties>
-        <shiro.version>1.4.0-RC2</shiro.version>
+        <shiro.version>1.4.0</shiro.version>
         <jbcrypt.version>0.4</jbcrypt.version>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.hk</groupId>
-                <artifactId>hk-core-spring-boot-dependencies</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>

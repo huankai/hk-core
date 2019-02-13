@@ -10,18 +10,6 @@
     </parent>
     <artifactId>hk-core-authentication-security</artifactId>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.hk</groupId>
-                <artifactId>hk-core-spring-boot-dependencies</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>

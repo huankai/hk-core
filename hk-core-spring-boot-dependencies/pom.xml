@@ -3,13 +3,11 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.hk</groupId>
-        <artifactId>hk-core</artifactId>
-        <version>2.1.2.RELEASE</version>
-    </parent>
-    <packaging>pom</packaging>
+    <groupId>com.hk</groupId>
     <artifactId>hk-core-spring-boot-dependencies</artifactId>
+    <version>2.1.2.RELEASE</version>
+    <packaging>pom</packaging>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -18,8 +16,7 @@
         <spring.boot.version>2.1.2.RELEASE</spring.boot.version>
         <spring.data.jdbc.version>1.0.4.RELEASE</spring.data.jdbc.version>
         <spring.boot.admin.version>2.1.2</spring.boot.admin.version>
-
-        <!-- <spring.cloud.version>Fishtown.RC1</spring.cloud.version> -->
+         <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
         <swagger.version>2.9.2</swagger.version>
         <weixin.java.version>3.3.0</weixin.java.version>
     </properties>
@@ -34,9 +31,13 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- <dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring.cloud.version}</version> <type>pom</type>lombok <scope>import</scope>
-                </dependency> -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -272,108 +273,6 @@
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-jdbc</artifactId>
                 <version>${spring.data.jdbc.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-security</artifactId>
-                <version>2.1.0.RELEASE</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-tomcat</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-oauth2</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-config-server</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-config</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-gateway</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-sleuth-zipkin</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-zipkin</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-sleuth</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-openfeign</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-bus-kafka</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
-                <version>2.1.0.RELEASE</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-stream-kafka</artifactId>
-                <version>2.1.0.RELEASE</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
