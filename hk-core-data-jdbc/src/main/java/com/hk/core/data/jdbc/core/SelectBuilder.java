@@ -228,7 +228,7 @@ class SelectBuilder {
             }
 
             public String toString() {
-                return "org.springframework.data.jdbc.core.SelectBuilder.Join.JoinBuilder(table=" + this.table + ", as="
+                return "com.hk.core.data.jdbc.core.SelectBuilder.Join.JoinBuilder(table=" + this.table + ", as="
                         + this.as + ")";
             }
 
