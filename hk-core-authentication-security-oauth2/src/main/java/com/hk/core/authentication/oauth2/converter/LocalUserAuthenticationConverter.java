@@ -2,6 +2,7 @@ package com.hk.core.authentication.oauth2.converter;
 
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SecurityUserPrincipal;
 import com.hk.core.authentication.security.UserDetailClientService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,7 +40,7 @@ public class LocalUserAuthenticationConverter implements UserAuthenticationConve
         if (map.containsKey(USERNAME)) {
             Map<String, Object> m = new HashMap<>(map);
             String principal = CollectionUtils.getStringValue(m, USERNAME);
-            UserPrincipal user = UserPrincipal.class.cast(userDetailClientService.loadUserByUsername(principal));
+            UserPrincipal user = SecurityUserPrincipal.class.cast(userDetailClientService.loadUserByUsername(principal)).getPrincipal();
             user.setAppInfo(userDetailClientService.getClientInfoById(CollectionUtils.getStringValue(m, "client_id")));
             List<GrantedAuthority> authorities = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(user.getPermissionSet())) {

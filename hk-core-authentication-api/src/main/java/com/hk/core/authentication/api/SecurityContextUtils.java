@@ -6,7 +6,7 @@ import com.hk.commons.util.SpringContextHolder;
  * @author kevin
  * @date 2018-08-01 16:58
  */
-public class SecurityContextUtils {
+public abstract class SecurityContextUtils {
 
     private static final SecurityContext SECURITY_CONTEXT = SpringContextHolder.getBean(SecurityContext.class);
 

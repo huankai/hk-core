@@ -1,6 +1,5 @@
 package com.hk.core.authentication.security.expression;
 
-import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.UserPrincipal;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -23,10 +22,8 @@ public class AdminAccessPermissionEvaluator implements PermissionEvaluator {
      */
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        return principal.isAdministrator()
-                || principal.isProtectUser()
-                || CollectionUtils.contains(principal.getPermissionSet(), permission);
+        UserPrincipal principal = UserPrincipal.class.cast(authentication.getPrincipal());
+        return principal.hasPermission(String.valueOf(permission));
     }
 
     /**

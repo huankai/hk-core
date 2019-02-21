@@ -1,17 +1,16 @@
 package com.hk.core.redis.locks;
 
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.IDGenerator;
+import com.hk.commons.util.ObjectUtils;
 import com.hk.commons.util.SpringContextHolder;
 import org.apache.commons.io.IOUtils;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStringCommands;
-import org.springframework.data.redis.connection.ReturnType;
-import org.springframework.data.redis.core.types.Expiration;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -25,14 +24,21 @@ import java.util.concurrent.locks.Lock;
 public class RedisLock implements Lock {
 
     /**
+     * 默认过期时间: 2 秒
+     */
+    private static final long EXPIRE_SECONDS = 2;
+
+    /**
      * redis Key
      */
     private final String key;
 
     /**
-     * 连接工厂
+     * key 过期时间，防止死锁
      */
-    private RedisConnectionFactory connectionFactory;
+    private final long expire;
+
+    private final StringRedisTemplate redisTemplate;
 
     /**
      * lua 脚本内容，lua 脚本能保证原子性执行
@@ -43,18 +49,21 @@ public class RedisLock implements Lock {
 
     static {
         URL resource = RedisLock.class.getClassLoader().getResource("unlock.lua");
-        String content;
         try {
-            content = IOUtils.toString(resource, StandardCharsets.UTF_8);
+            LUA_SCRIPT = IOUtils.toString(resource, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("lua file not found..");
         }
-        LUA_SCRIPT = content;
     }
 
     public RedisLock(String key) {
+        this(key, EXPIRE_SECONDS);
+    }
+
+    public RedisLock(String key, long expire) {
         this.key = key;
-        connectionFactory = SpringContextHolder.getBean(RedisConnectionFactory.class);
+        this.expire = expire <= 0 ? EXPIRE_SECONDS : expire;
+        redisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
     }
 
     /**
@@ -62,41 +71,61 @@ public class RedisLock implements Lock {
      */
     @Override
     public void lock() {
-        if (tryLock()) {
-            return;
+        if (!tryLock()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+            lock();
         }
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            // ignore
-        }
-        lock();
     }
 
     @Override
-    public void lockInterruptibly() {
-        throw new UnsupportedOperationException("UnsupportedOperation");
+    public void lockInterruptibly() throws InterruptedException {
+        if (Thread.interrupted()) {//如果当前线程已中段
+            throw new InterruptedException();
+        }
+        if (!tryLock()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+            lockInterruptibly();
+        }
     }
 
     /**
-     * 如果返回  true ,加锁成功
+     * 尝试获取锁，立即返回。如果返回  true ,加锁成功
      *
      * @return true or false
      */
     @Override
     public boolean tryLock() {
-        String value = UUID.randomUUID().toString();
-        RedisConnection connection = connectionFactory.getConnection();
-        try {
-            return connection.set(key.getBytes(StandardCharsets.UTF_8), value.getBytes(StandardCharsets.UTF_8),
-                    Expiration.seconds(2), RedisStringCommands.SetOption.ifAbsent());
-        } finally {
-            connection.close();
-        }
+        String value = IDGenerator.STRING_UUID.generate();
+        LOCAL_VALUE.set(value);
+        Boolean result = redisTemplate.opsForValue().setIfAbsent(key, value, expire, TimeUnit.SECONDS);
+        return ObjectUtils.defaultIfNull(result, Boolean.FALSE);
     }
 
+    /**
+     * 在指定的时间段获取锁，超出指定的时间立即返回
+     *
+     * @param time time
+     * @param unit unit
+     * @return true or false
+     */
     @Override
-    public boolean tryLock(long time, TimeUnit unit) {
+    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+        if (Thread.interrupted()) {
+            throw new InterruptedException();
+        }
+        long max = System.nanoTime() + unit.toNanos(time);
+        while (System.nanoTime() < max) {
+            boolean lock = tryLock();
+            if (lock) return true;
+        }
         return false;
     }
 
@@ -105,15 +134,8 @@ public class RedisLock implements Lock {
      */
     @Override
     public void unlock() {
-        RedisConnection connection = connectionFactory.getConnection();
-        try {
-            //执行 LUA 脚本
-            connection.eval(LUA_SCRIPT.getBytes(StandardCharsets.UTF_8),
-                    ReturnType.BOOLEAN, 2,
-                    key.getBytes(StandardCharsets.UTF_8), LOCAL_VALUE.get().getBytes(StandardCharsets.UTF_8));
-        } finally {
-            connection.close();
-        }
+        redisTemplate.execute(new DefaultRedisScript<>(LUA_SCRIPT, Long.class),
+                ArrayUtils.asArrayList(key), LOCAL_VALUE.get());
     }
 
     @Override

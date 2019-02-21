@@ -1,5 +1,6 @@
 package com.hk.core.authentication.security.expression;
 
+import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.authentication.security.SecurityUserPrincipal;
@@ -8,12 +9,8 @@ import org.springframework.security.access.expression.SecurityExpressionOperatio
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -88,8 +85,7 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
         if (isAnonymous()) {// 为什么要这么判断，因为调用此方法时，用户可能是未登陆的用户
             return false;
         }
-        Object principal = authentication.getPrincipal();
-        UserPrincipal userPrincipal = (UserPrincipal) principal;
+        UserPrincipal userPrincipal = UserPrincipal.class.cast(authentication.getPrincipal());
         return userPrincipal.isAdministrator()
                 || userPrincipal.isProtectUser()
                 || CollectionUtils.containsAny(userPrincipal.getPermissionSet(), authorities)
@@ -108,26 +104,27 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
      */
     @Override
     public final boolean hasAnyRole(String... roles) {
-        if (isAnonymous()) {// 为什么要这么判断，因为调用此方法时，用户可能是未登陆的用户
+        if (ArrayUtils.isEmpty(roles) || isAnonymous()) {// 为什么要这么判断，因为调用此方法时，用户可能是未登陆的用户
             return false;
         }
-        Object principal = authentication.getPrincipal();
-        UserPrincipal userPrincipal = (UserPrincipal) principal;
-        return userPrincipal.isAdministrator()
-                || userPrincipal.isProtectUser()
-                || CollectionUtils.containsAny(userPrincipal.getRoleSet(), roles)
-                || hasAnyAuthorityName(defaultRolePrefix, roles);
-    }
-
-    private boolean hasAnyAuthorityName(String prefix, String... roles) {
-        Set<String> roleSet = getAuthoritySet();
+        UserPrincipal userPrincipal = UserPrincipal.class.cast(authentication.getPrincipal());
         for (String role : roles) {
-            String defaultedRole = getRoleWithDefaultPrefix(prefix, role);
-            if (CollectionUtils.contains(roleSet, defaultedRole)) {
+            if (userPrincipal.hasRole(role)) {
                 return true;
             }
         }
+        return hasAnyAuthorityName(defaultRolePrefix, roles);
+    }
 
+    private boolean hasAnyAuthorityName(String prefix, String... roles) {
+//        Set<String> roleSet = getAuthoritySet();
+        Set<String> permissionSet = UserPrincipal.class.cast(authentication.getPrincipal()).getPermissionSet();
+        for (String role : roles) {
+            String defaultedRole = getRoleWithDefaultPrefix(prefix, role);
+            if (CollectionUtils.contains(permissionSet, defaultedRole)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -203,18 +200,18 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
         this.defaultRolePrefix = defaultRolePrefix;
     }
 
-    private Set<String> getAuthoritySet() {
-        if (roles == null) {
-            roles = new HashSet<>();
-            Collection<? extends GrantedAuthority> userAuthorities = authentication.getAuthorities();
-            if (roleHierarchy != null) {
-                userAuthorities = roleHierarchy
-                        .getReachableGrantedAuthorities(userAuthorities);
-            }
-            roles = AuthorityUtils.authorityListToSet(userAuthorities);
-        }
-        return roles;
-    }
+//    private Set<String> getAuthoritySet() {
+//        if (roles == null) {
+//            roles = new HashSet<>();
+//            Collection<? extends GrantedAuthority> userAuthorities = authentication.getAuthorities();
+//            if (roleHierarchy != null) {
+//                userAuthorities = roleHierarchy
+//                        .getReachableGrantedAuthorities(userAuthorities);
+//            }
+//            roles = AuthorityUtils.authorityListToSet(userAuthorities);
+//        }
+//        return roles;
+//    }
 
     @Override
     public boolean hasPermission(Object target, Object permission) {

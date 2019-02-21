@@ -28,7 +28,7 @@ public class JpaExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = {EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public JsonResult<Void> e(EntityNotFoundException e, HttpServletRequest request) {
+    public JsonResult<Void> entityNotFoundException(EntityNotFoundException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return new JsonResult<>(JsonResult.Status.NOT_FOUND, "您访问的资源可能不存在!");
     }

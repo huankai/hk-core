@@ -1,7 +1,7 @@
 package com.hk.core.authentication.security.authentication.sms;
 
 import com.hk.commons.util.ByteConstants;
-import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SecurityUserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -30,14 +30,15 @@ public class SMSAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         SMSAuthenticationToken token = (SMSAuthenticationToken) authentication;
         String principal = token.getPrincipal().toString();
-        UserPrincipal userPrincipal = null;
+        SecurityUserPrincipal userPrincipal = null;
         try {
-            userPrincipal = UserPrincipal.class.cast(userDetailsService.loadUserByUsername(principal));
+            userPrincipal = SecurityUserPrincipal.class.cast(userDetailsService.loadUserByUsername(principal));
         } catch (UsernameNotFoundException e) {
             LOGGER.error("用户不存在:{}", principal);
         }
         if (null == userPrincipal) {
-            userPrincipal = new UserPrincipal(null, principal, false, principal, ByteConstants.NINE, principal, null, ByteConstants.NINE, null);
+            userPrincipal = new SecurityUserPrincipal(null, null, null, null, null, principal, false, principal, ByteConstants.NINE,
+                    principal, null, ByteConstants.NINE, null, null, ByteConstants.TWO, null, null);
 //            throw new InternalAuthenticationServiceException("无法获取用户信息");
         }
 //        Collection<? extends GrantedAuthority> authorities = userPrincipal.getAuthorities();

@@ -6,6 +6,7 @@ import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.UserPrincipal;
+import lombok.Getter;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,7 +22,7 @@ import java.util.Set;
  * @date 2017年12月21日下午5:45:54
  */
 @SuppressWarnings("serial")
-public class SecurityUserPrincipal extends UserPrincipal implements UserDetails, CredentialsContainer {
+public class SecurityUserPrincipal implements UserDetails, CredentialsContainer {
 
     public static final String ROLE_PREFIX = "ROLE_";
 
@@ -34,10 +35,29 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     @JsonIgnore
     private final Byte userStatus;
 
-    public SecurityUserPrincipal(String userId, String account, boolean protectUser,
+    @Getter
+    private UserPrincipal principal;
+
+//    public SecurityUserPrincipal(String userId, String account, boolean protectUser,
+//                                 String realName, Byte userType, String phone,
+//                                 String email, Byte sex, String iconPath, String password, Byte userStatus) {
+////        super(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
+//        this.principal = new UserPrincipal(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
+//        this.userStatus = userStatus;
+//        this.password = password;
+//    }
+
+    public SecurityUserPrincipal(String userId, String orgId, String orgName, String deptId, String deptName, String account, boolean protectUser,
                                  String realName, Byte userType, String phone,
-                                 String email, Byte sex, String iconPath, String password, Byte userStatus) {
-        super(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
+                                 String email, Byte sex, String iconPath, String password, Byte userStatus, Set<String> roles, Set<String> permissions) {
+//        super(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
+        this.principal = new UserPrincipal(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
+        principal.setOrgId(orgId);
+        principal.setOrgName(orgName);
+        principal.setDeptId(deptId);
+        principal.setDeptName(deptName);
+        principal.setRoleSet(roles);
+        principal.setPermissionSet(permissions);
         this.userStatus = userStatus;
         this.password = password;
     }
@@ -52,7 +72,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        Set<String> roleSet = getRoleSet();
+        Set<String> roleSet = principal.getRoleSet();
         if (CollectionUtils.isNotEmpty(roleSet)) {
             roleSet.forEach(role -> {
                 if (!StringUtils.startsWith(role, ROLE_PREFIX)) {
@@ -62,7 +82,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
             });
         }
-        Set<String> permissionSet = getPermissionSet();
+        Set<String> permissionSet = principal.getPermissionSet();
         if (CollectionUtils.isNotEmpty(permissionSet)) {
             permissionSet.forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission)));
         }
@@ -76,7 +96,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
     @Override
     public String getUsername() {
-        return getAccount();
+        return principal.getAccount();
     }
 
     /**
@@ -136,5 +156,4 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     public String toJsonString() {
         return JsonUtils.serialize(this);
     }
-
 }
