@@ -45,17 +45,6 @@ public class CustomGrantedAuthorityFromAssertionAttributesUserDetailsService
                 CollectionUtils.getByteValue(attributes, "sex"),
                 CollectionUtils.getStringValue(attributes, "icon_path"),
                 null, CollectionUtils.getByteValue(attributes, "user_status", ByteConstants.TWO), defaultRoles, defaultPermissions);
-//        userPrincipal.setOrgId(CollectionUtils.getStringValue(attributes, "org_id"));
-//        userPrincipal.setOrgName(CollectionUtils.getStringValue(attributes, "org_name"));
-//        userPrincipal.setDeptId(CollectionUtils.getStringValue(attributes, "dept_id"));
-//        userPrincipal.setDeptName(CollectionUtils.getStringValue(attributes, "dept_name"));
-//        if (CollectionUtils.isNotEmpty(defaultRoles)) {
-//            userPrincipal.setRoleSet(defaultRoles);
-//        }
-//        if (CollectionUtils.isNotEmpty(defaultPermissions)) {
-//            userPrincipal.setPermissionSet(defaultPermissions);
-//        }
-//        return userPrincipal;
     }
 
 }

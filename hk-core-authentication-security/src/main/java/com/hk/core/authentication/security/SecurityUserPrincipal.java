@@ -3,7 +3,6 @@ package com.hk.core.authentication.security;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.UserPrincipal;
 import lombok.Getter;
@@ -29,28 +28,22 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
     /**
      *
      */
-    @JsonIgnore
     private String password;
 
-    @JsonIgnore
     private final Byte userStatus;
 
     @Getter
     private UserPrincipal principal;
 
-//    public SecurityUserPrincipal(String userId, String account, boolean protectUser,
-//                                 String realName, Byte userType, String phone,
-//                                 String email, Byte sex, String iconPath, String password, Byte userStatus) {
-////        super(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
-//        this.principal = new UserPrincipal(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
-//        this.userStatus = userStatus;
-//        this.password = password;
-//    }
+    public SecurityUserPrincipal(UserPrincipal principal, String password, Byte userStatus) {
+        this.principal = principal;
+        this.password = password;
+        this.userStatus = userStatus;
+    }
 
     public SecurityUserPrincipal(String userId, String orgId, String orgName, String deptId, String deptName, String account, boolean protectUser,
                                  String realName, Byte userType, String phone,
                                  String email, Byte sex, String iconPath, String password, Byte userStatus, Set<String> roles, Set<String> permissions) {
-//        super(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
         this.principal = new UserPrincipal(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
         principal.setOrgId(orgId);
         principal.setOrgName(orgName);
@@ -105,7 +98,6 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
      * @return true
      */
     @Override
-    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -116,7 +108,6 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
      * @return true if userStatus is One.
      */
     @Override
-    @JsonIgnore
     public boolean isAccountNonLocked() {
         return ByteConstants.TWO.equals(userStatus);
     }
@@ -127,7 +118,6 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
      * @return true
      */
     @Override
-    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -138,7 +128,6 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
      * @return true if userStatus is One.
      */
     @Override
-    @JsonIgnore
     public boolean isEnabled() {
         return ByteConstants.TWO.equals(userStatus);
     }
@@ -146,14 +135,5 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
     @Override
     public void eraseCredentials() {
         password = null;
-    }
-
-    @Override
-    public String toString() {
-        return toJsonString();
-    }
-
-    public String toJsonString() {
-        return JsonUtils.serialize(this);
     }
 }
