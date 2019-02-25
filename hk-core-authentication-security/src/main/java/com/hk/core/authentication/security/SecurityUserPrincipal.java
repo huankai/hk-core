@@ -5,7 +5,6 @@ import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.UserPrincipal;
-import lombok.Getter;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,7 +20,7 @@ import java.util.Set;
  * @date 2017年12月21日下午5:45:54
  */
 @SuppressWarnings("serial")
-public class SecurityUserPrincipal implements UserDetails, CredentialsContainer {
+public class SecurityUserPrincipal extends UserPrincipal implements UserDetails, CredentialsContainer {
 
     public static final String ROLE_PREFIX = "ROLE_";
 
@@ -32,25 +31,16 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
 
     private final Byte userStatus;
 
-    @Getter
-    private UserPrincipal principal;
-
-    public SecurityUserPrincipal(UserPrincipal principal, String password, Byte userStatus) {
-        this.principal = principal;
-        this.password = password;
-        this.userStatus = userStatus;
-    }
-
     public SecurityUserPrincipal(String userId, String orgId, String orgName, String deptId, String deptName, String account, boolean protectUser,
                                  String realName, Byte userType, String phone,
                                  String email, Byte sex, String iconPath, String password, Byte userStatus, Set<String> roles, Set<String> permissions) {
-        this.principal = new UserPrincipal(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
-        principal.setOrgId(orgId);
-        principal.setOrgName(orgName);
-        principal.setDeptId(deptId);
-        principal.setDeptName(deptName);
-        principal.setRoleSet(roles);
-        principal.setPermissionSet(permissions);
+        super(userId, account, protectUser, realName, userType, phone, email, sex, iconPath);
+        setOrgId(orgId);
+        setOrgName(orgName);
+        setDeptId(deptId);
+        setDeptName(deptName);
+        setRoleSet(roles);
+        setPermissionSet(permissions);
         this.userStatus = userStatus;
         this.password = password;
     }
@@ -65,7 +55,7 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        Set<String> roleSet = principal.getRoleSet();
+        Set<String> roleSet = getRoleSet();
         if (CollectionUtils.isNotEmpty(roleSet)) {
             roleSet.forEach(role -> {
                 if (!StringUtils.startsWith(role, ROLE_PREFIX)) {
@@ -75,7 +65,7 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
 
             });
         }
-        Set<String> permissionSet = principal.getPermissionSet();
+        Set<String> permissionSet = getPermissionSet();
         if (CollectionUtils.isNotEmpty(permissionSet)) {
             permissionSet.forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission)));
         }
@@ -89,7 +79,7 @@ public class SecurityUserPrincipal implements UserDetails, CredentialsContainer 
 
     @Override
     public String getUsername() {
-        return principal.getAccount();
+        return getAccount();
     }
 
     /**

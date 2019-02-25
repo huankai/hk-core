@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Data
 @NoArgsConstructor
-public final class UserPrincipal implements Serializable {
+public class UserPrincipal implements Serializable {
 
     /**
      *
@@ -126,7 +126,7 @@ public final class UserPrincipal implements Serializable {
      *
      * @param permissionName 权限名
      */
-    public boolean hasPermission(String permissionName) {
+    public final boolean hasPermission(String permissionName) {
         return isAdministrator() || CollectionUtils.contains(permissionSet, permissionName);
     }
 
@@ -135,7 +135,7 @@ public final class UserPrincipal implements Serializable {
      *
      * @param roleName 角色名
      */
-    public boolean hasRole(String roleName) {
+    public final boolean hasRole(String roleName) {
         return isAdministrator() || CollectionUtils.contains(roleSet, roleName);
     }
 
@@ -145,7 +145,7 @@ public final class UserPrincipal implements Serializable {
      * @return true if is an admin.
      */
     @JsonIgnore
-    public boolean isAdministrator() {
+    public final boolean isAdministrator() {
         return protectUser;
     }
 

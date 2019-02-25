@@ -4,13 +4,11 @@ import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.IDGenerator;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.commons.util.SpringContextHolder;
-import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.ResourceScriptSource;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -38,22 +36,19 @@ public class RedisLock implements Lock {
      */
     private final long expire;
 
-    private final StringRedisTemplate redisTemplate;
+    private static final StringRedisTemplate REDIS_TEMPLATE = SpringContextHolder.getBean(StringRedisTemplate.class);
 
     /**
      * lua 脚本内容，lua 脚本能保证原子性执行
      */
-    private static final String LUA_SCRIPT;
+    private static DefaultRedisScript<Long> LUA_SCRIPT;
 
     private ThreadLocal<String> LOCAL_VALUE = new ThreadLocal<>();
 
     static {
-        URL resource = RedisLock.class.getClassLoader().getResource("unlock.lua");
-        try {
-            LUA_SCRIPT = IOUtils.toString(resource, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("lua file not found..");
-        }
+        LUA_SCRIPT = new DefaultRedisScript<>();
+        LUA_SCRIPT.setScriptSource(new ResourceScriptSource(new ClassPathResource("META-INF/scripts/unlock.lua")));
+        LUA_SCRIPT.setResultType(Long.class);
     }
 
     public RedisLock(String key) {
@@ -63,7 +58,6 @@ public class RedisLock implements Lock {
     public RedisLock(String key, long expire) {
         this.key = key;
         this.expire = expire <= 0 ? EXPIRE_SECONDS : expire;
-        redisTemplate = SpringContextHolder.getBean(StringRedisTemplate.class);
     }
 
     /**
@@ -105,7 +99,7 @@ public class RedisLock implements Lock {
     public boolean tryLock() {
         String value = IDGenerator.STRING_UUID.generate();
         LOCAL_VALUE.set(value);
-        Boolean result = redisTemplate.opsForValue().setIfAbsent(key, value, expire, TimeUnit.SECONDS);
+        Boolean result = REDIS_TEMPLATE.opsForValue().setIfAbsent(key, value, expire, TimeUnit.SECONDS);
         return ObjectUtils.defaultIfNull(result, Boolean.FALSE);
     }
 
@@ -134,8 +128,7 @@ public class RedisLock implements Lock {
      */
     @Override
     public void unlock() {
-        redisTemplate.execute(new DefaultRedisScript<>(LUA_SCRIPT, Long.class),
-                ArrayUtils.asArrayList(key), LOCAL_VALUE.get());
+        REDIS_TEMPLATE.execute(LUA_SCRIPT, ArrayUtils.asArrayList(key), LOCAL_VALUE.get());
     }
 
     @Override
