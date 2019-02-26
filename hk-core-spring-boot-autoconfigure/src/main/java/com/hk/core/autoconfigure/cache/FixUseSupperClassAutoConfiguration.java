@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hk.commons.util.JsonUtils;
 import com.hk.core.cache.LogCacheErrorHandler;
+import com.hk.core.cache.interceptor.LockCacheInterceptor;
 import com.hk.core.cache.spring.FixUseSupperClassAnnotationParser;
 import com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
+import org.springframework.cache.interceptor.CacheInterceptor;
 import org.springframework.cache.interceptor.CacheOperationSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -73,5 +75,14 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
     @Override
     public CacheErrorHandler errorHandler() {
         return new LogCacheErrorHandler();
+    }
+
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    public CacheInterceptor cacheInterceptor() {
+        LockCacheInterceptor interceptor = new LockCacheInterceptor();
+        interceptor.configure(this::errorHandler, this::keyGenerator, this::cacheResolver, this::cacheManager);
+        interceptor.setCacheOperationSource(cacheOperationSource());
+        return interceptor;
     }
 }
