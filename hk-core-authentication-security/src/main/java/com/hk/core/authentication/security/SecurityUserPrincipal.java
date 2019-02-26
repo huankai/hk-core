@@ -27,8 +27,10 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     /**
      *
      */
+    @JsonIgnore
     private String password;
 
+    @JsonIgnore
     private final Byte userStatus;
 
     public SecurityUserPrincipal(String userId, String orgId, String orgName, String deptId, String deptName, String account, boolean protectUser,
@@ -78,6 +80,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return getAccount();
     }
@@ -88,6 +91,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
      * @return true
      */
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -98,6 +102,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
      * @return true if userStatus is One.
      */
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return ByteConstants.TWO.equals(userStatus);
     }
@@ -108,6 +113,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
      * @return true
      */
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -118,6 +124,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
      * @return true if userStatus is One.
      */
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return ByteConstants.TWO.equals(userStatus);
     }

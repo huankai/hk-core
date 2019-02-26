@@ -28,6 +28,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 
 /**
+ * 使用 Redis 缓存
+ *
  * @author kevin
  */
 @Configuration

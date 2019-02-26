@@ -35,6 +35,8 @@ public class SelectArguments extends DeleteArguments {
     /**
      * Select count(*) || select count(id)
      * 默认所有主键字段为 id
+     *
+     * @see com.hk.core.data.jdbc.domain.AbstractUUIDPersistable#id
      */
     private String countField = "id";
 

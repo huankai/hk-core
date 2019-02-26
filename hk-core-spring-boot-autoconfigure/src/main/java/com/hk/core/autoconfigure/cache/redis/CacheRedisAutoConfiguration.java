@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 
@@ -28,7 +28,7 @@ public class CacheRedisAutoConfiguration {
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setEnableTransactionSupport(true);
 
-        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        RedisSerializer<String> serializer = RedisSerializer.string();
 
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
                 .json()
@@ -40,10 +40,10 @@ public class CacheRedisAutoConfiguration {
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 
         GenericJackson2JsonRedisSerializer redisSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
-        redisTemplate.setKeySerializer(keySerializer);
+        redisTemplate.setKeySerializer(serializer);
         redisTemplate.setValueSerializer(redisSerializer);
 
-        redisTemplate.setHashKeySerializer(keySerializer);
+        redisTemplate.setHashKeySerializer(serializer);
         redisTemplate.setHashValueSerializer(redisSerializer);
         return redisTemplate;
 

@@ -1,14 +1,12 @@
 package com.hk.core.redis.locks;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.IDGenerator;
-import com.hk.commons.util.ObjectUtils;
-import com.hk.commons.util.SpringContextHolder;
+import com.hk.commons.util.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -25,6 +23,8 @@ public class RedisLock implements Lock {
      * 默认过期时间: 2 秒
      */
     private static final long EXPIRE_SECONDS = 2;
+
+    private static final long SLEEP_TIME = 10;
 
     /**
      * redis Key
@@ -60,6 +60,12 @@ public class RedisLock implements Lock {
         this.expire = expire <= 0 ? EXPIRE_SECONDS : expire;
     }
 
+    public RedisLock(String key, Duration duration) {
+        AssertUtils.isTrue(duration.isNegative() || duration.isZero(), "过期时间不能小于等于0");
+        this.key = key;
+        this.expire = duration.getSeconds();
+    }
+
     /**
      * 获取锁，使用递归，无法使用优雅方式，即当一个线程释放锁后不能自动通知其它等待的客户端来获取锁，而使用递归每 10 ms 来获取一次.
      */
@@ -67,7 +73,7 @@ public class RedisLock implements Lock {
     public void lock() {
         if (!tryLock()) {
             try {
-                Thread.sleep(10);
+                Thread.sleep(SLEEP_TIME);
             } catch (InterruptedException e) {
                 // ignore
             }
@@ -82,7 +88,7 @@ public class RedisLock implements Lock {
         }
         if (!tryLock()) {
             try {
-                Thread.sleep(10);
+                Thread.sleep(SLEEP_TIME);
             } catch (InterruptedException e) {
                 // ignore
             }

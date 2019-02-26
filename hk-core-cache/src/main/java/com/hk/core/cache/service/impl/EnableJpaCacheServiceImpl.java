@@ -1,9 +1,7 @@
 package com.hk.core.cache.service.impl;
 
-import com.hk.core.cache.service.CacheInvalidService;
-import com.hk.core.service.jpa.JpaBaseService;
+import com.hk.core.cache.service.JpaCacheService;
 import com.hk.core.service.jpa.impl.JpaServiceImpl;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,7 +22,7 @@ import java.util.function.Function;
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
  * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */
-public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JpaServiceImpl<T, PK> implements JpaBaseService<T, PK>, CacheInvalidService {
+public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JpaServiceImpl<T, PK> implements JpaCacheService<T, PK> {
 
     @Override
     @Cacheable(key = "'id'+#root.args[0]")
@@ -66,18 +64,6 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
     public Optional<T> findById(PK pk) {
         return super.findById(pk);
     }
-
-//    @Override
-//    @Cacheable(key = "'id'+#root.args[0]")
-//    public Iterable<T> findByIds(Iterable<PK> pks) {
-//        return super.findByIds(pks);
-//    }
-//
-//    @Override
-//    @Cacheable(key = "'id'+#root.args")
-//    public Iterable<T> findByIds(PK... pks) {
-//        return super.findByIds(pks);
-//    }
 
     @Override
     @Cacheable(key = "'count'")
@@ -148,11 +134,6 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
     @CacheEvict(allEntries = true)
     public void cleanCache() {
 
-    }
-
-    @SuppressWarnings("unchecked")
-    protected final EnableJpaCacheServiceImpl<T, PK> getCurrentProxy() {
-        return (EnableJpaCacheServiceImpl<T, PK>) AopContext.currentProxy();
     }
 
 }

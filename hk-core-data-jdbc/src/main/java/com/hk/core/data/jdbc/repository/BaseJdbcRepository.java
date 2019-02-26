@@ -10,9 +10,9 @@ import com.hk.core.data.jdbc.metadata.PersistentEntityInfo;
 import com.hk.core.data.jdbc.metadata.PersistentEntityMetadata;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.query.SimpleCondition;
-import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
+import com.hk.core.query.QueryModel;
 import lombok.NonNull;
 import org.springframework.data.domain.*;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
@@ -110,6 +110,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @Override
     public T getById(ID id) throws EntityNotFoundException {
+        AssertUtils.notNull(id, "id 不能为 null");
         return findById(id).orElseThrow(EntityNotFoundException::new);
     }
 

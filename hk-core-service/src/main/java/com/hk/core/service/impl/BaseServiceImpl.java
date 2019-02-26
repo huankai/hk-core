@@ -15,6 +15,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -94,7 +95,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     public Optional<T> findById(ID id) {
-        return getBaseRepository().findById(id);
+        return Objects.isNull(id) ? Optional.empty() : getBaseRepository().findById(id);
     }
 
     @Override
@@ -109,7 +110,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
 
     @Override
     public boolean existsById(ID id) {
-        return getBaseRepository().existsById(id);
+        return Objects.nonNull(id) && getBaseRepository().existsById(id);
     }
 
     @Override
