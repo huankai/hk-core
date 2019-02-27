@@ -42,8 +42,9 @@ public class LocalUserAuthenticationConverter implements UserAuthenticationConve
             SecurityUserPrincipal user = SecurityUserPrincipal.class.cast(userDetailClientService.loadUserByUsername(principal));
             user.setAppInfo(userDetailClientService.getClientInfoById(CollectionUtils.getStringValue(m, "client_id")));
             List<GrantedAuthority> authorities = new ArrayList<>();
-            if (CollectionUtils.isNotEmpty(user.getPermissionSet())) {
-                user.getPermissionSet().forEach(item -> authorities.add(new SimpleGrantedAuthority(item)));
+            Set<String> permissions = user.getPermissions();
+            if (CollectionUtils.isNotEmpty(permissions)) {
+                permissions.forEach(item -> authorities.add(new SimpleGrantedAuthority(item)));
             }
             return new UsernamePasswordAuthenticationToken(user, "N/A", authorities);
         }

@@ -39,8 +39,8 @@ public abstract class AbstractAuthorizingRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         UserPrincipal principal = principalCollection.oneByType(UserPrincipal.class);
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo(principal.getPermissionSet());
-        authorizationInfo.setStringPermissions(principal.getPermissionSet());
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo(principal.getRoles());
+        authorizationInfo.setStringPermissions(principal.getPermissions());
         return authorizationInfo;
     }
 

@@ -87,8 +87,7 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
         }
         UserPrincipal userPrincipal = UserPrincipal.class.cast(authentication.getPrincipal());
         return userPrincipal.isAdministrator()
-                || userPrincipal.isProtectUser()
-                || CollectionUtils.containsAny(userPrincipal.getPermissionSet(), authorities)
+                || CollectionUtils.containsAny(userPrincipal.getPermissions(), authorities)
                 || hasAnyAuthorityName(null, authorities);
     }
 
@@ -118,7 +117,7 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
 
     private boolean hasAnyAuthorityName(String prefix, String... roles) {
 //        Set<String> roleSet = getAuthoritySet();
-        Set<String> permissionSet = UserPrincipal.class.cast(authentication.getPrincipal()).getPermissionSet();
+        Set<String> permissionSet = UserPrincipal.class.cast(authentication.getPrincipal()).getPermissions();
         for (String role : roles) {
             String defaultedRole = getRoleWithDefaultPrefix(prefix, role);
             if (CollectionUtils.contains(permissionSet, defaultedRole)) {

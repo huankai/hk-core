@@ -77,7 +77,7 @@ public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthentica
                 WxMpOAuth2AccessToken accessToken = wxService.oauth2getAccessToken(code);
                 WxMpUser mpUser = wxService.oauth2getUserInfo(accessToken, null);
                 UserPrincipal principal = new UserPrincipal(mpUser.getOpenId(), mpUser.getNickname(), false, mpUser.getNickname(), ByteConstants.ZERO, null, null,
-                        Byte.valueOf(String.valueOf(mpUser.getSex())), mpUser.getHeadImgUrl());
+                        Byte.valueOf(String.valueOf(mpUser.getSex())), mpUser.getHeadImgUrl(), null, null);
                 WechatQrCodeAuthenticationToken authenticationToken = new WechatQrCodeAuthenticationToken(principal);
                 setDetails(request, authenticationToken);
                 return getAuthenticationManager().authenticate(authenticationToken);
