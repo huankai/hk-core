@@ -13,7 +13,14 @@ import java.lang.reflect.Method;
  */
 public class LockCacheInterceptor extends CacheInterceptor {
 
-
+    /**
+     * 在这里使用 synchronized 虽然解决了缓存雪崩的情况 ，但对性能会有所下降
+     *
+     * @param invoker invoker
+     * @param target  target
+     * @param method  method
+     * @param args    args
+     */
     @Override
     protected synchronized Object execute(CacheOperationInvoker invoker, Object target, Method method, Object[] args) {
         return super.execute(invoker, target, method, args);

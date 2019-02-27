@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hk.commons.util.JsonUtils;
 import com.hk.core.cache.LogCacheErrorHandler;
+import com.hk.core.cache.NullCacheProperties;
 import com.hk.core.cache.interceptor.LockCacheInterceptor;
+import com.hk.core.cache.redis.CustomRedisCacheManager;
 import com.hk.core.cache.spring.FixUseSupperClassAnnotationParser;
 import com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -21,7 +24,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Role;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -38,7 +40,23 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @EnableCaching
 @ConditionalOnClass(FixUseSupperClassCacheOperationSource.class)
 @EnableAspectJAutoProxy(exposeProxy = true)
+@EnableConfigurationProperties({CacheProperties.class, NullCacheProperties.class})
 public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport {
+
+    /**
+     * @see org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration#determineConfiguration(ClassLoader)
+     */
+    private final CacheProperties cacheProperties;
+
+    private final NullCacheProperties nullCacheProperties;
+
+    private final RedisConnectionFactory redisConnectionFactory;
+
+    public FixUseSupperClassAutoConfiguration(RedisConnectionFactory redisConnectionFactory, CacheProperties cacheProperties, NullCacheProperties nullCacheProperties) {
+        this.redisConnectionFactory = redisConnectionFactory;
+        this.cacheProperties = cacheProperties;
+        this.nullCacheProperties = nullCacheProperties;
+    }
 
     @Bean
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
@@ -46,8 +64,6 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
         return new FixUseSupperClassCacheOperationSource(new FixUseSupperClassAnnotationParser());
     }
 
-    @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
 
     @Override
     public CacheManager cacheManager() {
@@ -59,14 +75,27 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
                 .build();
         JsonUtils.configure(objectMapper, true);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        CacheProperties.Redis redisProperties = cacheProperties.getRedis();
 
-        RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationPair);
-//        redisCacheConfiguration = redisCacheConfiguration.entryTtl(Duration.ofHours(2));//缓存过期时间，默认为2小时
-//        RedisCacheManager redisCacheManager = new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
-//        redisCacheManager.setTransactionAware(true);
-//        return redisCacheManager;
-        return new RedisCacheManager(redisCacheWriter, redisCacheConfiguration);
+        RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair
+                .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
+
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationPair);
+        if (redisProperties.getTimeToLive() != null) {
+            config = config.entryTtl(redisProperties.getTimeToLive());
+        }
+        if (redisProperties.getKeyPrefix() != null) {
+            config = config.prefixKeysWith(redisProperties.getKeyPrefix());
+        }
+        if (!redisProperties.isCacheNullValues()) {
+            config = config.disableCachingNullValues();
+        }
+        if (!redisProperties.isUseKeyPrefix()) {
+            config = config.disableKeyPrefix();
+        }
+        CustomRedisCacheManager cacheManager = new CustomRedisCacheManager(redisCacheWriter, config);
+        cacheManager.setNullValueTtl(nullCacheProperties.getNullValueTtl());
+        return cacheManager;
     }
 
     /**

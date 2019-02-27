@@ -23,12 +23,12 @@ import java.util.function.Function;
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
  * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */
-public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JdbcServiceImpl<T, PK> implements JdbcCacheService<T, PK> {
+public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<ID>, ID extends Serializable> extends JdbcServiceImpl<T, ID> implements JdbcCacheService<T, ID> {
 
     @Override
     @Cacheable(key = "'id'+#root.args[0]")
-    public T getById(PK pk) {
-        return super.getById(pk);
+    public T getById(ID id) {
+        return super.getById(id);
     }
 
     @Override
@@ -44,8 +44,8 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
                     @CacheEvict(key = "'count'")
             }
     )
-    public void deleteById(PK pk) {
-        super.deleteById(pk);
+    public void deleteById(ID id) {
+        super.deleteById(id);
     }
 
     @Override
@@ -62,8 +62,8 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
 
     @Override
     @Cacheable(key = "'id'+#root.args[0]")
-    public Optional<T> findById(PK pk) {
-        return super.findById(pk);
+    public Optional<T> findById(ID id) {
+        return super.findById(id);
     }
 
     @Override
@@ -115,14 +115,14 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<PK>, PK e
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(Iterable<PK> pks) {
-        super.deleteByIds(pks);
+    public void deleteByIds(Iterable<ID> ids) {
+        super.deleteByIds(ids);
     }
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(@SuppressWarnings("unchecked") PK... pks) {
-        super.deleteByIds(pks);
+    public void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
+        super.deleteByIds(ids);
     }
 
     @Override

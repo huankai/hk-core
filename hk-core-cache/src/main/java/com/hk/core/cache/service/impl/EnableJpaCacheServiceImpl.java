@@ -22,11 +22,11 @@ import java.util.function.Function;
  * @see com.hk.core.cache.spring.FixUseSupperClassAnnotationParser
  * @see com.hk.core.cache.spring.FixUseSupperClassCacheOperationSource
  */
-public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK extends Serializable> extends JpaServiceImpl<T, PK> implements JpaCacheService<T, PK> {
+public abstract class EnableJpaCacheServiceImpl<T extends Persistable<ID>, ID extends Serializable> extends JpaServiceImpl<T, ID> implements JpaCacheService<T, ID> {
 
     @Override
     @Cacheable(key = "'id'+#root.args[0]")
-    public T getOne(PK pk) {
+    public T getOne(ID pk) {
         return super.getOne(pk);
     }
 
@@ -37,8 +37,8 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
                     @CacheEvict(key = "'count'")
             }
     )
-    public void deleteById(PK pk) {
-        super.deleteById(pk);
+    public void deleteById(ID id) {
+        super.deleteById(id);
     }
 
     @Override
@@ -61,8 +61,8 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
 
     @Override
     @Cacheable(key = "'id'+#root.args[0]")
-    public Optional<T> findById(PK pk) {
-        return super.findById(pk);
+    public Optional<T> findById(ID id) {
+        return super.findById(id);
     }
 
     @Override
@@ -114,14 +114,14 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<PK>, PK ex
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(Iterable<PK> pks) {
-        super.deleteByIds(pks);
+    public void deleteByIds(Iterable<ID> ids) {
+        super.deleteByIds(ids);
     }
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(@SuppressWarnings("unchecked") PK... pks) {
-        super.deleteByIds(pks);
+    public void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
+        super.deleteByIds(ids);
     }
 
     @Override
