@@ -3,6 +3,9 @@ package com.hk.core.authentication.shiro;
 import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+
+import java.util.Objects;
 
 /**
  * Shiro SecurityContext
@@ -20,5 +23,23 @@ public class ShiroSecurityContext implements SecurityContext {
     @Override
     public boolean isAuthenticated() {
         return SecurityUtils.getSubject().isAuthenticated();
+    }
+
+    @Override
+    public <T> T getSessionAttribute(String key, Class<T> clazz) {
+        return clazz.cast(SecurityUtils.getSubject().getSession().getAttribute(key));
+    }
+
+    @Override
+    public void setSessionAttribute(String key, Object value, boolean create) {
+        Session session = SecurityUtils.getSubject().getSession(create);
+        if (Objects.nonNull(session)) {
+            session.setAttribute(key, value);
+        }
+    }
+
+    @Override
+    public void removeSessionAttribute(String key) {
+        SecurityUtils.getSubject().getSession().removeAttribute(key);
     }
 }

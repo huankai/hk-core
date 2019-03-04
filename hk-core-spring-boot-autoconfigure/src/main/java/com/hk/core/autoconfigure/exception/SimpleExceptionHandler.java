@@ -30,10 +30,10 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      * @return jsonResult
      */
     @ExceptionHandler(value = ServiceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public JsonResult<Void> serviceException(ServiceException e, HttpServletRequest request) {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public JsonResult<?> serviceException(ServiceException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return JsonResult.badRequest(e.getMessage());
+        return e.getResult();
     }
 
     /**

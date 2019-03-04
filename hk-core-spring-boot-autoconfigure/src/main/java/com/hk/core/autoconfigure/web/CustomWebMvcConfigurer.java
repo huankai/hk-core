@@ -7,7 +7,9 @@ import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.Contants;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
+import com.hk.core.authentication.api.method.support.LoginUserHandlerMethodArgumentResolver;
 import com.hk.core.web.ServletContextHolder;
+import com.hk.core.web.filter.XssFilter;
 import com.hk.core.web.interceptors.GlobalPropertyInterceptor;
 import com.hk.core.web.mvc.CustomRequestMappingHandlerMapping;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +17,23 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import javax.servlet.Filter;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +42,7 @@ import java.util.Map;
  * @date 2018-05-31 16:26
  */
 @Configuration
-@ServletComponentScan(basePackages = {"com.hk.core"})
+//@ServletComponentScan(basePackages = {"com.hk.core"})
 @EnableConfigurationProperties(GlobalPropertyInterceptor.RequestPropertyProperties.class)
 public class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
@@ -51,6 +57,22 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     @ConditionalOnClass(ServletContextHolder.class)
     public ServletContextHolder servletContextHolder() {
         return new ServletContextHolder();
+    }
+
+    /**
+     * 使用配置方式
+     *
+     * @return
+     */
+    @Order(value = 0)
+    @Bean
+    public FilterRegistrationBean xssFilter() {
+        FilterRegistrationBean<Filter> xssFilterRgistration = new FilterRegistrationBean<>();
+        xssFilterRgistration.setAsyncSupported(true);
+        xssFilterRgistration.addUrlPatterns("/**");
+        xssFilterRgistration.setFilter(new XssFilter());
+        xssFilterRgistration.setName("xssFilter");
+        return xssFilterRgistration;
     }
 
     @Autowired
@@ -103,6 +125,16 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         registry.addConverter(new StringToLocalDateConverter());
         registry.addConverter(new StringToLocalTimeConverter());
         registry.addConverter(new StringToLocalDateTimeConverter());
+    }
+
+    /**
+     * 添加方法参数解析
+     *
+     * @param resolvers
+     */
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new LoginUserHandlerMethodArgumentResolver());
     }
 
     /**
