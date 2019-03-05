@@ -10,7 +10,10 @@
 	- 使用Spring Security oauth2实现单点登陆.
 
 - hk-core-authentication-weixin-mp 
-	- 使用Spring Security oauth2实现微信扫码登陆.
+	- 使用Spring Security oauth2实现微信登陆.
+	
+- hk-core-authentication-alipay
+	- 使用Spring Security 实现支付宝登陆.
 
 - hk-core-cache 
 	- 缓存功能的自动配置

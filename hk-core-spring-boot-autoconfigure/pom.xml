@@ -47,6 +47,11 @@
             <artifactId>hk-core-authentication-weixin-mp</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-core-authentication-alipay</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>com.hk</groupId>

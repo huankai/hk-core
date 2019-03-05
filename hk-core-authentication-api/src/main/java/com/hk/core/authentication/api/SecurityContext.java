@@ -39,6 +39,22 @@ public interface SecurityContext {
     }
 
     /**
+     * 获取 Session 属性并删除
+     *
+     * @param key   session key
+     * @param clazz 值类型
+     * @return session value
+     * @throws ClassCastException 类型转换异常
+     */
+    default <T> Optional<T> getSessionAttributeAndRemove(String key, Class<T> clazz) throws ClassCastException {
+        try {
+            return getSessionAttribute(key, clazz);
+        } finally {
+            removeSessionAttribute(key);
+        }
+    }
+
+    /**
      * 设置 session 属性值，如果 session 不存在，不创建session
      *
      * @param key   session Key

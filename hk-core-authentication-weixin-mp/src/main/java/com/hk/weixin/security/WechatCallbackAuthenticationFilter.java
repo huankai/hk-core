@@ -1,10 +1,10 @@
-package com.hk.weixin.qrcode.security;
+package com.hk.weixin.security;
 
 import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.weixin.qrcode.WechatQrCodeProperties;
 
+import com.hk.weixin.WechatMpProperties;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author kevin
  * @date 2018年2月8日上午11:18:31
  */
-public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     /**
      * <pre>
@@ -55,13 +55,13 @@ public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthentica
     /**
      * 配置
      */
-    private final WechatQrCodeProperties qrCodeProperties;
+    private final WechatMpProperties.Authentication authentication;
 
-    public WechatQrCodeCallbackAuthenticationFilter(WxMpService wxMpService, WechatQrCodeProperties qrCodeProperties) {
+    public WechatCallbackAuthenticationFilter(WxMpService wxMpService, WechatMpProperties.Authentication authentication) {
         /* 处理 微信回调的url请求  */
-        super(new AntPathRequestMatcher(qrCodeProperties.getCallbackUrl()));
+        super(new AntPathRequestMatcher(authentication.getCallbackUrl()));
         this.wxService = wxMpService;
-        this.qrCodeProperties = qrCodeProperties;
+        this.authentication = authentication;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthentica
             throws AuthenticationException {
         final String code = request.getParameter(CODE_PARAM_NAME);
         final String state = request.getParameter(STATE_PARAM_NAME);
-        if (StringUtils.isNotEmpty(qrCodeProperties.getState()) && StringUtils.notEquals(qrCodeProperties.getState(), state)) {
+        if (StringUtils.isNotEmpty(authentication.getState()) && StringUtils.notEquals(authentication.getState(), state)) {
             throw new AuthenticationServiceException("登录失败，跨站请求伪造攻击");
         }
         if (StringUtils.isNotEmpty(code)) { // 用户同意授权
@@ -78,7 +78,7 @@ public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthentica
                 WxMpUser mpUser = wxService.oauth2getUserInfo(accessToken, null);
                 UserPrincipal principal = new UserPrincipal(mpUser.getOpenId(), mpUser.getNickname(), false, mpUser.getNickname(), ByteConstants.ZERO, null, null,
                         Byte.valueOf(String.valueOf(mpUser.getSex())), mpUser.getHeadImgUrl(), null, null);
-                WechatQrCodeAuthenticationToken authenticationToken = new WechatQrCodeAuthenticationToken(principal);
+                WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(principal);
                 setDetails(request, authenticationToken);
                 return getAuthenticationManager().authenticate(authenticationToken);
             } catch (WxErrorException e) {
@@ -91,7 +91,7 @@ public class WechatQrCodeCallbackAuthenticationFilter extends AbstractAuthentica
         return null;
     }
 
-    private void setDetails(HttpServletRequest request, WechatQrCodeAuthenticationToken authenticationToken) {
+    private void setDetails(HttpServletRequest request, WechatAuthenticationToken authenticationToken) {
         authenticationToken.setDetails(authenticationDetailsSource.buildDetails(request));
     }
 

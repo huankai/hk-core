@@ -7,7 +7,7 @@
     <artifactId>hk-core-spring-boot-dependencies</artifactId>
     <version>2.1.2.RELEASE</version>
     <packaging>pom</packaging>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -131,6 +131,11 @@
             <dependency>
                 <groupId>com.hk</groupId>
                 <artifactId>hk-core-authentication-weixin-mp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-authentication-alipay</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -262,7 +267,7 @@
                 <artifactId>spring-boot-admin-starter-client</artifactId>
                 <version>${spring.boot.admin.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-commons</artifactId>
