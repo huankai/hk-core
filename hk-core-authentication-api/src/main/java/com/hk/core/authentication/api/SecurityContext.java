@@ -2,6 +2,8 @@ package com.hk.core.authentication.api;
 
 import com.hk.core.web.Webs;
 
+import java.util.Optional;
+
 /**
  * 此接口可获取当前登陆用户信息
  *
@@ -32,8 +34,8 @@ public interface SecurityContext {
      * @param <T>   泛型类型
      * @return session Value
      */
-    default <T> T getSessionAttribute(String key, Class<T> clazz) throws ClassCastException {
-        return Webs.getAttributeFromSession(key, clazz);
+    default <T> Optional<T> getSessionAttribute(String key, Class<T> clazz) throws ClassCastException {
+        return Optional.ofNullable(Webs.getAttributeFromSession(key, clazz));
     }
 
     /**
@@ -54,7 +56,7 @@ public interface SecurityContext {
      * @param create 如果session　不存在，是否创建session
      */
     default void setSessionAttribute(String key, Object value, boolean create) {
-        Webs.setAttributeFromSession(key, value);
+        Webs.setAttributeFromSession(key, value, create);
     }
 
     /**

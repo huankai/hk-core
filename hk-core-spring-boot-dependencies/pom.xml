@@ -16,7 +16,7 @@
         <spring.boot.version>2.1.2.RELEASE</spring.boot.version>
         <spring.data.jdbc.version>1.0.4.RELEASE</spring.data.jdbc.version>
         <spring.boot.admin.version>2.1.2</spring.boot.admin.version>
-         <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
+        <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
         <swagger.version>2.9.2</swagger.version>
         <weixin.java.version>3.3.0</weixin.java.version>
     </properties>

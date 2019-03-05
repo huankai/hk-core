@@ -6,6 +6,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Shiro SecurityContext
@@ -26,8 +27,8 @@ public class ShiroSecurityContext implements SecurityContext {
     }
 
     @Override
-    public <T> T getSessionAttribute(String key, Class<T> clazz) {
-        return clazz.cast(SecurityUtils.getSubject().getSession().getAttribute(key));
+    public <T> Optional<T> getSessionAttribute(String key, Class<T> clazz) {
+        return Optional.ofNullable(clazz.cast(SecurityUtils.getSubject().getSession().getAttribute(key)));
     }
 
     @Override
