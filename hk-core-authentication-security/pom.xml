@@ -13,15 +13,11 @@
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-commons-util</artifactId>
+            <artifactId>hk-core-authentication-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-i18n</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-authentication-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>

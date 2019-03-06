@@ -1,6 +1,9 @@
 package com.hk.core.authentication.security.accesstoken;
 
+import com.hk.commons.JsonResult;
 import com.hk.commons.util.StringUtils;
+import com.hk.core.web.Webs;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -8,6 +11,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 
 /**
  * @author huangkai
@@ -31,6 +35,8 @@ public class AccessTokenAuthenticationFilter extends AbstractAuthenticationProce
         super(new TokenRequestMatcher(header, tokenParameter));
         this.header = header;
         this.tokenParameter = tokenParameter;
+        setAuthenticationSuccessHandler((request, response, authentication) -> request.getRequestDispatcher(request.getRequestURI()).forward(request, response));
+        setAuthenticationFailureHandler((request, response, exception) -> Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.error(exception.getMessage())));
     }
 
     @Override

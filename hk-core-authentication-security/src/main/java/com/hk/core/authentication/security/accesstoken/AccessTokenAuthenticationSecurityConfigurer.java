@@ -28,7 +28,7 @@ public class AccessTokenAuthenticationSecurityConfigurer extends SecurityConfigu
     public void configure(HttpSecurity builder) {
         AccessTokenAuthenticationFilter filter = new AccessTokenAuthenticationFilter(header, tokenParameter);
         filter.setAuthenticationManager(builder.getSharedObject(AuthenticationManager.class));
-        AccesstokenAuthenticationProvider provider = new AccesstokenAuthenticationProvider(accessTokenContext);
+        AccessTokenAuthenticationProvider provider = new AccessTokenAuthenticationProvider(accessTokenContext);
         builder.authenticationProvider(provider).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
     }
 }

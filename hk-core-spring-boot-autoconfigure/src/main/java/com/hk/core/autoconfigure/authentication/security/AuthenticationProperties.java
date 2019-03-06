@@ -1,7 +1,9 @@
 package com.hk.core.autoconfigure.authentication.security;
 
+import com.hk.core.authentication.security.accesstoken.AccessTokenAuthenticationFilter;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -19,16 +21,19 @@ public class AuthenticationProperties {
     /**
      * 手机发送短信验证码
      */
+    @NestedConfigurationProperty
     private SMSProperties sms = new SMSProperties();
 
     /**
      * 登陆参数配置
      */
+    @NestedConfigurationProperty
     private LoginProperties login = new LoginProperties();
 
     /**
      * 图片验证码
      */
+    @NestedConfigurationProperty
     private ImageCodeProperties imageCode = new ImageCodeProperties();
 
     /**
@@ -52,6 +57,37 @@ public class AuthenticationProperties {
      * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#allowSessionCreation
      */
     private boolean allowSessionCreation = true;
+
+
+    /**
+     * Token 登录，一般使用移动app 无 Session 登陆
+     */
+    @NestedConfigurationProperty
+    private Token token = new Token();
+
+    private static class Token {
+
+        /**
+         * 是否启用
+         */
+        private boolean enabled;
+
+        /**
+         * token 过期时间，默认为 2 小时
+         */
+        private long tokenExpire = 7200;
+
+        /**
+         * 从请求头获取 token 信息
+         */
+        private String tokenHeader = AccessTokenAuthenticationFilter.AUTHORIZATION;
+
+        /**
+         * 从请求参数中获取 token　信息
+         */
+        private String tokenParameter = AccessTokenAuthenticationFilter.TOKEN_PARAMETER;
+
+    }
     /* ******************************************************************* */
 
     /**

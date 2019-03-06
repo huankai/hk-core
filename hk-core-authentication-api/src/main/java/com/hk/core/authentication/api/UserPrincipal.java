@@ -30,13 +30,13 @@ public class UserPrincipal implements Serializable {
      * 当前用户id
      */
     @Getter
-    private final String userId;
+    private String userId;
 
     /**
      * 用户账号
      */
     @Getter
-    private final String account;
+    private String account;
 
     /**
      * 真实名称
@@ -49,7 +49,7 @@ public class UserPrincipal implements Serializable {
      * 用户类型
      */
     @Getter
-    private final Byte userType;
+    private Byte userType;
 
     /**
      * 用户手机号
@@ -92,7 +92,7 @@ public class UserPrincipal implements Serializable {
      */
     @Getter
     @JsonIgnore
-    private final boolean protectUser;
+    private boolean protectUser;
 
     /**
      * orgId
@@ -126,13 +126,13 @@ public class UserPrincipal implements Serializable {
      * 用户角色
      */
     @JsonIgnore
-    private final Set<String> roles;
+    private Set<String> roles;
 
     /**
      * 用户权限
      */
     @JsonIgnore
-    private final Set<String> permissions;
+    private Set<String> permissions;
 
     public UserPrincipal(String userId, String account, Byte userType) {
         this.protectUser = false;
