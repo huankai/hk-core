@@ -14,6 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
 /**
+ * token 认证过滤器
+ * <p>
+ * 请求头中添加了 {@link #AUTHORIZATION} 或 请求参数中和添加了 {@link #TOKEN_PARAMETER} 时会验证
+ *
  * @author huangkai
  * @date 2019/3/5 15:06
  */

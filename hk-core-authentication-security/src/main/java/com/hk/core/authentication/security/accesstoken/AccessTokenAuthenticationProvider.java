@@ -6,6 +6,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 /**
+ * 使用 token 认证提供者
+ *
  * @author huangkai
  * @date 2019/3/5 15:28
  */
