@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  *
  * @author kevin
  */
-public final class SpringSecurityContext implements SecurityContext {
+public class SpringSecurityContext implements SecurityContext {
 
     @Override
     public UserPrincipal getPrincipal() {

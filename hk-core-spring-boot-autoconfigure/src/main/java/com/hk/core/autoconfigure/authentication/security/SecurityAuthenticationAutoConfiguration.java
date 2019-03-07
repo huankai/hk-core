@@ -37,6 +37,7 @@ public class SecurityAuthenticationAutoConfiguration {
      * @return SpringSecurityContext
      */
     @Bean
+    @ConditionalOnMissingBean
     public SpringSecurityContext securityContext() {
         return new SpringSecurityContext();
     }

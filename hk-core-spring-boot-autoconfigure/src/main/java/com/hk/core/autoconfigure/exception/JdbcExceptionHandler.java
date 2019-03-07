@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Jdbc 异常处理器
+ *
  * @author kevin
  * @date 2018-10-23 11:43
  */
@@ -24,7 +26,7 @@ public class JdbcExceptionHandler extends AbstractExceptionHandler {
      *
      * @param e       e
      * @param request request
-     * @return jsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = {EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)

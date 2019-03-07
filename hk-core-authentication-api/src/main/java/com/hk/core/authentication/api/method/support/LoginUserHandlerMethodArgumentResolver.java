@@ -13,7 +13,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * <p>
  * 使用 spring mvc controller方法中的参数加入当前登陆用户信息
  * </p>
- * 使用方法:
+ * 使用姿势:
  * <pre>
  * \@RequestMapping(path = "xxx")
  * public JsonResult methodName(@LoginUser() UserPrincipal principal,其他参数...){

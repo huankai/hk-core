@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * spring security 异常处理器
+ *
  * @author kevin
  * @date 2018-09-10 14:17
  */

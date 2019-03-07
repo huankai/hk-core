@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 当前登陆的用户
+ * 当前登陆的用户，所有获取当前登陆用户信息必须继承此类
  *
  * @author kevin
  * @date 2017年9月28日上午9:45:55
@@ -80,7 +80,7 @@ public class UserPrincipal implements Serializable {
     private String iconPath;
 
     /**
-     * appId
+     * 获取 app 信息，对于 单点登陆，或 oauth2 登陆时有效
      */
     @Getter
     @Setter
@@ -95,28 +95,28 @@ public class UserPrincipal implements Serializable {
     private boolean protectUser;
 
     /**
-     * orgId
+     * 用户所在机构id
      */
     @Getter
     @Setter
     private String orgId;
 
     /**
-     * orgName
+     * 用户所在机构名称
      */
     @Getter
     @Setter
     private String orgName;
 
     /**
-     * deptId
+     * 用户所在部门Id
      */
     @Getter
     @Setter
     private String deptId;
 
     /**
-     * deptNames
+     * 用户所在部门名称
      */
     @Getter
     @Setter
@@ -159,10 +159,16 @@ public class UserPrincipal implements Serializable {
         this.permissions = (permissions == null) ? new HashSet<>() : permissions;
     }
 
+    /**
+     * 获取用户所有权限
+     */
     public Set<String> getPermissions() {
         return Collections.unmodifiableSet(permissions);
     }
 
+    /**
+     * 获取用户所有角色
+     */
     public Set<String> getRoles() {
         return Collections.unmodifiableSet(roles);
     }
