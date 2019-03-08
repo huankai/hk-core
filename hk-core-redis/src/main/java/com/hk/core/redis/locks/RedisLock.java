@@ -1,6 +1,8 @@
 package com.hk.core.redis.locks;
 
 import com.hk.commons.util.*;
+import com.sun.istack.internal.NotNull;
+import lombok.Setter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -20,11 +22,17 @@ import java.util.concurrent.locks.Lock;
 public class RedisLock implements Lock {
 
     /**
+     * 线程睡眠时间
+     */
+    private static final long SLEEP_TIME = 10;
+
+    /**
+     * <pre>
      * 默认过期时间: 2 秒
+     * </pre>
      */
     private static final long EXPIRE_SECONDS = 2;
 
-    private static final long SLEEP_TIME = 10;
 
     /**
      * redis Key
@@ -35,6 +43,12 @@ public class RedisLock implements Lock {
      * key 过期时间，防止死锁
      */
     private final long expire;
+
+    /**
+     * redis lock 生成器
+     */
+    @Setter
+    private IDGenerator<String> lockGenerator = IDGenerator.STRING_UUID;
 
     private static final StringRedisTemplate REDIS_TEMPLATE = SpringContextHolder.getBean(StringRedisTemplate.class);
 
@@ -87,11 +101,7 @@ public class RedisLock implements Lock {
             throw new InterruptedException();
         }
         if (!tryLock()) {
-            try {
-                Thread.sleep(SLEEP_TIME);
-            } catch (InterruptedException e) {
-                // ignore
-            }
+            Thread.sleep(SLEEP_TIME);
             lockInterruptibly();
         }
     }
@@ -103,7 +113,7 @@ public class RedisLock implements Lock {
      */
     @Override
     public boolean tryLock() {
-        String value = IDGenerator.STRING_UUID.generate();
+        String value = lockGenerator.generate();
         LOCAL_VALUE.set(value);
         Boolean result = REDIS_TEMPLATE.opsForValue().setIfAbsent(key, value, expire, TimeUnit.SECONDS);
         return ObjectUtils.defaultIfNull(result, Boolean.FALSE);
@@ -117,7 +127,7 @@ public class RedisLock implements Lock {
      * @return true or false
      */
     @Override
-    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+    public boolean tryLock(long time, @NotNull TimeUnit unit) throws InterruptedException {
         if (Thread.interrupted()) {
             throw new InterruptedException();
         }

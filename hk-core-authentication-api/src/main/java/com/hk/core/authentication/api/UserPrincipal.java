@@ -19,6 +19,7 @@ import java.util.Set;
  * @author kevin
  * @date 2017年9月28日上午9:45:55
  */
+@NoArgsConstructor
 public class UserPrincipal implements Serializable {
 
     /**

@@ -14,7 +14,7 @@ import javax.persistence.criteria.Root;
  */
 class PathUtils {
 
-    public static <X> Path<X> getPath(Root<X> root, String propertyName) {
+    static <X> Path<X> getPath(Root<X> root, String propertyName) {
         Path<X> path;
         if (StringUtils.contains(propertyName, ".")) {
             String[] names = StringUtils.splitByComma(propertyName);

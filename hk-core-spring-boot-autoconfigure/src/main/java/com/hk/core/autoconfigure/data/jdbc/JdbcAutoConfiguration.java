@@ -45,14 +45,12 @@ public class JdbcAutoConfiguration {
 
     /**
      * 如果是使用 spring data common中的注解映射表名和字段名，配置此bean，默认会配置
-     *
      */
     @Bean
     @ConditionalOnMissingBean(PersistentEntityMetadata.class)
     public PersistentEntityMetadata persistentEntityMetadata() {
         return new SpringJdbcPersistentEntityMetadata();
     }
-
 
     /* ************如果是使用 jpa 注解映射表名和字段名，配置下面两个 bean(JpaPersistentEntityMetadata) 和 (JpaAnnotationNamingStrategy),*************** */
 

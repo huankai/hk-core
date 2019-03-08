@@ -53,14 +53,7 @@ public class BaseSimpleSolrRepository<T extends Serializable, ID extends Seriali
     @Override
     public QueryPage<T> findByPage(List<Condition> conditions, int pageIndex, int pageSize, Order... orders) {
         SimpleQuery query = new SimpleQuery().setPageRequest(new SolrPageRequest(pageIndex, pageSize));
-        if (CollectionUtils.isNotEmpty(conditions)) {
-            for (Condition condition : conditions) {
-                Criteria criteria = condition.toSolrCriteria();
-                if (null != criteria) {
-                    query.addCriteria(criteria);
-                }
-            }
-        }
+        Condition.addCriteria(query, conditions);
         fillQueryCondition(query);
         query.addSort(OrderUtils.toSort(orders));
         ScoredPage<T> page = getSolrOperations().queryForPage(solrCollectionName, query, getEntityClass());

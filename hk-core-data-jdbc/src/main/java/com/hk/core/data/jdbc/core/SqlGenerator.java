@@ -1,6 +1,8 @@
 package com.hk.core.data.jdbc.core;
 
+import com.hk.commons.util.ClassUtils;
 import com.hk.core.data.jdbc.annotations.NonUpdate;
+import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.PersistentPropertyPath;
 import org.springframework.data.mapping.PropertyHandler;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
@@ -11,6 +13,7 @@ import org.springframework.data.util.StreamUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+import javax.persistence.Column;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -65,6 +68,8 @@ class SqlGenerator {
 
     private final SqlGeneratorSource sqlGeneratorSource;
 
+    private static final boolean JPA_PERSISTENCE = ClassUtils.isPresent("javax.persistence.Column", null);
+
     SqlGenerator(RelationalMappingContext context, RelationalPersistentEntity<?> entity,
                  SqlGeneratorSource sqlGeneratorSource) {
 
@@ -83,11 +88,19 @@ class SqlGenerator {
                 if (!entity.isIdProperty(p)) {
                     nonIdColumnNames.add(p.getColumnName());
                 }
-                if (!p.isAnnotationPresent(NonUpdate.class)) {
+                if (!p.isAnnotationPresent(NonUpdate.class) || isAnnotationPresent(p)) {
                     updateColumnNames.add(p.getColumnName());
                 }
             }
         });
+    }
+
+    private boolean isAnnotationPresent(PersistentProperty<?> p) {
+        if (JPA_PERSISTENCE) {
+            Column column = p.findAnnotation(Column.class);
+            return column == null || column.updatable();
+        }
+        return false;
     }
 
     /**
@@ -192,7 +205,7 @@ class SqlGenerator {
             if (!property.isEntity() //
                     || Collection.class.isAssignableFrom(property.getType()) //
                     || Map.class.isAssignableFrom(property.getType()) //
-                    ) {
+            ) {
                 continue;
             }
 

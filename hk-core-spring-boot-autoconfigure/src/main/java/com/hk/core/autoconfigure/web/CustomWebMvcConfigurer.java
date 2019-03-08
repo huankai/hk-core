@@ -18,7 +18,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -42,7 +41,6 @@ import java.util.Map;
  * @date 2018-05-31 16:26
  */
 @Configuration
-//@ServletComponentScan(basePackages = {"com.hk.core"})
 @EnableConfigurationProperties(GlobalPropertyInterceptor.RequestPropertyProperties.class)
 public class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
@@ -61,11 +59,9 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
     /**
      * 使用配置方式
-     *
-     * @return
      */
-    @Order(value = 0)
     @Bean
+    @Order(value = 1)
     public FilterRegistrationBean xssFilter() {
         FilterRegistrationBean<Filter> xssFilterRgistration = new FilterRegistrationBean<>();
         xssFilterRgistration.setAsyncSupported(true);
@@ -130,7 +126,7 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     /**
      * 添加方法参数解析
      *
-     * @param resolvers
+     * @param resolvers resolvers
      */
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

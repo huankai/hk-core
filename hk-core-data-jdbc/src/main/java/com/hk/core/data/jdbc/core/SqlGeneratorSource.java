@@ -19,7 +19,6 @@ public class SqlGeneratorSource {
     private final RelationalMappingContext context;
 
     SqlGenerator getSqlGenerator(Class<?> domainType) {
-
         return sqlGeneratorCache.computeIfAbsent(domainType,
                 t -> new SqlGenerator(context, context.getRequiredPersistentEntity(t), this));
 

@@ -3,6 +3,7 @@ package com.hk.core.data.jpa.query.specification;
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.query.Order;
+import lombok.Getter;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -14,18 +15,21 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"rawtypes", "unchecked", "serial"})
 public class Criteria<T> implements Specification<T> {
 
+    @Getter
     private List<Criterion> criterions = new ArrayList<>();
 
+    @Getter
     private List<Criterion> havings = new ArrayList<>();
 
+    @Getter
     private List<Order> orders = new ArrayList<>();
 
+    @Getter
     private List<String> groupByPropertyNames;
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         List predicates;
@@ -107,21 +111,5 @@ public class Criteria<T> implements Specification<T> {
         if (ArrayUtils.isNotEmpty(propertyNames)) {
             addGroupBy(Arrays.asList(propertyNames));
         }
-    }
-
-    public List<Criterion> getCriterions() {
-        return criterions;
-    }
-
-    public List<Criterion> getHavings() {
-        return havings;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public List<String> getGroupByPropertyNames() {
-        return groupByPropertyNames;
     }
 }

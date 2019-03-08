@@ -5,6 +5,7 @@ import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.UserPrincipal;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +24,7 @@ import java.util.Set;
  * @date 2017年12月21日下午5:45:54
  */
 @SuppressWarnings("serial")
+@NoArgsConstructor
 public class SecurityUserPrincipal extends UserPrincipal implements UserDetails, CredentialsContainer {
 
     /**
@@ -40,7 +42,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
      * 用户状态
      */
     @JsonIgnore
-    private final Byte userStatus;
+    private Byte userStatus;
 
     public SecurityUserPrincipal(String userId, String orgId, String orgName, String deptId, String deptName, String account, boolean protectUser,
                                  String realName, Byte userType, String phone,
