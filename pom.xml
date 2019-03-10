@@ -33,6 +33,7 @@
         <module>hk-core-data-jpa</module>
         <module>hk-core-data-mybatis</module>
         <module>hk-core-data-solr</module>
+        <module>hk-core-data-elasticsearch</module>
         <module>hk-core-authentication-api</module>
         <module>hk-core-authentication-security</module>
         <module>hk-core-authentication-security-cas</module>

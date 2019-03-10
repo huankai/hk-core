@@ -62,7 +62,7 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
      */
     @Bean
     @Order(value = 1)
-    public FilterRegistrationBean xssFilter() {
+    public FilterRegistrationBean<Filter> xssFilter() {
         FilterRegistrationBean<Filter> xssFilterRgistration = new FilterRegistrationBean<>();
         xssFilterRgistration.setAsyncSupported(true);
         xssFilterRgistration.addUrlPatterns("/**");

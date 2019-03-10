@@ -1,9 +1,7 @@
 package com.hk.core.authentication.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

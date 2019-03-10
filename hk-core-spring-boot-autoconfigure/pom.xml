@@ -74,6 +74,12 @@
             <artifactId>hk-core-data-solr</artifactId>
             <optional>true</optional>
         </dependency>
+        
+        <dependency>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-core-data-elasticsearch</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>com.hk</groupId>
