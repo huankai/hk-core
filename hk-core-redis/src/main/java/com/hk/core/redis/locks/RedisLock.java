@@ -1,7 +1,6 @@
 package com.hk.core.redis.locks;
 
 import com.hk.commons.util.*;
-import com.sun.istack.internal.NotNull;
 import lombok.Setter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -127,7 +126,7 @@ public class RedisLock implements Lock {
      * @return true or false
      */
     @Override
-    public boolean tryLock(long time, @NotNull TimeUnit unit) throws InterruptedException {
+    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
         if (Thread.interrupted()) {
             throw new InterruptedException();
         }

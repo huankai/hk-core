@@ -35,7 +35,8 @@ public class BaseSimpleSolrRepository<T extends Serializable, ID extends Seriali
 
     @Override
     public QueryPage<T> findByPage(QueryModel<T> queryModel) {
-        SimpleQuery query = new SimpleQuery().setPageRequest(new SolrPageRequest(queryModel.getPageIndex(), queryModel.getPageSize()));
+        SimpleQuery query = new SimpleQuery().setPageRequest(new SolrPageRequest(queryModel.getPageIndex(),
+                queryModel.getPageSize(), OrderUtils.toSort(queryModel.getOrders())));
         Map<String, Object> map = BeanUtils.beanToMap(queryModel.getParam(), "class");
         if (CollectionUtils.isNotEmpty(map)) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -45,17 +46,15 @@ public class BaseSimpleSolrRepository<T extends Serializable, ID extends Seriali
             }
         }
         fillQueryCondition(query);
-        query.addSort(OrderUtils.toSort(queryModel.getOrders()));
         ScoredPage<T> page = getSolrOperations().queryForPage(solrCollectionName, query, getEntityClass());
         return new SimpleQueryPage<>(queryModel, page.getContent(), page.getTotalElements());
     }
 
     @Override
     public QueryPage<T> findByPage(List<Condition> conditions, int pageIndex, int pageSize, Order... orders) {
-        SimpleQuery query = new SimpleQuery().setPageRequest(new SolrPageRequest(pageIndex, pageSize));
+        SimpleQuery query = new SimpleQuery().setPageRequest(new SolrPageRequest(pageIndex, pageSize, OrderUtils.toSort(orders)));
         Condition.addCriteria(query, conditions);
         fillQueryCondition(query);
-        query.addSort(OrderUtils.toSort(orders));
         ScoredPage<T> page = getSolrOperations().queryForPage(solrCollectionName, query, getEntityClass());
         return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
     }
