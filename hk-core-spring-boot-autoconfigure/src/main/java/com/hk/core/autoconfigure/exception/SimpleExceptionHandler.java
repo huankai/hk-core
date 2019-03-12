@@ -1,10 +1,10 @@
 package com.hk.core.autoconfigure.exception;
 
-import com.hk.commons.util.EnumDisplayUtils;
-import com.hk.core.service.exception.ServiceException;
-import com.hk.commons.JsonResult;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.servlet.http.HttpServletRequest;
+import com.hk.commons.JsonResult;
+import com.hk.commons.util.EnumDisplayUtils;
+import com.hk.core.service.exception.ServiceException;
 
 /**
  * @author kevin
@@ -31,10 +33,9 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      * @return {@link JsonResult}
      */
     @ExceptionHandler(value = ServiceException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public JsonResult<?> serviceException(ServiceException e, HttpServletRequest request) {
+    public ResponseEntity<JsonResult<?>> serviceException(ServiceException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return e.getResult();
+        return ResponseEntity.status(HttpStatus.valueOf(e.getHttpStatus())).body(e.getResult());
     }
 
     /**

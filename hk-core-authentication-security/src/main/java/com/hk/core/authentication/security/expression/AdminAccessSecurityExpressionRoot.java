@@ -1,17 +1,21 @@
 package com.hk.core.authentication.security.expression;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.authentication.security.SecurityUserPrincipal;
+import java.io.Serializable;
+import java.util.Set;
+
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.SecurityExpressionOperations;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 
-import java.io.Serializable;
-import java.util.Set;
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.StringUtils;
+import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SecurityUserPrincipal;
+
+import lombok.Setter;
 
 /**
  * <p>
@@ -28,12 +32,15 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
 
     protected final Authentication authentication;
 
+    @Setter
     private AuthenticationTrustResolver trustResolver;
 
+    @Setter
     private RoleHierarchy roleHierarchy;
+//
+//    private Set<String> roles;
 
-    private Set<String> roles;
-
+    @Setter
     private String defaultRolePrefix = SecurityUserPrincipal.ROLE_PREFIX;
 
     /**
@@ -46,6 +53,7 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
      */
     public final boolean denyAll = false;
 
+    @Setter
     private PermissionEvaluator permissionEvaluator;
 
     public final String read = "read";
@@ -116,7 +124,6 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
     }
 
     private boolean hasAnyAuthorityName(String prefix, String... roles) {
-//        Set<String> roleSet = getAuthoritySet();
         Set<String> permissionSet = UserPrincipal.class.cast(authentication.getPrincipal()).getPermissions();
         for (String role : roles) {
             String defaultedRole = getRoleWithDefaultPrefix(prefix, role);
@@ -173,45 +180,6 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
         return authentication.getPrincipal();
     }
 
-    public void setTrustResolver(AuthenticationTrustResolver trustResolver) {
-        this.trustResolver = trustResolver;
-    }
-
-    public void setRoleHierarchy(RoleHierarchy roleHierarchy) {
-        this.roleHierarchy = roleHierarchy;
-    }
-
-    /**
-     * <p>
-     * Sets the default prefix to be added to {@link #hasAnyRole(String...)} or
-     * {@link #hasRole(String)}. For example, if hasRole("ADMIN") or hasRole("ROLE_ADMIN")
-     * is passed in, then the role ROLE_ADMIN will be used when the defaultRolePrefix is
-     * "ROLE_" (default).
-     * </p>
-     * <p>
-     * <p>
-     * If null or empty, then no default role prefix is used.
-     * </p>
-     *
-     * @param defaultRolePrefix the default prefix to add to roles. Default "ROLE_".
-     */
-    public void setDefaultRolePrefix(String defaultRolePrefix) {
-        this.defaultRolePrefix = defaultRolePrefix;
-    }
-
-//    private Set<String> getAuthoritySet() {
-//        if (roles == null) {
-//            roles = new HashSet<>();
-//            Collection<? extends GrantedAuthority> userAuthorities = authentication.getAuthorities();
-//            if (roleHierarchy != null) {
-//                userAuthorities = roleHierarchy
-//                        .getReachableGrantedAuthorities(userAuthorities);
-//            }
-//            roles = AuthorityUtils.authorityListToSet(userAuthorities);
-//        }
-//        return roles;
-//    }
-
     @Override
     public boolean hasPermission(Object target, Object permission) {
         return permissionEvaluator.hasPermission(authentication, target, permission);
@@ -220,10 +188,6 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
     @Override
     public boolean hasPermission(Object targetId, String targetType, Object permission) {
         return permissionEvaluator.hasPermission(authentication, (Serializable) targetId, targetType, permission);
-    }
-
-    public void setPermissionEvaluator(PermissionEvaluator permissionEvaluator) {
-        this.permissionEvaluator = permissionEvaluator;
     }
 
     /**
@@ -238,7 +202,7 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
         if (role == null) {
             return null;
         }
-        if (defaultRolePrefix == null || defaultRolePrefix.length() == 0) {
+        if (StringUtils.isEmpty(defaultRolePrefix)) {
             return role;
         }
         if (role.startsWith(defaultRolePrefix)) {

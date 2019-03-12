@@ -1,15 +1,16 @@
 package com.hk.alipay.security;
 
+import java.util.Collection;
+
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
 
 /**
  * 支付宝
  *
  * @author huangkai
  */
+@SuppressWarnings("serial")
 public class AlipayAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Object principal;

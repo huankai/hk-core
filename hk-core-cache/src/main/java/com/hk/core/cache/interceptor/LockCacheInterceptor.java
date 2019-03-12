@@ -1,9 +1,9 @@
 package com.hk.core.cache.interceptor;
 
+import java.lang.reflect.Method;
+
 import org.springframework.cache.interceptor.CacheInterceptor;
 import org.springframework.cache.interceptor.CacheOperationInvoker;
-
-import java.lang.reflect.Method;
 
 /**
  * 加锁缓存拦截器，防止 缓存雪崩
@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
  * @author huangkai
  * @date 2019/2/26 22:43
  */
+@SuppressWarnings("serial")
 public class LockCacheInterceptor extends CacheInterceptor {
 
     /**

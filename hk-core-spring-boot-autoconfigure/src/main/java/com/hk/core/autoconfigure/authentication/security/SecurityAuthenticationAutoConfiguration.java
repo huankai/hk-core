@@ -1,6 +1,6 @@
 package com.hk.core.autoconfigure.authentication.security;
 
-import com.hk.commons.sms.DefaultSmsCodeSender;
+import com.hk.commons.sms.LoggerSmsCodeSender;
 import com.hk.commons.sms.SmsCodeSender;
 import com.hk.core.authentication.api.validatecode.*;
 import com.hk.core.authentication.security.SpringSecurityContext;
@@ -112,7 +112,7 @@ public class SecurityAuthenticationAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean(SmsCodeSender.class)
         public SmsCodeSender defaultSmsCodeSender() {
-            return new DefaultSmsCodeSender();
+            return new LoggerSmsCodeSender();
         }
 
         @Bean("smsValidateCodeGenerator")

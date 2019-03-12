@@ -1,11 +1,11 @@
 package com.hk.core.autoconfigure.data.elasticsearch;
 
-import com.hk.core.elasticsearch.repository.BaseElasticsearchRepositoryFactoryBean;
 import org.elasticsearch.client.ElasticsearchClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
+
+import com.hk.core.elasticsearch.repository.BaseElasticsearchRepositoryFactoryBean;
 
 /**
  * Elasticsearch 配置类

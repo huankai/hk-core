@@ -7,6 +7,7 @@ import javax.persistence.criteria.Root;
 
 public interface Projection {
 
-    Expression toExpression(Root<?> root, CriteriaQuery<?> cq, CriteriaBuilder cb);
+    @SuppressWarnings("rawtypes")
+	Expression toExpression(Root<?> root, CriteriaQuery<?> cq, CriteriaBuilder cb);
 
 }
