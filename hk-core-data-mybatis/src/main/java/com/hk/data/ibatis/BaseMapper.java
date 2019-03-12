@@ -1,4 +1,4 @@
-package com.hk.data.mybatis;
+package com.hk.data.ibatis;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

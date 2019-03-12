@@ -24,6 +24,7 @@
         <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
         <swagger.version>2.9.2</swagger.version>
         <weixin.java.version>3.3.0</weixin.java.version>
+        <hibernate.type.version>2.4.2</hibernate.type.version>
     </properties>
 
     <dependencyManagement>
@@ -282,6 +283,12 @@
                 <groupId>com.hk</groupId>
                 <artifactId>hk-core-test</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.vladmihalcea</groupId>
+                <artifactId>hibernate-types-52</artifactId>
+                <version>${hibernate.type.version}</version>
             </dependency>
 
             <dependency>
