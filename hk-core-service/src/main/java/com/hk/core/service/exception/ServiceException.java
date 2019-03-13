@@ -1,9 +1,7 @@
 package com.hk.core.service.exception;
 
 import com.hk.commons.JsonResult;
-
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Http Status Code ：400
@@ -13,10 +11,9 @@ import lombok.Setter;
  */
 @SuppressWarnings("serial")
 public class ServiceException extends RuntimeException {
-	
-	@Getter
-	@Setter
-	private int httpStatus = 400;
+
+    @Getter
+    private int statusCode = 400;
 
     @Getter
     private final JsonResult<?> result;
@@ -27,7 +24,15 @@ public class ServiceException extends RuntimeException {
     }
 
     public ServiceException(JsonResult<?> result) {
+        super(result.getMessage());
         this.result = result;
+    }
+
+    public ServiceException(int statusCode, JsonResult<?> result) {
+        super(result.getMessage());
+        this.result = result;
+        this.statusCode = statusCode;
+
     }
 
     public ServiceException(String message, Throwable t) {

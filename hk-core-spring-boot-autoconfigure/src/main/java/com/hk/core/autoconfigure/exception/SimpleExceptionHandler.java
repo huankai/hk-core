@@ -1,7 +1,8 @@
 package com.hk.core.autoconfigure.exception;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.hk.commons.JsonResult;
+import com.hk.commons.util.EnumDisplayUtils;
+import com.hk.core.service.exception.ServiceException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.hk.commons.JsonResult;
-import com.hk.commons.util.EnumDisplayUtils;
-import com.hk.core.service.exception.ServiceException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author kevin
@@ -35,7 +34,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ExceptionHandler(value = ServiceException.class)
     public ResponseEntity<JsonResult<?>> serviceException(ServiceException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return ResponseEntity.status(HttpStatus.valueOf(e.getHttpStatus())).body(e.getResult());
+        return ResponseEntity.status(e.getStatusCode()).body(e.getResult());
     }
 
     /**

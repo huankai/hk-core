@@ -226,7 +226,7 @@ public abstract class Webs {
      */
     public static ResponseEntity<InputStreamResource> toImageViewResponseEntity(Resource resource) {
         try {
-            return toDownloadResponseEntity(null, MediaType.IMAGE_JPEG, resource.contentLength(),
+            return toDownloadResponseEntity(resource.getFilename(), MediaType.IMAGE_JPEG, resource.contentLength(),
                     new InputStreamResource(resource.getInputStream()));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
