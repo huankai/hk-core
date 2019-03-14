@@ -43,7 +43,7 @@ public class CustomRedisCache extends RedisCache {
             return;
         }
         // 如果缓存值为 null ，使用 null 值的缓存过期时间
-        Duration ttl = (NullValue.INSTANCE == cacheValue || null == cacheValue) ? nullValueTtl : cacheConfig.getTtl();
+        Duration ttl = (null == cacheValue || NullValue.INSTANCE.equals(cacheValue)) ? nullValueTtl : cacheConfig.getTtl();
         cacheWriter.put(getName(), createAndConvertCacheKey(key), serializeCacheValue(cacheValue), ttl);
     }
 
