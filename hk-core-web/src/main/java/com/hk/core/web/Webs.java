@@ -130,7 +130,10 @@ public abstract class Webs {
      * session 失效
      */
     public static void invalidateSession() {
-        getRequestAttribute().getRequest().getSession().invalidate();
+        HttpSession session = getRequestAttribute().getRequest().getSession(false);
+        if (null != session) {
+            session.invalidate();
+        }
     }
 
     /**
@@ -174,6 +177,36 @@ public abstract class Webs {
     public static boolean isWeiXin(HttpServletRequest request) {
         String userAgent = request.getHeader("user-agent");
         return StringUtils.contains(userAgent, "MicroMessenger");
+    }
+
+    /**
+     * 判断是否是支付宝发出的请求
+     *
+     * @param request request
+     * @return true or false
+     */
+    public static boolean isAliPay(HttpServletRequest request) {
+        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "AlipayClient");
+    }
+
+    /**
+     * 判断是否是 android 发出的请求
+     *
+     * @param request request
+     * @return true or false
+     */
+    public static boolean isAndroid(HttpServletRequest request) {
+        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "Android");
+    }
+
+    /**
+     * 判断是否是 苹果手机应用发送的请求
+     *
+     * @param request request
+     * @return true or false
+     */
+    public static boolean isIPhone(HttpServletRequest request) {
+        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "iPhone");
     }
 
     /**

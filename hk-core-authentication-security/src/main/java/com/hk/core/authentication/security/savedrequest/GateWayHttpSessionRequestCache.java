@@ -2,6 +2,7 @@ package com.hk.core.authentication.security.savedrequest;
 
 import com.hk.commons.util.AssertUtils;
 import com.hk.commons.util.StringUtils;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.web.PortResolver;
@@ -22,16 +23,20 @@ import javax.servlet.http.HttpSession;
  */
 public class GateWayHttpSessionRequestCache implements RequestCache {
 
-    static final String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
+    private static final String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST";
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Setter
     private PortResolver portResolver = new PortResolverImpl();
 
+    @Setter
     private boolean createSessionAllowed = true;
 
+    @Setter
     private RequestMatcher requestMatcher = AnyRequestMatcher.INSTANCE;
 
+    @Setter
     private String sessionAttrName = SAVED_REQUEST;
 
     /**
@@ -87,21 +92,5 @@ public class GateWayHttpSessionRequestCache implements RequestCache {
             logger.debug("Removing DefaultSavedRequest from session if present");
             session.removeAttribute(sessionAttrName);
         }
-    }
-
-    public void setPortResolver(PortResolver portResolver) {
-        this.portResolver = portResolver;
-    }
-
-    public void setCreateSessionAllowed(boolean createSessionAllowed) {
-        this.createSessionAllowed = createSessionAllowed;
-    }
-
-    public void setRequestMatcher(RequestMatcher requestMatcher) {
-        this.requestMatcher = requestMatcher;
-    }
-
-    public void setSessionAttrName(String sessionAttrName) {
-        this.sessionAttrName = sessionAttrName;
     }
 }

@@ -2,16 +2,17 @@ package com.hk.core.service.jpa.impl;
 
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
+import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.data.jpa.repository.BaseJpaRepository;
+import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.service.impl.BaseServiceImpl;
 import com.hk.core.service.jpa.JpaBaseService;
 import org.springframework.core.ResolvableType;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Persistable;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -98,4 +99,24 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
         return getBaseRepository().updateByIdSelective(t);
     }
 
+    @Override
+    public Optional<T> findOne(Specification<T> spec) {
+        return getBaseRepository().findOne(spec);
+    }
+
+    @Override
+    public QueryPage<T> findAll(Specification<T> spec, int pageIndex, int pageSize, Order... orders) {
+        Page<T> page = getBaseRepository().findAll(spec, PageRequest.of(pageIndex, pageSize, OrderUtils.toSort(orders)));
+        return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
+    }
+
+    @Override
+    public List<T> findAll(Specification<T> spec, Order... orders) {
+        return getBaseRepository().findAll(spec, OrderUtils.toSort(orders));
+    }
+
+    @Override
+    public long count(Specification<T> spec) {
+        return getBaseRepository().count(spec);
+    }
 }

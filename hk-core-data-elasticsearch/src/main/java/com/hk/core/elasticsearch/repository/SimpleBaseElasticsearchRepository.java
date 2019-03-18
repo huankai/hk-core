@@ -30,7 +30,6 @@ public class SimpleBaseElasticsearchRepository<T extends Serializable>
         extends SimpleElasticsearchRepository<T> implements BaseElasticsearchRepository<T> {
 
     public SimpleBaseElasticsearchRepository() {
-        super();
     }
 
     public SimpleBaseElasticsearchRepository(ElasticsearchEntityInformation<T, String> metadata,

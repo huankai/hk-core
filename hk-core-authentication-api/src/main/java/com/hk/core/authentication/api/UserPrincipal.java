@@ -17,6 +17,8 @@ import java.util.Set;
  * @author kevin
  * @date 2017年9月28日上午9:45:55
  */
+@Getter
+@Setter
 @NoArgsConstructor
 public class UserPrincipal implements Serializable {
 
@@ -28,97 +30,74 @@ public class UserPrincipal implements Serializable {
     /**
      * 当前用户id
      */
-    @Getter
+
     private String userId;
 
     /**
      * 用户账号
      */
-    @Getter
     private String account;
 
     /**
      * 真实名称
      */
-    @Getter
-    @Setter
     private String realName;
 
     /**
      * 用户类型
      */
-    @Getter
     private Byte userType;
 
     /**
      * 用户手机号
      */
-    @Getter
-    @Setter
     private String phone;
 
     /**
      * 用户邮箱
      */
-    @Getter
-    @Setter
     private String email;
 
     /**
      * 用户性别
      */
-    @Getter
-    @Setter
     private Byte sex;
 
     /**
      * 用户头像
      */
-    @Getter
-    @Setter
     private String iconPath;
 
     /**
      * 获取 app 信息，对于 单点登陆，或 oauth2 登陆时有效
      */
-    @Getter
-    @Setter
     private ClientAppInfo appInfo;
 
     /**
      * 是否受保护的用户
      * protectUser
      */
-    @Getter
     @JsonIgnore
     private boolean protectUser;
 
     /**
      * 用户所在机构id
      */
-    @Getter
-    @Setter
     private String orgId;
 
     /**
      * 用户所在机构名称
      */
-    @Getter
-    @Setter
     private String orgName;
 
     /**
      * 用户所在部门Id
      */
-    @Getter
-    @Setter
     private String deptId;
 
     /**
      * 用户所在部门名称
      */
-    @Getter
-    @Setter
     private String deptName;
 
     /**

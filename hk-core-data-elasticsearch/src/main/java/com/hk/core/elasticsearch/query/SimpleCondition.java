@@ -58,7 +58,7 @@ public class SimpleCondition implements Condition {
                     Object[] valueArr = (Object[]) this.value;
                     if (ArrayUtils.length(valueArr) == 2) {
                         String geoLocation = ConverterUtils.defaultConvert(valueArr[0], String.class);
-                        String distance = ConverterUtils.defaultConvert(valueArr[0], String.class);
+                        String distance = ConverterUtils.defaultConvert(valueArr[1], String.class);
                         if (StringUtils.isNotEmpty(geoLocation) && StringUtils.isNotEmpty(distance)) {
                             return Criteria.where(field).within(geoLocation, distance);
                         }
