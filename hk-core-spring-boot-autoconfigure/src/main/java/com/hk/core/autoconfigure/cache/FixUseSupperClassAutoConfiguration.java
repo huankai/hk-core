@@ -40,7 +40,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @EnableCaching
 @ConditionalOnClass(FixUseSupperClassCacheOperationSource.class)
 @EnableAspectJAutoProxy(exposeProxy = true)
-@EnableConfigurationProperties({CacheProperties.class, NullCacheProperties.class})
+@EnableConfigurationProperties(value = {CacheProperties.class, NullCacheProperties.class})
 public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport {
 
     /**

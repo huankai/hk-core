@@ -156,7 +156,7 @@ public abstract class Webs {
      * @return true if Request Header contains X-Requested-With
      */
     public static boolean isAjax(HttpServletRequest request) {
-        return null != request.getHeader("X-Requested-With");
+        return StringUtils.isNotEmpty(request.getHeader("X-Requested-With"));
     }
 
     /**
@@ -175,8 +175,7 @@ public abstract class Webs {
      * @return true if Request Header contains MicroMessenger
      */
     public static boolean isWeiXin(HttpServletRequest request) {
-        String userAgent = request.getHeader("user-agent");
-        return StringUtils.contains(userAgent, "MicroMessenger");
+        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "MicroMessenger");
     }
 
     /**
