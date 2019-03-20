@@ -33,13 +33,13 @@ public class Criteria<T> implements Specification<T> {
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         List predicates;
-        Iterator var5;
+        Iterator iterator;
         Criterion criterion;
         if (!this.criterions.isEmpty()) {
             predicates = new ArrayList();
-            var5 = this.criterions.iterator();
-            while (var5.hasNext()) {
-                criterion = (Criterion) var5.next();
+            iterator = this.criterions.iterator();
+            while (iterator.hasNext()) {
+                criterion = (Criterion) iterator.next();
                 if (criterion != null) {
                     Predicate predicate = criterion.toPredicate(root, query, cb);
                     if (predicate != null) {
@@ -53,19 +53,19 @@ public class Criteria<T> implements Specification<T> {
         }
         if (this.orders != null) {
             predicates = new ArrayList();
-            var5 = this.orders.iterator();
-            while (var5.hasNext()) {
-                Order order = (Order) var5.next();
+            iterator = this.orders.iterator();
+            while (iterator.hasNext()) {
+                Order order = (Order) iterator.next();
                 predicates.add(OrderUtils.toJpaOrder(root, order));
             }
             query.orderBy(predicates);
         }
         if (this.groupByPropertyNames != null) {
             predicates = new ArrayList();
-            var5 = this.groupByPropertyNames.iterator();
+            iterator = this.groupByPropertyNames.iterator();
 
-            while (var5.hasNext()) {
-                String propertyName = (String) var5.next();
+            while (iterator.hasNext()) {
+                String propertyName = (String) iterator.next();
                 predicates.add(PathUtils.getPath(root, propertyName));
             }
 
@@ -73,9 +73,9 @@ public class Criteria<T> implements Specification<T> {
         }
         if (!this.havings.isEmpty()) {
             predicates = new ArrayList();
-            var5 = this.havings.iterator();
-            while (var5.hasNext()) {
-                criterion = (Criterion) var5.next();
+            iterator = this.havings.iterator();
+            while (iterator.hasNext()) {
+                criterion = (Criterion) iterator.next();
                 predicates.add(criterion.toPredicate(root, query, cb));
             }
             if (predicates.size() > 0) {

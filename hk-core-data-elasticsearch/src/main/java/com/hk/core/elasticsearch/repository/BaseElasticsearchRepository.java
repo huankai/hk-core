@@ -48,4 +48,13 @@ public interface BaseElasticsearchRepository<T extends Serializable>
      */
     void deleteByIds(Iterable<String> ids);
 
+    /**
+     * 条件查询
+     *
+     * @param conditions conditions
+     * @param orders     orders
+     * @return 查询结果集
+     */
+    List<T> findAll(List<Condition> conditions, Order... orders);
+
 }

@@ -1,6 +1,8 @@
 package com.hk.core.data.jpa.query.specification;
 
 import com.hk.core.data.commons.query.Operator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaBuilder.In;
@@ -10,19 +12,17 @@ import javax.persistence.criteria.Root;
 import java.util.Collection;
 import java.util.Iterator;
 
+@AllArgsConstructor
 public class AggregateExpression implements Criterion {
 
+    @Getter
     private Projection projection;
 
+    @Getter
     private Object value;
 
+    @Getter
     private Operator operator;
-
-    public AggregateExpression(Projection projection, Object value, Operator operator) {
-        this.projection = projection;
-        this.value = value;
-        this.operator = operator;
-    }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})

@@ -82,4 +82,12 @@ public class SimpleBaseElasticsearchRepository<T extends Serializable>
             ids.forEach(this::deleteById);
         }
     }
+
+    @Override
+    public List<T> findAll(List<Condition> conditions, Order... orders) {
+        CriteriaQuery query = new CriteriaQuery(new Criteria());
+        Condition.addCriteria(query, conditions);
+        query.addSort(OrderUtils.toSort(orders));
+        return elasticsearchOperations.queryForList(query, getEntityClass());
+    }
 }

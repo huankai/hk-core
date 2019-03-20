@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.hk.core.data.jpa.query.specification;
 
 import com.hk.commons.util.StringUtils;

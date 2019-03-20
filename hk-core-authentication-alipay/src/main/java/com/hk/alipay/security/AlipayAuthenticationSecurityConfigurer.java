@@ -10,6 +10,8 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
+ * 支付宝认证配置
+ *
  * @author huangkai
  * @date 2019/3/5 18:18
  */

@@ -59,6 +59,7 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
 //            AlipayUserInfoShareResponse userInfo = alipayClient.execute(userInfoShareRequest, tokenResponse.getAccessToken());
             UserPrincipal principal = new UserPrincipal();
             principal.setUserId(tokenResponse.getUserId());
+            principal.setProtectUser(false);
             AlipayAuthenticationToken authenticationToken = new AlipayAuthenticationToken(principal);
             setDetails(request, authenticationToken);
             return getAuthenticationManager().authenticate(authenticationToken);
