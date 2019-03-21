@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Objects;
 
 /**
  * web相关的工具类
@@ -356,14 +357,14 @@ public abstract class Webs {
      *
      * @param response response
      * @param status   status
-     * @param result   result
+     * @param data     data
      */
-    public static <T> void writeJson(HttpServletResponse response, int status, JsonResult<T> result) {
+    public static void writeJson(HttpServletResponse response, int status, Object data) {
         response.setCharacterEncoding(Contants.UTF_8);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try (PrintWriter writer = response.getWriter()) {
             response.setStatus(status);
-            writer.write(JsonUtils.serialize(result));
+            writer.write(JsonUtils.serialize(data));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
