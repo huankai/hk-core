@@ -1,6 +1,7 @@
 package com.hk.core.autoconfigure.exception;
 
 import com.hk.core.authentication.security.SpringSecurityContext;
+import com.hk.core.service.exception.ServiceException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,20 @@ public class ExceptionHandlerConfiguration {
 
 
     /**
-     * JDbc Exception
+     * Service Exception
+     */
+    @Configuration
+    @ConditionalOnClass(ServiceException.class)
+    public class ServiceExceptionHandlerConfiguration {
+
+        @Bean
+        public ServiceExceptionHandler jdbcExceptionHandler() {
+            return new ServiceExceptionHandler();
+        }
+    }
+
+    /**
+     * Jdbc Exception
      */
     @Configuration
     @ConditionalOnClass(com.hk.core.data.jdbc.exception.EntityNotFoundException.class)
