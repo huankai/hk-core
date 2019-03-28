@@ -2,14 +2,7 @@ package com.hk.commons.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 /**
@@ -64,6 +57,35 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
             return ((Collection<?>) iterable).size();
         }
         return StreamSupport.stream(iterable.spliterator(), false).count();
+    }
+
+    /**
+     * iterable 转换为集合
+     *
+     * @param iterable iterable
+     * @return {@link ArrayList}
+     */
+    public static <T> Collection<T> toCollection(Iterable<T> iterable) {
+        return toCollection(iterable, 10);
+    }
+
+    /**
+     * iterable 转换为集合
+     *
+     * @param iterable      iterable
+     * @param estimatedSize estimatedSize
+     * @return {@link ArrayList}
+     */
+    public static <T> Collection<T> toCollection(Iterable<T> iterable, int estimatedSize) {
+        if (iterable == null) {
+            return new ArrayList<>(estimatedSize);
+        }
+        if (iterable instanceof Collection) {
+            return (Collection<T>) iterable;
+        }
+        Collection<T> coll = new ArrayList<>(estimatedSize);
+        iterable.forEach(coll::add);
+        return coll;
     }
 
     /**

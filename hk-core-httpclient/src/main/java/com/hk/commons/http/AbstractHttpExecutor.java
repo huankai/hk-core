@@ -40,7 +40,7 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
      * 连接超时:    5秒
      * 连接请求超时: 5秒
      */
-    private static final RequestConfig DEFAULT_REQUEST_CONFIG = RequestConfig.custom()
+    public static final RequestConfig DEFAULT_REQUEST_CONFIG = RequestConfig.custom()
             .setSocketTimeout(10000)
             .setConnectTimeout(5000)
             .setConnectionRequestTimeout(5000)
