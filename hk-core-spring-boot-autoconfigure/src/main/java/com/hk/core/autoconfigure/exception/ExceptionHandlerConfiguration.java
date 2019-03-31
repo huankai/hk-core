@@ -32,7 +32,7 @@ public class ExceptionHandlerConfiguration {
      * Service Exception
      */
     @Configuration
-    @ConditionalOnClass(ServiceException.class)
+    @ConditionalOnClass(value = {ServiceException.class})
     public class ServiceExceptionHandlerConfiguration {
 
         @Bean
@@ -45,7 +45,7 @@ public class ExceptionHandlerConfiguration {
      * Jdbc Exception
      */
     @Configuration
-    @ConditionalOnClass(com.hk.core.data.jdbc.exception.EntityNotFoundException.class)
+    @ConditionalOnClass(value = {com.hk.core.data.jdbc.exception.EntityNotFoundException.class})
     public class JdbcExceptionHandlerConfiguration {
 
         @Bean
@@ -58,7 +58,7 @@ public class ExceptionHandlerConfiguration {
      * Jpa　Exception
      */
     @Configuration
-    @ConditionalOnClass(EntityNotFoundException.class)
+    @ConditionalOnClass(value = {EntityNotFoundException.class})
     public class JpaExceptionHandlerConfiguration {
 
         @Bean
@@ -72,7 +72,7 @@ public class ExceptionHandlerConfiguration {
      * Spring Security Exception
      */
     @Configuration
-    @ConditionalOnClass(SpringSecurityContext.class)
+    @ConditionalOnClass(value = {SpringSecurityContext.class})
     public class SpringSecurityExceptionHandlerConfiguration {
 
         @Bean
