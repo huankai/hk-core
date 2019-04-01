@@ -64,15 +64,28 @@ public class RedisLock implements Lock {
         LUA_SCRIPT.setResultType(Long.class);
     }
 
+    /**
+     * 默认过期时间 2 秒
+     *
+     * @param key key
+     */
     public RedisLock(String key) {
         this(key, EXPIRE_SECONDS);
     }
 
+    /**
+     * @param key    key
+     * @param expire 过期时间，单位: 秒
+     */
     public RedisLock(String key, long expire) {
         this.key = key;
         this.expire = expire <= 0 ? EXPIRE_SECONDS : expire;
     }
 
+    /**
+     * @param key      key
+     * @param duration 过期时间
+     */
     public RedisLock(String key, Duration duration) {
         AssertUtils.isTrue(duration.isNegative() || duration.isZero(), "过期时间不能小于等于0");
         this.key = key;
@@ -132,8 +145,9 @@ public class RedisLock implements Lock {
         }
         long max = System.nanoTime() + unit.toNanos(time);
         while (System.nanoTime() < max) {
-            boolean lock = tryLock();
-            if (lock) return true;
+            if (tryLock()) {
+                return true;
+            }
         }
         return false;
     }
