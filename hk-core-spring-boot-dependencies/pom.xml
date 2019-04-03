@@ -25,6 +25,7 @@
         <swagger.version>2.9.2</swagger.version>
         <weixin.java.version>3.3.0</weixin.java.version>
         <alipay.version>3.6.0.ALL</alipay.version>
+        <aliyun.oss.version>2.8.3</aliyun.oss.version>
         <hibernate.type.version>2.4.2</hibernate.type.version>
     </properties>
     <distributionManagement>
@@ -201,6 +202,11 @@
                 <groupId>com.hk</groupId>
                 <artifactId>hk-core-authentication-alipay</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun.oss.version}</version>
             </dependency>
 
             <dependency>
