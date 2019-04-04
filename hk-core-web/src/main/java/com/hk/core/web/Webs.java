@@ -1,6 +1,5 @@
 package com.hk.core.web;
 
-import com.hk.commons.JsonResult;
 import com.hk.commons.util.Contants;
 import com.hk.commons.util.FileUtils;
 import com.hk.commons.util.JsonUtils;
@@ -24,7 +23,6 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Objects;
 
 /**
  * web相关的工具类
@@ -210,56 +208,56 @@ public abstract class Webs {
     }
 
     /**
-     * 下载文件
+     * 文件下载或预览
      *
      * @param fileName fileName
      * @param body     body
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, byte[] body) {
-        return toDownloadResponseEntity(fileName, new ByteArrayResource(body));
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, byte[] body) {
+        return toResponseEntity(fileName, new ByteArrayResource(body));
     }
 
     /**
-     * 下载文件
+     * 文件下载或预览
      *
      * @param fileName fileName
      * @param url      url
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, URL url) {
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, URL url) {
         try {
             URLConnection connection = url.openConnection();
-            return toDownloadResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
+            return toResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     /**
-     * 文件下载
+     * 文件下载或预览
      *
      * @param fileName fileName
      * @param resource resource
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, Resource resource) {
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, Resource resource) {
         try {
-            return toDownloadResponseEntity(fileName, resource.contentLength(), resource.getInputStream());
+            return toResponseEntity(fileName, resource.contentLength(), resource.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     /**
-     * 图片预览
+     * 文件下载或预览
      *
      * @param resource resource
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toImageViewResponseEntity(Resource resource) {
+    public static ResponseEntity<InputStreamResource> toResponseEntity(Resource resource) {
         try {
-            return toDownloadResponseEntity(resource.getFilename(), MediaType.IMAGE_JPEG, resource.contentLength(),
+            return toResponseEntity(resource.getFilename(), MediaType.IMAGE_JPEG, resource.contentLength(),
                     new InputStreamResource(resource.getInputStream()));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -267,23 +265,26 @@ public abstract class Webs {
     }
 
     /**
+     * 文件下载或预览
+     *
      * @param fileName fileName
      * @param in       in
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, long contextLength,
-                                                                               InputStream in) {
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, long contextLength,
+                                                                       InputStream in) {
         InputStreamResource streamResource = new InputStreamResource(in);
-        MediaType mediaType = (streamResource.isFile() && FileUtils.isImage(streamResource.getFilename()))
+        MediaType mediaType = StringUtils.isEmpty(fileName)
+                || (streamResource.isFile() && FileUtils.isImage(streamResource.getFilename()))
                 ? MediaType.IMAGE_JPEG : MediaType.APPLICATION_OCTET_STREAM;
-        return toDownloadResponseEntity(fileName, mediaType, contextLength, streamResource);
+        return toResponseEntity(fileName, mediaType, contextLength, streamResource);
     }
 
-    private static <T> ResponseEntity<T> toDownloadResponseEntity(String fileName, MediaType mediaType,
-                                                                  long contextLength, T body) {
+    private static <T> ResponseEntity<T> toResponseEntity(String fileName, MediaType mediaType,
+                                                          long contextLength, T body) {
         HttpHeaders httpHeaders = new HttpHeaders();
         if (StringUtils.isNotEmpty(fileName)) {
-            httpHeaders.setContentDispositionFormData("attachment", getAttachFileName(fileName));
+            httpHeaders.setContentDispositionFormData("attachment", obtainAttachFileName(fileName));
         }
         httpHeaders.setContentType(mediaType);
         httpHeaders.setContentLength(contextLength);
@@ -296,7 +297,7 @@ public abstract class Webs {
      * @param fileName fileName
      * @return fileName
      */
-    private static String getAttachFileName(String fileName) {
+    private static String obtainAttachFileName(String fileName) {
         String encodeFileName = fileName;
         HttpServletRequest request = getHttpServletRequest();
         try {

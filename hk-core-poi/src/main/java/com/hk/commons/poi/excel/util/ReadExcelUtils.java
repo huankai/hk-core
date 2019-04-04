@@ -11,6 +11,7 @@ import org.springframework.beans.PropertyAccessor;
 import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Field;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,6 @@ public abstract class ReadExcelUtils {
         putReadExcel(beanClass, null, null, map);
         return map;
     }
-
 
     private static void putReadExcel(Class<?> beanClass, Class<?> wrapClass, String nestedPrefix, Map<Integer, String> map) {
         if (null != wrapClass) {
@@ -94,8 +94,14 @@ public abstract class ReadExcelUtils {
         return FieldUtils.getFieldsListWithAnnotation(cls, ReadExcelField.class);
     }
 
+    public static int getMinColumnWithExcelCellAnnotations(Class<?> cls) {
+        return getFieldWithExcelCellAnnotations(cls).stream()
+                .map(item -> item.getAnnotation(ReadExcelField.class)).sorted(Comparator.comparingInt(ReadExcelField::start))
+                .findFirst().get().start();
+    }
+
     /**
-     * @param beanClazz beanClazz
+     * @param beanClazz   beanClazz
      * @param columnIndex columnIndex
      * @return {@link ReadExcelField}
      */
@@ -104,7 +110,7 @@ public abstract class ReadExcelUtils {
     }
 
     /**
-     * @param beanClass beanClass
+     * @param beanClass   beanClass
      * @param columnIndex columnIndex
      * @return {@link Field}
      */

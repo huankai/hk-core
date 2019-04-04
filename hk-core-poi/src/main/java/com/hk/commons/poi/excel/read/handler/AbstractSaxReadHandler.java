@@ -64,7 +64,7 @@ public abstract class AbstractSaxReadHandler<T> extends AbstractReadHandler<T> {
     }
 
     /**
-     * 将当行行的数据解析为一个对象
+     * 将当行的数据解析为一个对象
      *
      * @param rowNum 当前数据所在的行
      * @return

@@ -254,4 +254,13 @@ public final class JsonResult<T> {
         return EnumDisplayUtils.getDisplayOrder(status);
     }
 
+    @JsonIgnore
+    public boolean isSuccess() {
+        return Status.SUCCESS.equals(status);
+    }
+
+    public <E> JsonResult<E> of(E data) {
+        return new JsonResult<>(this.status, this.message, data);
+    }
+
 }

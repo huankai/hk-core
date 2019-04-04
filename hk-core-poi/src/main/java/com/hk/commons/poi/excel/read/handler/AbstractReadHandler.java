@@ -1,30 +1,26 @@
 package com.hk.commons.poi.excel.read.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
-
 import com.hk.commons.poi.ReadException;
+import com.hk.commons.poi.excel.exception.ExcelReadException;
+import com.hk.commons.poi.excel.model.*;
+import com.hk.commons.poi.excel.read.interceptor.ValidationInterceptor;
+import com.hk.commons.poi.excel.read.validation.Validationable;
+import com.hk.commons.poi.excel.util.ReadExcelUtils;
+import com.hk.commons.poi.excel.util.WriteExcelUtils;
+import com.hk.commons.util.ClassUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.ObjectUtils;
+import com.hk.commons.util.StringUtils;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
 
-import com.hk.commons.poi.excel.exception.ExcelReadException;
-import com.hk.commons.poi.excel.model.ErrorLog;
-import com.hk.commons.poi.excel.model.InvalidCell;
-import com.hk.commons.poi.excel.model.ReadParam;
-import com.hk.commons.poi.excel.model.ReadResult;
-import com.hk.commons.poi.excel.model.SheetData;
-import com.hk.commons.poi.excel.model.Title;
-import com.hk.commons.poi.excel.read.interceptor.ValidationInterceptor;
-import com.hk.commons.poi.excel.read.validation.Validationable;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.ObjectUtils;
-import com.hk.commons.util.StringUtils;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author kevin
@@ -120,9 +116,67 @@ public abstract class AbstractReadHandler<T> {
             String propertyName = getPropertyName(columnIndex);
             if (StringUtils.isNotEmpty(propertyName)) {
                 value = trimToValue(value);
+                boolean isNestedProperty = StringUtils.indexOf(propertyName, WriteExcelUtils.NESTED_PROPERTY) != -1;
+                if (isNestedProperty) {
+                    String nestedPropertyPrefix = StringUtils.substringBefore(propertyName, WriteExcelUtils.NESTED_PROPERTY);
+                    Class<?> propertyType = wrapper.getPropertyType(nestedPropertyPrefix);
+                    propertyName = String.format(propertyName, 0);
+                    Object propertyValue = wrapper.getPropertyValue(propertyName);
+                    if (null == propertyValue) {
+                        if (!ClassUtils.isAssignable(Collection.class, propertyType)) {
+                            throw new BeanCreationException("NestedProperty 类型必须为 Collection");
+                        }
+                        propertyValue = newNestedPropertyValue(propertyType);
+                    }
+                    int size = getNestedPropertySize(propertyValue);
+                    if (isNewObject(wrapper.getWrappedClass(), nestedPropertyPrefix, columnIndex)) {
+                        size = size + 1;
+                    }
+                    propertyName = String.format(propertyName, size);
+                }
                 wrapper.setPropertyValue(propertyName, value);
             }
         }
+    }
+
+    private boolean isNewObject(Class<?> propertyType, String nestedPropertyPrefix, int currentColumnIndex) {
+        try {
+            ParameterizedType type = (ParameterizedType) propertyType.getDeclaredField(nestedPropertyPrefix).getGenericType();
+            return ReadExcelUtils.getMinColumnWithExcelCellAnnotations((Class)type.getActualTypeArguments()[0]) == currentColumnIndex;
+        } catch (NoSuchFieldException e) {
+            throw new BeanCreationException(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当前Nested 属性的size
+     *
+     * @param value value
+     * @return
+     */
+    private int getNestedPropertySize(Object value) {
+        return (int) CollectionUtils.size((Iterable) value);
+    }
+
+    /**
+     * 创建 Nested属性对象，目前只支持 {@link List} ,{@link Set} ,{@link Queue} ,{@link Collection} 类型
+     *
+     * @param propertyType propertyType
+     */
+    private Object newNestedPropertyValue(Class<?> propertyType) {
+        if (ClassUtils.isAssignable(List.class, propertyType)) {
+            return new ArrayList<>();
+        }
+        if (ClassUtils.isAssignable(Set.class, propertyType)) {
+            return new HashSet<>();
+        }
+        if (ClassUtils.isAssignable(Queue.class, propertyType)) {
+            return new LinkedList<>();
+        }
+        if (ClassUtils.isAssignable(Collection.class, propertyType)) {
+            return new ArrayList<>();
+        }
+        throw new BeanCreationException("NestedProperty 类型必须为 Collection");
     }
 
     /**

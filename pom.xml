@@ -31,13 +31,9 @@
         <module>hk-core-poi</module>
         <module>hk-core-httpclient</module>
         <module>hk-core-page</module>
-        <module>hk-core-data-commons</module>
         <module>hk-core-web</module>
-        <module>hk-core-data-jdbc</module>
-        <module>hk-core-data-jpa</module>
-        <module>hk-core-data-mybatis</module>
-        <module>hk-core-data-solr</module>
-        <module>hk-core-data-elasticsearch</module>
+        <module>hk-core-spring-boot-autoconfigure</module>
+        <module>hk-core-spring-boot-dependencies</module>
         <module>hk-core-authentication-api</module>
         <module>hk-core-authentication-security</module>
         <module>hk-core-authentication-security-cas</module>
@@ -45,10 +41,16 @@
         <module>hk-core-authentication-weixin-mp</module>
         <module>hk-core-authentication-alipay</module>
         <module>hk-core-authentication-security-oauth2</module>
+        <module>hk-core-data-commons</module>
+        <module>hk-core-data-jdbc</module>
+        <module>hk-core-data-jpa</module>
+        <module>hk-core-data-mybatis</module>
+        <module>hk-core-data-solr</module>
+        <module>hk-core-data-elasticsearch</module>
+        <module>hk-core-i18n</module>
+        <module>hk-core-redis</module>
         <module>hk-core-service</module>
         <module>hk-core-cache</module>
-        <module>hk-core-redis</module>
-        <module>hk-core-i18n</module>
         <module>hk-core-message-api</module>
         <module>hk-core-message-websocket</module>
         <module>hk-core-message-weixin</module>
@@ -57,8 +59,6 @@
         <module>hk-core-stream-kafka</module>
         <module>hk-swagger-ui</module>
         <module>hk-core-test</module>
-        <module>hk-core-spring-boot-autoconfigure</module>
-        <module>hk-core-spring-boot-dependencies</module>
     </modules>
 
     <!--发布到 nexus 地址-->
