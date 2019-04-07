@@ -55,12 +55,15 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
         CELL_FORMATTER.put(DataFormat.TEXT_FORMAT, ObjectUtils::toString);
 
         /* 日期类型 */
+        CELL_FORMATTER.put(DataFormat.DATE_FORMAT_YEAR, (value) -> DateTimeUtils.objectToString(value, DataFormat.DATE_FORMAT_YEAR.getPattern()));
+        CELL_FORMATTER.put(DataFormat.DATE_FORMAT_YEAR_MONTH, (value) -> DateTimeUtils.objectToString(value, DataFormat.DATE_FORMAT_YEAR_MONTH.getPattern()));
         CELL_FORMATTER.put(DataFormat.DATE_FORMAT, (value) -> DateTimeUtils.objectToString(value, DataFormat.DATE_FORMAT.getPattern()));
         CELL_FORMATTER.put(DataFormat.DATE_FORMAT_CN, (value) -> DateTimeUtils.objectToString(value, DataFormat.DATE_FORMAT_CN.getPattern()));
         CELL_FORMATTER.put(DataFormat.DATE_FORMAT_EN, (value) -> DateTimeUtils.objectToString(value, DataFormat.DATE_FORMAT_EN.getPattern()));
         CELL_FORMATTER.put(DataFormat.DATETIME_FORMAT_EN, (value) -> DateTimeUtils.objectToString(value, DataFormat.DATETIME_FORMAT_EN.getPattern()));
         CELL_FORMATTER.put(DataFormat.DATETIME_FORMAT, (value) -> DateTimeUtils.objectToString(value, DataFormat.DATETIME_FORMAT.getPattern()));
-        CELL_FORMATTER.put(DataFormat.TIME_FORMAT, (value) -> DateTimeUtils.objectToString(value, DataFormat.TIME_FORMAT.getPattern()));
+        CELL_FORMATTER.put(DataFormat.TIME_FORMAT_1, (value) -> DateTimeUtils.objectToString(value, DataFormat.TIME_FORMAT_1.getPattern()));
+        CELL_FORMATTER.put(DataFormat.TIME_FORMAT_2, (value) -> DateTimeUtils.objectToString(value, DataFormat.TIME_FORMAT_2.getPattern()));
 
         /*  整型  */
         CELL_FORMATTER.put(DataFormat.INTEGER_FORMAT, (value) -> NumberUtils.formatDecimal(value, DataFormat.INTEGER_FORMAT.getPattern()));

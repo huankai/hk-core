@@ -1,6 +1,7 @@
 package com.hk.commons.poi.excel.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Objects;
  * @date 2018年1月10日下午4:05:03
  */
 @Data
+@NoArgsConstructor
 public final class SheetData<T> {
 
     /**
@@ -34,10 +36,6 @@ public final class SheetData<T> {
      * 解析时出现错误的日志
      */
     private List<ErrorLog<T>> errorLogs = new ArrayList<>();
-
-    public SheetData() {
-
-    }
 
     /**
      * @param sheetIndex sheetIndex

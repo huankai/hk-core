@@ -10,7 +10,7 @@ import java.util.List;
  * @author kevin
  * @date 2017年9月11日下午5:42:52
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "unchecked"})
 public class InvalidCellReadableExcelException extends ExcelReadException {
 
     /**
@@ -37,7 +37,6 @@ public class InvalidCellReadableExcelException extends ExcelReadException {
      * @return {@link #target}
      * @throws ClassCastException 强制类型转换异常
      */
-    @SuppressWarnings("unchecked")
     public <T> T getTarget() throws ClassCastException {
         return (T) target;
     }

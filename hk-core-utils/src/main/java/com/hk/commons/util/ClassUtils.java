@@ -27,7 +27,7 @@ public abstract class ClassUtils extends org.springframework.util.ClassUtils {
         }
         Object res = params[index];
         if (res instanceof Class) {
-            return Class.class.cast(res);
+            return (Class<?>) res;
         }
         if (res instanceof ParameterizedType) {
             return (Class<?>) ((ParameterizedType) res).getRawType();

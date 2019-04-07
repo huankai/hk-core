@@ -2,9 +2,7 @@ package com.hk.commons.poi.excel.model;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,15 +34,14 @@ public class ValueFormat {
         DEFAULT_FORMAT.put(Float.class, DataFormat.DECIMAL_FORMAT_2);
         DEFAULT_FORMAT.put(Double.TYPE, DataFormat.DECIMAL_FORMAT_2);
         DEFAULT_FORMAT.put(Double.class, DataFormat.DECIMAL_FORMAT_2);
+        DEFAULT_FORMAT.put(Year.class, DataFormat.DATE_FORMAT_YEAR);
+        DEFAULT_FORMAT.put(YearMonth.class, DataFormat.DATE_FORMAT_YEAR_MONTH);
         DEFAULT_FORMAT.put(BigDecimal.class, DataFormat.DECIMAL_FORMAT_2);
         DEFAULT_FORMAT.put(LocalDateTime.class, DataFormat.DATETIME_FORMAT);
         DEFAULT_FORMAT.put(LocalDate.class, DataFormat.DATE_FORMAT);
-        DEFAULT_FORMAT.put(LocalTime.class, DataFormat.TIME_FORMAT);
+        DEFAULT_FORMAT.put(LocalTime.class, DataFormat.TIME_FORMAT_2);
     }
 
-    /**
-     *
-     */
     public ValueFormat() {
         mapper.putAll(DEFAULT_FORMAT);
     }
@@ -89,6 +86,7 @@ public class ValueFormat {
      * @return {@link DataFormat}
      */
     public DataFormat getFormat(String propertyName, Class<?> propertyType) {
-        return mapper.getOrDefault(propertyName, mapper.getOrDefault(propertyType, DataFormat.TEXT_FORMAT));
+        return mapper.getOrDefault(propertyName,
+                mapper.getOrDefault(propertyType, DataFormat.TEXT_FORMAT));
     }
 }

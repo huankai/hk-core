@@ -162,8 +162,7 @@ public final class JsonUtils {
     /**
      * 序列化到 byte 数组
      *
-     * @param obj    obj
-     * @param indent indent
+     * @param obj obj
      * @return byte[]
      */
     public static byte[] serializeToByte(Object obj) {
@@ -181,7 +180,6 @@ public final class JsonUtils {
      * 序列化到 outputStream
      *
      * @param obj          obj
-     * @param indent       indent
      * @param outputStream outputStream
      */
     public static void serializeToOutputStream(Object obj, OutputStream outputStream) {
@@ -198,9 +196,8 @@ public final class JsonUtils {
     /**
      * 序列化为文件
      *
-     * @param obj    obj
-     * @param indent indent
-     * @param file   file
+     * @param obj  obj
+     * @param file file
      */
     public static void serializeToFile(Object obj, File file) {
         if (Objects.nonNull(obj)) {
@@ -242,7 +239,7 @@ public final class JsonUtils {
      * @return 序列化的List
      */
     public static <T> List<T> deserializeList(String json, Class<T> clazz) {
-        return deserializeCollection(json, List.class, clazz);
+        return (List<T>) deserializeCollection(json, List.class, clazz);
     }
 
     /**
@@ -257,6 +254,14 @@ public final class JsonUtils {
         return deserializeCollection(json, Set.class, clazz);
     }
 
+    /**
+     * 将json 字符串反序列化为对象集合
+     *
+     * @param <T>   T
+     * @param json  json str
+     * @param clazz class
+     * @return 序列化的List
+     */
     public static <T, C extends Collection<T>> C deserializeCollection(String json, Class<C> coll, Class<T> clazz) {
         if (StringUtils.isEmpty(json)) {
             return null;

@@ -22,12 +22,12 @@ public class ReadResult<T> implements Serializable {
      * 总错误信息
      */
     @Getter
-    private List<ErrorLog<T>> errorLogList = Collections.synchronizedList(new ArrayList<>());
+    private List<ErrorLog<T>> errorLogList = new ArrayList<>();
 
     /**
      * 解析的每个工作表数据
      */
-    private List<SheetData<T>> sheetDataList = Collections.synchronizedList(new ArrayList<>());
+    private List<SheetData<T>> sheetDataList = new ArrayList<>();
 
     /**
      * 解析的标题行信息
@@ -88,6 +88,7 @@ public class ReadResult<T> implements Serializable {
      */
     public List<T> getAllSheetData() {
         return sheetDataList.stream()
+                .sorted(Comparator.comparingInt(SheetData::getSheetIndex))
                 .map(SheetData::getData)
                 .reduce(new ArrayList<>(), (result, dataSheetItem) -> {
                     result.addAll(dataSheetItem);

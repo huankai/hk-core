@@ -15,6 +15,16 @@ public enum DataFormat {
     TEXT_FORMAT("GENERAL"),
 
     /**
+     * 日期格式 : yyyy
+     */
+    DATE_FORMAT_YEAR(DatePattern.YYYY.getPattern()),
+
+    /**
+     * 日期格式 : yyyy-MM
+     */
+    DATE_FORMAT_YEAR_MONTH(DatePattern.YYYY_MM.getPattern()),
+
+    /**
      * 日期格式: yyyy-MM-dd
      */
     DATE_FORMAT(DatePattern.YYYY_MM_DD.getPattern()),
@@ -28,6 +38,7 @@ public enum DataFormat {
      * 日期格式：yyyy/MM/dd
      */
     DATE_FORMAT_EN(DatePattern.YYYY_MM_DD_EN.getPattern()),
+
     /**
      * 日期格式:yyyy/MM/dd HH:mm:ss
      */
@@ -39,9 +50,14 @@ public enum DataFormat {
     DATETIME_FORMAT(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()),
 
     /**
+     * 时间格式：HH:mm
+     */
+    TIME_FORMAT_1(DatePattern.HH_MM.getPattern()),
+
+    /**
      * 时间格式：HH:mm:ss
      */
-    TIME_FORMAT(DatePattern.HH_MM_SS.getPattern()),
+    TIME_FORMAT_2(DatePattern.HH_MM_SS.getPattern()),
 
     /**
      * 整数格式

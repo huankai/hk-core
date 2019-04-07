@@ -9,8 +9,6 @@ import com.hk.commons.poi.excel.model.ReadResult;
  */
 public interface ValidationInterceptor<T> {
 
-
-    @SuppressWarnings("rawtypes")
     ValidationInterceptor INSTANCE = new ValidationInterceptor() {
     };
 

@@ -32,7 +32,7 @@ public class InvalidCell implements Serializable {
     private String cellReference;
 
     /**
-     * 列对应的标题
+     * 单元格所在列对应的标题列
      */
     private Title title;
 
