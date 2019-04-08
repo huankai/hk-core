@@ -3,12 +3,8 @@ package com.hk.core.service.jpa;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.service.SelectService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.util.List;

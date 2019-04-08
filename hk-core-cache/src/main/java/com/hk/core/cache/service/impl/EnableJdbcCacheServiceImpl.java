@@ -121,7 +121,7 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<ID>, ID e
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(ID... ids) {
+    public void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
         super.deleteByIds(ids);
     }
 

@@ -2,8 +2,6 @@ package com.hk.core.authentication.security.handler.login;
 
 import com.hk.commons.JsonResult;
 import com.hk.core.web.Webs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 

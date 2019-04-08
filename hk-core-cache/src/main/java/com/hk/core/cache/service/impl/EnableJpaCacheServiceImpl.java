@@ -120,7 +120,7 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<ID>, ID ex
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(ID... ids) {
+    public void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
         super.deleteByIds(ids);
     }
 
