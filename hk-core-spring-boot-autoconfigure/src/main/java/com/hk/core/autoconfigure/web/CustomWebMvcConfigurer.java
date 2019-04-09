@@ -139,12 +139,12 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
+        GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
         Map<String, Object> property = requestProperty.getProperty();
         if (CollectionUtils.isNotEmpty(property)) {
-            GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
             propertyInterceptor.setProperty(property);
-            registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
         }
+        registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
 
         /* ****************** 国际化支持******************* */
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();

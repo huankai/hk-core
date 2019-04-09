@@ -34,6 +34,7 @@ public class GlobalPropertyInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         property.forEach(request::setAttribute);
+        request.setAttribute("contextPath", request.getContextPath());
         return true;
     }
 

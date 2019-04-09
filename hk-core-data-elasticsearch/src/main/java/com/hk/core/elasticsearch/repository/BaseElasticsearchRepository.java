@@ -2,8 +2,11 @@ package com.hk.core.elasticsearch.repository;
 
 import com.hk.core.elasticsearch.query.Condition;
 import com.hk.core.page.QueryPage;
+import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -56,5 +59,21 @@ public interface BaseElasticsearchRepository<T extends Serializable>
      * @return 查询结果集
      */
     List<T> findAll(List<Condition> conditions, Order... orders);
+
+    /**
+     * 分页查询
+     *
+     * @param query query
+     * @return {@link SimpleQueryPage}
+     */
+    default QueryPage<T> findByPage(SearchQuery query) {
+//        String preTag = "", postTag = "";
+//        NativeSearchQuery query = new NativeSearchQueryBuilder().withHighlightBuilder(
+//                new HighlightBuilder().field("").preTags(preTag).postTags(postTag)).build();
+//        query.setPageable(Pageable.unpaged());
+        Page<T> page = search(query);
+        return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(),
+                page.getNumber(), page.getSize());
+    }
 
 }
