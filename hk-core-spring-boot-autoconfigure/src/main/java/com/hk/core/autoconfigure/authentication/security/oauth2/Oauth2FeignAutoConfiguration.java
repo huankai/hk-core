@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.security.oauth2.client.resource.UserRedirectRequiredException;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 /**
  * @author kevin
@@ -20,8 +22,38 @@ public class Oauth2FeignAutoConfiguration {
 
     @Bean
     public OAuth2FeignRequestInterceptor oAuth2FeignRequestInterceptor(OAuth2ClientContext clientContext, OAuth2ProtectedResourceDetails resourceDetails) {
-        return new OAuth2FeignRequestInterceptor(clientContext, resourceDetails);
-    }
+        return new OAuth2FeignRequestInterceptor(clientContext, resourceDetails) {
 
+            @Override
+            protected String extract(String tokenType) {
+                OAuth2AccessToken accessToken = getToken();
+                return accessToken == null ? null : String.format("%s %s", tokenType, accessToken.getValue());
+            }
+
+            @Override
+            public OAuth2AccessToken getToken() {
+                OAuth2AccessToken accessToken = clientContext.getAccessToken();
+                if (accessToken == null || accessToken.isExpired()) {
+                    try {
+                        accessToken = acquireAccessToken();
+                    } catch (UserRedirectRequiredException e) {
+                        clientContext.setAccessToken(null);
+                        String stateKey = e.getStateKey();
+                        if (stateKey != null) {
+                            Object stateToPreserve = e.getStateToPreserve();
+                            if (stateToPreserve == null) {
+                                stateToPreserve = "NONE";
+                            }
+                            clientContext.setPreservedState(stateKey, stateToPreserve);
+                        }
+                        // 查看父类方法，当使用Feign 调用不需要认证的api时，此时用户未授权(没有带 access_token) 参数，在这里获取认证信息时会抛出异常
+                        // 解决方法: 如果不需要(或不能)获取用户认证信息，则不带请求认证头信息(Authorization)到调用的服务提供方
+                        return null;
+                    }
+                }
+                return accessToken;
+            }
+        };
+    }
 
 }

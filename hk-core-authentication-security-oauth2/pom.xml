@@ -13,9 +13,9 @@
 
     <dependencies>
         <dependency>
-        	<groupId>com.hk</groupId>
-        	<artifactId>hk-core-web</artifactId>
-        	<optional>true</optional>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-core-web</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>

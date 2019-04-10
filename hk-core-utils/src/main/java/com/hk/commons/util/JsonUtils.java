@@ -102,10 +102,8 @@ public final class JsonUtils {
         om.registerModules(modules());
 //        om.configure(MapperFeature.USE_ANNOTATIONS, false);//忽略注解
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-        /*
-         * 忽略实体中的Hibernate getOne查询返回的  "handler", "hibernateLazyInitializer" 字段
-         *
-         */
+        
+        /* 忽略实体中的Hibernate getOne查询返回的  "handler", "hibernateLazyInitializer" 字段 */
         filterProvider.addFilter(IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
                 SimpleBeanPropertyFilter.serializeAllExcept("handler", "hibernateLazyInitializer"));
         om.setFilterProvider(filterProvider);
@@ -239,7 +237,15 @@ public final class JsonUtils {
      * @return 序列化的List
      */
     public static <T> List<T> deserializeList(String json, Class<T> clazz) {
-        return (List<T>) deserializeCollection(json, List.class, clazz);
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+        ObjectMapper mapper = getMapper();
+        try {
+            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(List.class, clazz));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -251,24 +257,12 @@ public final class JsonUtils {
      * @return 序列化的List
      */
     public static <T> Set<T> deserializeSet(String json, Class<T> clazz) {
-        return deserializeCollection(json, Set.class, clazz);
-    }
-
-    /**
-     * 将json 字符串反序列化为对象集合
-     *
-     * @param <T>   T
-     * @param json  json str
-     * @param clazz class
-     * @return 序列化的List
-     */
-    public static <T, C extends Collection<T>> C deserializeCollection(String json, Class<C> coll, Class<T> clazz) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
         ObjectMapper mapper = getMapper();
         try {
-            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(coll, clazz));
+            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(Set.class, clazz));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

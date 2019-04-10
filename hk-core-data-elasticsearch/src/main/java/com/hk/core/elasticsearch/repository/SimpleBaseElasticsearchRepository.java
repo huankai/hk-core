@@ -44,7 +44,7 @@ public class SimpleBaseElasticsearchRepository<T extends Serializable>
     @Override
     public QueryPage<T> findByPage(QueryModel<T> queryModel) {
         Map<String, Object> map = BeanUtils.beanToMap(queryModel.getParam(), "class");
-        CriteriaQuery query = new CriteriaQuery(new Criteria(), PageRequest.of(queryModel.getPageIndex(),
+        CriteriaQuery query = new CriteriaQuery(new Criteria(), PageRequest.of(queryModel.getStartRowIndex(),
                 queryModel.getPageSize(), OrderUtils.toSort(queryModel.getOrders())));
         if (CollectionUtils.isNotEmpty(map)) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {

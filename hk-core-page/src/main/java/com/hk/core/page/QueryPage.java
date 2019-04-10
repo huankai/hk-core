@@ -37,4 +37,10 @@ public interface QueryPage<T> extends Serializable {
      */
     long getTotalRow();
 
+    default long getTotalPage() {
+        long totalRow = getTotalRow();
+        int pageSize = getPageSize();
+        return totalRow == 0 ? 1 : totalRow / pageSize + (totalRow % pageSize > 0 ? 1 : 0);
+    }
+
 }

@@ -44,11 +44,7 @@ public class QueryModel<T> {
     private List<Order> orders = new ArrayList<>();
 
     public final int getStartRowIndex() {
-        int startRow = pageIndex;
-        if (pageIndex < 1) {
-            startRow = 1;
-        }
-        return (startRow - 1) * getPageSize();
+        return pageIndex <= 0 ? 0 : pageIndex - 1;
     }
 
     @SuppressWarnings("unchecked")
