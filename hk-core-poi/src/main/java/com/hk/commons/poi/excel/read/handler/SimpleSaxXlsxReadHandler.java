@@ -94,20 +94,25 @@ public class SimpleSaxXlsxReadHandler<T> extends AbstractSaxReadHandler<T> imple
         SheetIterator sheetsData = (SheetIterator) reader.getSheetsData();
         try {
             for (int sheetIndex = 0; sheetsData.hasNext(); sheetIndex++) {
-                if (readParam.isParseAll() || (sheetIndex >= readParam.getSheetStartIndex() && sheetIndex <= readParam.getSheetMaxIndex())) {
-                    cleanSheetData();
-                    getSheetData().setSheetIndex(sheetIndex);
-                    processSheet(reader.getStylesTable(), stringsTable, this, sheetsData.next());
-                    if (CollectionUtils.isEmpty(result.getTitleList())) {
-                        result.setTitleList(titles);
+                InputStream sheet = sheetsData.next();
+                if (null != sheet) {
+                    if (readParam.isParseAll()
+                            || (sheetIndex >= readParam.getSheetStartIndex() && sheetIndex <= readParam.getSheetMaxIndex())) {
+                        cleanSheetData();
+                        getSheetData().setSheetIndex(sheetIndex);
+                        processSheet(reader.getStylesTable(), stringsTable, this, sheet);
+                        if (CollectionUtils.isEmpty(result.getTitleList())) {
+                            result.setTitleList(titles);
+                        }
+                        getSheetData().setSheetName(sheetsData.getSheetName());
+                        List<ErrorLog<T>> errorLogs = getSheetData().getErrorLogs();
+                        if (CollectionUtils.isNotEmpty(errorLogs)) {
+                            errorLogs.forEach(item -> item.setSheetName(sheetsData.getSheetName()));
+                            result.addErrorLogList(errorLogs);
+                        }
+                        result.addSheetData(getSheetData());
                     }
-                    getSheetData().setSheetName(sheetsData.getSheetName());
-                    List<ErrorLog<T>> errorLogs = getSheetData().getErrorLogs();
-                    if (CollectionUtils.isNotEmpty(errorLogs)) {
-                        errorLogs.forEach(item -> item.setSheetName(sheetsData.getSheetName()));
-                        result.addErrorLogList(errorLogs);
-                    }
-                    result.addSheetData(getSheetData());
+                    sheet.close();
                 }
             }
         } catch (ParserConfigurationException e) {

@@ -35,6 +35,10 @@ abstract class AbstractReadExcel<T> implements ReadableExcel<T> {
     AbstractReadExcel(ReadParam<T> readParam) {
         AssertUtils.isTrue(Objects.nonNull(readParam), "ReadParam must not be null");
         AssertUtils.isTrue(readParam.getTitleRow() < readParam.getDataStartRow(), "标题行必须小于数据开始行");
+        if (!readParam.isParseAll()) {
+            AssertUtils.isTrue(readParam.getSheetStartIndex() <= readParam.getSheetMaxIndex(),
+                    "开始解析的工作表必须小于等于结束解析的工作表");
+        }
         this.beanClazz = readParam.getBeanClazz();
         readParam.setColumnProperties(getColumnProperty().getColumnProperties());
     }
