@@ -2,21 +2,27 @@ package com.hk.core.elasticsearch.repository;
 
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.JsonUtils;
+import com.hk.commons.util.StringUtils;
 import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.elasticsearch.query.Condition;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
+import lombok.NoArgsConstructor;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.UpdateQueryBuilder;
 import org.springframework.data.elasticsearch.repository.support.ElasticsearchEntityInformation;
 import org.springframework.data.elasticsearch.repository.support.SimpleElasticsearchRepository;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +32,9 @@ import java.util.Map;
  * @author huangkai
  * @date 2019/3/11 9:00
  */
-public class SimpleBaseElasticsearchRepository<T extends Serializable>
+@NoArgsConstructor
+public class SimpleBaseElasticsearchRepository<T extends Persistable<String>>
         extends SimpleElasticsearchRepository<T> implements BaseElasticsearchRepository<T> {
-
-    public SimpleBaseElasticsearchRepository() {
-    }
 
     public SimpleBaseElasticsearchRepository(ElasticsearchEntityInformation<T, String> metadata,
                                              ElasticsearchOperations elasticsearchOperations) {
@@ -89,5 +93,21 @@ public class SimpleBaseElasticsearchRepository<T extends Serializable>
         Condition.addCriteria(query, conditions);
         query.addSort(OrderUtils.toSort(orders));
         return elasticsearchOperations.queryForList(query, getEntityClass());
+    }
+
+    @Override
+    public void partialUpdate(T t) {
+        String id = t.getId();
+        if (StringUtils.isNotEmpty(id)) {
+            UpdateRequest request = new UpdateRequest();
+            Map<String, Object> updateMap = BeanUtils.beanToMap(t, "class", "new", "id");
+            if (CollectionUtils.isNotEmpty(updateMap)) {
+                request.doc(updateMap);
+                UpdateResponse update = elasticsearchOperations.update(new UpdateQueryBuilder().withId(id)
+                        .withClass(t.getClass()).withUpdateRequest(request).build());
+                System.out.println(JsonUtils.serialize(update, true));
+            }
+
+        }
     }
 }

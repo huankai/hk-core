@@ -83,6 +83,12 @@
 
         <dependency>
             <groupId>com.hk</groupId>
+            <artifactId>hk-core-stream-rabbitmq</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hk</groupId>
             <artifactId>hk-swagger-ui</artifactId>
             <optional>true</optional>
         </dependency>

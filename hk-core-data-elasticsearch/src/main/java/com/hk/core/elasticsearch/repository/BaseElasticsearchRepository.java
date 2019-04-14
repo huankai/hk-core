@@ -4,14 +4,14 @@ import com.hk.core.elasticsearch.query.Condition;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
-import java.io.Serializable;
 import java.util.List;
 
 @NoRepositoryBean
-public interface BaseElasticsearchRepository<T extends Serializable>
+public interface BaseElasticsearchRepository<T extends Persistable<String>>
         extends ElasticsearchRepository<T, String> {
 
     /**
@@ -56,5 +56,12 @@ public interface BaseElasticsearchRepository<T extends Serializable>
      * @return 查询结果集
      */
     List<T> findAll(List<Condition> conditions, Order... orders);
+
+    /**
+     * 根据不为空的字段更新
+     *
+     * @param t t
+     */
+    void partialUpdate(T t);
 
 }

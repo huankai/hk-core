@@ -94,7 +94,7 @@ public class AlipayProperties {
 
     public String getCallHost() {
         if (StringUtils.endsWith(callHost, "/")) {
-            callHost = callHost + "/";
+            callHost = StringUtils.substring(callHost, 0, callHost.length() - 1);
         }
         return callHost;
     }
