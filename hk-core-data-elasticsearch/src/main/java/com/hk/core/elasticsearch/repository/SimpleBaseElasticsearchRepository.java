@@ -47,7 +47,7 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>>
 
     @Override
     public QueryPage<T> findByPage(QueryModel<T> queryModel) {
-        Map<String, Object> map = BeanUtils.beanToMap(queryModel.getParam(), "class");
+        Map<String, Object> map = BeanUtils.beanToMap(queryModel.getParam(), "class", "new");
         CriteriaQuery query = new CriteriaQuery(new Criteria(), PageRequest.of(queryModel.getStartRowIndex(),
                 queryModel.getPageSize(), OrderUtils.toSort(queryModel.getOrders())));
         if (CollectionUtils.isNotEmpty(map)) {
@@ -71,7 +71,7 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>>
     @Override
     public long count(T t) {
         CriteriaQuery query = new CriteriaQuery(new Criteria());
-        Map<String, Object> map = BeanUtils.beanToMap(t, "class");
+        Map<String, Object> map = BeanUtils.beanToMap(t, "class", "new");
         if (CollectionUtils.isNotEmpty(map)) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 query.addCriteria(Criteria.where(entry.getKey()).is(entry.getValue()));

@@ -1,5 +1,8 @@
 package com.hk.commons.http;
 
+import org.apache.http.Header;
+import org.apache.http.client.ResponseHandler;
+
 import java.io.IOException;
 
 /**
@@ -16,5 +19,21 @@ public interface HttpExecutor<T, P> {
      * @throws IOException 抛出IO异常
      */
     T execute(String uri, P params) throws IOException;
+
+    /**
+     * 设置返回 处理器
+     *
+     * @param responseHandler ResponseHandler
+     * @return {@link HttpExecutor}
+     */
+    HttpExecutor<T, P> setResponseHandler(ResponseHandler<T> responseHandler);
+
+    /**
+     * 添加请求头
+     *
+     * @param headers 请求头信息
+     * @return {@link HttpExecutor}
+     */
+    HttpExecutor<T, P> addHeaders(Header... headers);
 
 }

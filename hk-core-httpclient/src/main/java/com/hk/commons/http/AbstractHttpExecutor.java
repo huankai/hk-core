@@ -1,8 +1,8 @@
 package com.hk.commons.http;
 
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.ConverterUtils;
-import com.hk.commons.util.StringUtils;
+import com.hk.commons.util.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -57,12 +57,19 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
     /**
      * httpClient
      */
+    @Getter
+    @Setter
     private CloseableHttpClient httpClient = DEFAULT_HTTP_CLIENT;
 
     /**
      * 响应处理器
      */
     private ResponseHandler<T> responseHandler;
+
+    /**
+     * Http 请求头信息
+     */
+    private List<Header> headers = ArrayUtils.asArrayList(new BasicHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name()));
 
     public AbstractHttpExecutor(ResponseHandler<T> responseHandler) {
         this.responseHandler = responseHandler;
@@ -77,22 +84,21 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
         return getHttpClient().execute(httpMethod, responseHandler);
     }
 
-    public CloseableHttpClient getHttpClient() {
-        return httpClient;
+    @Override
+    public final HttpExecutor<T, P> addHeaders(Header... headers) {
+        CollectionUtils.addAllNotNull(this.headers, headers);
+        return this;
     }
 
-    public void setHttpClient(CloseableHttpClient httpClient) {
-        this.httpClient = httpClient;
+    protected final Header[] getHeaders() {
+        return this.headers.toArray(new Header[0]);
     }
 
-    /**
-     * 生成 Http 请求头
-     * Content-Encoding : UTF-8
-     *
-     * @return
-     */
-    protected Header[] generateHeaders() {
-        return new Header[]{new BasicHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name())};
+    @Override
+    public HttpExecutor<T, P> setResponseHandler(ResponseHandler<T> responseHandler) {
+        AssertUtils.notNull(responseHandler, "responseHandler must not be null");
+        this.responseHandler = responseHandler;
+        return this;
     }
 
     /**

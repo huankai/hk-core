@@ -19,7 +19,6 @@ public abstract class AbstractUUIDPersistable implements Persistable<String> {
     @Setter
     private String id;
 
-
     @Override
     @Transient
     @JsonIgnore

@@ -14,7 +14,11 @@
 	
 - hk-core-authentication-alipay
 	- 使用Spring Security 实现支付宝登陆.
-
+	
+- hk-core-authentication-security-stream-rabbit
+	- 使用Spring Security 与 spring cloud stream rabbit实现消息发送与接受认证.
+	    实现思路：
+	        在生产者发送消息时，在消息请求头中添加用户认证信息，在消费者消费消息时，先从认证头中获取用户认证信息，再设置到　spring security context 中。
 - hk-core-cache 
 	- 缓存功能的自动配置
 Spring 默认需要在标记有缓存注解的方法上定义缓存名 、或在类上定义@CacheConfig 来指定缓存名，

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,6 +19,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -50,6 +52,42 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
     @Override
     public <S extends T> List<S> findAll(Example<S> example) {
         return getQuery(new ExampleSpecification<>(example), example.getProbeType(), Sort.unsorted()).getResultList();
+    }
+
+    @Override
+    public <S extends T> long count(Example<S> example) {
+        return executeCountQuery(getCountQuery(new ExampleSpecification<>(example), example.getProbeType()));
+    }
+
+    /**
+     * Executes a count query and transparently sums up all values returned.
+     *
+     * @param query must not be {@literal null}.
+     * @return
+     */
+    private static long executeCountQuery(TypedQuery<Long> query) {
+
+        Assert.notNull(query, "TypedQuery must not be null!");
+
+        List<Long> totals = query.getResultList();
+        long total = 0L;
+
+        for (Long element : totals) {
+            total += element == null ? 0 : element;
+        }
+
+        return total;
+    }
+
+
+    @Override
+    public <S extends T> Optional<S> findOne(Example<S> example) {
+        try {
+            return Optional.of(
+                    getQuery(new ExampleSpecification<>(example), example.getProbeType(), Sort.unsorted()).getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

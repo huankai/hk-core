@@ -40,6 +40,7 @@
         <module>hk-core-authentication-shiro</module>
         <module>hk-core-authentication-weixin-mp</module>
         <module>hk-core-authentication-alipay</module>
+        <module>hk-core-authentication-security-stram-rabbit</module>
         <module>hk-core-authentication-security-oauth2</module>
         <module>hk-core-data-commons</module>
         <module>hk-core-data-jdbc</module>

@@ -1,7 +1,7 @@
 package com.hk.commons.http.post;
 
+import com.hk.commons.util.JsonUtils;
 import org.apache.http.Consts;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.ResponseHandler;
@@ -9,8 +9,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicHeader;
-
-import com.hk.commons.util.JsonUtils;
 
 
 /**
@@ -23,6 +21,8 @@ public class JsonPostHttpExecutor extends AbstractPostHttpExecutor<String, Objec
 
     public JsonPostHttpExecutor() {
         super(BASIC_HANDLER);
+        addHeaders(new BasicHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name()),
+                new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString()));
     }
 
     public JsonPostHttpExecutor(CloseableHttpClient httpClient, ResponseHandler<String> responseHandler) {
@@ -32,14 +32,6 @@ public class JsonPostHttpExecutor extends AbstractPostHttpExecutor<String, Objec
     @Override
     public HttpEntity generateEntity(Object params) {
         return new StringEntity(JsonUtils.serialize(params), Consts.UTF_8);
-    }
-
-    @Override
-    protected Header[] generateHeaders() {
-        return new Header[]{
-                new BasicHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name()),
-                new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString())
-        };
     }
 
 }

@@ -175,6 +175,11 @@
             </dependency>
             <dependency>
                 <groupId>com.hk</groupId>
+                <artifactId>hk-core-authentication-security-stram-rabbit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
                 <artifactId>hk-core-authentication-shiro</artifactId>
                 <version>${project.version}</version>
             </dependency>

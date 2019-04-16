@@ -1,6 +1,7 @@
-package com.hk.stream.binder.rabbit;
+package com.hk.authentication.security.stream.binder.rabbit;
 
-import com.hk.stream.authentication.security.oauth2.Oauth2AuthenticationMessageListenerContainer;
+import com.hk.authentication.AuthenticationMessageListenerContainer;
+import com.hk.authentication.interceptors.AuthenticationChannelInterceptor;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Envelope;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -66,7 +67,6 @@ import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -80,10 +80,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author huangkai
- * @date 2019-04-14 21:55
+ * @date 2019-4-15 11:23
  * @see RabbitMessageChannelBinder
  */
-public class Oauth2RabbitMessageChannelBinder extends AbstractMessageChannelBinder<ExtendedConsumerProperties<RabbitConsumerProperties>,
+public class AuthenticationRabbitMessageChannelBinder extends AbstractMessageChannelBinder<ExtendedConsumerProperties<RabbitConsumerProperties>,
         ExtendedProducerProperties<RabbitProducerProperties>, RabbitExchangeQueueProvisioner>
         implements ExtendedPropertiesBinder<MessageChannel, RabbitConsumerProperties, RabbitProducerProperties>,
         DisposableBean {
@@ -125,24 +125,18 @@ public class Oauth2RabbitMessageChannelBinder extends AbstractMessageChannelBind
 
     private RabbitExtendedBindingProperties extendedBindingProperties = new RabbitExtendedBindingProperties();
 
-    private ResourceServerTokenServices tokenServices;
-
-    public Oauth2RabbitMessageChannelBinder(ConnectionFactory connectionFactory,
-                                            RabbitProperties rabbitProperties,
-                                            ResourceServerTokenServices tokenServices,
-                                            RabbitExchangeQueueProvisioner provisioningProvider) {
-        this(connectionFactory, rabbitProperties, tokenServices, provisioningProvider, null);
+    public AuthenticationRabbitMessageChannelBinder(ConnectionFactory connectionFactory,
+                                                    RabbitProperties rabbitProperties,
+                                                    RabbitExchangeQueueProvisioner provisioningProvider) {
+        this(connectionFactory, rabbitProperties, provisioningProvider, null);
     }
 
-    public Oauth2RabbitMessageChannelBinder(ConnectionFactory connectionFactory,
-                                            RabbitProperties rabbitProperties,
-                                            ResourceServerTokenServices tokenServices,
-                                            RabbitExchangeQueueProvisioner provisioningProvider, ListenerContainerCustomizer<AbstractMessageListenerContainer> containerCustomizer) {
+    public AuthenticationRabbitMessageChannelBinder(ConnectionFactory connectionFactory,
+                                                    RabbitProperties rabbitProperties,
+                                                    RabbitExchangeQueueProvisioner provisioningProvider, ListenerContainerCustomizer<AbstractMessageListenerContainer> containerCustomizer) {
         super(new String[0], provisioningProvider, containerCustomizer);
         Assert.notNull(connectionFactory, "connectionFactory must not be null");
         Assert.notNull(rabbitProperties, "rabbitProperties must not be null");
-        Assert.notNull(tokenServices, "tokenServices must not be null");
-        this.tokenServices = tokenServices;
         this.connectionFactory = connectionFactory;
         this.rabbitProperties = rabbitProperties;
     }
@@ -314,7 +308,8 @@ public class Oauth2RabbitMessageChannelBinder extends AbstractMessageChannelBind
                     new RabbitExpressionEvaluatingInterceptor(extendedProperties.getRoutingKeyExpression(),
                             extendedProperties.getDelayExpression(), getEvaluationContext()));
         }
-        ((AbstractMessageChannel) outputChannel).addInterceptor(new Oauth2HeaderAuthenticationChannelInterceptor());
+        // 添加认证拦截器
+        ((AbstractMessageChannel) outputChannel).addInterceptor(new AuthenticationChannelInterceptor());
     }
 
     private boolean expressionInterceptorNeeded(RabbitProducerProperties extendedProperties) {
@@ -356,12 +351,9 @@ public class Oauth2RabbitMessageChannelBinder extends AbstractMessageChannelBind
         Assert.state(!HeaderMode.embeddedHeaders.equals(properties.getHeaderMode()),
                 "the RabbitMQ binder does not support embedded headers since RabbitMQ supports headers natively");
         String destination = consumerDestination.getName();
-
-        // 使用 Oauth2 认证
-        Oauth2AuthenticationMessageListenerContainer listenerContainer = new Oauth2AuthenticationMessageListenerContainer(
-                this.tokenServices);
-        listenerContainer.setConnectionFactory(this.connectionFactory);
-
+        // 认证监听
+        AuthenticationMessageListenerContainer listenerContainer = new AuthenticationMessageListenerContainer(
+                this.connectionFactory);
         listenerContainer.setAcknowledgeMode(properties.getExtension().getAcknowledgeMode());
         listenerContainer.setChannelTransacted(properties.getExtension().isTransacted());
         listenerContainer.setDefaultRequeueRejected(properties.getExtension().isRequeueRejected());
@@ -453,7 +445,7 @@ public class Oauth2RabbitMessageChannelBinder extends AbstractMessageChannelBind
         if (properties.getExtension().isRepublishToDlq()) {
             return new MessageHandler() {
                 private final RabbitTemplate template = new RabbitTemplate(
-                        Oauth2RabbitMessageChannelBinder.this.connectionFactory);
+                        AuthenticationRabbitMessageChannelBinder.this.connectionFactory);
 
                 {
                     this.template.setUsePublisherConnection(true);

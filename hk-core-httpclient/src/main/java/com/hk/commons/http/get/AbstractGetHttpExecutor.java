@@ -34,14 +34,14 @@ public abstract class AbstractGetHttpExecutor<T> extends AbstractHttpExecutor<T,
     /**
      * 创建一个HttpGet
      *
-     * @param uri
-     * @param params
-     * @return
+     * @param uri    uri
+     * @param params params
+     * @return {@link HttpGet}
      */
     protected final HttpGet buildHttpGet(String uri, Map<String, Object> params) {
         HttpGet get = new HttpGet();
         String uri_ = generateUri(uri, params);
-        get.setHeaders(generateHeaders());
+        get.setHeaders(getHeaders());
         get.setURI(URI.create(uri_));
         return get;
     }
