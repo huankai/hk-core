@@ -1,5 +1,9 @@
 package com.hk.weixin.security;
 
+import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.api.UserPrincipalService;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -11,14 +15,22 @@ import org.springframework.security.core.AuthenticationException;
  * @author kevin
  * @date 2018年2月8日上午11:25:39
  */
+@NoArgsConstructor
 public class WechatAuthenticationProvider implements AuthenticationProvider {
+
+    @Setter
+    private UserPrincipalService userPrincipalService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         /*
          * 这里可以根据authentication.getPrincipal() 返回的对象去数据库查询用户信息、权限等
          */
-        return new WechatAuthenticationToken(authentication.getPrincipal(), null);
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        if (null != userPrincipalService) {
+            principal = userPrincipalService.loadByUsername(principal.getAccount());
+        }
+        return new WechatAuthenticationToken(principal, null);
     }
 
     @Override

@@ -92,12 +92,54 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         };
     }
 
+
+//    private class QueryPageReferenceTypeDeserializer extends ReferenceTypeDeserializer<QueryPage<?>> {
+//
+//
+//        public QueryPageReferenceTypeDeserializer(JavaType fullType, ValueInstantiator vi,
+//                                                  TypeDeserializer typeDeser, JsonDeserializer<?> deser) {
+//            super(fullType, vi, typeDeser, deser);
+//        }
+//
+//        @Override
+//        protected ReferenceTypeDeserializer<QueryPage<?>> withResolved(TypeDeserializer typeDeser, JsonDeserializer<?> valueDeser) {
+//            return new QueryPageReferenceTypeDeserializer(_fullType, _valueInstantiator, typeDeser, valueDeser);
+//        }
+//
+//        @Override
+//        public QueryPage<?> getNullValue(DeserializationContext ctxt) {
+//            return new SimpleQueryPage<>();
+//        }
+//
+//        @Override
+//        public QueryPage<?> referenceValue(Object contents) {
+//            SimpleQueryPage<Object> queryPage = new SimpleQueryPage<>();
+//            queryPage.setData((List<Object>) contents);
+//            return queryPage;
+//        }
+//
+//        @Override
+//        public QueryPage<?> updateReference(QueryPage<?> reference, Object contents) {
+//            SimpleQueryPage<Object> queryPage = new SimpleQueryPage<>();
+//            queryPage.setData((List<Object>) contents);
+//            return queryPage;
+//        }
+//
+//        @Override
+//        public Object getReferenced(QueryPage<?> reference) {
+//            return reference.getData();
+//        }
+//    }
+
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.forEach(converter -> {
             if (converter instanceof StringHttpMessageConverter) {
                 ((StringHttpMessageConverter) converter).setDefaultCharset(Contants.CHARSET_UTF_8);
             } else if (converter instanceof MappingJackson2HttpMessageConverter) {
+//                SimpleModule module = new SimpleModule();
+//                module.addDeserializer(QueryPage.class,
+//                        new QueryPageReferenceTypeDeserializer()));
                 MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
                 ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().defaultUseWrapper(true)
                         .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)

@@ -37,6 +37,11 @@ public interface QueryPage<T> extends Serializable {
      */
     long getTotalRow();
 
+    /**
+     * 获取总页数
+     *
+     * @return 总页数
+     */
     default long getTotalPage() {
         long totalRow = getTotalRow();
         int pageSize = getPageSize();

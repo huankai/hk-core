@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.annotations.EnumDisplay;
 import com.hk.commons.util.EnumDisplayUtils;
 import com.hk.commons.util.StringUtils;
+import lombok.*;
 
 /**
  * Json返回结果
@@ -11,7 +12,9 @@ import com.hk.commons.util.StringUtils;
  * @author kevin
  * @date 2017年9月27日上午11:09:08
  */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JsonResult<T> {
+
 
     public enum Status {
 
@@ -67,24 +70,29 @@ public final class JsonResult<T> {
          * 服务器错误
          */
         @EnumDisplay(value = "operation.server_error", order = 10500)
-        SERVER_ERROR
-    }
+        SERVER_ERROR;
 
-    /**
-     * 返回数据
-     */
-    private T data;
+    }
 
     /**
      * 返回状态
      */
-    @JsonIgnore
-    private Status status;
+    @Getter
+    @Setter
+    private int statusCode;
 
     /**
      * 返回消息信息
      */
+    @Setter
     private String message;
+    /**
+     * 返回数据
+     */
+    @Getter
+    @Setter
+    private T data;
+
 
     /**
      * 请求成功
@@ -229,38 +237,24 @@ public final class JsonResult<T> {
     }
 
     public JsonResult(Status status, String message, T data) {
-        this.status = status;
+        this.statusCode = EnumDisplayUtils.getDisplayOrder(status);
         this.data = data;
         this.message = message;
     }
 
-    public T getData() {
-        return data;
-    }
 
     public String getMessage() {
-        return StringUtils.isEmpty(message) ? EnumDisplayUtils.getDisplayText(status.name(), Status.class) : message;
+        return StringUtils.isEmpty(message) ? EnumDisplayUtils.getDisplayText(Status.class, statusCode) : message;
     }
 
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public int getStatusCode() {
-        return EnumDisplayUtils.getDisplayOrder(status);
-    }
 
     @JsonIgnore
     public boolean isSuccess() {
-        return Status.SUCCESS.equals(status);
+        return this.statusCode == 10200;
     }
 
     public <E> JsonResult<E> of(E data) {
-        return new JsonResult<>(this.status, this.message, data);
+        return new JsonResult<>(statusCode, message, data);
     }
 
 }

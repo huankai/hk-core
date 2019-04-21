@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-core-authentication-security-stram-rabbit</artifactId>
+            <artifactId>hk-core-authentication-security-stream</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -125,5 +125,6 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
     </dependencies>
 </project>
