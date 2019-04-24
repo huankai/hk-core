@@ -6,6 +6,8 @@ import com.hk.commons.util.EnumDisplayUtils;
 import com.hk.commons.util.StringUtils;
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * Json返回结果
  *
@@ -13,8 +15,7 @@ import lombok.*;
  * @date 2017年9月27日上午11:09:08
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class JsonResult<T> {
-
+public final class JsonResult<T> implements Serializable {
 
     public enum Status {
 
@@ -242,11 +243,9 @@ public final class JsonResult<T> {
         this.message = message;
     }
 
-
     public String getMessage() {
         return StringUtils.isEmpty(message) ? EnumDisplayUtils.getDisplayText(Status.class, statusCode) : message;
     }
-
 
     @JsonIgnore
     public boolean isSuccess() {

@@ -23,12 +23,12 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        /*
-         * 这里可以根据authentication.getPrincipal() 返回的对象去数据库查询用户信息、权限等
-         */
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         if (null != userPrincipalService) {
-            principal = userPrincipalService.loadByUsername(principal.getAccount());
+            /*
+             * 返回的对象去数据库查询用户信息、权限等
+             */
+            principal = userPrincipalService.athenticationSuccess(principal);
         }
         return new WechatAuthenticationToken(principal, null);
     }

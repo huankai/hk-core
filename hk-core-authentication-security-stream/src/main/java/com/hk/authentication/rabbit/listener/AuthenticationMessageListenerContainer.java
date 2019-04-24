@@ -1,9 +1,8 @@
-package com.hk.authentication;
+package com.hk.authentication.rabbit.listener;
 
 import com.hk.commons.util.JsonUtils;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.rabbitmq.client.Channel;
-import lombok.NoArgsConstructor;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -21,7 +20,6 @@ import java.util.Objects;
  * @date 2019-4-15 11:27
  * @see com.hk.authentication.interceptors.AuthenticationChannelInterceptor
  */
-@NoArgsConstructor
 public class AuthenticationMessageListenerContainer extends SimpleMessageListenerContainer {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -55,11 +53,11 @@ public class AuthenticationMessageListenerContainer extends SimpleMessageListene
         }
         super.executeListener(channel, messageIn);
     }
-}
 
-/*
- * oauth 2 实现
- */
+
+    /*
+     * oauth 2 实现
+     */
 //    private final ResourceServerTokenServices tokenServices;
 
 //    @Override
@@ -77,3 +75,6 @@ public class AuthenticationMessageListenerContainer extends SimpleMessageListene
 //        }
 //        super.executeListener(channel, messageIn);
 //    }
+}
+
+

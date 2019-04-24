@@ -8,5 +8,12 @@ package com.hk.core.authentication.api;
  */
 public interface UserPrincipalService {
 
-    UserPrincipal loadByUsername(String username);
+    /**
+     * 认证成功之前处理
+     *
+     * @param principal principal
+     * @return {@link UserPrincipal}
+     */
+    UserPrincipal athenticationSuccess(UserPrincipal principal);
+
 }

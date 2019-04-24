@@ -1,6 +1,6 @@
 package com.hk.core.autoconfigure.stream.rabbit;
 
-import com.hk.authentication.security.stream.binder.rabbit.AuthenticationRabbitMessageChannelBinder;
+import com.hk.authentication.stream.binder.rabbit.AuthenticationRabbitMessageChannelBinder;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer;
@@ -24,6 +24,7 @@ import org.springframework.lang.Nullable;
  *
  * @author huangkai
  * @date 2019-4-15 11:40
+ * @see RabbitMessageChannelBinderConfiguration
  */
 @Configuration
 @ConditionalOnClass(value = {AuthenticationRabbitMessageChannelBinder.class})

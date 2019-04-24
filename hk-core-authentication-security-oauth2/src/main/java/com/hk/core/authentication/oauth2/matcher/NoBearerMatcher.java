@@ -1,6 +1,7 @@
 package com.hk.core.authentication.oauth2.matcher;
 
 import com.hk.commons.util.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -29,7 +30,7 @@ public class NoBearerMatcher implements RequestMatcher {
     }
 
     private boolean extractHeaderToken(HttpServletRequest request) {
-        Enumeration<String> headers = request.getHeaders("Authorization");
+        Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
             if (StringUtils.startsWithIgnoreCase(value, OAuth2AccessToken.BEARER_TYPE)) {

@@ -22,7 +22,7 @@ public class AlipayAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         if (null != userPrincipalService) {
-            principal = userPrincipalService.loadByUsername(principal.getAccount());
+            principal = userPrincipalService.athenticationSuccess(principal);
         }
         return new AlipayAuthenticationToken(principal, null);
     }

@@ -1,10 +1,9 @@
 package com.hk.authentication.interceptors;
 
-import com.hk.authentication.AuthenticationMessageListenerContainer;
+import com.hk.authentication.rabbit.listener.AuthenticationMessageListenerContainer;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.SecurityContextUtils;
-import com.rabbitmq.client.Channel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 分页结果
+ *
  * @author kevin
  * @date 2018年1月24日上午9:56:21
  */
@@ -38,7 +40,7 @@ public interface QueryPage<T> extends Serializable {
     long getTotalRow();
 
     /**
-     * 获取总页数
+     * 返回总页数
      *
      * @return 总页数
      */

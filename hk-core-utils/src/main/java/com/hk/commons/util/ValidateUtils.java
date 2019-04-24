@@ -66,7 +66,7 @@ public abstract class ValidateUtils {
      * @param args args
      * @return true or false
      */
-    public static boolean isMobilephone(String args) {
+    public static boolean isMobilephone(CharSequence args) {
         return StringUtils.isNotEmpty(args) && MOBILEPHONE_PARTTERN.matcher(args).find();
     }
 }

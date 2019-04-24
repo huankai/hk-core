@@ -1,11 +1,6 @@
 package com.hk.core.authentication.oauth2.provider.token.store.redis;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
+import lombok.Setter;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
@@ -17,6 +12,8 @@ import org.springframework.security.oauth2.provider.token.DefaultAuthenticationK
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.JdkSerializationStrategy;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
+
+import java.util.*;
 
 /**
  * 奇怪，什么也没有改，会报 java.lang.NoSuchMethodError: org.springframework.data.redis.connection.RedisConnection.set([B[B)V
@@ -46,8 +43,10 @@ public class RedisTokenStore implements TokenStore {
 
     private final RedisConnectionFactory connectionFactory;
 
+    @Setter
     private AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
 
+    @Setter
     private RedisTokenStoreSerializationStrategy serializationStrategy = new JdkSerializationStrategy();
 
     private String prefix = "";
