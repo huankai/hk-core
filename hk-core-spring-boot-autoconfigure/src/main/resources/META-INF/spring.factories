@@ -6,6 +6,7 @@ com.hk.core.autoconfigure.stream.rabbit.AuthenticationRabbitMessageChannelBinder
 com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2FeignAutoConfiguration,\
 com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2AutoConfiguration,\
 com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2JWTAccessTokenConverterConfiguration,\
+com.hk.core.autoconfigure.authentication.security.oauth2.OAuth2ClientAuthenticationConfiguration,\
 com.hk.core.autoconfigure.authentication.shiro.ShiroAutoConfiguration,\
 com.hk.core.autoconfigure.alipay.AlipayAutoConfiguration,\
 com.hk.core.autoconfigure.authentication.apereo.cas.SecurityCasClientConfiguration,\

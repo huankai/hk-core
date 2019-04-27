@@ -198,6 +198,16 @@ public abstract class Webs {
     }
 
     /**
+     * 判断是否手机端请求
+     *
+     * @param request
+     * @return
+     */
+    public static boolean isMobile(HttpServletRequest request) {
+        return isAndroid(request) || isIPhone(request);
+    }
+
+    /**
      * 判断是否是 苹果手机应用发送的请求
      *
      * @param request request
