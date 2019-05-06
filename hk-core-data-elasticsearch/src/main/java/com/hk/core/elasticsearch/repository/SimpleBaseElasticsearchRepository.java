@@ -12,7 +12,7 @@ import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
 import lombok.NoArgsConstructor;
 import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
@@ -102,10 +102,10 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>>
             UpdateRequest request = new UpdateRequest();
             Map<String, Object> updateMap = BeanUtils.beanToMap(t, "class", "new", "id");
             if (CollectionUtils.isNotEmpty(updateMap)) {
-                request.doc(updateMap);
-                UpdateResponse update = elasticsearchOperations.update(new UpdateQueryBuilder().withId(id)
+                request.doc(JsonUtils.serialize(updateMap), XContentType.JSON);
+                elasticsearchOperations.update(new UpdateQueryBuilder().withId(id)
                         .withClass(t.getClass()).withUpdateRequest(request).build());
-                System.out.println(JsonUtils.serialize(update, true));
+//                System.out.println(JsonUtils.serialize(update, true));
             }
 
         }

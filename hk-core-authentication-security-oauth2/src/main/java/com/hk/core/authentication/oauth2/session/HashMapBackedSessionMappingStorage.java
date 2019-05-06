@@ -13,12 +13,12 @@ import java.util.Map;
 @Slf4j
 public class HashMapBackedSessionMappingStorage implements SessionMappingStorage {
 
-    private final Map<String, HttpSession> MANAGED_SESSIONS = new HashMap<String, HttpSession>();
+    private final Map<String, HttpSession> MANAGED_SESSIONS = new HashMap<>();
 
     /**
      * Maps the Session ID to the key from the CAS Server.
      */
-    private final Map<String, String> ID_TO_SESSION_KEY_MAPPING = new HashMap<String, String>();
+    private final Map<String, String> ID_TO_SESSION_KEY_MAPPING = new HashMap<>();
 
     @Override
     public synchronized HttpSession removeSessionByMappingId(String mappingId) {
@@ -30,7 +30,7 @@ public class HashMapBackedSessionMappingStorage implements SessionMappingStorage
     }
 
     @Override
-    public void removeBySessionById(String sessionId) {
+    public synchronized void removeBySessionById(String sessionId) {
         log.debug("Attempting to remove Session=[{}]", sessionId);
         final String key = ID_TO_SESSION_KEY_MAPPING.get(sessionId);
         if (log.isDebugEnabled()) {
