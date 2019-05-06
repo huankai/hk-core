@@ -27,11 +27,11 @@ public abstract class AbstractDeleteHttpExecutor<T> extends AbstractHttpExecutor
     }
 
     @Override
-    public T execute(String uri, Map<String, Object> params) throws IOException {
+    public T execute(URI uri, Map<String, Object> params) throws IOException {
         return doExecute(buildHttpDelete(uri, params));
     }
 
-    protected HttpDelete buildHttpDelete(String uri, Map<String, Object> params) {
+    protected HttpDelete buildHttpDelete(URI uri, Map<String, Object> params) {
         HttpDelete httpDelete = new HttpDelete();
         String uri_ = generateUri(uri, params);
         httpDelete.setURI(URI.create(uri_));

@@ -26,11 +26,11 @@ public abstract class AbstractPostHttpExecutor<T, P> extends AbstractHttpExecuto
         super(httpClient, responseHandler);
     }
 
-    public T execute(String uri, P params) throws IOException {
+    public T execute(URI uri, P params) throws IOException {
         HttpPost httpPost = new HttpPost();
         httpPost.setEntity(generateEntity(params));
         httpPost.setHeaders(getHeaders());
-        httpPost.setURI(URI.create(uri));
+        httpPost.setURI(uri);
         return doExecute(httpPost);
     }
 

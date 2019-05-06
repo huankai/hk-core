@@ -18,6 +18,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -108,8 +109,9 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
      * @param params 请求参数
      * @return url?params1[key]=params1[value]&params2[key]=params2[value]
      */
-    protected String generateUri(String uri, Map<String, Object> params) {
-        StringBuilder s = new StringBuilder(uri);
+    protected String generateUri(URI uri, Map<String, Object> params) {
+        String urlString = uri.toString();
+        StringBuilder s = new StringBuilder();
         if (CollectionUtils.isNotEmpty(params)) {
             List<NameValuePair> nvps = new ArrayList<>();
             params.forEach((key, value) -> {
@@ -119,7 +121,7 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
                 }
             });
             if (!nvps.isEmpty()) {
-                if (!StringUtils.endsWith(uri, "?")) {
+                if (!StringUtils.endsWith(urlString, "?")) {
                     s.append("?");
                 }
                 s.append(URLEncodedUtils.format(nvps, Consts.UTF_8));

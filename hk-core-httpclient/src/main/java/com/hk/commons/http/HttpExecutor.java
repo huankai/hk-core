@@ -4,6 +4,7 @@ import org.apache.http.Header;
 import org.apache.http.client.ResponseHandler;
 
 import java.io.IOException;
+import java.net.URI;
 
 /**
  * Http 请求
@@ -18,7 +19,11 @@ public interface HttpExecutor<T, P> {
      * @return 返回Http请求的结果
      * @throws IOException 抛出IO异常
      */
-    T execute(String uri, P params) throws IOException;
+    default T execute(String uri, P params) throws IOException {
+        return execute(URI.create(uri), params);
+    }
+
+    T execute(URI uri, P params) throws IOException;
 
     /**
      * 设置返回 处理器

@@ -27,7 +27,7 @@ public abstract class AbstractGetHttpExecutor<T> extends AbstractHttpExecutor<T,
     }
 
     @Override
-    public T execute(String uri, Map<String, Object> params) throws IOException {
+    public T execute(URI uri, Map<String, Object> params) throws IOException {
         return doExecute(buildHttpGet(uri, params));
     }
 
@@ -38,7 +38,7 @@ public abstract class AbstractGetHttpExecutor<T> extends AbstractHttpExecutor<T,
      * @param params params
      * @return {@link HttpGet}
      */
-    protected final HttpGet buildHttpGet(String uri, Map<String, Object> params) {
+    protected final HttpGet buildHttpGet(URI uri, Map<String, Object> params) {
         HttpGet get = new HttpGet();
         String uri_ = generateUri(uri, params);
         get.setHeaders(getHeaders());

@@ -9,7 +9,7 @@ public interface ConfigurationKeys {
     /**
      * logoutParameterName
      */
-    ConfigurationKey<String> LOGOUT_PARAMETER_NAME = new ConfigurationKey<>("logoutParameterName", "oauth2LogoutParameterName");
+    ConfigurationKey<String> LOGOUT_PARAMETER_NAME = new ConfigurationKey<>("logoutParameterName", "oauth2LogoutParameter");
 
     /**
      * eagerlyCreateSessions

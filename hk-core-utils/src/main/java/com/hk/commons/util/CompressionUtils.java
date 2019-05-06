@@ -10,7 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.zip.*;
 
 /**
@@ -107,7 +106,7 @@ public class CompressionUtils {
         zos.flush();
         zos.finish();
         final byte[] bytes = rstBao.toByteArray();
-        final String base64 = StringUtils.remove(Base64.getEncoder().encodeToString(bytes), '\0');
+        final String base64 = StringUtils.remove(Base64Utils.encodeToString(bytes), '\0');
         return new String(StandardCharsets.UTF_8.encode(base64).array(), StandardCharsets.UTF_8);
     }
 
