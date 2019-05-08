@@ -364,6 +364,16 @@ public abstract class Webs {
     }
 
     /**
+     * 获取 user-Agent 信息
+     *
+     * @param request request
+     * @return User-Agent
+     */
+    public static String getUserAgent(HttpServletRequest request) {
+        return request.getHeader(USER_AGENT_HEADER_NAME);
+    }
+
+    /**
      * 写入Json数据
      *
      * @param response response
