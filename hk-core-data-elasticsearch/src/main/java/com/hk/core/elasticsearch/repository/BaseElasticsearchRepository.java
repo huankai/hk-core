@@ -5,6 +5,7 @@ import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -63,5 +64,13 @@ public interface BaseElasticsearchRepository<T extends Persistable<String>>
      * @param t t
      */
     void partialUpdate(T t);
+
+    /**
+     * 分页查询，支持高亮
+     *
+     * @param searchQuery searchQuery
+     * @return {@link QueryPage}
+     */
+    QueryPage<T> queryForPage(SearchQuery searchQuery);
 
 }

@@ -6,10 +6,13 @@ import com.hk.core.authentication.oauth2.session.SingleSignOutHttpSessionListene
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
 /**
  * @author kevin
@@ -35,6 +38,21 @@ public class OAuth2ClientAuthenticationConfiguration {
     @EventListener
     public SingleSignOutHttpSessionListener singleSignOutHttpSessionListener(SessionMappingStorage sessionMappingStorage) {
         return new SingleSignOutHttpSessionListener(sessionMappingStorage);
+    }
+
+    /**
+     * 自定认 {@link OAuth2RestTemplate}
+     *
+     * @return {@link UserInfoRestTemplateCustomizer}
+     */
+    @Bean
+    public UserInfoRestTemplateCustomizer userInfoRestTemplateCustomizer() {
+        return new UserInfoRestTemplateCustomizer() {
+            @Override
+            public void customize(OAuth2RestTemplate template) {
+                template.setRequestFactory(new SimpleClientHttpRequestFactory());
+            }
+        };
     }
 
 //    /**

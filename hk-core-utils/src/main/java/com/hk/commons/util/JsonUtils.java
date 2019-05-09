@@ -35,6 +35,10 @@ public final class JsonUtils {
 
     public static final String IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID = "fieldFilter";
 
+    public static final String HANDLER = "handler";
+
+    public static final String HIBERNATE_LAZY_INITIALIZER = "hibernateLazyInitializer";
+
     private static ObjectMapper mapper;
 
     private static final Module[] modules;
@@ -102,10 +106,10 @@ public final class JsonUtils {
         om.registerModules(modules());
 //        om.configure(MapperFeature.USE_ANNOTATIONS, false);//忽略注解
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-        
+
         /* 忽略实体中的Hibernate getOne查询返回的  "handler", "hibernateLazyInitializer" 字段 */
         filterProvider.addFilter(IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
-                SimpleBeanPropertyFilter.serializeAllExcept("handler", "hibernateLazyInitializer"));
+                SimpleBeanPropertyFilter.serializeAllExcept(HANDLER, HIBERNATE_LAZY_INITIALIZER));
         om.setFilterProvider(filterProvider);
 
         if (disableAnnotation) {

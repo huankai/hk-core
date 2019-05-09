@@ -46,7 +46,7 @@ public final class JsonResult<T> implements Serializable {
         /**
          * 未认证
          */
-        @EnumDisplay(value = "operation.unauthorized", order = 10401)
+        @EnumDisplay(value = "operation.unauthorized", order =10401 )
         UNAUTHORIZED,
 
         /**

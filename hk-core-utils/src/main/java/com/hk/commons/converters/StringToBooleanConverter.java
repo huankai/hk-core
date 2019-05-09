@@ -10,19 +10,19 @@ import com.hk.commons.util.BooleanUtils;
  */
 public class StringToBooleanConverter extends StringGenericConverter<Boolean> {
 
-	/**
-	 * 默认为null 时转换为 false
-	 */
-	public StringToBooleanConverter() {
-		super(Boolean.FALSE, Boolean.class);
-	}
+    /**
+     * 默认为null 时转换为 false
+     */
+    public StringToBooleanConverter() {
+        super(Boolean.class);
+    }
 
-	/**
-	 *
-	 */
-	@Override
-	protected Boolean doConvert(String source) {
-		return BooleanUtils.toBoolean(source);
-	}
+    /**
+     *
+     */
+    @Override
+    protected Boolean doConvert(String source) {
+        return BooleanUtils.toBoolean(source);
+    }
 
 }

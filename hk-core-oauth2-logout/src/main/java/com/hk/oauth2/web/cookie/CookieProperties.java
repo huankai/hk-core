@@ -1,9 +1,10 @@
-package com.hk.core.web.cookie;
+package com.hk.oauth2.web.cookie;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.io.Serializable;
 
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@ConfigurationProperties(prefix = "hk.authentication.cookie")
 public class CookieProperties implements Serializable {
 
     private String name;
@@ -44,7 +46,7 @@ public class CookieProperties implements Serializable {
     private int maxAge = -1;
 
     /**
-     *
+     * 当配置为true时，会将 cookie 信息中拼接 user-agent 和 requestIp
      */
     private boolean pinToSession = true;
 }

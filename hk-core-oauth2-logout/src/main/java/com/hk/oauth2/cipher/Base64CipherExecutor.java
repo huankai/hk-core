@@ -1,4 +1,4 @@
-package com.hk.commons.cipher;
+package com.hk.oauth2.cipher;
 
 import com.hk.commons.util.Base64Utils;
 import lombok.AccessLevel;

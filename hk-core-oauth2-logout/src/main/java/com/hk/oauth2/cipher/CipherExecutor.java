@@ -1,4 +1,4 @@
-package com.hk.commons.cipher;
+package com.hk.oauth2.cipher;
 
 /**
  * 密码解析器

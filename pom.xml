@@ -12,7 +12,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -32,6 +32,7 @@
         <module>hk-core-httpclient</module>
         <module>hk-core-page</module>
         <module>hk-core-web</module>
+        <module>hk-core-oauth2-logout</module>
         <module>hk-core-spring-boot-autoconfigure</module>
         <module>hk-core-spring-boot-dependencies</module>
         <module>hk-core-authentication-api</module>

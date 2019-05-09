@@ -88,7 +88,6 @@ public abstract class Webs {
      */
     public static void setAttributeFromSession(String name, Object value) {
         setAttributeFromSession(name, value, false);
-
     }
 
     /**
@@ -129,19 +128,19 @@ public abstract class Webs {
      * session 失效
      */
     public static void invalidateSession() {
-        HttpSession session = getRequestAttribute().getRequest().getSession(false);
-        if (null != session) {
-            session.invalidate();
-        }
+        invalidateSession(getHttpServletRequest());
     }
 
     /**
-     * 获取SessionId
+     * Session 失效
      *
-     * @return Session Id
+     * @param request request
      */
-    public static String getSessionId() {
-        return getRequestAttribute().getSessionId();
+    public static void invalidateSession(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (null != session) {
+            session.invalidate();
+        }
     }
 
     private static ServletRequestAttributes getRequestAttribute() {

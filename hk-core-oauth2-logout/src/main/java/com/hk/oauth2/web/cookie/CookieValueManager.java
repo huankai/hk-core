@@ -1,4 +1,4 @@
-package com.hk.core.web.cookie;
+package com.hk.oauth2.web.cookie;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +9,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface CookieValueManager {
 
+    /**
+     * 构建 Cookie 值
+     *
+     * @param givenCookieValue givenCookieValue
+     * @param request          request
+     * @return 新的 Cookie 值
+     */
     String buildCookieValue(String givenCookieValue, HttpServletRequest request);
 
     /**
@@ -20,16 +27,4 @@ public interface CookieValueManager {
      */
     String obtainCookieValue(Cookie cookie, HttpServletRequest request);
 
-
-    CookieValueManager NO_OP_COOKIE_MANAGER = new CookieValueManager() {
-        @Override
-        public String buildCookieValue(String givenCookieValue, HttpServletRequest request) {
-            return givenCookieValue;
-        }
-
-        @Override
-        public String obtainCookieValue(Cookie cookie, HttpServletRequest request) {
-            return cookie.getValue();
-        }
-    };
 }

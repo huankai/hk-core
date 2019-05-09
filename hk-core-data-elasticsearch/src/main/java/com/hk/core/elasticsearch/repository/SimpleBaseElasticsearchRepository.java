@@ -1,9 +1,6 @@
 package com.hk.core.elasticsearch.repository;
 
-import com.hk.commons.util.BeanUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.JsonUtils;
-import com.hk.commons.util.StringUtils;
+import com.hk.commons.util.*;
 import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.elasticsearch.query.Condition;
 import com.hk.core.page.QueryPage;
@@ -11,18 +8,30 @@ import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
 import lombok.NoArgsConstructor;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
+import org.springframework.beans.BeanWrapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchResultMapper;
+import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
+import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.core.query.UpdateQueryBuilder;
 import org.springframework.data.elasticsearch.repository.support.ElasticsearchEntityInformation;
 import org.springframework.data.elasticsearch.repository.support.SimpleElasticsearchRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -105,9 +114,39 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>>
                 request.doc(JsonUtils.serialize(updateMap), XContentType.JSON);
                 elasticsearchOperations.update(new UpdateQueryBuilder().withId(id)
                         .withClass(t.getClass()).withUpdateRequest(request).build());
-//                System.out.println(JsonUtils.serialize(update, true));
             }
 
         }
+    }
+
+    @Override
+    public QueryPage<T> queryForPage(SearchQuery searchQuery) {
+        Page<T> page = elasticsearchOperations.queryForPage(searchQuery, getEntityClass(), new SearchResultMapper() {
+
+            @Override
+            public <E> AggregatedPage<E> mapResults(SearchResponse response, Class<E> clazz, Pageable pageable) {
+                List<E> result = new ArrayList<>();
+                SearchHits hits = response.getHits();
+                E data;
+                for (SearchHit searchHit : hits) {
+                    String source = searchHit.getSourceAsString();
+                    data = JsonUtils.deserialize(source, clazz);
+                    Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
+                    if (CollectionUtils.isNotEmpty(highlightFields)) {
+                        BeanWrapper beanWrapper = BeanWrapperUtils.createBeanWrapper(data);
+                        for (Map.Entry<String, HighlightField> entry : highlightFields.entrySet()) {
+                            Text[] fragments = entry.getValue().getFragments();
+                            if (ArrayUtils.isNotEmpty(fragments)) {
+                                beanWrapper.setPropertyValue(entry.getKey(), fragments[0].toString());
+                            }
+                        }
+                    }
+                    result.add(data);
+                }
+                return new AggregatedPageImpl<>(result, pageable, hits.getTotalHits(),
+                        response.getAggregations(), response.getScrollId(), hits.getMaxScore());
+            }
+        });
+        return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), page.getNumber(), page.getSize());
     }
 }

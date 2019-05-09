@@ -1,7 +1,7 @@
-package com.hk.core.web.cookie;
+package com.hk.oauth2.web.cookie;
 
-import com.hk.commons.cipher.CipherExecutor;
 import com.hk.commons.util.StringUtils;
+import com.hk.oauth2.cipher.CipherExecutor;
 import lombok.RequiredArgsConstructor;
 
 import javax.servlet.http.Cookie;
@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 
 /**
+ * 使用 {@link CipherExecutor} 对 cookie 值进行编码与解码
+ *
  * @author huangkai
  * @date 2019-05-08 22:58
  */
