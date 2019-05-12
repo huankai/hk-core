@@ -1,14 +1,11 @@
 package com.hk.core.authentication.security.authentication.sms;
 
-import com.hk.commons.util.ByteConstants;
-import com.hk.core.authentication.security.SecurityUserPrincipal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.api.UserPrincipalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  * 短信验证 Provider
@@ -16,33 +13,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * @author kevin
  * @date 2018-07-26 16:41
  */
+@RequiredArgsConstructor
 public class SMSAuthenticationProvider implements AuthenticationProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SMSAuthenticationProvider.class);
-
-    private final UserDetailsService userDetailsService;
-
-    public SMSAuthenticationProvider(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    private final UserPrincipalService<UserPrincipal, String> userPrincipalService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         SMSAuthenticationToken token = (SMSAuthenticationToken) authentication;
-        String principal = token.getPrincipal().toString();
-        SecurityUserPrincipal userPrincipal = null;
-        try {
-            userPrincipal = SecurityUserPrincipal.class.cast(userDetailsService.loadUserByUsername(principal));
-        } catch (UsernameNotFoundException e) {
-            LOGGER.error("用户不存在:{}", principal);
-        }
-        if (null == userPrincipal) {
-            userPrincipal = new SecurityUserPrincipal(null, null, null, null, null, principal, false, principal, ByteConstants.NINE,
-                    principal, null, ByteConstants.NINE, null, null, ByteConstants.TWO, null, null);
-//            throw new InternalAuthenticationServiceException("无法获取用户信息");
-        }
-//        Collection<? extends GrantedAuthority> authorities = userPrincipal.getAuthorities();
-        SMSAuthenticationToken authenticationToken = new SMSAuthenticationToken(userPrincipal, null);
+        UserPrincipal principal = userPrincipalService.processAuthentication(token.getPrincipal().toString());
+        SMSAuthenticationToken authenticationToken = new SMSAuthenticationToken(principal, null);
         authenticationToken.setDetails(token.getDetails());
         return authenticationToken;
     }

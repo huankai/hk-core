@@ -1,11 +1,12 @@
 package com.hk.core.autoconfigure.authentication.security;
 
+import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.api.UserPrincipalService;
 import com.hk.core.authentication.security.authentication.sms.SMSAuthenticationFilter;
 import com.hk.core.authentication.security.authentication.sms.SMSAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -23,14 +24,14 @@ public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAd
 
 //    private AuthenticationFailureHandler authenticationFailureHandler;
 
-    private final UserDetailsService userDetailsService;
+    private final UserPrincipalService<UserPrincipal, String> smsUserPrincipalService;
 
     public SmsAuthenticationSecurityConfiguration(AuthenticationProperties.SMSProperties smsProperties,
-                                                  UserDetailsService userDetailsService) {
+                                                  UserPrincipalService<UserPrincipal, String> smsUserPrincipalService) {
         this.smsProperties = smsProperties;
 //        this.authenticationSuccessHandler = successHandler;
 //        this.authenticationFailureHandler = failureHandler;
-        this.userDetailsService = userDetailsService;
+        this.smsUserPrincipalService = smsUserPrincipalService;
 
     }
 
@@ -43,7 +44,7 @@ public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAd
             smsAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
 //            smsAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
 //            smsAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
-            SMSAuthenticationProvider smsAuthenticationProvider = new SMSAuthenticationProvider(userDetailsService);
+            SMSAuthenticationProvider smsAuthenticationProvider = new SMSAuthenticationProvider(smsUserPrincipalService);
             http.authenticationProvider(smsAuthenticationProvider).addFilterAfter(smsAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         }
     }
