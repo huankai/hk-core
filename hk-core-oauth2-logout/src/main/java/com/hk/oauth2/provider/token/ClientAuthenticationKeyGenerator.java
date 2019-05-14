@@ -33,6 +33,7 @@ import java.util.TreeSet;
  */
 @Slf4j
 @RequiredArgsConstructor
+@Deprecated
 public class ClientAuthenticationKeyGenerator implements AuthenticationKeyGenerator {
 
     private static final String CLIENT_ID = "client_id";
