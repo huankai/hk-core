@@ -15,12 +15,8 @@ import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -82,13 +78,14 @@ public class ClientAuthenticationKeyGenerator implements AuthenticationKeyGenera
     }
 
     protected String generateKey(Map<String, String> values) {
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            byte[] bytes = digest.digest(values.toString().getBytes(StandardCharsets.UTF_8));
-            return String.format("%032x", new BigInteger(1, bytes));
-        } catch (NoSuchAlgorithmException nsae) {
-            throw new IllegalStateException("MD5 algorithm not available.  Fatal (should be in the JDK).", nsae);
-        }
+        return null;
+//        MessageDigest digest;
+//        try {
+//            digest = MessageDigest.getInstance("MD5");
+//            byte[] bytes = digest.digest(values.toString().getBytes(StandardCharsets.UTF_8));
+//            return String.format("%032x", new BigInteger(1, bytes));
+//        } catch (NoSuchAlgorithmException nsae) {
+//            throw new IllegalStateException("MD5 algorithm not available.  Fatal (should be in the JDK).", nsae);
+//        }
     }
 }

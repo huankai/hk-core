@@ -86,10 +86,6 @@ public final class JsonUtils {
         return mapper;
     }
 
-    public static void configure(ObjectMapper om) {
-        configure(om, false);
-    }
-
     public static void configure(ObjectMapper om, boolean disableAnnotation) {
 //        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 //        om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);

@@ -73,7 +73,7 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
                 .defaultUseWrapper(true)
                 .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .build();
-        JsonUtils.configure(objectMapper, true);
+        JsonUtils.configure(objectMapper, false);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
 
