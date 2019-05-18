@@ -175,6 +175,16 @@
             </dependency>
             <dependency>
                 <groupId>com.hk</groupId>
+                <artifactId>hk-core-authentication-security-oauth2-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-authentication-security-oauth2-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hk</groupId>
                 <artifactId>hk-core-authentication-security-stream</artifactId>
                 <version>${project.version}</version>
             </dependency>

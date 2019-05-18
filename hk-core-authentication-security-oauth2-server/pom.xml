@@ -4,9 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hk-core-authentication-alipay</artifactId>
+    <artifactId>hk-core-authentication-security-oauth2-server</artifactId>
     <packaging>jar</packaging>
-
     <parent>
         <groupId>com.hk</groupId>
         <artifactId>hk-core</artifactId>
@@ -15,25 +14,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.alipay.sdk</groupId>
-            <artifactId>alipay-sdk-java</artifactId>
+            <groupId>com.hk</groupId>
+            <artifactId>hk-core-httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-core-authentication-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
+            <artifactId>hk-core-authentication-security-oauth2</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>

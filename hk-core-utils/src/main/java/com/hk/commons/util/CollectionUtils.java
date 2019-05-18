@@ -44,6 +44,19 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     }
 
     /**
+     * 转换为 String 数组
+     *
+     * @param it it
+     * @return String[]
+     */
+    public static String[] toArray(Iterable<String> it) {
+        if (it == null) {
+            return new String[0];
+        }
+        return StreamSupport.stream(it.spliterator(), false).toArray(String[]::new);
+    }
+
+    /**
      * 判断iterable元素长度
      *
      * @param iterable iterable
@@ -117,14 +130,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @return boolean
      */
     public static boolean contains(Iterable<?> it, Object element) {
-        if (null != it) {
-            for (Object e : it) {
-                if (ObjectUtils.nullSafeEquals(e, element)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return it != null && StreamSupport.stream(it.spliterator(), false).anyMatch(item -> ObjectUtils.nullSafeEquals(item, element));
     }
 
     /**
@@ -307,7 +313,6 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     public static Short getByteValue(Map<String, Object> map, Object key, Short defaultValue) {
         return getValueOrDefault(map, key, defaultValue, Short.class);
     }
-
 
     /**
      * 获取Map key 的 value值,如果不存在，返回 null
@@ -551,6 +556,4 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
         }
         return result;
     }
-
-
 }

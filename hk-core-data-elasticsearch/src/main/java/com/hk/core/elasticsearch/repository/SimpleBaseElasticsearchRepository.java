@@ -12,6 +12,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
@@ -24,10 +25,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchResultMapper;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.data.elasticsearch.core.query.UpdateQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.data.elasticsearch.repository.support.ElasticsearchEntityInformation;
 import org.springframework.data.elasticsearch.repository.support.SimpleElasticsearchRepository;
 
@@ -92,7 +90,10 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>>
     @Override
     public void deleteByIds(Iterable<String> ids) {
         if (CollectionUtils.isNotEmpty(ids)) {
-            ids.forEach(this::deleteById);
+            DeleteQuery deleteQuery = new DeleteQuery();
+            deleteQuery.setQuery(QueryBuilders.idsQuery()
+                    .addIds(CollectionUtils.toArray(ids)));
+            elasticsearchOperations.delete(deleteQuery);
         }
     }
 
@@ -115,7 +116,6 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>>
                 elasticsearchOperations.update(new UpdateQueryBuilder().withId(id)
                         .withClass(t.getClass()).withUpdateRequest(request).build());
             }
-
         }
     }
 

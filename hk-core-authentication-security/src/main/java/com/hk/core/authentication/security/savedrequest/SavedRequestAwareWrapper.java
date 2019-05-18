@@ -24,10 +24,10 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
 
     protected static final TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
 
-    /**
-     * The default Locale if none are specified.
-     */
-    protected static Locale defaultLocale = Locale.getDefault();
+//    /**
+//     * The default Locale if none are specified.
+//     */
+//    protected static Locale defaultLocale = Locale.getDefault();
 
     // ~ Instance fields
     // ================================================================================================

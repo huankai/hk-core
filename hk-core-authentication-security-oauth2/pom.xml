@@ -5,6 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hk-core-authentication-security-oauth2</artifactId>
+    <packaging>jar</packaging>
     <parent>
         <groupId>com.hk</groupId>
         <artifactId>hk-core</artifactId>
@@ -12,11 +13,6 @@
     </parent>
 
     <dependencies>
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-web</artifactId>
-            <optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-authentication-security</artifactId>

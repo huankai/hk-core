@@ -20,11 +20,6 @@
             <artifactId>hk-core-i18n</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-web</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-security</artifactId>
         </dependency>

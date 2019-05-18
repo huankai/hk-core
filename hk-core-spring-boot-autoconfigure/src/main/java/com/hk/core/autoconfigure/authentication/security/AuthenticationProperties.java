@@ -86,6 +86,11 @@ public class AuthenticationProperties {
         private String loginProcessingUrl = getLoginUrl();
 
         /**
+         * 登陆成功后的地址
+         */
+        private String loginSuccessUrl = "/";
+
+        /**
          * 退出地址
          */
         private String logoutUrl = "/logout";

@@ -32,17 +32,18 @@
         <module>hk-core-httpclient</module>
         <module>hk-core-page</module>
         <module>hk-core-web</module>
-        <module>hk-core-oauth2-logout</module>
         <module>hk-core-spring-boot-autoconfigure</module>
         <module>hk-core-spring-boot-dependencies</module>
         <module>hk-core-authentication-api</module>
         <module>hk-core-authentication-security</module>
+        <module>hk-core-authentication-security-stream</module>
+        <module>hk-core-authentication-security-oauth2</module>
+        <module>hk-core-authentication-security-oauth2-client</module>
+        <module>hk-core-authentication-security-oauth2-server</module>
         <module>hk-core-authentication-security-cas</module>
         <module>hk-core-authentication-shiro</module>
         <module>hk-core-authentication-weixin-mp</module>
         <module>hk-core-authentication-alipay</module>
-        <module>hk-core-authentication-security-stream</module>
-        <module>hk-core-authentication-security-oauth2</module>
         <module>hk-core-data-commons</module>
         <module>hk-core-data-jdbc</module>
         <module>hk-core-data-jpa</module>

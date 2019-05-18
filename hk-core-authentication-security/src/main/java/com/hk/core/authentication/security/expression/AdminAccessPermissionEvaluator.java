@@ -22,7 +22,7 @@ public class AdminAccessPermissionEvaluator implements PermissionEvaluator {
      */
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-        UserPrincipal principal = UserPrincipal.class.cast(authentication.getPrincipal());
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         return principal.hasPermission(String.valueOf(permission));
     }
 
