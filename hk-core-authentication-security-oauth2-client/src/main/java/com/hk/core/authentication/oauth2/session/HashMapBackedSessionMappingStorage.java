@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * HashMap client session　存储
+ *
  * @author kevin
  * @date 2019-5-18 10:07
  */

@@ -33,17 +33,14 @@ public class CustomAuthenticationKeyGenerator implements AuthenticationKeyGenera
     }
 
     protected String generateKey(Map<String, Object> values) {
-        Map<String, Object> finalMap = new LinkedHashMap<>();
-        values.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEachOrdered(e -> finalMap.put(e.getKey(), e.getValue()));
+        Map<String, Object> keyMap = CollectionUtils.sortMapByKey(values);
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("MD5");
-            byte[] bytes = digest.digest(finalMap.toString().getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = digest.digest(keyMap.toString().getBytes(StandardCharsets.UTF_8));
             return String.format("%032x", new BigInteger(1, bytes));
-        } catch (NoSuchAlgorithmException nsae) {
-            throw new IllegalStateException("MD5 algorithm not available.  Fatal (should be in the JDK).", nsae);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("MD5 algorithm not available.  Fatal (should be in the JDK).", e);
         }
     }
 }

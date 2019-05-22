@@ -8,9 +8,14 @@ import java.util.List;
  */
 public interface LogoutManager {
 
-    void registerLogoutClient(String accessToken, LogoutRequest logoutRequest);
+//    void registerLogoutClient(String accessToken, LogoutRequest logoutRequest);
 
-    List<LogoutRequest> getClientsAndRemove(String accessToken);
+    List<LogoutRequest> performLogout(String accessToken);
+
+//    List<LogoutRequest> getClientsAndRemove(String accessToken);
+
+
+    String createFrontChannelLogoutMessage(String accessToken);
 
 
 }

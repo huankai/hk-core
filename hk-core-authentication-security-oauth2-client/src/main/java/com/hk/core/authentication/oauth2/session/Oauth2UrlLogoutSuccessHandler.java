@@ -3,6 +3,7 @@ package com.hk.core.authentication.oauth2.session;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.oauth2.utils.AccessTokenUtils;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -20,12 +21,12 @@ import java.io.IOException;
  */
 public class Oauth2UrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
-    private final String formatTargetUrl;
+    private final String oauth2ServerLogoutUrl;
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-    public Oauth2UrlLogoutSuccessHandler(String formatTargetUrl) {
-        this.formatTargetUrl = formatTargetUrl;
+    public Oauth2UrlLogoutSuccessHandler(String oauth2ServerLogoutUrl) {
+        this.oauth2ServerLogoutUrl = oauth2ServerLogoutUrl;
     }
 
     @Override
@@ -38,8 +39,7 @@ public class Oauth2UrlLogoutSuccessHandler implements LogoutSuccessHandler {
                 accessToken = details.getTokenValue();
             }
         }
-        String redirectUrl = String.format(formatTargetUrl, accessToken);
+        String redirectUrl = String.format("%s?%s=%s", oauth2ServerLogoutUrl, OAuth2AccessToken.ACCESS_TOKEN, accessToken);
         redirectStrategy.sendRedirect(request, response, redirectUrl);
-
     }
 }

@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-core-authentication-security-oauth2</artifactId>
+            <artifactId>hk-core-authentication-security-oauth2-client</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

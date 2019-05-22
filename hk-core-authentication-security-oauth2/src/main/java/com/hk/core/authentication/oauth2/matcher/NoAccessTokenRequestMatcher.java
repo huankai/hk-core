@@ -1,6 +1,5 @@
 package com.hk.core.authentication.oauth2.matcher;
 
-import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.oauth2.utils.AccessTokenUtils;
 import lombok.NoArgsConstructor;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -26,6 +25,6 @@ public class NoAccessTokenRequestMatcher implements RequestMatcher {
 
     @Override
     public boolean matches(HttpServletRequest request) {
-        return StringUtils.isEmpty(AccessTokenUtils.getAccessToken(request));
+        return !AccessTokenUtils.isAccessTokenRequest(request);
     }
 }

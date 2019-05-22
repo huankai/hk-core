@@ -1,13 +1,11 @@
 package com.hk.oauth2.logout;
 
-import com.hk.commons.util.StringUtils;
 import com.hk.oauth2.http.HttpClient;
-import com.hk.oauth2.http.LogoutHttpMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,16 +27,18 @@ public class DefaultSingleLogoutServiceMessageHandler implements SingleLogoutSer
     private boolean asynchronous = true;
 
     @Override
-    public void handle(String accessToken) {
-        String logoutMessage = logoutMessageCreator.create(accessToken);
-        List<LogoutRequest> clientLogoutUrl = logoutManager.getClientsAndRemove(accessToken);
-        clientLogoutUrl.forEach(item -> performBackChannelLogout(logoutMessage, item));
+    public List<LogoutRequest> handle(String accessToken) {
+//        String logoutMessage = logoutMessageCreator.create(accessToken);
+//        List<LogoutRequest> clientLogoutUrl = logoutManager.getClientsAndRemove(accessToken);
+//        clientLogoutUrl.forEach(item -> performBackChannelLogout(logoutMessage, item));
+//        return createLogoutRequests(accessToken);
+        return Collections.emptyList();
     }
 
-    private boolean performBackChannelLogout(String logoutMessage, LogoutRequest logoutRequest) {
-        URL url = StringUtils.toURL(logoutRequest.getLogoutURL());
-        final LogoutHttpMessage msg = new LogoutHttpMessage(url, logoutMessage, asynchronous);
-        log.debug("Prepared logout message to send is [{}]. Sending...", msg);
-        return httpClient.sendMessageToEndPoint(msg);
-    }
+//    private boolean performBackChannelLogout(String logoutMessage, LogoutRequest logoutRequest) {
+//        URL url = StringUtils.toURL(logoutRequest.getLogoutURL());
+//        final LogoutHttpMessage msg = new LogoutHttpMessage(url, logoutMessage, asynchronous);
+//        log.debug("Prepared logout message to send is [{}]. Sending...", msg);
+//        return httpClient.sendMessageToEndPoint(msg);
+//    }
 }

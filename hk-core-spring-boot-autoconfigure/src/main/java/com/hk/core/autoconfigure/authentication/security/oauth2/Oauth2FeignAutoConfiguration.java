@@ -1,5 +1,6 @@
 package com.hk.core.autoconfigure.authentication.security.oauth2;
 
+import com.hk.core.authentication.api.SecurityContext;
 import feign.RequestInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -20,12 +21,22 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 @ConditionalOnBean(OAuth2ClientContext.class)
 public class Oauth2FeignAutoConfiguration {
 
+    private SecurityContext securityContext;
+
+    public Oauth2FeignAutoConfiguration(SecurityContext securityContext) {
+        this.securityContext = securityContext;
+    }
+
     @Bean
     public OAuth2FeignRequestInterceptor oAuth2FeignRequestInterceptor(OAuth2ClientContext clientContext, OAuth2ProtectedResourceDetails resourceDetails) {
         return new OAuth2FeignRequestInterceptor(clientContext, resourceDetails) {
 
             @Override
             protected String extract(String tokenType) {
+                // 如果当前用户没有认证，则调用 其它服务的接口也不能需要认证，否则就会调用失败
+                if (!securityContext.isAuthenticated()) {
+                    return null;
+                }
                 OAuth2AccessToken accessToken = getToken();
                 return accessToken == null ? null : String.format("%s %s", tokenType, accessToken.getValue());
             }
@@ -48,6 +59,8 @@ public class Oauth2FeignAutoConfiguration {
                         }
                         // 查看父类方法，当使用Feign 调用不需要认证的api时，此时用户未授权(没有带 access_token) 参数，在这里获取认证信息时会抛出异常
                         // 解决方法: 如果不需要(或不能)获取用户认证信息，则不带请求认证头信息(Authorization)到调用的服务提供方
+                        return null;
+                    } catch (RuntimeException e) {
                         return null;
                     }
                 }

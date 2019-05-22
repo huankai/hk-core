@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 失效 access_token 退出处理器
+ *
  * @author kevin
  * @date 2019-5-10 17:47
  */

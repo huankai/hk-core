@@ -1,7 +1,6 @@
 package com.hk.oauth2.provider.token;
 
 import com.hk.oauth2.logout.LogoutManager;
-import com.hk.oauth2.logout.LogoutRequest;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -64,10 +63,7 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
 
     @Transactional
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-//        Oauth2App oauth2App = oauth2AppService.findById(authentication.getOAuth2Request().getClientId());
-//        checkOauth2(oauth2App);
         OAuth2Request oAuth2Request = authentication.getOAuth2Request();
-//        URL redirectURL = StringUtils.toURL(.getRedirectUri());
         OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
         OAuth2RefreshToken refreshToken = null;
         if (existingAccessToken != null) {
@@ -79,8 +75,8 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
                 tokenStore.removeAccessToken(existingAccessToken);
             } else {
                 tokenStore.storeAccessToken(existingAccessToken, authentication);
-                logoutManager.registerLogoutClient(existingAccessToken.getValue(),
-                        new LogoutRequest(oAuth2Request.getClientId(), oAuth2Request.getRedirectUri()));
+//                logoutManager.registerLogoutClient(existingAccessToken.getValue(),
+//                        new LogoutRequest(oAuth2Request.getClientId(), oAuth2Request.getRedirectUri()));
                 return existingAccessToken;
             }
         }
@@ -109,8 +105,8 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
         if (refreshToken != null) {
             tokenStore.storeRefreshToken(refreshToken, authentication);
         }
-        logoutManager.registerLogoutClient(accessToken.getValue(),
-                new LogoutRequest(oAuth2Request.getClientId(), oAuth2Request.getRedirectUri()));
+//        logoutManager.registerLogoutClient(accessToken.getValue(),
+//                new LogoutRequest(oAuth2Request.getClientId(), oAuth2Request.getRedirectUri()));
         return accessToken;
     }
 

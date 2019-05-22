@@ -3,8 +3,10 @@ package com.hk.core.authentication.oauth2.session;
 import com.hk.commons.util.StringUtils;
 import com.hk.commons.util.XmlUtils;
 import com.hk.core.authentication.oauth2.utils.AccessTokenUtils;
+import com.hk.core.web.Webs;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +19,20 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 public class SingleSignOutHandler {
 
+    /**
+     * session 中存储的 oauth2ClientContext
+     */
+    private static final String SESSION_OAUTH2_CLIENT_CONTEXT_KEY = "scopedTarget.oauth2ClientContext";
+
     private SessionMappingStorage sessionMappingStorage;
 
     private static final String LOGOUT_PARAM_NAME = "oauth2LogoutParameter";
 
     @Setter
-    private boolean eagerlyCreateSessions = false;
+    private boolean eagerlyCreateSessions = true;
 
-    private final LogoutStrategy logoutStrategy = isServlet30() ? new Servlet30LogoutStrategy() : new Servlet25LogoutStrategy();
+    private final LogoutStrategy logoutStrategy = isServlet30() ? HttpServletRequest::logout : request -> {
+    };
 
     public SingleSignOutHandler(SessionMappingStorage sessionMappingStorage) {
         this.sessionMappingStorage = sessionMappingStorage;
@@ -45,6 +53,11 @@ public class SingleSignOutHandler {
         return true;
     }
 
+    /**
+     * 销毁 session
+     *
+     * @param request request
+     */
     private void destroySession(HttpServletRequest request) {
         String logoutMessage = request.getParameter(LOGOUT_PARAM_NAME);
         if (StringUtils.isEmpty(logoutMessage)) {
@@ -61,24 +74,43 @@ public class SingleSignOutHandler {
                 try {
                     session.invalidate();
                 } catch (final IllegalStateException e) {
-                    log.debug("Error invalidating session.", e);
+                    // ignore
                 }
-                this.logoutStrategy.logout(request);
+                try {
+                    logoutStrategy.logout(request);
+                } catch (ServletException e) {
+                    log.debug("Error performing request.logout.");
+                }
             }
         }
     }
 
+    /**
+     * 判断是否为 logout 请求
+     *
+     * @param request
+     * @return
+     */
     private boolean isLogoutRequest(HttpServletRequest request) {
-        return StringUtils.isNotEmpty(request.getParameter(LOGOUT_PARAM_NAME));
+        return StringUtils.isNotEmpty(request.getParameter(LOGOUT_PARAM_NAME)) && !isMultipartRequest(request);
     }
 
+    /**
+     * 更新 {@link sessionMappingStorage} 中的 session
+     *
+     * @param request request
+     */
     private void recordSession(HttpServletRequest request) {
         final HttpSession session = request.getSession(eagerlyCreateSessions);
         if (session == null) {
             log.debug("No session currently exists (and none created).  Cannot record session information for single sign out.");
             return;
         }
-        final String token = AccessTokenUtils.getAccessToken(request);
+        String token = AccessTokenUtils.getAccessToken(request);
+        if (StringUtils.isEmpty(token)) {
+            DefaultOAuth2ClientContext clientContext = Webs.getAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
+            token = clientContext.getAccessToken().getValue();
+        }
         log.debug("Recording session for token {}", token);
         try {
             sessionMappingStorage.removeBySessionById(session.getId());
@@ -88,8 +120,32 @@ public class SingleSignOutHandler {
         sessionMappingStorage.addSessionById(token, session);
     }
 
+    /**
+     * 查看是否能获取到 access_token
+     *
+     * @param request request
+     * @return
+     */
     private boolean isTokenRequest(HttpServletRequest request) {
-        return StringUtils.isNotEmpty(AccessTokenUtils.getAccessToken(request));
+        if (StringUtils.isNotEmpty(AccessTokenUtils.getAccessToken(request))) {
+            return true;
+        }
+        HttpSession session = request.getSession(eagerlyCreateSessions);
+        if (session == null) {
+            return false;
+        }
+        DefaultOAuth2ClientContext clientContext = Webs.getAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
+        return null != clientContext && null != clientContext.getAccessToken();
+    }
+
+    /**
+     * 是否为文件上传请求
+     *
+     * @param request
+     * @return
+     */
+    private boolean isMultipartRequest(final HttpServletRequest request) {
+        return request.getContentType() != null && request.getContentType().toLowerCase().startsWith("multipart");
     }
 
     private static boolean isServlet30() {
@@ -100,26 +156,9 @@ public class SingleSignOutHandler {
         }
     }
 
+    @FunctionalInterface
     private interface LogoutStrategy {
 
-        void logout(HttpServletRequest request);
-    }
-
-    private class Servlet25LogoutStrategy implements LogoutStrategy {
-
-        public void logout(final HttpServletRequest request) {
-            // nothing additional to do here
-        }
-    }
-
-    private class Servlet30LogoutStrategy implements LogoutStrategy {
-
-        public void logout(final HttpServletRequest request) {
-            try {
-                request.logout();
-            } catch (final ServletException e) {
-                log.debug("Error performing request.logout.");
-            }
-        }
+        void logout(HttpServletRequest request) throws ServletException;
     }
 }

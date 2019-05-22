@@ -10,10 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * 单点退出 过滤器
+ *
  * @author kevin
  * @date 2019-5-18 10:47
  */
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 public class SingleSignOutFilter extends AbstractFilter {
 
     private final SingleSignOutHandler singleSignOutHandler;

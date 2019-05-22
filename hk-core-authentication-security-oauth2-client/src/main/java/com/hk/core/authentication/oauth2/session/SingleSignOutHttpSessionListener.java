@@ -6,6 +6,8 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
+ * 单点退出监听器
+ *
  * @author kevin
  * @date 2019-5-18 10:16
  */
@@ -16,11 +18,6 @@ public class SingleSignOutHttpSessionListener implements HttpSessionListener {
 
     public SingleSignOutHttpSessionListener(SessionMappingStorage sessionMappingStorage) {
         this.sessionMappingStorage = sessionMappingStorage;
-    }
-
-    @Override
-    public void sessionCreated(HttpSessionEvent se) {
-        log.debug("Session Created: {}", se.getSession().getId());
     }
 
     @Override
