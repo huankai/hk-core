@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.net.URL;
 
 /**
+ * Http 消息
+ *
  * @author kevin
  * @date 2019-5-18 11:33
  */

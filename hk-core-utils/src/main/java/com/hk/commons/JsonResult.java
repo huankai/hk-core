@@ -14,6 +14,7 @@ import java.io.Serializable;
  * @author kevin
  * @date 2017年9月27日上午11:09:08
  */
+@SuppressWarnings("serial")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JsonResult<T> implements Serializable {
 
