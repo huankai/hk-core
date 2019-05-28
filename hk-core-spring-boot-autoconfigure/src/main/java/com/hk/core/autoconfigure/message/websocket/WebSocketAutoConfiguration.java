@@ -1,21 +1,14 @@
 package com.hk.core.autoconfigure.message.websocket;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.StringUtils;
-import com.hk.message.websocket.WebsocketMessager;
-import com.hk.message.websocket.handlers.CheckLoginHandshakeInterceptor;
-import com.hk.message.websocket.publish.WebSocketMessagePublish;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.scheduling.concurrent.DefaultManagedTaskScheduler;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
@@ -23,17 +16,23 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 import org.springframework.web.socket.server.HandshakeHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.StringUtils;
+import com.hk.core.autoconfigure.authentication.security.WebSocketSecurityConfiguration;
+import com.hk.message.websocket.WebsocketMessager;
 
 /**
+ * 如果不与 spring security 集成，可以使用此配置，
+ * 如果与 spring security 集成时，使用 {@link WebSocketSecurityConfiguration}
  * @author kevin
  * @date 2018-09-21 13:14
  */
-@Configuration
-@ConditionalOnClass(WebSocketMessagePublish.class)
-@EnableWebSocketMessageBroker
-@EnableConfigurationProperties(WebSocketProperties.class)
+//@Configuration
+//@ConditionalOnClass(WebSocketMessagePublish.class)
+//@EnableWebSocketMessageBroker
+//@EnableConfigurationProperties(WebSocketProperties.class)
+@Deprecated
 public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
 
     private WebSocketProperties webSocketProperties;
@@ -73,9 +72,6 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         List<HandshakeInterceptor> interceptorList = new ArrayList<>();
-        if (webSocketProperties.isNeedLogin()) {
-            interceptorList.add(new CheckLoginHandshakeInterceptor());
-        }
         HandshakeInterceptor[] interceptors = interceptorList.toArray(new HandshakeInterceptor[]{});
 
         registry.addEndpoint(webSocketProperties.getEndpoint())

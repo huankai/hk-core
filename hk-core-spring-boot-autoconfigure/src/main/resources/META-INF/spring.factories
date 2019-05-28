@@ -19,7 +19,6 @@ com.hk.core.autoconfigure.data.jpa.JpaAutoConfiguration,\
 com.hk.core.autoconfigure.data.jdbc.JdbcAutoConfiguration,\
 com.hk.core.autoconfigure.data.solr.SolrAutoConfiguration,\
 com.hk.core.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,\
-com.hk.core.autoconfigure.message.websocket.WebSocketAutoConfiguration,\
 com.hk.core.autoconfigure.message.weixin.WeixinMessageAutoConfiguration,\
 com.hk.core.autoconfigure.weixin.WechatMpConfiguration,\
 com.hk.core.autoconfigure.swagger2.Swagger2AutoConfiguration

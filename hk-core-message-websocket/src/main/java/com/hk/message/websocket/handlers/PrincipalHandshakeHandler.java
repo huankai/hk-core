@@ -1,16 +1,15 @@
 package com.hk.message.websocket.handlers;
 
-import com.hk.core.authentication.api.SecurityContextUtils;
-import com.hk.core.authentication.api.UserPrincipal;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import java.security.Principal;
+import java.util.Map;
+
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.lang.Nullable;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
-import java.security.Principal;
-import java.util.Map;
+import com.hk.core.authentication.api.SecurityContextUtils;
+import com.hk.core.authentication.api.UserPrincipal;
 
 /**
  * 获取 websocket 用户，不建议这么做了， spring security messaging 有集成
@@ -27,7 +26,8 @@ public class PrincipalHandshakeHandler extends DefaultHandshakeHandler {
         return new WebSocketUserPrincipal(SecurityContextUtils.getPrincipal());
     }
 
-    public class WebSocketUserPrincipal extends UserPrincipal implements Principal {
+    @SuppressWarnings("serial")
+	public class WebSocketUserPrincipal extends UserPrincipal implements Principal {
 
         WebSocketUserPrincipal(UserPrincipal userPrincipal) {
             super(userPrincipal.getUserId(), userPrincipal.getAccount(), userPrincipal.isProtectUser(), userPrincipal.getRealName(), userPrincipal.getUserType(), userPrincipal.getPhone(),
