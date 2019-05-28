@@ -158,6 +158,18 @@ public final class JsonUtils {
     }
 
     /**
+     * 序列化为 字符串，忽略指定属性
+     *
+     * @param obj               obj
+     * @param containsNullValue 是否 包含属性值为null 属性
+     * @param ignoreProperties  要忽略的属性名
+     * @return json str
+     */
+    public static String serializeIgnoreProperties(Object obj, boolean containsNullValue, String... ignoreProperties) {
+        return serialize(BeanUtils.beanToMap(obj, containsNullValue, ignoreProperties), false);
+    }
+
+    /**
      * 序列化到 byte 数组
      *
      * @param obj obj
@@ -204,7 +216,6 @@ public final class JsonUtils {
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-
         }
     }
 

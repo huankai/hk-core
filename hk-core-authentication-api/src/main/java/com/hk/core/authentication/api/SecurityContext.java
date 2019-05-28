@@ -46,7 +46,7 @@ public interface SecurityContext {
      * @return session value
      * @throws ClassCastException 类型转换异常
      */
-    default <T> Optional<T> getSessionAttributeAndRemove(String key, Class<T> clazz) throws ClassCastException {
+    default <T> Optional<T> consumeSessionAttribute(String key, Class<T> clazz) throws ClassCastException {
         try {
             return getSessionAttribute(key, clazz);
         } finally {

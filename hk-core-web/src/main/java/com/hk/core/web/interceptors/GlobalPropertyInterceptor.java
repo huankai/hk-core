@@ -18,6 +18,8 @@ import java.util.Map;
  */
 public class GlobalPropertyInterceptor extends HandlerInterceptorAdapter {
 
+    private static final String CONTEXT_PATH = "contextPath";
+
     /**
      * request 中的属性
      *
@@ -34,7 +36,7 @@ public class GlobalPropertyInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         property.forEach(request::setAttribute);
-        request.setAttribute("contextPath", request.getContextPath());
+        request.setAttribute(CONTEXT_PATH, request.getContextPath());
         return true;
     }
 

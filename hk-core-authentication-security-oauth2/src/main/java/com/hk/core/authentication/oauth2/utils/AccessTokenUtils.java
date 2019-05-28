@@ -13,11 +13,23 @@ import java.util.Enumeration;
  */
 public abstract class AccessTokenUtils {
 
+    /**
+     * 从请求头或请求参数中获取 access_token 信息
+     *
+     * @param request request
+     * @return access_token
+     */
     public static String getAccessToken(HttpServletRequest request) {
         String authorization = extractHeaderToken(request);
         return StringUtils.isEmpty(authorization) ? request.getParameter(OAuth2AccessToken.ACCESS_TOKEN) : authorization;
     }
 
+    /**
+     * 从请求头获取  access_token 信息
+     *
+     * @param request request
+     * @return access_token
+     */
     private static String extractHeaderToken(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
         while (headers.hasMoreElements()) {
@@ -29,6 +41,12 @@ public abstract class AccessTokenUtils {
         return null;
     }
 
+    /**
+     * 是否为 accessToken 请求
+     *
+     * @param request request
+     * @return true or false
+     */
     public static boolean isAccessTokenRequest(HttpServletRequest request) {
         return StringUtils.isNotEmpty(getAccessToken(request));
     }

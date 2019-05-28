@@ -38,6 +38,7 @@
         <module>hk-core-authentication-security</module>
         <module>hk-core-authentication-security-stream</module>
         <module>hk-core-authentication-security-oauth2</module>
+        <module>hk-core-data-session-redis</module>
         <module>hk-core-authentication-security-oauth2-client</module>
         <module>hk-core-authentication-security-oauth2-server</module>
         <module>hk-core-authentication-security-cas</module>

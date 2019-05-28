@@ -32,8 +32,6 @@ import java.net.URLEncoder;
  */
 public abstract class Webs {
 
-    private static final String USER_AGENT_HEADER_NAME = "User-Agent";
-
     private static final String MSIE_USER_AGENT_HEADER_VALUE = "MSIE";
 
     private static final String EDGE_USER_AGENT_HEADER_VALUE = "Edge";
@@ -56,7 +54,7 @@ public abstract class Webs {
      *
      * @return HttpServletResponse
      */
-    public static HttpServletResponse getHttpservletResponse() {
+    public static HttpServletResponse getHttpServletResponse() {
         return getRequestAttribute().getResponse();
     }
 
@@ -121,26 +119,12 @@ public abstract class Webs {
      * @return Value
      */
     public static <T> T getAttribute(String name, int scope, Class<T> clazz) throws ClassCastException {
-        return clazz.cast(getRequestAttribute().getAttribute(name, scope));
-    }
-
-    /**
-     * session 失效
-     */
-    public static void invalidateSession() {
-        invalidateSession(getHttpServletRequest());
-    }
-
-    /**
-     * Session 失效
-     *
-     * @param request request
-     */
-    public static void invalidateSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (null != session) {
-            session.invalidate();
+        ServletRequestAttributes requestAttribute = getRequestAttribute();
+        if (requestAttribute == null) {
+            return null;
         }
+        Object value = requestAttribute.getAttribute(name, scope);
+        return value == null ? null : clazz.cast(value);
     }
 
     private static ServletRequestAttributes getRequestAttribute() {
@@ -157,14 +141,14 @@ public abstract class Webs {
         return StringUtils.isNotEmpty(request.getHeader("X-Requested-With"));
     }
 
-    /**
-     * 是否为ajax请求
-     *
-     * @return true if Request Header contains X-Requested-With
-     */
-    public static boolean isAjax() {
-        return isAjax(getHttpServletRequest());
-    }
+//    /**
+//     * 是否为ajax请求
+//     *
+//     * @return true if Request Header contains X-Requested-With
+//     */
+//    public static boolean isAjax() {
+//        return isAjax(getHttpServletRequest());
+//    }
 
     /**
      * 是否是微信浏览器请求
@@ -173,7 +157,7 @@ public abstract class Webs {
      * @return true if Request Header contains MicroMessenger
      */
     public static boolean isWeiXin(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "MicroMessenger");
+        return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "MicroMessenger");
     }
 
     /**
@@ -183,7 +167,7 @@ public abstract class Webs {
      * @return true or false
      */
     public static boolean isAliPay(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "AlipayClient");
+        return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "AlipayClient");
     }
 
     /**
@@ -193,7 +177,7 @@ public abstract class Webs {
      * @return true or false
      */
     public static boolean isAndroid(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "Android");
+        return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "Android");
     }
 
     /**
@@ -213,7 +197,7 @@ public abstract class Webs {
      * @return true or false
      */
     public static boolean isIPhone(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "iPhone");
+        return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "iPhone");
     }
 
     /**
@@ -310,7 +294,7 @@ public abstract class Webs {
         String encodeFileName = fileName;
         HttpServletRequest request = getHttpServletRequest();
         try {
-            String agent = request.getHeader(USER_AGENT_HEADER_NAME);
+            String agent = request.getHeader(HttpHeaders.USER_AGENT);
             if (StringUtils.isNotEmpty(agent)) {
                 if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
                         || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE
@@ -323,15 +307,6 @@ public abstract class Webs {
             throw new RuntimeException(e.getMessage(), e);
         }
         return encodeFileName;
-    }
-
-    /**
-     * 获取请求地址
-     *
-     * @return ip address
-     */
-    public static String getRemoteAddr() {
-        return getRemoteAddr(getHttpServletRequest());
     }
 
     /**
@@ -369,7 +344,7 @@ public abstract class Webs {
      * @return User-Agent
      */
     public static String getUserAgent(HttpServletRequest request) {
-        return request.getHeader(USER_AGENT_HEADER_NAME);
+        return request.getHeader(HttpHeaders.USER_AGENT);
     }
 
     /**

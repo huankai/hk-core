@@ -15,6 +15,7 @@ import java.util.Map;
  * @author huangkai
  * @date 2018-9-21 21:26
  */
+@Deprecated
 public class CheckLoginHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
