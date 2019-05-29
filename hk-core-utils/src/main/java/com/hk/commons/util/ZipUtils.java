@@ -1,6 +1,9 @@
 package com.hk.commons.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -8,7 +11,7 @@ import java.util.zip.ZipOutputStream;
  * @author kevin
  * @date 2018-05-30 08:42
  */
-public class ZipUtils {
+public abstract class ZipUtils {
 
     public static void toZip(String dir, OutputStream out, boolean keepDirStructure) {
         try (ZipOutputStream zipOutputStream = new ZipOutputStream(out)) {

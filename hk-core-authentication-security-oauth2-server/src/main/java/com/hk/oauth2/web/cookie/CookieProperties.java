@@ -1,12 +1,13 @@
 package com.hk.oauth2.web.cookie;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.io.Serializable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author huangkai
@@ -15,6 +16,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@SuppressWarnings("serial")
 @ConfigurationProperties(prefix = "hk.authentication.cookie")
 public class CookieProperties implements Serializable {
 

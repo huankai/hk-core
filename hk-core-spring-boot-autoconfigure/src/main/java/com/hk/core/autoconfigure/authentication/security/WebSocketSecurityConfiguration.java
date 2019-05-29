@@ -103,7 +103,10 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
 		if (StringUtils.isNotEmpty(userDestinationPrefix)) {
 			registry.setUserDestinationPrefix(userDestinationPrefix);
 		}
-		registry.setCacheLimit(webSocketProperties.getCacheLimit());
+		Integer cacheLimit = webSocketProperties.getCacheLimit();
+		if(null != cacheLimit) {
+			registry.setCacheLimit(cacheLimit);
+		}
 	}
 
 	/**

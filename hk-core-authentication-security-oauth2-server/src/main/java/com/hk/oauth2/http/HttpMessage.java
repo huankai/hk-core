@@ -1,13 +1,15 @@
 package com.hk.oauth2.http;
 
+import java.io.Serializable;
+import java.net.URL;
+
+import org.springframework.http.MediaType;
+
 import com.hk.oauth2.utils.EncodingUtils;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-
-import java.io.Serializable;
-import java.net.URL;
 
 /**
  * Http 消息
@@ -18,6 +20,7 @@ import java.net.URL;
 @Slf4j
 @Getter
 @Setter
+@SuppressWarnings("serial")
 public class HttpMessage implements Serializable {
 
     private static final boolean DEFAULT_ASYNCHRONOUS_CALLBACKS_ENABLED = true;

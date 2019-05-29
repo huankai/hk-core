@@ -104,6 +104,8 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
 	public void deleteByIds(Iterable<String> ids) {
 		if (CollectionUtils.isNotEmpty(ids)) {
 			DeleteQuery deleteQuery = new DeleteQuery();
+			deleteQuery.setIndex(entityInformation.getIndexName());
+			deleteQuery.setType(entityInformation.getType());
 			deleteQuery.setQuery(QueryBuilders.idsQuery().addIds(CollectionUtils.toArray(ids)));
 			elasticsearchOperations.delete(deleteQuery);
 		}

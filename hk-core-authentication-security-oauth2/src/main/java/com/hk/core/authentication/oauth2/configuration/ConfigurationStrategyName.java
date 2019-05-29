@@ -1,6 +1,7 @@
 package com.hk.core.authentication.oauth2.configuration;
 
 import com.hk.commons.util.StringUtils;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,7 +21,8 @@ public enum ConfigurationStrategyName {
         this.configurationStrategyClass = configurationStrategyClass;
     }
 
-    public static Class<? extends ConfigurationStrategy> resolveToConfigurationStrategy(final String value) {
+    @SuppressWarnings("unchecked")
+	public static Class<? extends ConfigurationStrategy> resolveToConfigurationStrategy(final String value) {
         if (StringUtils.isEmpty(value)) {
             return PROPERTY_FILE.configurationStrategyClass;
         }

@@ -1,9 +1,9 @@
 package com.hk.commons.util;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.io.IOException;
+
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * 文件工具类
@@ -11,7 +11,7 @@ import java.io.IOException;
  * @author kevin
  * @date 2018-05-30 11:17
  */
-public class FileUtils extends org.apache.commons.io.FileUtils {
+public abstract class FileUtils extends org.apache.commons.io.FileUtils {
 
     /**
      * 图片后缀名

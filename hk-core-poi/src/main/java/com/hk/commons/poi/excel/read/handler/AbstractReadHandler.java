@@ -1,8 +1,31 @@
 package com.hk.commons.poi.excel.read.handler;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
+
 import com.hk.commons.poi.ReadException;
 import com.hk.commons.poi.excel.exception.ExcelReadException;
-import com.hk.commons.poi.excel.model.*;
+import com.hk.commons.poi.excel.model.ErrorLog;
+import com.hk.commons.poi.excel.model.InvalidCell;
+import com.hk.commons.poi.excel.model.ReadParam;
+import com.hk.commons.poi.excel.model.ReadResult;
+import com.hk.commons.poi.excel.model.SheetData;
+import com.hk.commons.poi.excel.model.Title;
 import com.hk.commons.poi.excel.read.interceptor.ValidationInterceptor;
 import com.hk.commons.poi.excel.read.validation.Validationable;
 import com.hk.commons.poi.excel.util.ReadExcelUtils;
@@ -11,16 +34,8 @@ import com.hk.commons.util.ClassUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.commons.util.StringUtils;
-import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanCreationException;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
+import lombok.AllArgsConstructor;
 
 /**
  * @author kevin
@@ -142,7 +157,7 @@ public abstract class AbstractReadHandler<T> {
     private boolean isNewObject(Class<?> propertyType, String nestedPropertyPrefix, int currentColumnIndex) {
         try {
             ParameterizedType type = (ParameterizedType) propertyType.getDeclaredField(nestedPropertyPrefix).getGenericType();
-            return ReadExcelUtils.getMinColumnWithExcelCellAnnotations((Class)type.getActualTypeArguments()[0]) == currentColumnIndex;
+            return ReadExcelUtils.getMinColumnWithExcelCellAnnotations((Class<?>)type.getActualTypeArguments()[0]) == currentColumnIndex;
         } catch (NoSuchFieldException e) {
             throw new BeanCreationException(e.getMessage());
         }
@@ -155,7 +170,7 @@ public abstract class AbstractReadHandler<T> {
      * @return
      */
     private int getNestedPropertySize(Object value) {
-        return (int) CollectionUtils.size((Iterable) value);
+        return (int) CollectionUtils.size((Iterable<?>) value);
     }
 
     /**

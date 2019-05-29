@@ -1,7 +1,12 @@
 package com.hk.oauth2.http;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -18,12 +23,8 @@ import org.apache.http.impl.client.HttpRequestFutureTask;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.DisposableBean;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author kevin
@@ -31,6 +32,7 @@ import java.util.concurrent.RejectedExecutionException;
  */
 @Slf4j
 @RequiredArgsConstructor
+@SuppressWarnings("serial")
 public class SimpleHttpClient implements HttpClient, Serializable, DisposableBean {
 
     /**

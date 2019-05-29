@@ -1,9 +1,9 @@
 package com.hk.oauth2.logout;
 
+import java.net.URL;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.net.URL;
 
 /**
  * @author kevin
@@ -11,6 +11,7 @@ import java.net.URL;
  */
 @Getter
 @Setter
+@SuppressWarnings("serial")
 public class DefaultLogoutRequest implements LogoutRequest {
 
     private URL logoutUrl;
