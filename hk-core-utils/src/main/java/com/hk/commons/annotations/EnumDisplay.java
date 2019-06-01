@@ -16,15 +16,11 @@ public @interface EnumDisplay {
 
     /**
      * value
-     *
-     * @return
      */
     String value();
 
     /**
      * Order
-     *
-     * @return
      */
     int order() default 0;
 }

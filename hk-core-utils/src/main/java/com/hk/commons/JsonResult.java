@@ -7,6 +7,7 @@ import com.hk.commons.util.StringUtils;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Json返回结果
@@ -47,7 +48,7 @@ public final class JsonResult<T> implements Serializable {
         /**
          * 未认证
          */
-        @EnumDisplay(value = "operation.unauthorized", order =10401 )
+        @EnumDisplay(value = "operation.unauthorized", order = 10401)
         UNAUTHORIZED,
 
         /**
@@ -245,7 +246,11 @@ public final class JsonResult<T> implements Serializable {
     }
 
     public String getMessage() {
-        return StringUtils.isEmpty(message) ? EnumDisplayUtils.getDisplayText(Status.class, statusCode) : message;
+        EnumDisplay enumDisplay = EnumDisplayUtils.getEnumDisplayByOrder(Status.class, statusCode);
+        if (Objects.isNull(enumDisplay)) {
+            return message;
+        }
+        return StringUtils.isEmpty(message) || StringUtils.equals(message, enumDisplay.value()) ? EnumDisplayUtils.getDisplayText(Status.class, statusCode) : message;
     }
 
     @JsonIgnore

@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +24,7 @@ public abstract class EnumDisplayUtils {
      * 获取 EnumDisplay注解修饰的value
      *
      * @param enumValue enumValue
-     * @return enumText
+     * @return {@link EnumDisplay#value()}
      */
     public static String getDisplayText(Object enumValue) {
         EnumDisplay enumDisplay = getEnumDisplay(enumValue);
@@ -33,14 +34,26 @@ public abstract class EnumDisplayUtils {
     /**
      * @param enumClass enumClass
      * @param order     order
-     * @return enumText
+     * @return {@link EnumDisplay#value()}
      */
     public static String getDisplayText(Class<? extends Enum<?>> enumClass, int order) {
+        EnumDisplay enumDisplay = getEnumDisplayByOrder(enumClass, order);
+        return Objects.isNull(enumDisplay) ? null : SpringContextHolder.getMessageWithDefault(enumDisplay.value(), null);
+    }
+
+    /**
+     * 根据枚举类与 order 获取注解
+     *
+     * @param enumClass enumClass
+     * @param order     order
+     * @return {@link EnumDisplay}
+     */
+    public static EnumDisplay getEnumDisplayByOrder(Class<? extends Enum<?>> enumClass, int order) {
         Enum<?>[] enumConstants = enumClass.getEnumConstants();
         for (Enum<?> enumConstant : enumConstants) {
             EnumDisplay enumDisplay = getEnumDisplay(enumConstant);
-            if (enumDisplay.order() == order) {
-                return SpringContextHolder.getMessageWithDefault(enumDisplay.value(), enumDisplay.value());
+            if (null != enumDisplay && enumDisplay.order() == order) {
+                return enumDisplay;
             }
         }
         return null;
@@ -50,7 +63,7 @@ public abstract class EnumDisplayUtils {
      * 获取EnumDisplay注解
      *
      * @param enumValue enumValue
-     * @return EnumDisplay
+     * @return {@link EnumDisplay}
      */
     private static EnumDisplay getEnumDisplay(Object enumValue) {
         if (null == enumValue) {
@@ -78,7 +91,11 @@ public abstract class EnumDisplayUtils {
     }
 
     /**
+     * 根据 枚举值 与类型获取 text
      *
+     * @param enumValue enumValue
+     * @param enumClass enumClass
+     * @return {@link EnumDisplay#value()}
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static String getDisplayText(String enumValue, Class<? extends Enum> enumClass) {
@@ -108,23 +125,23 @@ public abstract class EnumDisplayUtils {
                     item.setOrder(0);
                     EnumDisplay ed = field.getAnnotation(EnumDisplay.class);
                     if (null != ed) {
-                        item.setText(SpringContextHolder.getMessageWithDefault(ed.value(), ed.value()));
+                        item.setText(SpringContextHolder.getMessageWithDefault(ed.value(), null));
                         item.setOrder(ed.order());
                     }
                     items.add(item);
                 }
             }
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(e);
         }
         return items.stream()
-        		.sorted(Comparator.comparingInt(EnumItem::getOrder))
-        		.collect(Collectors.toList());
+                .sorted(Comparator.comparingInt(EnumItem::getOrder))
+                .collect(Collectors.toList());
     }
 
-	@Data
+    @Data
     @EqualsAndHashCode(callSuper = true)
-	@SuppressWarnings("serial")
+    @SuppressWarnings("serial")
     public static class EnumItem extends TextValueItem {
 
         private int order;

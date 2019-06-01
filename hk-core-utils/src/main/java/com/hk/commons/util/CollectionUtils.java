@@ -50,7 +50,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @return String[]
      */
     public static String[] toArray(Iterable<String> it) {
-        if (it == null) {
+        if (null == it) {
             return new String[0];
         }
         return StreamSupport.stream(it.spliterator(), false).toArray(String[]::new);

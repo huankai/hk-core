@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import java.util.Map;
+
 /**
  * Spring Bean 工具类
  *
@@ -46,6 +48,29 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     public static <T> T getBean(Class<T> clazz) throws BeansException {
         return applicationContext.getBean(clazz);
+    }
+
+    /**
+     * 根据类型获取 Bean
+     *
+     * @param clazz bean 类型
+     * @param <T>   T
+     * @return Map
+     */
+    public static <T> Map<String, T> getBeanOfType(Class<T> clazz) {
+        return applicationContext.getBeansOfType(clazz);
+    }
+
+    /**
+     * 根据名称获取 Bean
+     *
+     * @param name  name
+     * @param clazz bean 类型
+     * @param <T>   T
+     * @return Bean
+     */
+    public static <T> T getBean(String name, Class<T> clazz) {
+        return applicationContext.getBean(name, clazz);
     }
 
     /**
