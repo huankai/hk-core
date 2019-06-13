@@ -1,10 +1,13 @@
 package com.hk.core.elasticsearch.repository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
+import com.hk.commons.util.*;
+import com.hk.core.data.commons.utils.OrderUtils;
+import com.hk.core.elasticsearch.query.Condition;
+import com.hk.core.page.QueryPage;
+import com.hk.core.page.SimpleQueryPage;
+import com.hk.core.query.Order;
+import com.hk.core.query.QueryModel;
+import lombok.NoArgsConstructor;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.common.text.Text;
@@ -22,29 +25,14 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchResultMapper;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
-import org.springframework.data.elasticsearch.core.query.DeleteQuery;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
-import org.springframework.data.elasticsearch.core.query.UpdateQuery;
-import org.springframework.data.elasticsearch.core.query.UpdateQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.*;
 import org.springframework.data.elasticsearch.repository.support.ElasticsearchEntityInformation;
 import org.springframework.data.elasticsearch.repository.support.SimpleElasticsearchRepository;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.BeanUtils;
-import com.hk.commons.util.BeanWrapperUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.JsonUtils;
-import com.hk.commons.util.StringUtils;
-import com.hk.core.data.commons.utils.OrderUtils;
-import com.hk.core.elasticsearch.query.Condition;
-import com.hk.core.page.QueryPage;
-import com.hk.core.page.SimpleQueryPage;
-import com.hk.core.query.Order;
-import com.hk.core.query.QueryModel;
-
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 自定义扩展 Repository, 添加自定义查询方法
@@ -151,7 +139,6 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
 				for (SearchHit searchHit : hits) {
 					String source = searchHit.getSourceAsString();
 					data = JsonUtils.deserialize(source, clazz);
-					System.out.println(searchHit.getScore());
 					Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
 					if (CollectionUtils.isNotEmpty(highlightFields)) {
 						BeanWrapper beanWrapper = BeanWrapperUtils.createBeanWrapper(data);
