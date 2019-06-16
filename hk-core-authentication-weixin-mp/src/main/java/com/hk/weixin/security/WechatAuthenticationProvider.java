@@ -1,7 +1,7 @@
 package com.hk.weixin.security;
 
+import com.hk.core.authentication.api.PostAuthenticaionHandler;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.authentication.api.UserPrincipalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -17,11 +17,11 @@ import org.springframework.security.core.AuthenticationException;
 @RequiredArgsConstructor
 public class WechatAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserPrincipalService<UserPrincipal, UserPrincipal> userPrincipalService;
+    private final PostAuthenticaionHandler<UserPrincipal, UserPrincipal> authenticaionHandler;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UserPrincipal principal = userPrincipalService.processAuthentication((UserPrincipal) authentication.getPrincipal());
+        UserPrincipal principal = authenticaionHandler.handler((UserPrincipal) authentication.getPrincipal());
         return new WechatAuthenticationToken(principal, null);
     }
 

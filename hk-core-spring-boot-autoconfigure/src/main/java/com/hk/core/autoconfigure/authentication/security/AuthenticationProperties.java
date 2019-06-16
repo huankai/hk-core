@@ -1,9 +1,9 @@
 package com.hk.core.autoconfigure.authentication.security;
 
+import com.hk.core.authentication.api.PermitMatcher;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashSet;
@@ -101,6 +101,12 @@ public class AuthenticationProperties {
         private String logoutSuccessUrl = "/";
 
         /**
+         * 是否使用 https
+         */
+        private boolean forceHttps = false;
+
+
+        /**
          * Session 失效/过期URL
          */
         private String sessionInvalidUrl = "/login";
@@ -130,30 +136,6 @@ public class AuthenticationProperties {
         private String gateWayHost;
 
         private RememberMeProperties rememberMe = new RememberMeProperties();
-    }
-
-    @Data
-    public static class PermitMatcher {
-
-        /**
-         * HTTP Method
-         */
-        private HttpMethod method;
-
-        /**
-         * URI
-         */
-        private String[] uris;
-
-        /**
-         * 需要的角色
-         */
-        private String[] roles;
-
-        /**
-         * 需要的权限
-         */
-        private String[] permissions;
     }
 
     @Data

@@ -6,10 +6,10 @@ package com.hk.oauth2.logout;
  */
 public class SamlCompliantLogoutMessageCreator implements LogoutMessageCreator {
 
-    private static final String LOGOUT_REQUEST_TEMPLATE = "<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\"><samlp:AccessToken>%s</samlp:AccessToken></samlp:LogoutRequest>";
+    private static final String LOGOUT_REQUEST_TEMPLATE = "<samlp:LogoutRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" ID=\"%s\"><samlp:AccessToken>%s</samlp:AccessToken></samlp:LogoutRequest>";
 
     @Override
-    public String create(String accessToken) {
-        return String.format(LOGOUT_REQUEST_TEMPLATE, accessToken);
+    public String create(LogoutRequest logoutRequest) {
+        return String.format(LOGOUT_REQUEST_TEMPLATE, logoutRequest.getClientId(), logoutRequest.getAccessToken());
     }
 }

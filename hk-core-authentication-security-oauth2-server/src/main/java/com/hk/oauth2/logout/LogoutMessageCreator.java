@@ -6,5 +6,5 @@ package com.hk.oauth2.logout;
  */
 public interface LogoutMessageCreator {
 
-    String create(String accessToken);
+    String create(LogoutRequest logoutRequest);
 }

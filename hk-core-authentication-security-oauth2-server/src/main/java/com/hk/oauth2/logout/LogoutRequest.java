@@ -1,42 +1,24 @@
 package com.hk.oauth2.logout;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
-import java.net.URL;
 
 /**
  * @author kevin
  * @date 2019-5-18 13:59
  */
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-public interface LogoutRequest extends Serializable {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class LogoutRequest implements Serializable {
 
-//    private String clientId;
-//
-//    private String logoutURL;
+    private String clientId;
 
-    /**
-     * @return
-     */
-    LogoutRequestStatus getStatus();
+    private String logoutURL;
 
-    /**
-     * Sets status of the request.
-     *
-     * @param status the status
-     */
-    void setStatus(LogoutRequestStatus status);
-
-    String getClientId();
-
-    void setClientId(String clientId);
-
-    /**
-     * Gets logout url.
-     *
-     * @return the logout url
-     */
-    URL getLogoutUrl();
+    private String accessToken;
 
 }

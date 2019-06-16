@@ -2,6 +2,7 @@ package com.hk.core.authentication.oauth2.session;
 
 import com.hk.commons.util.StringUtils;
 import com.hk.commons.util.XmlUtils;
+import com.hk.core.authentication.oauth2.LogoutParamater;
 import com.hk.core.authentication.oauth2.utils.AccessTokenUtils;
 import com.hk.core.web.Webs;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpSession;
  * @date 2019-5-18 10:26
  */
 @Slf4j
-public class SingleSignOutHandler {
+public class SingleSignOutHandler implements LogoutParamater {
 
     /**
      * session 中存储的 oauth2ClientContext
@@ -26,15 +27,18 @@ public class SingleSignOutHandler {
 
     private SessionMappingStorage sessionMappingStorage;
 
-    private static final String LOGOUT_PARAM_NAME = "oauth2LogoutParameter";
+    private static final String LOGOUT_PARAM_NAME = CLIENT_LOGOUT_PARAMETER_NAME;
 
     @Setter
     private boolean eagerlyCreateSessions = true;
 
+    private final String logoutUrl;
+
     private final LogoutStrategy logoutStrategy = isServlet30() ? HttpServletRequest::logout : request -> {
     };
 
-    public SingleSignOutHandler(SessionMappingStorage sessionMappingStorage) {
+    public SingleSignOutHandler(String logoutUrl, SessionMappingStorage sessionMappingStorage) {
+        this.logoutUrl = logoutUrl;
         this.sessionMappingStorage = sessionMappingStorage;
     }
 
@@ -92,7 +96,8 @@ public class SingleSignOutHandler {
      * @return
      */
     private boolean isLogoutRequest(HttpServletRequest request) {
-        return StringUtils.isNotEmpty(request.getParameter(LOGOUT_PARAM_NAME)) && !isMultipartRequest(request);
+        return StringUtils.equals(StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()), logoutUrl)
+                && StringUtils.isNotEmpty(request.getParameter(LOGOUT_PARAM_NAME));
     }
 
     /**
@@ -136,16 +141,6 @@ public class SingleSignOutHandler {
         }
         DefaultOAuth2ClientContext clientContext = Webs.getAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
         return null != clientContext && null != clientContext.getAccessToken();
-    }
-
-    /**
-     * 是否为文件上传请求
-     *
-     * @param request
-     * @return
-     */
-    private boolean isMultipartRequest(final HttpServletRequest request) {
-        return request.getContentType() != null && request.getContentType().toLowerCase().startsWith("multipart");
     }
 
     private static boolean isServlet30() {

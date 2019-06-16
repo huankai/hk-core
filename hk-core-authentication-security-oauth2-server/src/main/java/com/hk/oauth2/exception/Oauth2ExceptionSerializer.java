@@ -62,11 +62,11 @@ public class Oauth2ExceptionSerializer<T extends OAuth2Exception> extends StdSer
 		return EnumDisplayUtils.getDisplayOrder(JsonResult.Status.BAD_REQUEST);
 	}
 
-	public static class Oauth2AppStatusExceptionJackson2Serializer
-			extends Oauth2ExceptionSerializer<Oauth2AppStatusException> {
+	public static class Oauth2ClientStatusExceptionJackson2Serializer
+			extends Oauth2ExceptionSerializer<Oauth2ClientStatusException> {
 
-		protected Oauth2AppStatusExceptionJackson2Serializer() {
-			super(Oauth2AppStatusException.class);
+		protected Oauth2ClientStatusExceptionJackson2Serializer() {
+			super(Oauth2ClientStatusException.class);
 		}
 	}
 

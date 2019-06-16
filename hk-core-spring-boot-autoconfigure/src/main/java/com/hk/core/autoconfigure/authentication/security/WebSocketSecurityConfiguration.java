@@ -1,7 +1,10 @@
 package com.hk.core.autoconfigure.authentication.security;
 
-import java.util.List;
-
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.StringUtils;
+import com.hk.core.authentication.api.SecurityContextUtils;
+import com.hk.core.autoconfigure.message.websocket.WebSocketProperties;
+import com.hk.message.websocket.WebsocketMessager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -10,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.scheduling.concurrent.DefaultManagedTaskScheduler;
 import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
@@ -21,13 +23,6 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 import org.springframework.web.socket.server.HandshakeHandler;
-
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.api.SecurityContextUtils;
-import com.hk.core.autoconfigure.message.websocket.WebSocketProperties;
-import com.hk.message.websocket.WebsocketMessager;
 
 /**
  * <pre>
@@ -103,7 +98,10 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
         if (StringUtils.isNotEmpty(userDestinationPrefix)) {
             registry.setUserDestinationPrefix(userDestinationPrefix);
         }
-        registry.setCacheLimit(webSocketProperties.getCacheLimit());
+        Integer cacheLimit = webSocketProperties.getCacheLimit();
+        if (null != cacheLimit) {
+            registry.setCacheLimit(cacheLimit);
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.hk.core.autoconfigure.authentication.security;
 
+import com.hk.core.authentication.api.PostAuthenticaionHandler;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.authentication.api.UserPrincipalService;
 import com.hk.core.authentication.security.authentication.sms.SMSAuthenticationFilter;
 import com.hk.core.authentication.security.authentication.sms.SMSAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,14 +24,14 @@ public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAd
 
 //    private AuthenticationFailureHandler authenticationFailureHandler;
 
-    private final UserPrincipalService<UserPrincipal, String> smsUserPrincipalService;
+    private final PostAuthenticaionHandler<UserPrincipal, String> authenticaionHandler;
 
     public SmsAuthenticationSecurityConfiguration(AuthenticationProperties.SMSProperties smsProperties,
-                                                  UserPrincipalService<UserPrincipal, String> smsUserPrincipalService) {
+                                                  PostAuthenticaionHandler<UserPrincipal, String> authenticaionHandler) {
         this.smsProperties = smsProperties;
 //        this.authenticationSuccessHandler = successHandler;
 //        this.authenticationFailureHandler = failureHandler;
-        this.smsUserPrincipalService = smsUserPrincipalService;
+        this.authenticaionHandler = authenticaionHandler;
 
     }
 
@@ -44,7 +44,7 @@ public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAd
             smsAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
 //            smsAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
 //            smsAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
-            SMSAuthenticationProvider smsAuthenticationProvider = new SMSAuthenticationProvider(smsUserPrincipalService);
+            SMSAuthenticationProvider smsAuthenticationProvider = new SMSAuthenticationProvider(authenticaionHandler);
             http.authenticationProvider(smsAuthenticationProvider).addFilterAfter(smsAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         }
     }

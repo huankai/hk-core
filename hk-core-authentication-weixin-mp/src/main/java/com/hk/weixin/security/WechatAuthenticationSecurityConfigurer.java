@@ -1,8 +1,8 @@
 package com.hk.weixin.security;
 
 
+import com.hk.core.authentication.api.PostAuthenticaionHandler;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.authentication.api.UserPrincipalService;
 import com.hk.weixin.WechatMpProperties;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -25,7 +25,7 @@ public class WechatAuthenticationSecurityConfigurer extends SecurityConfigurerAd
 
     private final WechatMpProperties.Authentication authentication;
 
-    private final UserPrincipalService<UserPrincipal,UserPrincipal> wechatUserPrincipalService;
+    private final PostAuthenticaionHandler<UserPrincipal,UserPrincipal> authenticaionHandler;
 
     /**
      * 此方法是将 WechatAuthenticationProvider 注册到spring security的filter 中
@@ -34,7 +34,7 @@ public class WechatAuthenticationSecurityConfigurer extends SecurityConfigurerAd
     public void configure(HttpSecurity http) {
         WechatCallbackAuthenticationFilter filter = new WechatCallbackAuthenticationFilter(wxMpService, authentication);
         filter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        WechatAuthenticationProvider provider = new WechatAuthenticationProvider(wechatUserPrincipalService);
+        WechatAuthenticationProvider provider = new WechatAuthenticationProvider(authenticaionHandler);
         http.authenticationProvider(provider).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
     }
 }

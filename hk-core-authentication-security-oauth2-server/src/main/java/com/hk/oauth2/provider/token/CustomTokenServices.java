@@ -1,44 +1,32 @@
 package com.hk.oauth2.provider.token;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
-
+import com.hk.commons.util.SpringContextHolder;
+import com.hk.oauth2.TokenRegistry;
+import com.hk.oauth2.exception.Oauth2ClientStatusException;
+import com.hk.oauth2.provider.ClientDetailsCheckService;
+import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.common.DefaultOAuth2RefreshToken;
-import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
+import org.springframework.security.oauth2.common.*;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.InvalidScopeException;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.TokenRequest;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
-import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.*;
+import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import com.hk.oauth2.logout.LogoutManager;
-
-import lombok.Setter;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author kevin
  * @date 2019-5-18 11:15
+ * @see DefaultTokenServices
  */
 public class CustomTokenServices implements AuthorizationServerTokenServices, ResourceServerTokenServices,
         ConsumerTokenServices, InitializingBean {
@@ -59,7 +47,7 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
     private TokenStore tokenStore;
 
     @Setter
-    private ClientDetailsService clientDetailsService;
+    private ClientDetailsCheckService clientDetailsCheckService;
 
     @Setter
     private TokenEnhancer accessTokenEnhancer;
@@ -68,7 +56,7 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
     private AuthenticationManager authenticationManager;
 
     @Setter
-    private LogoutManager logoutManager;
+    private TokenRegistry tokenRegistry;
 
     /**
      * Initialize these token services. If no random generator is set, one will be created.
@@ -77,9 +65,25 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
         Assert.notNull(tokenStore, "tokenStore must be set");
     }
 
+    private void checkAppStatus(OAuth2AccessToken existingAccessToken, String clientId) {
+        if (clientDetailsCheckService != null && !clientDetailsCheckService.isEnabled(clientId)) {
+            OAuth2RefreshToken refreshToken = null;
+            if (null != existingAccessToken) {
+                refreshToken = existingAccessToken.getRefreshToken();
+                tokenStore.removeAccessToken(existingAccessToken);
+            }
+            if (null != refreshToken) {
+                tokenStore.removeRefreshToken(refreshToken);
+            }
+            throw new Oauth2ClientStatusException(SpringContextHolder.getMessageWithDefault("app.disable.message", clientId));
+        }
+    }
+
+
     @Transactional
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
         OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
+        checkAppStatus(existingAccessToken, authentication.getOAuth2Request().getClientId());
         OAuth2RefreshToken refreshToken = null;
         if (existingAccessToken != null) {
             if (existingAccessToken.isExpired()) {
@@ -90,38 +94,25 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
                 tokenStore.removeAccessToken(existingAccessToken);
             } else {
                 tokenStore.storeAccessToken(existingAccessToken, authentication);
-//                logoutManager.registerLogoutClient(existingAccessToken.getValue(),
-//                        new LogoutRequest(oAuth2Request.getClientId(), oAuth2Request.getRedirectUri()));
+                tokenRegistry.addAccessToken(authentication, existingAccessToken);
                 return existingAccessToken;
             }
         }
-
-        // Only create a new refresh token if there wasn't an existing one
-        // associated with an expired access token.
-        // Clients might be holding existing refresh tokens, so we re-use it in
-        // the case that the old access token
-        // expired.
         if (refreshToken == null) {
             refreshToken = createRefreshToken(authentication);
-        }
-        // But the refresh token itself might need to be re-issued if it has
-        // expired.
-        else if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
+        } else if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
             ExpiringOAuth2RefreshToken expiring = (ExpiringOAuth2RefreshToken) refreshToken;
             if (System.currentTimeMillis() > expiring.getExpiration().getTime()) {
                 refreshToken = createRefreshToken(authentication);
             }
         }
-
         OAuth2AccessToken accessToken = createAccessToken(authentication, refreshToken);
         tokenStore.storeAccessToken(accessToken, authentication);
-        // In case it was modified
         refreshToken = accessToken.getRefreshToken();
         if (refreshToken != null) {
             tokenStore.storeRefreshToken(refreshToken, authentication);
         }
-//        logoutManager.registerLogoutClient(accessToken.getValue(),
-//                new LogoutRequest(oAuth2Request.getClientId(), oAuth2Request.getRedirectUri()));
+        tokenRegistry.addAccessToken(authentication, accessToken);
         return accessToken;
     }
 
@@ -234,10 +225,10 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
             // in case of race condition
             throw new InvalidTokenException("Invalid access token: " + accessTokenValue);
         }
-        if (clientDetailsService != null) {
+        if (clientDetailsCheckService != null) {
             String clientId = result.getOAuth2Request().getClientId();
             try {
-                clientDetailsService.loadClientByClientId(clientId);
+                clientDetailsCheckService.loadClientByClientId(clientId);
             } catch (ClientRegistrationException e) {
                 throw new InvalidTokenException("Client not valid: " + clientId, e);
             }
@@ -301,8 +292,8 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
      * @return the access token validity period in seconds
      */
     protected int getAccessTokenValiditySeconds(OAuth2Request clientAuth) {
-        if (clientDetailsService != null) {
-            ClientDetails client = clientDetailsService.loadClientByClientId(clientAuth.getClientId());
+        if (clientDetailsCheckService != null) {
+            ClientDetails client = clientDetailsCheckService.loadClientByClientId(clientAuth.getClientId());
             Integer validity = client.getAccessTokenValiditySeconds();
             if (validity != null) {
                 return validity;
@@ -318,8 +309,8 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
      * @return the refresh token validity period in seconds
      */
     protected int getRefreshTokenValiditySeconds(OAuth2Request clientAuth) {
-        if (clientDetailsService != null) {
-            ClientDetails client = clientDetailsService.loadClientByClientId(clientAuth.getClientId());
+        if (clientDetailsCheckService != null) {
+            ClientDetails client = clientDetailsCheckService.loadClientByClientId(clientAuth.getClientId());
             Integer validity = client.getRefreshTokenValiditySeconds();
             if (validity != null) {
                 return validity;
@@ -336,8 +327,8 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
      * @return boolean to indicate if refresh token is supported
      */
     protected boolean isSupportRefreshToken(OAuth2Request clientAuth) {
-        if (clientDetailsService != null) {
-            ClientDetails client = clientDetailsService.loadClientByClientId(clientAuth.getClientId());
+        if (clientDetailsCheckService != null) {
+            ClientDetails client = clientDetailsCheckService.loadClientByClientId(clientAuth.getClientId());
             return client.getAuthorizedGrantTypes().contains("refresh_token");
         }
         return this.supportRefreshToken;
