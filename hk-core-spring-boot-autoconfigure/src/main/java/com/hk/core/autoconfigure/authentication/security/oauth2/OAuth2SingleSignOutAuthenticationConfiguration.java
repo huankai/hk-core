@@ -61,7 +61,7 @@ public class OAuth2SingleSignOutAuthenticationConfiguration {
     }
 
     /**
-     * 自定认 {@link OAuth2RestTemplate}
+     * 自定义 {@link OAuth2RestTemplate}
      *
      * @return {@link UserInfoRestTemplateCustomizer}
      */

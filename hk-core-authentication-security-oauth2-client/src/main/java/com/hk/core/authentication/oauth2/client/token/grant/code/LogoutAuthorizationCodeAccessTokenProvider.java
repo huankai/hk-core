@@ -2,6 +2,7 @@ package com.hk.core.authentication.oauth2.client.token.grant.code;
 
 import com.hk.commons.util.ObjectUtils;
 import com.hk.commons.util.StringUtils;
+import com.hk.core.authentication.oauth2.AuthenticationType;
 import com.hk.core.authentication.oauth2.LogoutParamater;
 import com.hk.core.web.ServletContextHolder;
 import lombok.Setter;
@@ -42,12 +43,16 @@ import java.util.*;
  */
 public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSupport implements AccessTokenProvider, LogoutParamater {
 
+    @Setter
     private StateKeyGenerator stateKeyGenerator = new DefaultStateKeyGenerator();
 
+    @Setter
     private String scopePrefix = OAuth2Utils.SCOPE_PREFIX;
 
+    @Setter
     private RequestEnhancer authorizationRequestEnhancer = new DefaultRequestEnhancer();
 
+    @Setter
     private boolean stateMandatory = true;
 
     @Setter
@@ -56,45 +61,12 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
     @Setter
     private String logoutUrl;
 
+    @Setter
     private PortMapper portMapper = new PortMapperImpl();
-
-    /**
-     * Flag to say that the use of state parameter is mandatory.
-     *
-     * @param stateMandatory the flag value (default true)
-     */
-    public void setStateMandatory(boolean stateMandatory) {
-        this.stateMandatory = stateMandatory;
-    }
-
-    /**
-     * A custom enhancer for the authorization request
-     *
-     * @param authorizationRequestEnhancer
-     */
-    public void setAuthorizationRequestEnhancer(RequestEnhancer authorizationRequestEnhancer) {
-        this.authorizationRequestEnhancer = authorizationRequestEnhancer;
-    }
-
-    /**
-     * Prefix for scope approval parameters.
-     *
-     * @param scopePrefix
-     */
-    public void setScopePrefix(String scopePrefix) {
-        this.scopePrefix = scopePrefix;
-    }
-
-    /**
-     * @param stateKeyGenerator the stateKeyGenerator to set
-     */
-    public void setStateKeyGenerator(StateKeyGenerator stateKeyGenerator) {
-        this.stateKeyGenerator = stateKeyGenerator;
-    }
 
     public boolean supportsResource(OAuth2ProtectedResourceDetails resource) {
         return resource instanceof AuthorizationCodeResourceDetails
-                && "authorization_code".equals(resource.getGrantType());
+                && AuthenticationType.authorization_code.name().equals(resource.getGrantType());
     }
 
     public boolean supportsRefresh(OAuth2ProtectedResourceDetails resource) {
@@ -131,12 +103,10 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
         // subclasses
         ResponseEntity<Void> response = getRestTemplate().execute(resource.getUserAuthorizationUri(), HttpMethod.POST,
                 getRequestCallback(resource, form, headers), extractor, form.toSingleValueMap());
-
         if (response.getStatusCode() == HttpStatus.OK) {
             // Need to re-submit with approval...
             throw getUserApprovalSignal(resource, request);
         }
-
         URI location = response.getHeaders().getLocation();
         String query = location.getQuery();
         Map<String, String> map = OAuth2Utils.extractMap(query);
@@ -151,14 +121,12 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
                 }
             }
         }
-
         String code = map.get("code");
         if (code == null) {
             throw new UserRedirectRequiredException(location.toString(), form.toSingleValueMap());
         }
         request.set("code", code);
         return code;
-
     }
 
     protected ResponseExtractor<ResponseEntity<Void>> getAuthorizationResponseExtractor() {
@@ -281,11 +249,9 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
                         "Possible CSRF detected - state parameter was present but no state could be found");
             }
         }
-
         if (redirectUri != null) {
             form.set("redirect_uri", redirectUri);
         }
-
         return form;
 
     }

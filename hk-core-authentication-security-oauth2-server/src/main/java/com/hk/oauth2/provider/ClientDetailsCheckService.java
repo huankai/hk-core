@@ -14,9 +14,9 @@ public interface ClientDetailsCheckService extends ClientDetailsService {
     /**
      * 判断当前应用是否可启用状态
      *
-     * @param clinetId clinetId
+     * @param clientId clientId
      * @return true or false，如果为 false ,抛出 {@link Oauth2ClientStatusException} 异常
      * @throws Oauth2ClientStatusException Oauth2ClientStatusException
      */
-    boolean isEnabled(String clinetId) throws Oauth2ClientStatusException;
+    boolean isEnabled(String clientId) throws Oauth2ClientStatusException;
 }

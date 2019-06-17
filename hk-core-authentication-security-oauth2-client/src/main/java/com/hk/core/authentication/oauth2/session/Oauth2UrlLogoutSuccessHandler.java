@@ -1,16 +1,10 @@
 package com.hk.core.authentication.oauth2.session;
 
-import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.oauth2.utils.AccessTokenUtils;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,16 +24,7 @@ public class Oauth2UrlLogoutSuccessHandler implements LogoutSuccessHandler {
     }
 
     @Override
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String accessToken = AccessTokenUtils.getAccessToken(request);
-        if (StringUtils.isEmpty(accessToken)) {
-            if (authentication instanceof OAuth2Authentication) {
-                OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
-                OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) oAuth2Authentication.getDetails();
-                accessToken = details.getTokenValue();
-            }
-        }
-        String redirectUrl = String.format("%s?%s=%s", oauth2ServerLogoutUrl, OAuth2AccessToken.ACCESS_TOKEN, accessToken);
-        redirectStrategy.sendRedirect(request, response, redirectUrl);
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        redirectStrategy.sendRedirect(request, response, oauth2ServerLogoutUrl);
     }
 }

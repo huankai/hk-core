@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * session token 存储
+ */
 @Slf4j
 public class SessionTokenRegistry implements TokenRegistry, LogoutParamater {
 

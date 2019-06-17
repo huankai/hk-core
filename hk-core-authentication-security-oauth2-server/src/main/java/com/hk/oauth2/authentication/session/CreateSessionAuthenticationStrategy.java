@@ -45,6 +45,9 @@ public class CreateSessionAuthenticationStrategy implements SessionAuthenticatio
 
     private final Method changeSessionIdMethod;
 
+    /**
+     * 是否允许创建 session
+     */
     @Setter
     private boolean alwaysCreateSession = true;
 

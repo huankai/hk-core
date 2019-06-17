@@ -32,7 +32,7 @@ public class Oauth2ErrorController {
         if (null == exception) {
             exception = AuthenticationException.class.cast(request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION));
         }
-        String message = null;
+        String message;
         if (exception != null) {
             //为什么错误信息要这么拿，因为Spring 封装了三层Exception，可通过源码查看
             // OAuth2AccessTokenSupport.retrieveToken(AccessTokenRequest, OAuth2ProtectedResourceDetails, MultiValueMap<String, String>, HttpHeaders) 方法中的 OAuth2Exception 捕捉后封装为 OAuth2AccessDeniedException 一层

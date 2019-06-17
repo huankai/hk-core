@@ -1,7 +1,7 @@
 package com.hk.weixin.security;
 
 
-import com.hk.core.authentication.api.PostAuthenticaionHandler;
+import com.hk.core.authentication.api.PostAuthenticationHandler;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.weixin.WechatMpProperties;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class WechatAuthenticationSecurityConfigurer extends SecurityConfigurerAd
 
     private final WechatMpProperties.Authentication authentication;
 
-    private final PostAuthenticaionHandler<UserPrincipal,UserPrincipal> authenticaionHandler;
+    private final PostAuthenticationHandler<UserPrincipal,UserPrincipal> authenticaionHandler;
 
     /**
      * 此方法是将 WechatAuthenticationProvider 注册到spring security的filter 中
