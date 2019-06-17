@@ -3,8 +3,7 @@ package com.hk.core.authentication.security.handler.logout;
 import com.hk.commons.JsonResult;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.web.Webs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -20,11 +19,10 @@ import java.io.IOException;
  * @author huangkai
  * @date 2018-9-22 20:42
  */
+@Slf4j
 public class EquipmentLogoutHandler implements LogoutHandler {
 
     private static final String REDIRECT_URL_PARAM_NAME = "redirect_url";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EquipmentLogoutHandler.class);
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -36,7 +34,7 @@ public class EquipmentLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        if (Webs.isAndroid(request) || Webs.isIPhone(request)) {
+        if (Webs.isAndroid(request) || Webs.isIPhone(request) || Webs.isAjax(request)) {
             Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.success("退出成功"));
         } else {
             String redirectUrl = getRedirectUrl(request);
@@ -44,8 +42,8 @@ public class EquipmentLogoutHandler implements LogoutHandler {
                 try {
                     redirectStrategy.sendRedirect(request, response, redirectUrl);
                 } catch (IOException e) {
-                    if (LOGGER.isErrorEnabled()) {
-                        LOGGER.debug("重定向到 {} 失败", redirectUrl);
+                    if (log.isErrorEnabled()) {
+                        log.debug("重定向到 {} 失败", redirectUrl);
                     }
                 }
             } else {
