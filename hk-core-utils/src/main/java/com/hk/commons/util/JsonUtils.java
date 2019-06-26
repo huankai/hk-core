@@ -91,7 +91,6 @@ public final class JsonUtils {
 //        om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
 
         om.setDateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()));
-        om.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         // 空值处理为空串
 //        om.getSerializerProvider().setNullValueSerializer(NullEmptyJsonSerializer.INSTANCE);
         // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性

@@ -1,19 +1,24 @@
 package com.hk.commons.http;
 
-import com.hk.commons.util.*;
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.ConverterUtils;
+import com.hk.commons.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.http.Consts;
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -22,6 +27,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * 请求接口抽象实现
@@ -33,7 +40,7 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
     /**
      * 默认响应处理器
      */
-    protected static final BasicResponseHandler BASIC_HANDLER = new BasicResponseHandler();
+    public static final ResponseHandler<String> UTF8_HANDLER = new UTF8ResponseHandler();
 
     /**
      * 请求时间配置
@@ -46,14 +53,26 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
             .setConnectTimeout(5000)
             .setConnectionRequestTimeout(5000)
             .build();
+
     /**
      * 定义默认 HttpClient
      */
-    private static final CloseableHttpClient DEFAULT_HTTP_CLIENT =
-            HttpClients
-                    .custom()
-                    .setDefaultRequestConfig(DEFAULT_REQUEST_CONFIG)
-                    .build();
+    private static final CloseableHttpClient DEFAULT_HTTP_CLIENT;
+
+    static {
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(500);
+        connectionManager.setDefaultMaxPerRoute(50);
+        SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(1000 * 5).build();
+        connectionManager.setDefaultSocketConfig(socketConfig);
+        DEFAULT_HTTP_CLIENT =
+                HttpClients
+                        .custom()
+                        .setConnectionManager(connectionManager)
+                        .disableCookieManagement()
+                        .setDefaultRequestConfig(DEFAULT_REQUEST_CONFIG)
+                        .build();
+    }
 
     /**
      * httpClient
@@ -61,6 +80,26 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
     @Getter
     @Setter
     private CloseableHttpClient httpClient = DEFAULT_HTTP_CLIENT;
+
+
+    private static final CloseableHttpAsyncClient DEFAULT_ASYNC_CLIENT;
+
+    @Getter
+    private CloseableHttpAsyncClient asyncClient = DEFAULT_ASYNC_CLIENT;
+
+    @Setter
+    private FutureCallback<HttpResponse> futureCallback;
+
+    static {
+        DEFAULT_ASYNC_CLIENT = HttpAsyncClients.custom().useSystemProperties()
+                .setMaxConnTotal(50)
+                .disableCookieManagement()
+                .useSystemProperties()
+                .build();
+    }
+
+    @Setter
+    private boolean async = false;
 
     /**
      * 响应处理器
@@ -76,13 +115,10 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
         this.responseHandler = responseHandler;
     }
 
-    public AbstractHttpExecutor(CloseableHttpClient httpClient, ResponseHandler<T> responseHandler) {
-        this.httpClient = httpClient;
+    @Override
+    public HttpExecutor<T, P> setResponseHandler(ResponseHandler<T> responseHandler) {
         this.responseHandler = responseHandler;
-    }
-
-    protected T doExecute(HttpUriRequest httpMethod) throws IOException {
-        return getHttpClient().execute(httpMethod, responseHandler);
+        return this;
     }
 
     @Override
@@ -95,11 +131,21 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
         return this.headers.toArray(new Header[0]);
     }
 
-    @Override
-    public HttpExecutor<T, P> setResponseHandler(ResponseHandler<T> responseHandler) {
-        AssertUtils.notNull(responseHandler, "responseHandler must not be null");
-        this.responseHandler = responseHandler;
-        return this;
+    protected T doExecute(HttpUriRequest request) throws IOException {
+        if (async) {
+            try (CloseableHttpAsyncClient client = getAsyncClient()) {
+                client.start();
+                Future<HttpResponse> future = client.execute(request, HttpClientContext.create(), futureCallback);
+                future.get();
+                return null;
+            } catch (InterruptedException | ExecutionException e) {
+                throw new IOException(e);
+            }
+        } else {
+            try (CloseableHttpClient client = getHttpClient()) {
+                return client.execute(request, responseHandler);
+            }
+        }
     }
 
     /**
@@ -112,6 +158,7 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
     protected String generateUri(URI uri, Map<String, Object> params) {
         String urlString = uri.toString();
         StringBuilder s = new StringBuilder();
+        s.append(urlString);
         if (CollectionUtils.isNotEmpty(params)) {
             List<NameValuePair> nvps = new ArrayList<>();
             params.forEach((key, value) -> {

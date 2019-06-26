@@ -3,7 +3,6 @@ package com.hk.commons.http.delete;
 import com.hk.commons.http.AbstractHttpExecutor;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,10 +19,6 @@ public abstract class AbstractDeleteHttpExecutor<T> extends AbstractHttpExecutor
 
     protected AbstractDeleteHttpExecutor(ResponseHandler<T> responseHandler) {
         super(responseHandler);
-    }
-
-    protected AbstractDeleteHttpExecutor(CloseableHttpClient httpClient, ResponseHandler<T> responseHandler) {
-        super(httpClient, responseHandler);
     }
 
     @Override

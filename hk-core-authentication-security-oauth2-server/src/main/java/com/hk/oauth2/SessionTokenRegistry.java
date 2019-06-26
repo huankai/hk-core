@@ -3,7 +3,7 @@ package com.hk.oauth2;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.oauth2.LogoutParamater;
+import com.hk.core.authentication.oauth2.LogoutParameter;
 import com.hk.oauth2.logout.LogoutRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * session token 存储
  */
 @Slf4j
-public class SessionTokenRegistry implements TokenRegistry, LogoutParamater {
+public class SessionTokenRegistry implements TokenRegistry, LogoutParameter {
 
     private final ConcurrentHashMap<String, List<LogoutRequest>> map = new ConcurrentHashMap<>(128);
 

@@ -4,6 +4,7 @@ import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,9 +50,8 @@ import java.util.Map;
  * @date 2018-12-11 13:39
  * @see https://www.jianshu.com/p/5574cb427140
  */
+@Slf4j
 public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomRequestMappingHandlerMapping.class);
 
     private static final Map<HandlerMethod, RequestMappingInfo> METHOD_REQUEST_MAPPING_INFO_MAP = new HashMap<>(64);
 
@@ -67,12 +67,12 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
     @Override
     protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
         String requestMappingName = request.getParameter(requestMappingParameterName);
-        final boolean debug = LOGGER.isDebugEnabled();
+        final boolean debug = log.isDebugEnabled();
         if (StringUtils.isEmpty(requestMappingName)) {
             requestMappingName = request.getHeader(requestMappingParameterName);
             if (StringUtils.isEmpty(requestMappingName)) {
                 if (debug) {
-                    LOGGER.debug("request parameter [" + requestMappingParameterName + "] is null");
+                    log.debug("request parameter [" + requestMappingParameterName + "] is null");
                 }
                 return super.lookupHandlerMethod(lookupPath, request);
             }
@@ -84,7 +84,7 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
         long size = CollectionUtils.size(handlerMethods);
         if (size != 1) {
             if (debug) {
-                LOGGER.debug("path_variable_event :{},handlerMethods 匹配数:{}", requestMappingName, size);
+                log.debug("path_variable_event :{},handlerMethods 匹配数:{}", requestMappingName, size);
             }
             return super.lookupHandlerMethod(lookupPath, request);
         }
@@ -92,7 +92,7 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
         RequestMappingInfo mappingInfo = METHOD_REQUEST_MAPPING_INFO_MAP.get(handlerMethod);
         if (null == mappingInfo) {
             if (debug) {
-                LOGGER.debug("mappingInfo is null.");
+                log.debug("mappingInfo is null.");
             }
             return super.lookupHandlerMethod(lookupPath, request);
         }

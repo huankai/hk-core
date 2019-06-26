@@ -8,7 +8,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
@@ -24,11 +23,11 @@ import java.util.Map;
 public class SimplePostHttpExecutor extends AbstractPostHttpExecutor<String, Map<String, Object>> {
 
     public SimplePostHttpExecutor() {
-        super(BASIC_HANDLER);
+        super(UTF8_HANDLER);
     }
 
-    public SimplePostHttpExecutor(CloseableHttpClient httpClient, ResponseHandler<String> responseHandler) {
-        super(httpClient, responseHandler);
+    public SimplePostHttpExecutor(ResponseHandler<String> responseHandler) {
+        super(responseHandler);
     }
 
     @Override

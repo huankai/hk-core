@@ -3,7 +3,7 @@ package com.hk.core.authentication.oauth2.client.token.grant.code;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.oauth2.AuthenticationType;
-import com.hk.core.authentication.oauth2.LogoutParamater;
+import com.hk.core.authentication.oauth2.LogoutParameter;
 import com.hk.core.web.ServletContextHolder;
 import lombok.Setter;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +41,7 @@ import java.util.*;
  * @date 2019-06-15 22:04
  * @see org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider
  */
-public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSupport implements AccessTokenProvider, LogoutParamater {
+public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSupport implements AccessTokenProvider, LogoutParameter {
 
     @Setter
     private StateKeyGenerator stateKeyGenerator = new DefaultStateKeyGenerator();
@@ -154,8 +154,9 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
                                                 OAuth2RefreshToken refreshToken, AccessTokenRequest request) throws UserRedirectRequiredException,
             OAuth2AccessDeniedException {
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
-        form.add("grant_type", "refresh_token");
-        form.add("refresh_token", refreshToken.getValue());
+        String refresh_token = AuthenticationType.refresh_token.name();
+        form.add(OAuth2Utils.GRANT_TYPE, refresh_token);
+        form.add(refresh_token, refreshToken.getValue());
         try {
             return retrieveToken(request, resource, form, getHeadersForTokenRequest(request));
         } catch (OAuth2AccessDeniedException e) {
@@ -182,7 +183,7 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
                                                                        AccessTokenRequest request) {
 
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
-        form.set("grant_type", "authorization_code");
+        form.set(OAuth2Utils.GRANT_TYPE, AuthenticationType.authorization_code.name());
         form.set("code", request.getAuthorizationCode());
 
         Object preservedState = request.getPreservedState();
@@ -197,7 +198,7 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
 
         // Extracting the redirect URI from a saved request should ignore the current URI, so it's not simply a call to
         // resource.getRedirectUri()
-        String redirectUri = null;
+        String redirectUri;
         // Get the redirect uri from the stored state
         if (preservedState instanceof String) {
             // Use the preserved state in preference if it is there
@@ -208,7 +209,7 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
         }
 
         if (redirectUri != null && !"NONE".equals(redirectUri)) {
-            form.set("redirect_uri", redirectUri);
+            form.set(OAuth2Utils.REDIRECT_URI, redirectUri);
         }
 
         return form;
@@ -219,8 +220,8 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
                                                                            AccessTokenRequest request) {
 
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
-        form.set("response_type", "code");
-        form.set("client_id", resource.getClientId());
+        form.set(OAuth2Utils.RESPONSE_TYPE, "code");
+        form.set(OAuth2Utils.CLIENT_ID, resource.getClientId());
 
         if (request.get("scope") != null) {
             form.set("scope", request.getFirst("scope"));
@@ -250,7 +251,7 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
             }
         }
         if (redirectUri != null) {
-            form.set("redirect_uri", redirectUri);
+            form.set(OAuth2Utils.REDIRECT_URI, redirectUri);
         }
         return form;
 
@@ -261,25 +262,23 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
 
         // we don't have an authorization code yet. So first get that.
         TreeMap<String, String> requestParameters = new TreeMap<>();
-        requestParameters.put("response_type", "code"); // oauth2 spec, section 3
-        requestParameters.put("client_id", resource.getClientId());
+        requestParameters.put(OAuth2Utils.RESPONSE_TYPE, "code"); // oauth2 spec, section 3
+        requestParameters.put(OAuth2Utils.CLIENT_ID, resource.getClientId());
         // Client secret is not required in the initial authorization request
 
         String redirectUri = resource.getRedirectUri(request);
         if (redirectUri != null) {
-            UriComponents url = UriComponentsBuilder.fromHttpUrl(redirectUri).build();
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(redirectUri);
+            UriComponents url = builder.cloneBuilder().build();
             String scheme = url.getScheme();
             int port = url.getPort();
             if (forceHttps) {
                 scheme = "https";
                 port = ObjectUtils.defaultIfNull(portMapper.lookupHttpPort(url.getPort()), url.getPort());
+                redirectUri = builder.cloneBuilder().scheme(scheme).port(port).toUriString();
             }
-            redirectUri = UriComponentsBuilder
-                    .fromHttpUrl(redirectUri)
-                    .scheme(scheme)
-                    .port(port)
-                    .toUriString();
-            requestParameters.put("redirect_uri", redirectUri);
+            requestParameters.put(OAuth2Utils.REDIRECT_URI, redirectUri);
 
             if (StringUtils.isNotEmpty(logoutUrl)) {
                 String contextPath = ServletContextHolder.getContextPath();
@@ -293,10 +292,8 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
         }
 
         if (resource.isScoped()) {
-
             StringBuilder builder = new StringBuilder();
             List<String> scope = resource.getScope();
-
             if (scope != null) {
                 Iterator<String> scopeIt = scope.iterator();
                 while (scopeIt.hasNext()) {
@@ -306,8 +303,7 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
                     }
                 }
             }
-
-            requestParameters.put("scope", builder.toString());
+            requestParameters.put(OAuth2Utils.SCOPE, builder.toString());
         }
 
 

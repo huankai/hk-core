@@ -3,6 +3,7 @@ package com.hk.core.solr.aop;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.AfterReturningAdvice;
@@ -18,9 +19,8 @@ import com.hk.core.solr.SolrDeltaImportUtils;
  * @author kevin
  * @date 2018-09-19 09:36
  */
+@Slf4j
 public class SolrDeltaImportMethodInterceptor implements AfterReturningAdvice {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SolrDeltaImportMethodInterceptor.class);
 
     /**
      * SolrUrl
@@ -34,16 +34,16 @@ public class SolrDeltaImportMethodInterceptor implements AfterReturningAdvice {
 
     @Override
     public void afterReturning(Object returnValue, Method method, Object[] args, Object target) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("增量同步索引...");
+        if (log.isDebugEnabled()) {
+            log.debug("增量同步索引...");
         }
         SolrDeltaImport solrDeltaImport = AnnotationUtils.getAnnotation(method, SolrDeltaImport.class);
         String[] entities = solrDeltaImport.entities();
         if (ArrayUtils.isNotEmpty(entities)) {
             Arrays.stream(entities).forEach(entity -> {
                 String result = SolrDeltaImportUtils.simpleGetDeltaImport(solrUrl, solrCore, entity);
-                if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info("SolrDeltaImport : Send Solr Core :{},entityName :{}, return :{}", solrCore, entity, result);
+                if (log.isInfoEnabled()) {
+                    log.info("SolrDeltaImport : Send Solr Core :{},entityName :{}, return :{}", solrCore, entity, result);
                 }
             });
         }

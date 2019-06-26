@@ -1,7 +1,6 @@
 package com.hk.commons.http.delete;
 
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.impl.client.CloseableHttpClient;
 
 
 /**
@@ -12,30 +11,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
  */
 public class SimpleDeleteHttpExecutor extends AbstractDeleteHttpExecutor<String> {
 
-    /**
-     * 使用默认
-     */
     public SimpleDeleteHttpExecutor() {
-        super(BASIC_HANDLER);
+        this(UTF8_HANDLER);
     }
 
-    /**
-     * 自定义一个 CloseableHttpClient
-     *
-     * @param httpClient httpClient
-     */
-    public SimpleDeleteHttpExecutor(CloseableHttpClient httpClient) {
-        super(httpClient, BASIC_HANDLER);
-    }
-
-    /**
-     * 自定义一个 CloseableHttpClient 和  ResponseHandler
-     *
-     * @param httpClient httpClient
-     * @param handler    handler
-     */
-    public SimpleDeleteHttpExecutor(CloseableHttpClient httpClient, ResponseHandler<String> handler) {
-        super(httpClient, handler);
+    public SimpleDeleteHttpExecutor(ResponseHandler<String> handler) {
+        super(handler);
     }
 
 }

@@ -3,7 +3,6 @@ package com.hk.commons.http.get;
 import com.hk.commons.http.AbstractHttpExecutor;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,10 +19,6 @@ public abstract class AbstractGetHttpExecutor<T> extends AbstractHttpExecutor<T,
 
     protected AbstractGetHttpExecutor(ResponseHandler<T> responseHandler) {
         super(responseHandler);
-    }
-
-    protected AbstractGetHttpExecutor(CloseableHttpClient httpClient, ResponseHandler<T> responseHandler) {
-        super(httpClient, responseHandler);
     }
 
     @Override

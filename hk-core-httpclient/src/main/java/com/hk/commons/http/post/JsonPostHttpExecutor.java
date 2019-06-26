@@ -7,7 +7,6 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicHeader;
 
 
@@ -20,13 +19,13 @@ import org.apache.http.message.BasicHeader;
 public class JsonPostHttpExecutor extends AbstractPostHttpExecutor<String, Object> {
 
     public JsonPostHttpExecutor() {
-        super(BASIC_HANDLER);
+        super(UTF8_HANDLER);
         addHeaders(new BasicHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name()),
                 new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString()));
     }
 
-    public JsonPostHttpExecutor(CloseableHttpClient httpClient, ResponseHandler<String> responseHandler) {
-        super(httpClient, responseHandler);
+    public JsonPostHttpExecutor(ResponseHandler<String> responseHandler) {
+        super(responseHandler);
     }
 
     @Override

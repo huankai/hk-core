@@ -59,7 +59,7 @@ public class SecurityAuthenticationAutoConfiguration {
     }
 
 //    /**
-//     * 登陆成功处理器
+//     * 登陆失败处理器
 //     *
 //     * @return
 //     */
@@ -70,7 +70,7 @@ public class SecurityAuthenticationAutoConfiguration {
 //    }
 //
 //    /**
-//     * 登陆失败处理器
+//     * 登陆成功处理器
 //     *
 //     * @return
 //     */

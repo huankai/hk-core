@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.hk.commons.converters.*;
+import com.hk.commons.util.ClassUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
@@ -168,7 +169,14 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
+        boolean securityContextPresent = ClassUtils.isPresent("com.hk.core.authentication.api.SecurityContextUtils", null);
+        if (securityContextPresent) {
+            registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
+        }
+        boolean accessTokenPresent = ClassUtils.isPresent("com.hk.core.authentication.oauth2.utils.AccessTokenUtils", null);
+        if (accessTokenPresent) {
+            registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**");
+        }
         GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
         Map<String, Object> property = requestProperty.getProperty();
         if (CollectionUtils.isNotEmpty(property)) {

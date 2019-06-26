@@ -1,7 +1,6 @@
 package com.hk.commons.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
@@ -16,9 +15,8 @@ import java.util.Map;
  * @author kevin
  * @date 2018-04-16 09:41
  */
+@Slf4j
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
-
-    private static final Logger logger = LoggerFactory.getLogger(SpringContextHolder.class);
 
     private static ApplicationContext applicationContext;
 
@@ -101,8 +99,8 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     @Override
     public void destroy() {
-        if (logger.isInfoEnabled()) {
-            logger.info("applicationContext destroy......");
+        if (log.isInfoEnabled()) {
+            log.info("applicationContext destroy......");
         }
         applicationContext = null;
     }

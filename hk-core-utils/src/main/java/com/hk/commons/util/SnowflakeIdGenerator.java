@@ -26,12 +26,12 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
     /**
      * 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
      */
-    private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
+    private final long maxWorkerId = ~(-1L << workerIdBits);
 
     /**
      * 支持的最大数据标识id，结果是31
      */
-    private final long maxDataCenterId = -1L ^ (-1L << dataCenterIdBits);
+    private final long maxDataCenterId = ~(-1L << dataCenterIdBits);
 
     /**
      * 序列在id中占的位数
@@ -56,7 +56,7 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
     /**
      * 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095)
      */
-    private final long sequenceMask = -1L ^ (-1L << sequenceBits);
+    private final long sequenceMask = ~(-1L << sequenceBits);
 
     /**
      * 工作机器ID(0~31)

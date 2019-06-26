@@ -1,7 +1,6 @@
 package com.hk.commons.http.get;
 
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.impl.client.CloseableHttpClient;
 
 /**
  * Get请求
@@ -11,20 +10,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
  */
 public class SimpleGetHttpExecutor extends AbstractGetHttpExecutor<String> {
 
-    /**
-     * 使用默认
-     */
     public SimpleGetHttpExecutor() {
-        super(BASIC_HANDLER);
-    }
-
-    /**
-     * 自定义一个 CloseableHttpClient
-     *
-     * @param httpClient httpClient
-     */
-    public SimpleGetHttpExecutor(CloseableHttpClient httpClient) {
-        super(httpClient, BASIC_HANDLER);
+        super(UTF8_HANDLER);
     }
 
     /**
@@ -33,8 +20,8 @@ public class SimpleGetHttpExecutor extends AbstractGetHttpExecutor<String> {
      * @param httpClient httpClient
      * @param handler    handler
      */
-    public SimpleGetHttpExecutor(CloseableHttpClient httpClient, ResponseHandler<String> handler) {
-        super(httpClient, handler);
+    public SimpleGetHttpExecutor(ResponseHandler<String> handler) {
+        super(handler);
     }
 
 }

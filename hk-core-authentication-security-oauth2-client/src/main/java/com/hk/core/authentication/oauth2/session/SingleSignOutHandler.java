@@ -2,7 +2,7 @@ package com.hk.core.authentication.oauth2.session;
 
 import com.hk.commons.util.StringUtils;
 import com.hk.commons.util.XmlUtils;
-import com.hk.core.authentication.oauth2.LogoutParamater;
+import com.hk.core.authentication.oauth2.LogoutParameter;
 import com.hk.core.authentication.oauth2.utils.AccessTokenUtils;
 import com.hk.core.web.Webs;
 import lombok.Setter;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
  * @date 2019-5-18 10:26
  */
 @Slf4j
-public class SingleSignOutHandler implements LogoutParamater {
+public class SingleSignOutHandler implements LogoutParameter {
 
     /**
      * session 中存储的 oauth2ClientContext
