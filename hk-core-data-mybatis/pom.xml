@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <pagehelper.mapper.version>1.2.10</pagehelper.mapper.version>
+        <pagehelper.mapper.version>1.2.12</pagehelper.mapper.version>
     </properties>
 
     <dependencies>

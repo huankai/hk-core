@@ -86,8 +86,5 @@ Spring 默认需要在标记有缓存注解的方法上定义缓存名 、或在
 - hk-core-spring-boot-dependencies
 	-  spring boot 自动依赖包
 
-- hk-swagger-ui
-	-  swagger接口管理文档模块
-
 - hk-core-test
 	-  单元测试模块

@@ -17,7 +17,6 @@ public class SimpleGetHttpExecutor extends AbstractGetHttpExecutor<String> {
     /**
      * 自定义一个 CloseableHttpClient 和  ResponseHandler
      *
-     * @param httpClient httpClient
      * @param handler    handler
      */
     public SimpleGetHttpExecutor(ResponseHandler<String> handler) {

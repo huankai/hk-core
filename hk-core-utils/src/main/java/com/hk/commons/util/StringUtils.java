@@ -280,7 +280,7 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      * @return 切割后的数组
      */
     public static String[] splitByComma(String args) {
-        return tokenizeToStringArray(args, "\\,");
+        return tokenizeToStringArray(args, COMMA_SEPARATE);
     }
 
     /**

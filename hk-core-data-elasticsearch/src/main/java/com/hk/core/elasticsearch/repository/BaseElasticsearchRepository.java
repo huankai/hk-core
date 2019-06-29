@@ -1,18 +1,19 @@
 package com.hk.core.elasticsearch.repository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
+import com.hk.core.elasticsearch.query.Condition;
+import com.hk.core.page.QueryPage;
+import com.hk.core.query.Order;
+import com.hk.core.query.QueryModel;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
-import com.hk.core.elasticsearch.query.Condition;
-import com.hk.core.page.QueryPage;
-import com.hk.core.query.Order;
-import com.hk.core.query.QueryModel;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @NoRepositoryBean
 public interface BaseElasticsearchRepository<T extends Persistable<String>>
@@ -66,15 +67,24 @@ public interface BaseElasticsearchRepository<T extends Persistable<String>>
      *
      * @param t t
      */
-    default void partialUpdate(T t) {
-    	partialUpdates(Collections.singletonList(t));
+    default void bulkUpdate(T t) {
+        bulkUpdate(Collections.singletonList(t));
     }
-    
+
     /**
-     *  批量更新多少不为空的属性值
-     * @param entities
+     * 批量更新多少不为空的属性值
+     *
+     * @param entities entities
      */
-    void partialUpdates(Collection<T> entities);
+    void bulkUpdate(Collection<T> entities);
+
+    /**
+     * 建议词查询
+     *
+     * @param suggestBuilder suggestBuilder
+     * @return {@link SearchResponse}
+     */
+    SearchResponse suggest(SuggestBuilder suggestBuilder);
 
     /**
      * 分页查询，支持高亮
