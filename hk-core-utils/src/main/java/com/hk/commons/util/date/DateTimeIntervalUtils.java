@@ -55,7 +55,8 @@ public abstract class DateTimeIntervalUtils {
      * @return 所在年所有月数
      */
     public static List<IntervalDate> getMonthListByYear(int year) {
-        return getAllMonthList(DateTimeUtils.getYearMinDay(year), DateTimeUtils.getYearMaxDay(year));
+        return getAllMonthList(DateTimeUtils.getYearMinDay(year),
+                DateTimeUtils.getYearMaxDay(year));
     }
 
     /**
@@ -79,7 +80,8 @@ public abstract class DateTimeIntervalUtils {
      * @return
      */
     public static List<IntervalDate> getAllMonthList(LocalDateTime start, LocalDateTime end) {
-        return getIntervalDateList(start, TemporalAdjusters.lastDayOfMonth(), end, TemporalAdjusters.firstDayOfNextMonth());
+        return getIntervalDateList(start, TemporalAdjusters.lastDayOfMonth(),
+                end, TemporalAdjusters.firstDayOfNextMonth());
 
     }
 
@@ -92,7 +94,8 @@ public abstract class DateTimeIntervalUtils {
      * @return 两个时间段的所有年
      */
     public static List<IntervalDate> getAllYearList(LocalDateTime start, LocalDateTime end) {
-        return getIntervalDateList(start, TemporalAdjusters.lastDayOfYear(), end, TemporalAdjusters.firstDayOfNextYear());
+        return getIntervalDateList(start, TemporalAdjusters.lastDayOfYear(),
+                end, TemporalAdjusters.firstDayOfNextYear());
     }
 
     /**
@@ -102,7 +105,8 @@ public abstract class DateTimeIntervalUtils {
      * @param firstDayOf firstDayOf
      * @return IntervalDate
      */
-    private static List<IntervalDate> getIntervalDateList(LocalDateTime start, TemporalAdjuster lastDayOf, LocalDateTime end, TemporalAdjuster firstDayOf) {
+    private static List<IntervalDate> getIntervalDateList(LocalDateTime start, TemporalAdjuster lastDayOf,
+                                                          LocalDateTime end, TemporalAdjuster firstDayOf) {
         List<IntervalDate> result = new ArrayList<>();
         int index = 1;
         LocalDateTime dayOfWeekStart = start;

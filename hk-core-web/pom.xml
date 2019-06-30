@@ -16,6 +16,11 @@
             <groupId>com.hk</groupId>
             <artifactId>hk-core-utils</artifactId>
         </dependency>
+        <!--  排除了 tomcat 所以这里依赖 servlet api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

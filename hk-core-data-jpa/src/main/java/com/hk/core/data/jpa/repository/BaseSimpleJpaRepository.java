@@ -98,7 +98,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
         }
         if (entityInformation.hasCompositeId()) {
 
-            List<T> results = new ArrayList<T>();
+            List<T> results = new ArrayList<>();
 
             for (ID id : ids) {
                 findById(id).ifPresent(results::add);

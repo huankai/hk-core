@@ -92,7 +92,7 @@ public class SingleSignOutHandler implements LogoutParameter {
     /**
      * 判断是否为 logout 请求
      *
-     * @param request
+     * @param request request
      * @return
      */
     private boolean isLogoutRequest(HttpServletRequest request) {

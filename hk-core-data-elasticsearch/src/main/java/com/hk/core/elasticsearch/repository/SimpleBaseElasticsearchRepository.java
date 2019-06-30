@@ -111,7 +111,7 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
     @Override
     public void bulkUpdate(Collection<T> entities) {
         if (CollectionUtils.isNotEmpty(entities)) {
-            List<UpdateQuery> list = new ArrayList<>();
+            List<UpdateQuery> list = new ArrayList<>(entities.size());
             entities.forEach(item -> {
                 String id = item.getId();
                 if (StringUtils.isNotEmpty(id)) {
@@ -145,12 +145,12 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
                 SearchHits hits = response.getHits();
                 List<E> result = new ArrayList<>(hits.getHits().length);
                 E data;
+                BeanWrapper beanWrapper;
                 for (SearchHit searchHit : hits) {
-                    String source = searchHit.getSourceAsString();
-                    data = JsonUtils.deserialize(source, clazz);
+                    data = JsonUtils.deserialize(searchHit.getSourceAsString(), clazz);
                     Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
                     if (CollectionUtils.isNotEmpty(highlightFields)) {
-                        BeanWrapper beanWrapper = BeanWrapperUtils.createBeanWrapper(data);
+                        beanWrapper = BeanWrapperUtils.createBeanWrapper(data);
                         for (Map.Entry<String, HighlightField> entry : highlightFields.entrySet()) {
                             Text[] fragments = entry.getValue().getFragments();
                             if (ArrayUtils.isNotEmpty(fragments)) {

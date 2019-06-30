@@ -357,7 +357,6 @@ public class AuthenticationRabbitMessageChannelBinder extends AbstractMessageCha
         listenerContainer.setChannelTransacted(properties.getExtension().isTransacted());
         listenerContainer.setDefaultRequeueRejected(properties.getExtension().isRequeueRejected());
         int concurrency = properties.getConcurrency();
-        concurrency = concurrency > 0 ? concurrency : 1;
         listenerContainer.setConcurrentConsumers(concurrency);
         int maxConcurrency = properties.getExtension().getMaxConcurrency();
         if (maxConcurrency > concurrency) {

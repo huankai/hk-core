@@ -55,13 +55,11 @@ abstract class AbstractExceptionHandler {
             sb.append(">");
             sb.append(StringUtils.LF);
         }
-
         sb.append("<ERROR:[").append(e.getClass()).append("]:").append(e).append(">");
         sb.append("<ERROR Message:[").append(e.getClass()).append("]:").append(StringUtils.isEmpty(message) ? e.getMessage() : message).append(">");
         sb.append(StringUtils.LF);
 
         sb.append("<------------------------->");
         logger.error(sb.toString());
-        e.printStackTrace();
     }
 }

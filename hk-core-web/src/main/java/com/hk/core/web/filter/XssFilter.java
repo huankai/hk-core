@@ -4,6 +4,7 @@ import com.hk.core.web.XssHttpServletRequestWrapper;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -15,10 +16,15 @@ import java.io.IOException;
  * @date 2018-06-07 17:18
  * *
  */
-public class XssFilter extends AbstractFilter {
+public class XssFilter extends HttpFilter {
 
     @Override
-    protected void doInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         chain.doFilter(new XssHttpServletRequestWrapper(request), response);
     }
+
+//    @Override
+//    protected void doInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+//        chain.doFilter(new XssHttpServletRequestWrapper(request), response);
+//    }
 }
