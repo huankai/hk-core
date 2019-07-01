@@ -36,7 +36,7 @@ public class AuthenticationProperties {
     private ImageCodeProperties imageCode = new ImageCodeProperties();
 
     /**
-     * 默认失败页面
+     * oauth2 client 登陆默认失败地址
      *
      * @see com.hk.core.autoconfigure.exception.Oauth2ErrorController
      * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#defaultFailureUrl
@@ -238,6 +238,16 @@ public class AuthenticationProperties {
          * 手机号登陆请求地址
          */
         private String phoneLoginUri = "/mobile/login";
+
+        /**
+         * oauth2 认证服务器 手机号登陆返回 access_token 信息 的 clientId
+         */
+        private String clientId;
+
+        /**
+         * oauth2 认证服务器 手机号登陆返回 access_token 信息 的 clientSecret
+         */
+        private String clientSecret;
     }
 
 }
