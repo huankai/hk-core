@@ -3,7 +3,6 @@ package com.hk.core.data.jpa.domain;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.util.JsonUtils;
-import com.hk.commons.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,20 +16,15 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
- * <p>
- * 基于 UUID的主键生成
- * </p>
- * <p>
- * JsonFilter : 过滤某一些字段
- * </p>
+ * 使用雪花id 算法生成id
  *
  * @author kevin
- * @date 2017年12月11日下午8:30:33
+ * @date 2019-7-2 16:57
  */
 @MappedSuperclass
 @JsonFilter(value = JsonUtils.IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID)
-@SuppressWarnings("serial")
-public abstract class AbstractUUIDPersistable implements Persistable<String>, Serializable {
+public abstract class AbstractSnowflakeIdPersistable implements Persistable<Long>, Serializable {
+
 
     /**
      * id 生成策略,strategy 的值可以为 {@link org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory} 中注册的key，也可以为 class 的全类名
@@ -38,16 +32,16 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
      * @see org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory
      */
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-snowflake-id")
+    @GenericGenerator(name = "system-snowflake-id", strategy = "org.hibernate.id.SnowflakeIdentifierGenerator")
     @Getter
     @Setter
-    private String id;
+    private Long id;
 
     @Transient // DATAJPA-622
     @JsonIgnore
     public final boolean isNew() {
-        return StringUtils.isEmpty(getId());
+        return null == id;
     }
 
     @Override
@@ -66,7 +60,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
         if (!getClass().equals(ClassUtils.getUserClass(obj))) {
             return false;
         }
-        AbstractUUIDPersistable that = (AbstractUUIDPersistable) obj;
+        AbstractSnowflakeIdPersistable that = (AbstractSnowflakeIdPersistable) obj;
         return null != this.getId() && this.getId().equals(that.getId());
     }
 
@@ -76,5 +70,4 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
         hashCode += null == getId() ? 0 : getId().hashCode() * 31;
         return hashCode;
     }
-
 }
