@@ -17,7 +17,7 @@ public class EnumDictValidator implements ConstraintValidator<EnumDict, Byte>, I
 
     private boolean notNull;
 
-    private String codeId;
+    private Long codeId;
 
     private DictService dictService;
 

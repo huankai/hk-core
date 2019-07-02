@@ -1,7 +1,6 @@
 package com.hk.core.authentication.api.validatecode;
 
 import com.hk.commons.util.StringUtils;
-import com.hk.core.web.Webs;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -58,13 +57,11 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      * @param validateCode 验证码
      * @param request      request
      */
-    protected void saveValidateCode(C validateCode, ServletWebRequest request) {
+    protected void saveValidateCode(C validateCode, ServletWebRequest request) throws ServletRequestBindingException {
         validateCodeStrategy.save(request, getStoreKey(request), validateCode);
     }
 
-    protected String getName() {
-        return getClass().getSimpleName();
-    }
+    protected abstract String getSuffix(ServletWebRequest request) throws ServletRequestBindingException;
 
     /**
      * 验证码存储的key
@@ -72,8 +69,8 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      * @param request request
      * @return
      */
-    private String getStoreKey(ServletWebRequest request) {
-        return VALIDATE_CODE_PREFIX + getName() + Webs.getRemoteAddr(request.getRequest());
+    private String getStoreKey(ServletWebRequest request) throws ServletRequestBindingException {
+        return VALIDATE_CODE_PREFIX.concat(getClass().getSimpleName()).concat(getSuffix(request));
     }
 
     /**
@@ -92,7 +89,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      */
     @Override
     @SuppressWarnings("unchecked")
-    public void validate(ServletWebRequest request) throws ValidateCodeException {
+    public void validate(ServletWebRequest request) throws ValidateCodeException, ServletRequestBindingException {
         final String key = getStoreKey(request);
         C inStoreValidateCode = (C) validateCodeStrategy.get(request, key);
         if (null == inStoreValidateCode) {

@@ -1,9 +1,7 @@
 package com.hk.weixin.security;
 
-import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.UserPrincipal;
-
 import com.hk.weixin.WechatMpProperties;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -76,8 +74,10 @@ public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationPr
             try {
                 WxMpOAuth2AccessToken accessToken = wxService.oauth2getAccessToken(code);
                 WxMpUser mpUser = wxService.oauth2getUserInfo(accessToken, null);
-                UserPrincipal principal = new UserPrincipal(mpUser.getOpenId(), mpUser.getNickname(), false, mpUser.getNickname(), ByteConstants.ZERO, null, null,
-                        Byte.valueOf(String.valueOf(mpUser.getSex())), mpUser.getHeadImgUrl(), null, null);
+                UserPrincipal principal = new UserPrincipal();
+                // todo
+//                UserPrincipal principal = new UserPrincipal(null,mpUser.getOpenId(), mpUser.getNickname(), false, mpUser.getNickname(), ByteConstants.ZERO, null, null,
+//                        Byte.valueOf(String.valueOf(mpUser.getSex())), mpUser.getHeadImgUrl(), null, null);
                 WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(principal);
                 setDetails(request, authenticationToken);
                 return getAuthenticationManager().authenticate(authenticationToken);

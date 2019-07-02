@@ -61,7 +61,7 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                 permissionList.forEach(permissionName -> authorities.add(new SimpleGrantedAuthority(permissionName)));
             }
 
-            UserPrincipal principal = new UserPrincipal(CollectionUtils.getStringValue(m, "userId"),
+            UserPrincipal principal = new UserPrincipal(CollectionUtils.getLongValue(m, "userId"),
                     CollectionUtils.getStringValue(m, "account", CollectionUtils.getStringValue(m, USERNAME)),
                     CollectionUtils.getBooleanValue(m, "protectUser", false),
                     CollectionUtils.getStringValue(m, "realName"),
@@ -70,14 +70,14 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                     CollectionUtils.getStringValue(m, "email"),
                     CollectionUtils.getByteValue(m, "sex"),
                     CollectionUtils.getStringValue(m, "iconPath"), roles, permissions);
-            principal.setOrgId(CollectionUtils.getStringValue(m, "orgId"));
+            principal.setOrgId(CollectionUtils.getLongValue(m, "orgId"));
             principal.setOrgName(CollectionUtils.getStringValue(m, "orgName"));
-            principal.setDeptId(CollectionUtils.getStringValue(m, "deptId"));
+            principal.setDeptId(CollectionUtils.getLongValue(m, "deptId"));
             principal.setDeptName(CollectionUtils.getStringValue(m, "deptName"));
 
             Map<String, Object> clientAppInfo = CollectionUtils.getMapValue(m, "appInfo");
             if (null != clientAppInfo) {
-                principal.setAppInfo(new ClientAppInfo(CollectionUtils.getStringValue(clientAppInfo, "appId"),
+                principal.setAppInfo(new ClientAppInfo(CollectionUtils.getLongValue(clientAppInfo, "appId"),
                         CollectionUtils.getStringValue(clientAppInfo, "appCode"),
                         CollectionUtils.getStringValue(clientAppInfo, "appName"),
                         CollectionUtils.getStringValue(clientAppInfo, "appIcon")));

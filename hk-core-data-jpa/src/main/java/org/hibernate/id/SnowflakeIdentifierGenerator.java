@@ -10,6 +10,7 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import java.io.Serializable;
 
 /**
+ * 此类必须要有默认的构造方法，能被实例化
  * hibernate 使用 雪花 算法生成id
  *
  * @author kevin
@@ -25,11 +26,15 @@ public class SnowflakeIdentifierGenerator implements IdentifierGenerator {
         return getSnowflakeIdGenerator().generate();
     }
 
-    private static synchronized SnowflakeIdGenerator getSnowflakeIdGenerator() {
-        if (null == snowflakeIdGenerator) {
-            SnowflakeProperties snowflakeProperties = SpringContextHolder.getBean(SnowflakeProperties.class);
-            snowflakeIdGenerator = new SnowflakeIdGenerator(snowflakeProperties.getWorkerId(),
-                    snowflakeProperties.getDataCenterId());
+    private static SnowflakeIdGenerator getSnowflakeIdGenerator() {
+        if (null == SnowflakeIdentifierGenerator.snowflakeIdGenerator) {
+            synchronized (SnowflakeIdentifierGenerator.class) {
+                if (null == SnowflakeIdentifierGenerator.snowflakeIdGenerator) {
+                    SnowflakeProperties snowflakeProperties = SpringContextHolder.getBean(SnowflakeProperties.class);
+                    SnowflakeIdentifierGenerator.snowflakeIdGenerator = new SnowflakeIdGenerator(snowflakeProperties.getWorkerId(),
+                            snowflakeProperties.getDataCenterId());
+                }
+            }
         }
         return snowflakeIdGenerator;
     }

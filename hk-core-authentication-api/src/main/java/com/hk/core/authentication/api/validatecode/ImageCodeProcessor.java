@@ -1,5 +1,7 @@
 package com.hk.core.authentication.api.validatecode;
 
+import com.hk.core.web.Webs;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.imageio.ImageIO;
@@ -19,5 +21,10 @@ public class ImageCodeProcessor extends AbstractValidateCodeProcessor<ImageCode>
     @Override
     protected void send(ImageCode imageCode, ServletWebRequest request) throws Exception {
         ImageIO.write(imageCode.getImage(), "JPEG", request.getResponse().getOutputStream());
+    }
+
+    @Override
+    protected String getSuffix(ServletWebRequest request) {
+        return Webs.getRemoteAddr(request.getRequest());
     }
 }

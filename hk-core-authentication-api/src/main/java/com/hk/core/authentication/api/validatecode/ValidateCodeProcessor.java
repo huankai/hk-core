@@ -1,5 +1,6 @@
 package com.hk.core.authentication.api.validatecode;
 
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.context.request.ServletWebRequest;
 
 /**
@@ -29,5 +30,5 @@ public interface ValidateCodeProcessor {
      * @param request request
      * @throws ValidateCodeException 验证码验证异常
      */
-    void validate(ServletWebRequest request) throws ValidateCodeException;
+    void validate(ServletWebRequest request) throws ValidateCodeException, ServletRequestBindingException;
 }

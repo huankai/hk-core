@@ -21,7 +21,7 @@ public class ClientAppInfo implements Serializable {
     /**
      * appid
      */
-    private String appId;
+    private Long appId;
 
     /**
      * appCode

@@ -33,4 +33,9 @@ public class SmsCodeProcessor extends AbstractValidateCodeProcessor<ValidateCode
         AssertUtils.notEmpty(phone, "手机号不能为空");
         smsCodeSender.send(phone, validateCode.getCode(), validateCode.getExpireSecond());
     }
+
+    @Override
+    protected String getSuffix(ServletWebRequest request) throws ServletRequestBindingException{
+        return ServletRequestUtils.getRequiredStringParameter(request.getRequest(), mobileParamName);
+    }
 }

@@ -22,11 +22,11 @@ public class AuditorConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(value = AuditorAware.class)
-    public AuditorAware<String> userIdAuditor(SecurityContext securityContext) {
+    public AuditorAware<Long> userIdAuditor(SecurityContext securityContext) {
         return new UserAuditorAware(securityContext);
     }
 
-    private class UserAuditorAware implements AuditorAware<String> {
+    private class UserAuditorAware implements AuditorAware<Long> {
 
         private SecurityContext securityContext;
 
@@ -35,9 +35,9 @@ public class AuditorConfiguration {
         }
 
         @Override
-        public Optional<String> getCurrentAuditor() {
+        public Optional<Long> getCurrentAuditor() {
             return Optional.of(securityContext.isAuthenticated() ? securityContext.getPrincipal().getUserId()
-                    : Contants.DEFAULT_VALUE);
+                    : 0L);
         }
     }
 }

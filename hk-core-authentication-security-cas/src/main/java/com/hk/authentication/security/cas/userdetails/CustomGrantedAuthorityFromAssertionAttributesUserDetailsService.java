@@ -31,10 +31,10 @@ public class CustomGrantedAuthorityFromAssertionAttributesUserDetailsService
     protected UserDetails loadUserDetails(Assertion assertion) {
         AttributePrincipal principal = assertion.getPrincipal();
         Map<String, Object> attributes = principal.getAttributes();
-        return new SecurityUserPrincipal(CollectionUtils.getStringValue(attributes, "id"),
-                CollectionUtils.getStringValue(attributes, "org_id"),
+        return new SecurityUserPrincipal(CollectionUtils.getLongValue(attributes, "id"),
+                CollectionUtils.getLongValue(attributes, "org_id"),
                 CollectionUtils.getStringValue(attributes, "org_name"),
-                CollectionUtils.getStringValue(attributes, "dept_id"),
+                CollectionUtils.getLongValue(attributes, "dept_id"),
                 CollectionUtils.getStringValue(attributes, "dept_name"),
                 principal.getName(),
                 CollectionUtils.getBooleanValue(attributes, "protect_user", false),

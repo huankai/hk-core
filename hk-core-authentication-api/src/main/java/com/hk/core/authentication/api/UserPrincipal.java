@@ -31,7 +31,7 @@ public class UserPrincipal implements Serializable {
      * 当前用户id
      */
 
-    private String userId;
+    private Long userId;
 
     /**
      * 用户账号
@@ -83,7 +83,7 @@ public class UserPrincipal implements Serializable {
     /**
      * 用户所在机构id
      */
-    private String orgId;
+    private Long orgId;
 
     /**
      * 用户所在机构名称
@@ -93,7 +93,7 @@ public class UserPrincipal implements Serializable {
     /**
      * 用户所在部门Id
      */
-    private String deptId;
+    private Long deptId;
 
     /**
      * 用户所在部门名称
@@ -112,7 +112,7 @@ public class UserPrincipal implements Serializable {
     @JsonIgnore
     private Set<String> permissions;
 
-    public UserPrincipal(String userId, String account, Byte userType) {
+    public UserPrincipal(Long userId, String account, Byte userType) {
         this.protectUser = false;
         this.userId = userId;
         this.account = account;
@@ -121,7 +121,7 @@ public class UserPrincipal implements Serializable {
         this.permissions = new HashSet<>();
     }
 
-    public UserPrincipal(String userId, String account, boolean protectUser, String realName,
+    public UserPrincipal(Long userId, String account, boolean protectUser, String realName,
                          Byte userType, String phone, String email,
                          Byte sex, String iconPath, Set<String> roles, Set<String> permissions) {
         this.userId = userId;

@@ -58,7 +58,7 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
 ////            根据 accessToken 获取用户信息
 //            AlipayUserInfoShareResponse userInfo = alipayClient.execute(userInfoShareRequest, tokenResponse.getAccessToken());
             UserPrincipal principal = new UserPrincipal();
-            principal.setUserId(tokenResponse.getUserId());
+//            principal.setUserId(tokenResponse.getUserId()); // todo
             principal.setProtectUser(false);
             AlipayAuthenticationToken authenticationToken = new AlipayAuthenticationToken(principal);
             setDetails(request, authenticationToken);
