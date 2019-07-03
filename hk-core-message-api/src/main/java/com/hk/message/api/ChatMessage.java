@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 @SuppressWarnings("serial")
 public class ChatMessage implements Message {
 
-    private String formUser;
+    private Long formUser;
 
-    private String toUser;
+    private Long toUser;
 
     private Object content;
 

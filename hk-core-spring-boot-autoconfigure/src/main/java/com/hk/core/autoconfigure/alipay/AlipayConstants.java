@@ -1,4 +1,4 @@
-package com.hk.alipay;
+package com.hk.core.autoconfigure.alipay;
 
 import com.hk.core.web.ServletContextHolder;
 

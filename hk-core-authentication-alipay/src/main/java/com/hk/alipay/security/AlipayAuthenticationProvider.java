@@ -1,5 +1,6 @@
 package com.hk.alipay.security;
 
+import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.hk.commons.util.AssertUtils;
 import com.hk.core.authentication.api.PostAuthenticationHandler;
 import com.hk.core.authentication.api.UserPrincipal;
@@ -15,11 +16,11 @@ import org.springframework.security.core.AuthenticationException;
 @RequiredArgsConstructor
 public class AlipayAuthenticationProvider implements AuthenticationProvider {
 
-    private final PostAuthenticationHandler<UserPrincipal, UserPrincipal> authenticationHandler;
+    private final PostAuthenticationHandler<UserPrincipal, AlipayUserInfoShareResponse> authenticationHandler;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UserPrincipal principal = authenticationHandler.handler((UserPrincipal) authentication.getPrincipal());
+        UserPrincipal principal = authenticationHandler.handler((AlipayUserInfoShareResponse) authentication.getPrincipal());
         AssertUtils.notNull(principal, "principal Must not be null.");
         return new AlipayAuthenticationToken(principal, null);
     }

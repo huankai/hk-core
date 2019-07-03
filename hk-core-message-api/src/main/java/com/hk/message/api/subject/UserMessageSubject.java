@@ -8,5 +8,5 @@ import java.util.List;
  */
 public interface UserMessageSubject extends QueueMessageSubject {
 
-    List<String> getUserIdList();
+    List<Long> getUserIdList();
 }

@@ -36,7 +36,7 @@ public class WebSocketMessagePublish implements MessagePublish {
         if (UserMessageSubject.class.isAssignableFrom(subject.getClass())) {
             UserMessageSubject userMessageSubject = (UserMessageSubject) subject;
             userMessageSubject.getUserIdList()
-                    .forEach(userId -> messagingTemplate.convertAndSendToUser(userId,
+                    .forEach(userId -> messagingTemplate.convertAndSendToUser(userId.toString(),
                             userMessageSubject.getQueueName(), message));
         } else if (TopicMessageSubject.class.equals(subject.getClass())) {
             messagingTemplate.convertAndSend(((TopicMessageSubject) subject).getTopic(), message);

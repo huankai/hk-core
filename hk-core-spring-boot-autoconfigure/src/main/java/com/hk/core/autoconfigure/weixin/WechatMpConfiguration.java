@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.weixin;
 
-import com.hk.weixin.WechatMpProperties;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -31,10 +30,10 @@ public class WechatMpConfiguration {
     @ConditionalOnMissingBean
     public WxMpConfigStorage configStorage() {
         WxMpInMemoryConfigStorage configStorage = new WxMpInMemoryConfigStorage();
-        configStorage.setAppId(this.properties.getAppId());
-        configStorage.setSecret(this.properties.getSecret());
-        configStorage.setToken(this.properties.getToken());
-        configStorage.setAesKey(this.properties.getAesKey());
+        configStorage.setAppId(properties.getAppId());
+        configStorage.setSecret(properties.getSecret());
+        configStorage.setToken(properties.getToken());
+        configStorage.setAesKey(properties.getAesKey());
         return configStorage;
     }
 

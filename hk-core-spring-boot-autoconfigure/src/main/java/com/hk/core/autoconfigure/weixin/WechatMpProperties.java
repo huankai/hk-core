@@ -1,4 +1,4 @@
-package com.hk.weixin;
+package com.hk.core.autoconfigure.weixin;
 
 import com.hk.commons.util.StringUtils;
 import lombok.Data;

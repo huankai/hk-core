@@ -3,10 +3,10 @@ package com.hk.alipay.security;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
+import com.alipay.api.request.AlipayUserInfoShareRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
-import com.hk.alipay.AlipayProperties;
+import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.api.UserPrincipal;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -26,16 +26,16 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
      */
     private static final String AUTH_CODE_NAME = "auth_code";
 
-    private static final String STATE = "state";
+    private static final String STATE_NAME = "state";
 
     private AlipayClient alipayClient;
 
-    private final AlipayProperties properties;
+    private final String state;
 
-    public AlipayCallbackAuthenticationFilter(String defaultFilterProcessesUrl, AlipayClient alipayClient, AlipayProperties properties) {
+    public AlipayCallbackAuthenticationFilter(String defaultFilterProcessesUrl, AlipayClient alipayClient, String state) {
         super(defaultFilterProcessesUrl);
         this.alipayClient = alipayClient;
-        this.properties = properties;
+        this.state = state;
     }
 
     @Override
@@ -44,8 +44,8 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
         if (StringUtils.isEmpty(authCode)) {
             throw new AuthenticationServiceException("authCode不能为空");
         }
-        if (StringUtils.isNotEmpty(properties.getState())
-                && StringUtils.notEquals(properties.getState(), request.getParameter(STATE))) {
+        if (StringUtils.isNotEmpty(state)
+                && StringUtils.notEquals(state, request.getParameter(STATE_NAME))) {
             throw new AuthenticationServiceException("登录失败，跨站请求伪造攻击");
         }
         AlipaySystemOauthTokenRequest oauthTokenRequest = new AlipaySystemOauthTokenRequest();
@@ -54,13 +54,10 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
         try {
 //             根据 authCode 获取  accessToken
             AlipaySystemOauthTokenResponse tokenResponse = alipayClient.execute(oauthTokenRequest);
-//            AlipayUserInfoShareRequest userInfoShareRequest = new AlipayUserInfoShareRequest();
+            AlipayUserInfoShareRequest userInfoShareRequest = new AlipayUserInfoShareRequest();
 ////            根据 accessToken 获取用户信息
-//            AlipayUserInfoShareResponse userInfo = alipayClient.execute(userInfoShareRequest, tokenResponse.getAccessToken());
-            UserPrincipal principal = new UserPrincipal();
-//            principal.setUserId(tokenResponse.getUserId()); // todo
-            principal.setProtectUser(false);
-            AlipayAuthenticationToken authenticationToken = new AlipayAuthenticationToken(principal);
+            AlipayUserInfoShareResponse userInfo = alipayClient.execute(userInfoShareRequest, tokenResponse.getAccessToken());
+            AlipayAuthenticationToken authenticationToken = new AlipayAuthenticationToken(userInfo);
             setDetails(request, authenticationToken);
             return getAuthenticationManager().authenticate(authenticationToken);
         } catch (AlipayApiException e) {

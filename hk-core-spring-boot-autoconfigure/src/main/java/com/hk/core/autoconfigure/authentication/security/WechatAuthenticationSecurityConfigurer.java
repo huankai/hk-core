@@ -1,11 +1,14 @@
-package com.hk.weixin.security;
+package com.hk.core.autoconfigure.authentication.security;
 
 
 import com.hk.core.authentication.api.PostAuthenticationHandler;
 import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.weixin.WechatMpProperties;
+import com.hk.core.autoconfigure.weixin.WechatMpProperties;
+import com.hk.weixin.security.WechatAuthenticationProvider;
+import com.hk.weixin.security.WechatCallbackAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,14 +28,15 @@ public class WechatAuthenticationSecurityConfigurer extends SecurityConfigurerAd
 
     private final WechatMpProperties.Authentication authentication;
 
-    private final PostAuthenticationHandler<UserPrincipal,UserPrincipal> authenticaionHandler;
+    private final PostAuthenticationHandler<UserPrincipal, WxMpUser> authenticaionHandler;
 
     /**
      * 此方法是将 WechatAuthenticationProvider 注册到spring security的filter 中
      */
     @Override
     public void configure(HttpSecurity http) {
-        WechatCallbackAuthenticationFilter filter = new WechatCallbackAuthenticationFilter(wxMpService, authentication);
+        WechatCallbackAuthenticationFilter filter = new WechatCallbackAuthenticationFilter(wxMpService, authentication.getCallbackUrl(),
+                authentication.getState());
         filter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
         WechatAuthenticationProvider provider = new WechatAuthenticationProvider(authenticaionHandler);
         http.authenticationProvider(provider).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);

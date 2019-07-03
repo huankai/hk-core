@@ -15,11 +15,11 @@ import java.util.List;
 @Builder
 public class SimpleUserMessageSubject implements UserMessageSubject {
 
-    private List<String> userList;
+    private List<Long> userList;
 
     private String queueName;
 
-    public SimpleUserMessageSubject addUser(String... users){
+    public SimpleUserMessageSubject addUser(Long... users){
         if(null == userList){
             userList = new ArrayList<>();
         }
@@ -28,7 +28,7 @@ public class SimpleUserMessageSubject implements UserMessageSubject {
     }
 
     @Override
-    public List<String> getUserIdList() {
+    public List<Long> getUserIdList() {
         return userList;
     }
 

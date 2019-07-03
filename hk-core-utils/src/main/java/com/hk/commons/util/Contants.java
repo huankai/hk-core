@@ -21,6 +21,8 @@ public interface Contants {
      */
     String DEFAULT_VALUE = "0";
 
+    Long DEFAULT_VALUE_LONG = 0L;
+
     /**
      * UTF-8 Charset
      */

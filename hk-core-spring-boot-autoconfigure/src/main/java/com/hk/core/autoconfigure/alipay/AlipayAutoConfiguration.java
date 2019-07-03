@@ -2,8 +2,6 @@ package com.hk.core.autoconfigure.alipay;
 
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.hk.alipay.AlipayConstants;
-import com.hk.alipay.AlipayProperties;
 import com.hk.commons.util.Contants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
