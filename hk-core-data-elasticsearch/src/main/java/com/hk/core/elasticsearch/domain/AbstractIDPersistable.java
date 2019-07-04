@@ -12,7 +12,7 @@ import org.springframework.data.domain.Persistable;
  * @author huangkai
  * @date 2019-04-14 13:17
  */
-public abstract class AbstractUUIDPersistable implements Persistable<String> {
+public abstract class AbstractIDPersistable implements Persistable<String> {
 
     @Id
     @Getter

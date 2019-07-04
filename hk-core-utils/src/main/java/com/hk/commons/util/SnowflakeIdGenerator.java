@@ -11,7 +11,7 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
     /**
      * 服务器第一次上线时间点, 设置后不允许修改 ,开始时间截 (2015-01-01)
      */
-    private static final long twepoch = 1489111610226L;
+    private static final long START_STMP = 1489111610226L;
 
     /**
      * 机器id所占的位数
@@ -84,12 +84,6 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
      */
     private long lastTimestamp = -1L;
 
-    //==============================Constructors=====================================
-
-    public SnowflakeIdGenerator() {
-        this(1, 1);
-    }
-
     /**
      * 构造函数
      *
@@ -132,7 +126,6 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
         return System.currentTimeMillis();
     }
 
-
     /**
      * 获得下一个ID (该方法是线程安全的)
      *
@@ -170,7 +163,7 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
         //上次生成ID的时间截
         lastTimestamp = timestamp;
         //移位并通过或运算拼到一起组成64位的ID
-        return ((timestamp - twepoch) << timestampLeftShift) //
+        return ((timestamp - START_STMP) << timestampLeftShift) //
                 | (dataCenterId << dataCenterIdShift) //
                 | (workerId << workerIdShift) //
                 | sequence;

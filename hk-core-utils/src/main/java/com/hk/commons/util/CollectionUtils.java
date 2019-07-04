@@ -90,15 +90,23 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @return {@link ArrayList}
      */
     public static <T> Collection<T> toCollection(Iterable<T> iterable, int estimatedSize) {
+        return toList(iterable, estimatedSize);
+    }
+
+    public static <T> List<T> toList(Iterable<T> iterable) {
+        return toList(iterable, 10);
+    }
+
+    public static <T> List<T> toList(Iterable<T> iterable, int estimatedSize) {
         if (iterable == null) {
             return new ArrayList<>(estimatedSize);
         }
-        if (iterable instanceof Collection) {
-            return (Collection<T>) iterable;
+        if (iterable instanceof List) {
+            return (List<T>) iterable;
         }
-        Collection<T> coll = new ArrayList<>(estimatedSize);
-        iterable.forEach(coll::add);
-        return coll;
+        List<T> list = new ArrayList<>(estimatedSize);
+        iterable.forEach(list::add);
+        return list;
     }
 
     /**

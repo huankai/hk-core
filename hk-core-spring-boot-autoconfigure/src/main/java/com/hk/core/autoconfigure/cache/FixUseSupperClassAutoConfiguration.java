@@ -64,7 +64,6 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
         return new FixUseSupperClassCacheOperationSource(new FixUseSupperClassAnnotationParser());
     }
 
-
     @Override
     public CacheManager cacheManager() {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory);
@@ -74,7 +73,6 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
                 .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .build();
         JsonUtils.configure(objectMapper, false);
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
 
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair

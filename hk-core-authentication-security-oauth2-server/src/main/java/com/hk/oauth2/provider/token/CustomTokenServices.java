@@ -79,7 +79,6 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
         }
     }
 
-
     @Transactional
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
         OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);

@@ -1,5 +1,6 @@
 package com.hk.core.service.elasticsearch.impl;
 
+import com.hk.commons.util.CollectionUtils;
 import com.hk.core.elasticsearch.query.Condition;
 import com.hk.core.elasticsearch.repository.BaseElasticsearchRepository;
 import com.hk.core.page.QueryPage;
@@ -11,6 +12,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.springframework.data.domain.Persistable;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -45,6 +47,17 @@ public abstract class ElasticSearchServiceImpl<T extends Persistable<String>> ex
     @Override
     public List<T> findAll(List<Condition> conditions, Order... orders) {
         return getBaseRepository().findAll(conditions, orders);
+    }
+
+    @Override
+    public List<T> insertOrUpdate(Collection<T> entities) {
+        return CollectionUtils.toList(getBaseRepository().saveAll(entities));
+    }
+
+    @Override
+    public List<T> insertOrUpdateSelective(Collection<T> entities) {
+        getBaseRepository().bulkUpdate(entities);
+        return CollectionUtils.toList(entities);
     }
 
     @Override
