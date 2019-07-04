@@ -87,27 +87,20 @@ public final class JsonUtils {
     }
 
     public static void configure(ObjectMapper om, boolean disableAnnotation) {
-//        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-//        om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-
-        om.setDateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()));
-        // 空值处理为空串
-//        om.getSerializerProvider().setNullValueSerializer(NullEmptyJsonSerializer.INSTANCE);
-        // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
-        om.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-        om.configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false);
-        /*  */
-        om.registerModules(modules());
-//        om.configure(MapperFeature.USE_ANNOTATIONS, false);//忽略注解
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-
         /* 忽略实体中的Hibernate getOne查询返回的  "handler", "hibernateLazyInitializer" 字段 */
         filterProvider.addFilter(IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
                 SimpleBeanPropertyFilter.serializeAllExcept(HANDLER, HIBERNATE_LAZY_INITIALIZER));
-        om.setFilterProvider(filterProvider);
 
-        if (disableAnnotation) {
+        om.setDateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)// 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
+                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                .configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false)
+//                .enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)// 如果配置为了会输出类名
+                .registerModules(modules()) //注册java 8 日期 module
+                .setFilterProvider(filterProvider);
+//                .getSerializerProvider().setNullValueSerializer(NullEmptyJsonSerializer.INSTANCE);// 空值处理为空串
+        if (!disableAnnotation) {
             om.setAnnotationIntrospector(DisableAnnotationIntrospector.getInstance());
         }
     }

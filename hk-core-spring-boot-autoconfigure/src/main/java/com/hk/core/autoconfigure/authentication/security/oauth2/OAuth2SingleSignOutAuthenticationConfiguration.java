@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.client.token.grant.implicit.ImplicitA
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * oauth2 client 单点退出配置
@@ -72,9 +73,8 @@ public class OAuth2SingleSignOutAuthenticationConfiguration {
             LogoutAuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider = new LogoutAuthorizationCodeAccessTokenProvider();
             authorizationCodeAccessTokenProvider.setLogoutUrl(loginProperties.getLogoutUrl());
             authorizationCodeAccessTokenProvider.setForceHttps(loginProperties.isForceHttps());
-            template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.<AccessTokenProvider>asList(
-                    authorizationCodeAccessTokenProvider, new ImplicitAccessTokenProvider(),
-                    new ResourceOwnerPasswordAccessTokenProvider(), new ClientCredentialsAccessTokenProvider())));
+            template.setAccessTokenProvider(authorizationCodeAccessTokenProvider);//简化，只需要认证码模式
+
         };
     }
 

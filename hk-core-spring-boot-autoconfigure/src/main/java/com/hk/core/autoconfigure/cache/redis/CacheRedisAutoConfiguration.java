@@ -24,21 +24,14 @@ public class CacheRedisAutoConfiguration {
     @Bean("redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setEnableTransactionSupport(true);
-
         RedisSerializer<String> serializer = RedisSerializer.string();
-
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
                 .json()
-                .defaultUseWrapper(true)
-                .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-                .modules(JsonUtils.modules())
                 .build();
         JsonUtils.configure(objectMapper, true);
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL); // 会写入类名
         GenericJackson2JsonRedisSerializer redisSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
         redisTemplate.setKeySerializer(serializer);
         redisTemplate.setValueSerializer(redisSerializer);

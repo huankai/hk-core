@@ -69,10 +69,9 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory);
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
                 .json()
-                .defaultUseWrapper(true)
-                .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .build();
         JsonUtils.configure(objectMapper, false);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);// 会写入类名
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
 
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair

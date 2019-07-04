@@ -55,9 +55,15 @@ public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessToke
     @Setter
     private boolean stateMandatory = true;
 
+    /**
+     * 是否强制使用 https
+     */
     @Setter
     private boolean forceHttps = false;
 
+    /**
+     * 退出 url 地址
+     */
     @Setter
     private String logoutUrl;
 
