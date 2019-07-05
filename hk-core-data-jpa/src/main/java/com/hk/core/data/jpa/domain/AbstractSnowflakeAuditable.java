@@ -1,7 +1,7 @@
 package com.hk.core.data.jpa.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.hk.core.data.commons.audit.AuditField;
+import com.hk.commons.util.AuditField;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -21,7 +21,6 @@ import java.util.Optional;
  */
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
-@JsonIgnoreProperties(value = {"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"})
 public class AbstractSnowflakeAuditable extends AbstractSnowflakeIdPersistable implements Auditable<Long, Long, LocalDateTime>, AuditField {
 
     /**

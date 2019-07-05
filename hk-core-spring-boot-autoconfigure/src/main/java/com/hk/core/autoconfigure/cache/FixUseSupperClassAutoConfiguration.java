@@ -1,7 +1,6 @@
 package com.hk.core.autoconfigure.cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hk.commons.util.JsonUtils;
 import com.hk.core.cache.LogCacheErrorHandler;
 import com.hk.core.cache.NullCacheProperties;
@@ -70,7 +69,7 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
                 .json()
                 .build();
-        JsonUtils.configure(objectMapper, false);
+        JsonUtils.configure(objectMapper);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);// 会写入类名
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
 

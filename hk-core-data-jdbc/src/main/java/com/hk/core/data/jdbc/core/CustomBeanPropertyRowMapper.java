@@ -1,9 +1,14 @@
 package com.hk.core.data.jdbc.core;
 
-import com.hk.core.data.commons.audit.AuditField;
+import com.hk.commons.util.AuditField;
+import com.hk.commons.util.FieldUtils;
+import com.hk.commons.util.JsonUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.*;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.NotWritablePropertyException;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -17,10 +22,14 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 import static org.springframework.jdbc.support.JdbcUtils.getResultSetValue;
@@ -34,6 +43,9 @@ import static org.springframework.jdbc.support.JdbcUtils.lookupColumnName;
  * @see org.springframework.jdbc.core.BeanPropertyRowMapper
  */
 public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
+
+    private static final List<Class<?>> EXCLUDE_JSON_CLASS = Arrays.asList(CharSequence.class,
+            Number.class, TemporalAccessor.class);
 
     /**
      * Logger available to subclasses.
@@ -259,7 +271,7 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
      * @see java.sql.ResultSetMetaData
      */
     @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public T mapRow(ResultSet rs, int rowNumber) throws SQLException {
         Assert.state(this.mappedClass != null, "Mapped class was not specified");
         T mappedObject = BeanUtils.instantiateClass(this.mappedClass);
@@ -280,19 +292,25 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
                         logger.debug("Mapping column '" + column + "' to property '" + pd.getName() +
                                 "' of type '" + ClassUtils.getQualifiedName(pd.getPropertyType()) + "'");
                     }
-                    try {
-                        bw.setPropertyValue(pd.getName(), value);
-                    } catch (TypeMismatchException ex) {
-                        if (value == null && this.primitivesDefaultedForNullValue) {
-                            if (logger.isDebugEnabled()) {
-                                logger.debug("Intercepted TypeMismatchException for row " + rowNumber +
-                                        " and column '" + column + "' with null value when setting property '" +
-                                        pd.getName() + "' of type '" +
-                                        ClassUtils.getQualifiedName(pd.getPropertyType()) +
-                                        "' on object: " + mappedObject, ex);
+                    if (null != value) {
+                        Class<?> propertyType = pd.getPropertyType();
+                        if (EXCLUDE_JSON_CLASS.stream().noneMatch(item -> ClassUtils.isAssignable(item, propertyType))) {
+                            Field filed = FieldUtils.getFiled(this.mappedClass, pd.getName());
+                            Type genericType = filed.getGenericType();
+                            if (Map.class.isAssignableFrom(propertyType)) {
+                                bw.setPropertyValue(pd.getName(), JsonUtils.deserialize(value.toString(), Map.class));
+                            } else if (genericType instanceof ParameterizedType) {
+                                Class<?> clazz = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+                                if (EXCLUDE_JSON_CLASS.stream().noneMatch(item -> ClassUtils.isAssignable(item, clazz))) {
+                                    bw.setPropertyValue(pd.getName(), JsonUtils.deserialize(value.toString(), propertyType, clazz));
+                                } else {
+                                    bw.setPropertyValue(pd.getName(), value);
+                                }
+                            } else {
+                                bw.setPropertyValue(pd.getName(), value);
                             }
                         } else {
-                            throw ex;
+                            bw.setPropertyValue(pd.getName(), value);
                         }
                     }
                     if (populatedProperties != null) {
@@ -303,7 +321,7 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
                             "Unable to map column '" + column + "' to property '" + pd.getName() + "'", ex);
                 }
             } else if (mappedObject instanceof Auditable) {
-				Auditable auditable = (Auditable) mappedObject;
+                Auditable auditable = (Auditable) mappedObject;
                 if (com.hk.commons.util.StringUtils.equals(field, AuditField.CREATED_BY)) {
                     auditable.setCreatedBy(getColumnValue(rs, index, String.class));
                 } else if (com.hk.commons.util.StringUtils.equals(field, AuditField.CREATED_DATE)) {
@@ -367,8 +385,8 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
         return getColumnValue(rs, index, pd.getPropertyType());
     }
 
-	@Nullable
-	@SuppressWarnings("unchecked")
+    @Nullable
+    @SuppressWarnings("unchecked")
     protected <E> E getColumnValue(ResultSet rs, int index, Class<E> clazz) throws SQLException {
         return (E) getResultSetValue(rs, index, clazz);
     }

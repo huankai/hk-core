@@ -12,8 +12,8 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.hk.commons.jackson.introspect.DisableAnnotationIntrospector;
 import com.hk.commons.util.date.DatePattern;
+import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * JSON Utils
@@ -79,19 +82,21 @@ public final class JsonUtils {
             synchronized (JsonUtils.class) {
                 if (mapper == null) {
                     mapper = new ObjectMapper();
-                    configure(mapper, true);
+                    configure(mapper, AuditField.AUDIT_FIELD_ARRAY);
                 }
             }
         }
         return mapper;
     }
 
-    public static void configure(ObjectMapper om, boolean disableAnnotation) {
+    public static void configure(ObjectMapper om, String... exceptFields) {
+        Set<String> exceptSet = ArrayUtils.asHashSet(HANDLER, HIBERNATE_LAZY_INITIALIZER);
+        CollectionUtils.addAllNotNull(exceptSet, exceptFields);
+
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
         /* 忽略实体中的Hibernate getOne查询返回的  "handler", "hibernateLazyInitializer" 字段 */
         filterProvider.addFilter(IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
-                SimpleBeanPropertyFilter.serializeAllExcept(HANDLER, HIBERNATE_LAZY_INITIALIZER));
-
+                SimpleBeanPropertyFilter.serializeAllExcept(exceptSet));
         om.setDateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)// 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
@@ -100,9 +105,6 @@ public final class JsonUtils {
                 .registerModules(modules()) //注册java 8 日期 module
                 .setFilterProvider(filterProvider);
 //                .getSerializerProvider().setNullValueSerializer(NullEmptyJsonSerializer.INSTANCE);// 空值处理为空串
-        if (!disableAnnotation) {
-            om.setAnnotationIntrospector(DisableAnnotationIntrospector.getInstance());
-        }
     }
 
     private static ObjectMapper indentMapper;
@@ -113,7 +115,7 @@ public final class JsonUtils {
                 if (indentMapper == null) {
                     indentMapper = new ObjectMapper();
                     indentMapper.enable(SerializationFeature.INDENT_OUTPUT);
-                    configure(indentMapper, true);
+                    configure(indentMapper, AuditField.AUDIT_FIELD_ARRAY);
                 }
             }
         }
@@ -137,16 +139,13 @@ public final class JsonUtils {
      * @param indent indent
      * @return json str
      */
+    @SneakyThrows(value = {JsonProcessingException.class})
     public static String serialize(Object obj, boolean indent) {
         if (obj == null) {
             return null;
         }
         ObjectMapper mapper = indent ? getIndentMapper() : getMapper();
-        try {
-            return mapper.writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.writeValueAsString(obj);
     }
 
     /**
@@ -167,15 +166,12 @@ public final class JsonUtils {
      * @param obj obj
      * @return byte[]
      */
+    @SneakyThrows(value = {JsonProcessingException.class})
     public static byte[] serializeToByte(Object obj) {
         if (null == obj) {
             return null;
         }
-        try {
-            return getMapper().writeValueAsBytes(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        return getMapper().writeValueAsBytes(obj);
     }
 
     /**
@@ -184,13 +180,10 @@ public final class JsonUtils {
      * @param obj          obj
      * @param outputStream outputStream
      */
+    @SneakyThrows(value = {IOException.class})
     public static void serializeToOutputStream(Object obj, OutputStream outputStream) {
         if (Objects.nonNull(obj)) {
-            try {
-                getMapper().writeValue(outputStream, obj);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            getMapper().writeValue(outputStream, obj);
         }
 
     }
@@ -201,13 +194,10 @@ public final class JsonUtils {
      * @param obj  obj
      * @param file file
      */
+    @SneakyThrows(value = {IOException.class})
     public static void serializeToFile(Object obj, File file) {
         if (Objects.nonNull(obj)) {
-            try {
-                getMapper().writeValue(file, obj);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            getMapper().writeValue(file, obj);
         }
     }
 
@@ -219,16 +209,12 @@ public final class JsonUtils {
      * @param <T>   T
      * @return T
      */
+    @SneakyThrows(value = {IOException.class})
     public static <T> T deserialize(String json, Class<T> clazz) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
-        ObjectMapper mapper = getMapper();
-        try {
-            return mapper.readValue(json, clazz);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return getMapper().readValue(json, clazz);
     }
 
     /**
@@ -239,16 +225,31 @@ public final class JsonUtils {
      * @param clazz class
      * @return 序列化的List
      */
+    @SneakyThrows(value = {IOException.class})
     public static <T> List<T> deserializeList(String json, Class<T> clazz) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
         ObjectMapper mapper = getMapper();
-        try {
-            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(List.class, clazz));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(List.class, clazz));
+    }
+
+    /**
+     * 三级泛型序列化
+     *
+     * @param json         json
+     * @param rawType      rawType
+     * @param parametrized parametrized
+     * @param <T>          T
+     * @return 序列化结果
+     */
+    @SneakyThrows(value = {IOException.class})
+    public static <T> T deserialize(String json, Class<T> rawType, Class<?> parametrized) {
+        if (StringUtils.isEmpty(json)) {
+            return null;
         }
+        ObjectMapper mapper = getMapper();
+        return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, parametrized));
     }
 
     /**
@@ -259,16 +260,13 @@ public final class JsonUtils {
      * @param clazz class
      * @return 序列化的List
      */
+    @SneakyThrows(value = {IOException.class})
     public static <T> Set<T> deserializeSet(String json, Class<T> clazz) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
         ObjectMapper mapper = getMapper();
-        try {
-            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(Set.class, clazz));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(Set.class, clazz));
     }
 
     /**
@@ -277,17 +275,13 @@ public final class JsonUtils {
      *
      * @return 序列化的对象
      */
+    @SneakyThrows(value = {IOException.class})
     public static <T> T deserialize(String json, Class<T> rawType, Class<?> parametrized, Class<?> parameterClasses) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
         ObjectMapper mapper = getMapper();
-        try {
-            JavaType type = mapper.getTypeFactory().constructParametricType(parametrized, parameterClasses);
-            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, type));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        JavaType type = mapper.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+        return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, type));
     }
 }

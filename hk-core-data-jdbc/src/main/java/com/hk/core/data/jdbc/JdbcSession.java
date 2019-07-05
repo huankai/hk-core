@@ -16,7 +16,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author kevin
@@ -233,7 +232,7 @@ public final class JdbcSession {
 
         Collection<String> fieldSet = arguments.getFields();
         String fields = CollectionUtils.isEmpty(fieldSet) ? "*"
-                : fieldSet.stream().collect(Collectors.joining(","));
+                : String.join(StringUtils.COMMA_SEPARATE, fieldSet);
         sql.append("SELECT ");
         countSql.append("SELECT ");
         if (arguments.isDistinct()) {
@@ -261,7 +260,7 @@ public final class JdbcSession {
         }
         Collection<String> groupBys = arguments.getGroupBy();
         if (CollectionUtils.isNotEmpty(groupBys)) {
-            String groupBySql = groupBys.stream().collect(Collectors.joining(StringUtils.COMMA_SEPARATE));
+            String groupBySql = String.join(StringUtils.COMMA_SEPARATE, groupBys);
             sql.append(" GROUP BY ").append(groupBySql);
             countSql.append(" GROUP BY ").append(groupBySql).append(") result_");
             countSql.insert(0, "SELECT COUNT(*) FROM (");

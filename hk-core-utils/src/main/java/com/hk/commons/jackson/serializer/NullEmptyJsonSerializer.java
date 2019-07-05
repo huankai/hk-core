@@ -11,6 +11,7 @@ import java.io.IOException;
  * @author kevin
  * @date 2018-08-20 13:09
  */
+@Deprecated
 public class NullEmptyJsonSerializer extends JsonSerializer<Object> {
 
     public static final NullEmptyJsonSerializer INSTANCE = new NullEmptyJsonSerializer();

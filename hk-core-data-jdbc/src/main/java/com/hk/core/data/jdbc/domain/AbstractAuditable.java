@@ -1,7 +1,7 @@
 package com.hk.core.data.jdbc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.hk.core.data.commons.audit.AuditField;
+import com.hk.commons.util.AuditField;
 import com.hk.core.data.jdbc.annotations.NonUpdate;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;

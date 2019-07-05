@@ -30,7 +30,7 @@ public class CacheRedisAutoConfiguration {
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
                 .json()
                 .build();
-        JsonUtils.configure(objectMapper, true);
+        JsonUtils.configure(objectMapper);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL); // 会写入类名
         GenericJackson2JsonRedisSerializer redisSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
         redisTemplate.setKeySerializer(serializer);

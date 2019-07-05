@@ -14,6 +14,7 @@ import java.lang.annotation.Annotation;
  * @date 2018-12-19 23:34
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class DisableAnnotationIntrospector extends JacksonAnnotationIntrospector {
 
     private static final DisableAnnotationIntrospector INSTANCE = new DisableAnnotationIntrospector();
