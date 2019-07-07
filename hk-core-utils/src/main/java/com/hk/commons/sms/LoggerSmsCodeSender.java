@@ -1,10 +1,8 @@
 package com.hk.commons.sms;
 
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.hk.commons.asyn.Asyn;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author kevin

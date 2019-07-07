@@ -107,7 +107,7 @@ public final class JdbcSession {
     public final <T> T queryForObject(SelectArguments arguments, Class<T> clazz) {
         SelectStatement statement = buildSelect(arguments);
         CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
-        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
+//        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return jdbcTemplate.queryForObject(statement.selectSql.toString(), rowMapper, statement.parameters.toArray());
     }
 
@@ -132,7 +132,7 @@ public final class JdbcSession {
      */
     public <T> ListResult<T> queryForList(SelectArguments arguments, boolean retriveRowCount, Class<T> clazz) {
         CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
-        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
+//        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return queryForList(arguments, retriveRowCount, rowMapper);
     }
 

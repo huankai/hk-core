@@ -1,8 +1,6 @@
 package com.hk.core.data.jdbc.core;
 
-import com.hk.commons.util.AuditField;
-import com.hk.commons.util.FieldUtils;
-import com.hk.commons.util.JsonUtils;
+import com.hk.commons.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,7 +17,6 @@ import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -29,7 +26,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 import static org.springframework.jdbc.support.JdbcUtils.getResultSetValue;
@@ -44,8 +40,8 @@ import static org.springframework.jdbc.support.JdbcUtils.lookupColumnName;
  */
 public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
 
-    private static final List<Class<?>> EXCLUDE_JSON_CLASS = Arrays.asList(CharSequence.class,
-            Number.class, TemporalAccessor.class);
+    private static final List<Class<?>> INCLUDE_JSON_CLASS = Arrays.asList(List.class,
+            Set.class, Map.class);
 
     /**
      * Logger available to subclasses.
@@ -72,7 +68,7 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
      * ConversionService for binding JDBC values to bean properties.
      */
     @Nullable
-    private ConversionService conversionService = DefaultConversionService.getSharedInstance();
+    private ConversionService conversionService = ConverterUtils.DEFAULT_CONVERSION_SERVICE;
 
     /**
      * Map of the fields we provide mapping for.
@@ -294,18 +290,19 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
                     }
                     if (null != value) {
                         Class<?> propertyType = pd.getPropertyType();
-                        if (EXCLUDE_JSON_CLASS.stream().noneMatch(item -> ClassUtils.isAssignable(item, propertyType))) {
+                        if (INCLUDE_JSON_CLASS.stream().anyMatch(item -> ClassUtils.isAssignable(item, propertyType))) {
                             Field filed = FieldUtils.getFiled(this.mappedClass, pd.getName());
                             Type genericType = filed.getGenericType();
                             if (Map.class.isAssignableFrom(propertyType)) {
-                                bw.setPropertyValue(pd.getName(), JsonUtils.deserialize(value.toString(), Map.class));
-                            } else if (genericType instanceof ParameterizedType) {
+                                Class<?> keyClass = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+                                Class<?> valueClass = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[1];
+                                bw.setPropertyValue(pd.getName(), JsonUtils.deserializeMap(value.toString(), keyClass, valueClass));
+                            } else if (List.class.isAssignableFrom(propertyType)) {
                                 Class<?> clazz = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
-                                if (EXCLUDE_JSON_CLASS.stream().noneMatch(item -> ClassUtils.isAssignable(item, clazz))) {
-                                    bw.setPropertyValue(pd.getName(), JsonUtils.deserialize(value.toString(), propertyType, clazz));
-                                } else {
-                                    bw.setPropertyValue(pd.getName(), value);
-                                }
+                                bw.setPropertyValue(pd.getName(), JsonUtils.deserializeList(value.toString(), clazz));
+                            } else if (Set.class.isAssignableFrom(propertyType)) {
+                                Class<?> clazz = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+                                bw.setPropertyValue(pd.getName(), JsonUtils.deserializeSet(value.toString(), clazz));
                             } else {
                                 bw.setPropertyValue(pd.getName(), value);
                             }
@@ -322,14 +319,26 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
                 }
             } else if (mappedObject instanceof Auditable) {
                 Auditable auditable = (Auditable) mappedObject;
-                if (com.hk.commons.util.StringUtils.equals(field, AuditField.CREATED_BY)) {
-                    auditable.setCreatedBy(getColumnValue(rs, index, String.class));
-                } else if (com.hk.commons.util.StringUtils.equals(field, AuditField.CREATED_DATE)) {
-                    auditable.setCreatedDate(getColumnValue(rs, index, Timestamp.class).toLocalDateTime());
-                } else if (com.hk.commons.util.StringUtils.equals(field, AuditField.LAST_MODIFIED_BY)) {
-                    auditable.setLastModifiedBy(getColumnValue(rs, index, String.class));
-                } else if (com.hk.commons.util.StringUtils.equals(field, AuditField.LAST_MODIFIED_DATE)) {
-                    auditable.setLastModifiedDate(getColumnValue(rs, index, Timestamp.class).toLocalDateTime());
+                if (StringUtils.equals(field, AuditField.CREATED_BY)) {
+                    String columnValue = getColumnValue(rs, index, String.class);
+                    if (StringUtils.hasText(columnValue)) {
+                        auditable.setCreatedBy(columnValue);
+                    }
+                } else if (StringUtils.equals(field, AuditField.CREATED_DATE)) {
+                    Timestamp columnValue = getColumnValue(rs, index, Timestamp.class);
+                    if (null != columnValue) {
+                        auditable.setCreatedDate(columnValue.toLocalDateTime());
+                    }
+                } else if (StringUtils.equals(field, AuditField.LAST_MODIFIED_BY)) {
+                    String columnValue = getColumnValue(rs, index, String.class);
+                    if (StringUtils.hasText(columnValue)) {
+                        auditable.setLastModifiedBy(columnValue);
+                    }
+                } else if (StringUtils.equals(field, AuditField.LAST_MODIFIED_DATE)) {
+                    Timestamp columnValue = getColumnValue(rs, index, Timestamp.class);
+                    if (null != columnValue) {
+                        auditable.setLastModifiedDate(columnValue.toLocalDateTime());
+                    }
                 }
             } else {
 
@@ -387,7 +396,7 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    protected <E> E getColumnValue(ResultSet rs, int index, Class<E> clazz) throws SQLException {
+    private  <E> E getColumnValue(ResultSet rs, int index, Class<E> clazz) throws SQLException {
         return (E) getResultSetValue(rs, index, clazz);
     }
 
