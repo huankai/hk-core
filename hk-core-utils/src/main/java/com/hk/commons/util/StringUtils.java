@@ -1,5 +1,6 @@
 package com.hk.commons.util;
 
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.core.io.UrlResource;
 
@@ -474,14 +475,10 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      *
      * @param url url
      * @return {@link URL}
-     * @throws IllegalArgumentException 如果转换失败，抛出此异常
      */
+    @SneakyThrows(value = {MalformedURLException.class})
     public static URL toURL(String url) {
-        try {
-            return new URL(url);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Failed to create url for : " + url);
-        }
+        return new URL(url);
     }
 
     /**
@@ -489,14 +486,10 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      *
      * @param url url
      * @return {@link UrlResource}
-     * @throws IllegalArgumentException 如果转换失败，抛出此异常
      */
+    @SneakyThrows(value = {MalformedURLException.class})
     public static UrlResource createResource(String url) {
-        try {
-            return new UrlResource(url);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Failed to create url for : " + url);
-        }
+        return new UrlResource(url);
     }
 
 }

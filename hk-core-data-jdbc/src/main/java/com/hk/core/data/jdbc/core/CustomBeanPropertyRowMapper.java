@@ -1,6 +1,8 @@
 package com.hk.core.data.jdbc.core;
 
-import com.hk.commons.util.*;
+import com.hk.commons.util.AuditField;
+import com.hk.commons.util.ConverterUtils;
+import com.hk.commons.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,9 +21,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -32,7 +31,13 @@ import static org.springframework.jdbc.support.JdbcUtils.getResultSetValue;
 import static org.springframework.jdbc.support.JdbcUtils.lookupColumnName;
 
 /**
- * 审计字段无法通过反射设置值
+ * <pre>
+ *
+ * 增强：
+ * 1、审计字段无法通过反射设置值;
+ * 2、mysql 数据库类型为 json 时，不能映射成 java 对象 {@link ConverterUtils#DEFAULT_CONVERSION_SERVICE} ,{@link #conversionService} ,
+ * {@link com.hk.commons.converters.JsonStringToCollectionConverter} ,{@link com.hk.commons.converters.JsonStringToMapConverter}
+ * </pre>
  *
  * @author huangkai
  * @date 2018-12-20 11:05
@@ -40,13 +45,10 @@ import static org.springframework.jdbc.support.JdbcUtils.lookupColumnName;
  */
 public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
 
-    private static final List<Class<?>> INCLUDE_JSON_CLASS = Arrays.asList(List.class,
-            Set.class, Map.class);
-
     /**
      * Logger available to subclasses.
      */
-    protected final Log logger = LogFactory.getLog(getClass());
+    private final Log logger = LogFactory.getLog(getClass());
 
     /**
      * The class we are mapping to.
@@ -197,7 +199,6 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
         return this.conversionService;
     }
 
-
     /**
      * Initialize the mapping meta-data for the given class.
      *
@@ -289,26 +290,7 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
                                 "' of type '" + ClassUtils.getQualifiedName(pd.getPropertyType()) + "'");
                     }
                     if (null != value) {
-                        Class<?> propertyType = pd.getPropertyType();
-                        if (INCLUDE_JSON_CLASS.stream().anyMatch(item -> ClassUtils.isAssignable(item, propertyType))) {
-                            Field filed = FieldUtils.getFiled(this.mappedClass, pd.getName());
-                            Type genericType = filed.getGenericType();
-                            if (Map.class.isAssignableFrom(propertyType)) {
-                                Class<?> keyClass = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
-                                Class<?> valueClass = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[1];
-                                bw.setPropertyValue(pd.getName(), JsonUtils.deserializeMap(value.toString(), keyClass, valueClass));
-                            } else if (List.class.isAssignableFrom(propertyType)) {
-                                Class<?> clazz = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
-                                bw.setPropertyValue(pd.getName(), JsonUtils.deserializeList(value.toString(), clazz));
-                            } else if (Set.class.isAssignableFrom(propertyType)) {
-                                Class<?> clazz = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
-                                bw.setPropertyValue(pd.getName(), JsonUtils.deserializeSet(value.toString(), clazz));
-                            } else {
-                                bw.setPropertyValue(pd.getName(), value);
-                            }
-                        } else {
-                            bw.setPropertyValue(pd.getName(), value);
-                        }
+                        bw.setPropertyValue(pd.getName(), value);
                     }
                     if (populatedProperties != null) {
                         populatedProperties.add(pd.getName());
@@ -396,7 +378,7 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    private  <E> E getColumnValue(ResultSet rs, int index, Class<E> clazz) throws SQLException {
+    private <E> E getColumnValue(ResultSet rs, int index, Class<E> clazz) throws SQLException {
         return (E) getResultSetValue(rs, index, clazz);
     }
 

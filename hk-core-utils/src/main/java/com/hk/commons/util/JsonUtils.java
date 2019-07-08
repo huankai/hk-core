@@ -1,21 +1,7 @@
 package com.hk.commons.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.databind.type.MapType;
@@ -28,8 +14,17 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.hk.commons.util.date.DatePattern;
-
 import lombok.SneakyThrows;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * JSON Utils
@@ -234,6 +229,15 @@ public final class JsonUtils {
 		}
 		ObjectMapper mapper = getMapper();
 		return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(ArrayList.class, clazz));
+	}
+
+	@SneakyThrows(value = {IOException.class})
+	public static <T> T deserialize(String json, Class<T> rawType, Class<?> parametrized) {
+		if (StringUtils.isEmpty(json)) {
+			return null;
+		}
+		ObjectMapper mapper = getMapper();
+		return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, parametrized));
 	}
 
 	/**
