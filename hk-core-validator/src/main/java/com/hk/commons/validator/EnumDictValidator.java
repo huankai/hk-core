@@ -3,7 +3,6 @@ package com.hk.commons.validator;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.commons.validator.constraints.EnumDict;
-import org.springframework.beans.factory.InitializingBean;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -13,11 +12,11 @@ import java.util.List;
  * @author kevin
  * @date 2018-08-31 10:57
  */
-public class EnumDictValidator implements ConstraintValidator<EnumDict, Byte>, InitializingBean {
+public class EnumDictValidator implements ConstraintValidator<EnumDict, Byte> {
 
     private boolean notNull;
 
-    private Long codeId;
+    private long codeId;
 
     private DictService dictService;
 
@@ -32,14 +31,14 @@ public class EnumDictValidator implements ConstraintValidator<EnumDict, Byte>, I
         if (null == value) {
             return !notNull;
         }
-        List<Byte> list = dictService.getDictValueListByCodeId(codeId);
+        List<Byte> list = getDictService().getDictValueListByCodeId(codeId);
         return CollectionUtils.contains(list, value);
     }
 
-    @Override
-    public void afterPropertiesSet() {
+    public DictService getDictService() {
         if (null == dictService) {
             dictService = SpringContextHolder.getBean(DictService.class);
         }
+        return dictService;
     }
 }

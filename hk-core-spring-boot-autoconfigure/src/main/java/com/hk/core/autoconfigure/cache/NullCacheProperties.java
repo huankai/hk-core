@@ -1,4 +1,4 @@
-package com.hk.core.cache;
+package com.hk.core.autoconfigure.cache;
 
 import lombok.Data;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
@@ -11,7 +11,7 @@ import java.time.Duration;
  * @date 2019-02-27 14:51
  */
 @Data
-@ConfigurationProperties(prefix = "spring.cache.redis")
+@ConfigurationProperties(prefix = "spring.cache")
 public class NullCacheProperties {
 
     /**

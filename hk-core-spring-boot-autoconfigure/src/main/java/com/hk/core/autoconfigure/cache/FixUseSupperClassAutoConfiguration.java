@@ -3,7 +3,6 @@ package com.hk.core.autoconfigure.cache;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hk.commons.util.JsonUtils;
 import com.hk.core.cache.LogCacheErrorHandler;
-import com.hk.core.cache.NullCacheProperties;
 import com.hk.core.cache.interceptor.LockCacheInterceptor;
 import com.hk.core.cache.redis.CustomRedisCacheManager;
 import com.hk.core.cache.spring.FixUseSupperClassAnnotationParser;

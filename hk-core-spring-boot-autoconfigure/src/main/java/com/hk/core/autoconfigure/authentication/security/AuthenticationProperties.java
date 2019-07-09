@@ -103,7 +103,7 @@ public class AuthenticationProperties {
         /**
          * 退出成功后的请求地址
          */
-        private String logoutSuccessUrl = "/";
+        private String logoutSuccessUrl = getLoginUrl();
 
         /**
          * 是否使用 https

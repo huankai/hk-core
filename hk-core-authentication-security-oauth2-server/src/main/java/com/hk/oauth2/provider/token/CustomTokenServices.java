@@ -1,6 +1,5 @@
 package com.hk.oauth2.provider.token;
 
-import com.hk.commons.util.SpringContextHolder;
 import com.hk.oauth2.TokenRegistry;
 import com.hk.oauth2.exception.Oauth2ClientStatusException;
 import com.hk.oauth2.provider.ClientDetailsCheckService;
@@ -65,24 +64,28 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
         Assert.notNull(tokenStore, "tokenStore must be set");
     }
 
-    private void checkAppStatus(OAuth2AccessToken existingAccessToken, String clientId) {
-        if (clientDetailsCheckService != null && !clientDetailsCheckService.isEnabled(clientId)) {
-            OAuth2RefreshToken refreshToken = null;
-            if (null != existingAccessToken) {
-                refreshToken = existingAccessToken.getRefreshToken();
-                tokenStore.removeAccessToken(existingAccessToken);
+    private void check(OAuth2AccessToken existingAccessToken, String clientId) {
+        if (clientDetailsCheckService != null) {
+            try {
+                clientDetailsCheckService.check(clientId);
+            } catch (Oauth2ClientStatusException e) {
+                OAuth2RefreshToken refreshToken = null;
+                if (null != existingAccessToken) {
+                    refreshToken = existingAccessToken.getRefreshToken();
+                    tokenStore.removeAccessToken(existingAccessToken);
+                }
+                if (null != refreshToken) {
+                    tokenStore.removeRefreshToken(refreshToken);
+                }
+                throw e;
             }
-            if (null != refreshToken) {
-                tokenStore.removeRefreshToken(refreshToken);
-            }
-            throw new Oauth2ClientStatusException(SpringContextHolder.getMessageWithDefault("app.disable.message", clientId));
         }
     }
 
     @Transactional
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
         OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
-        checkAppStatus(existingAccessToken, authentication.getOAuth2Request().getClientId());
+        check(existingAccessToken, authentication.getOAuth2Request().getClientId());
         OAuth2RefreshToken refreshToken = null;
         if (existingAccessToken != null) {
             if (existingAccessToken.isExpired()) {
