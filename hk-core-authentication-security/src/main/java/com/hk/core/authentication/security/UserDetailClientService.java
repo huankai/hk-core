@@ -36,7 +36,7 @@ public interface UserDetailClientService extends UserDetailsService {
      * @param clientId clientId
      * @return ClientAppInfo
      */
-    ClientAppInfo getClientInfoById(String clientId);
+    ClientAppInfo getClientInfoById(Long clientId);
 
 
 }

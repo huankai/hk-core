@@ -40,7 +40,7 @@ public class LocalUserAuthenticationConverter implements UserAuthenticationConve
             Map<String, Object> m = new HashMap<>(map);
             String principal = CollectionUtils.getStringValue(m, USERNAME);
             SecurityUserPrincipal user = (SecurityUserPrincipal) userDetailClientService.loadUserByUsername(principal);
-            user.setAppInfo(userDetailClientService.getClientInfoById(CollectionUtils.getStringValue(m, "client_id")));
+            user.setAppInfo(userDetailClientService.getClientInfoById(CollectionUtils.getLongValue(m, "client_id")));
             List<GrantedAuthority> authorities = new ArrayList<>();
             Set<String> permissions = user.getPermissions();
             if (CollectionUtils.isNotEmpty(permissions)) {
