@@ -3,6 +3,7 @@ package com.hk.core.autoconfigure.cache;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 import java.time.Duration;
 
@@ -11,6 +12,7 @@ import java.time.Duration;
  * @date 2019-02-27 14:51
  */
 @Data
+@RefreshScope
 @ConfigurationProperties(prefix = "spring.cache")
 public class NullCacheProperties {
 

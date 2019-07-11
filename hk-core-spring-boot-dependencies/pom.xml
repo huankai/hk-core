@@ -22,6 +22,7 @@
         <alipay.version>3.6.0.ALL</alipay.version>
         <aliyun.oss.version>2.8.3</aliyun.oss.version>
         <hibernate.type.version>2.4.3</hibernate.type.version>
+        <spring.cloud.alibaba.version>0.9.0.RELEASE</spring.cloud.alibaba.version>
     </properties>
     <distributionManagement>
         <repository>
@@ -53,6 +54,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring.cloud.alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
 
             <!--  排除 logging -->
             <dependency>

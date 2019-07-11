@@ -4,6 +4,7 @@ import com.hk.core.authentication.api.PermitMatcher;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.Set;
  * @date 2018-07-26 16:59
  */
 @Data
+@RefreshScope
 @ConfigurationProperties(prefix = "hk.authentication")
 public class AuthenticationProperties {
 

@@ -4,6 +4,7 @@ import com.hk.commons.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
  * @author huangkai
@@ -11,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Getter
 @Setter
+@RefreshScope
 @ConfigurationProperties(prefix = "alipay")
 public class AlipayProperties {
 
