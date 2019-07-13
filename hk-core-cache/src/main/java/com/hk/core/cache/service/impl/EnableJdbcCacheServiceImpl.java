@@ -1,7 +1,7 @@
 package com.hk.core.cache.service.impl;
 
 import com.hk.core.cache.service.JdbcCacheService;
-import com.hk.core.data.jdbc.query.CompositeCondition;
+import com.hk.core.jdbc.query.CompositeCondition;
 import com.hk.core.service.jdbc.impl.JdbcServiceImpl;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
