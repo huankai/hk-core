@@ -228,6 +228,12 @@
 
             <dependency>
                 <groupId>com.hk</groupId>
+                <artifactId>hk-core-jdbc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.hk</groupId>
                 <artifactId>hk-core-data-jpa</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -331,6 +337,11 @@
             <dependency>
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>weixin-java-mp</artifactId>
+                <version>${weixin.java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-cp</artifactId>
                 <version>${weixin.java.version}</version>
             </dependency>
             <dependency>

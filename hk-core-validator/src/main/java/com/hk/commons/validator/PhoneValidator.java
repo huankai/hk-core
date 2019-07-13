@@ -23,6 +23,6 @@ public class PhoneValidator implements ConstraintValidator<Phone, CharSequence> 
 
     @Override
     public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
-        return StringUtils.isEmpty(value) ? !notEmpty : ValidateUtils.isMobilephone(value);
+        return StringUtils.isEmpty(value) ? !notEmpty : ValidateUtils.isMobilePhone(value);
     }
 }

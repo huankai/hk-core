@@ -1,9 +1,9 @@
 package com.hk.core.authentication.oauth2.session;
 
 import com.hk.commons.util.StringUtils;
-import com.hk.commons.util.XmlUtils;
 import com.hk.core.authentication.oauth2.LogoutParameter;
 import com.hk.core.authentication.oauth2.utils.AccessTokenUtils;
+import com.hk.core.authentication.oauth2.utils.XmlUtils;
 import com.hk.core.web.Webs;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

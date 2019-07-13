@@ -13,7 +13,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
-            <artifactId>hk-core-data-commons</artifactId>
+            <artifactId>hk-core-jdbc</artifactId>
 
             <!--
                 在使用 mysql json 类型的字段时，需要引用此依赖包

@@ -4,7 +4,6 @@ import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.ConverterUtils;
 import com.hk.commons.util.StringUtils;
-import lombok.Getter;
 import lombok.Setter;
 import org.apache.http.*;
 import org.apache.http.client.ResponseHandler;
@@ -54,48 +53,45 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
             .setConnectionRequestTimeout(5000)
             .build();
 
-    /**
-     * 定义默认 HttpClient
-     */
-    private static final CloseableHttpClient DEFAULT_HTTP_CLIENT;
-
-    static {
-        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(500);
-        connectionManager.setDefaultMaxPerRoute(50);
-        SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(1000 * 5).build();
-        connectionManager.setDefaultSocketConfig(socketConfig);
-        DEFAULT_HTTP_CLIENT =
-                HttpClients
-                        .custom()
-                        .setConnectionManager(connectionManager)
-                        .disableCookieManagement()
-                        .setDefaultRequestConfig(DEFAULT_REQUEST_CONFIG)
-                        .build();
-    }
 
     /**
      * httpClient
      */
-    @Getter
     @Setter
-    private CloseableHttpClient httpClient = DEFAULT_HTTP_CLIENT;
+    private CloseableHttpClient httpClient;
 
-
-    private static final CloseableHttpAsyncClient DEFAULT_ASYNC_CLIENT;
-
-    @Getter
-    private CloseableHttpAsyncClient asyncClient = DEFAULT_ASYNC_CLIENT;
+    private CloseableHttpAsyncClient asyncClient;
 
     @Setter
     private FutureCallback<HttpResponse> futureCallback;
 
-    static {
-        DEFAULT_ASYNC_CLIENT = HttpAsyncClients.custom().useSystemProperties()
-                .setMaxConnTotal(50)
-                .disableCookieManagement()
-                .useSystemProperties()
-                .build();
+    protected CloseableHttpAsyncClient getAsyncClient() {
+        if (null == this.asyncClient) {
+            this.asyncClient = HttpAsyncClients.custom().useSystemProperties()
+                    .setMaxConnTotal(50)
+                    .disableCookieManagement()
+                    .useSystemProperties()
+                    .build();
+        }
+        return asyncClient;
+    }
+
+    protected CloseableHttpClient getHttpClient() {
+        if (this.httpClient == null) {
+            PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+            connectionManager.setMaxTotal(500);
+            connectionManager.setDefaultMaxPerRoute(50);
+            SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(1000 * 5).build();
+            connectionManager.setDefaultSocketConfig(socketConfig);
+            this.httpClient = HttpClients.
+                    custom()
+//                    .setUserAgent("")//自定义 user-Agent
+                    .setConnectionManager(connectionManager)
+                    .setConnectionManagerShared(true)
+                    .setDefaultRequestConfig(DEFAULT_REQUEST_CONFIG)
+                    .build();
+        }
+        return httpClient;
     }
 
     @Setter
@@ -109,21 +105,22 @@ public abstract class AbstractHttpExecutor<T, P> implements HttpExecutor<T, P> {
     /**
      * Http 请求头信息
      */
-    private List<Header> headers = ArrayUtils.asArrayList(new BasicHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name()));
+    private List<Header> headers = ArrayUtils.asArrayList(
+            new BasicHeader(HttpHeaders.CONTENT_ENCODING, Consts.UTF_8.name()));
 
     public AbstractHttpExecutor(ResponseHandler<T> responseHandler) {
         this.responseHandler = responseHandler;
     }
 
     @Override
-    public HttpExecutor<T, P> setResponseHandler(ResponseHandler<T> responseHandler) {
-        this.responseHandler = responseHandler;
+    public final HttpExecutor<T, P> addHeaders(Header... headers) {
+        CollectionUtils.addAllNotNull(this.headers, headers);
         return this;
     }
 
     @Override
-    public final HttpExecutor<T, P> addHeaders(Header... headers) {
-        CollectionUtils.addAllNotNull(this.headers, headers);
+    public HttpExecutor<T, P> setResponseHandler(ResponseHandler<T> responseHandler) {
+        this.responseHandler = responseHandler;
         return this;
     }
 
