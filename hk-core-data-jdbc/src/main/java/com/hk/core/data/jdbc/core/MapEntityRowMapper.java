@@ -1,4 +1,4 @@
-package com.hk.core.jdbc.core;
+package com.hk.core.data.jdbc.core;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
