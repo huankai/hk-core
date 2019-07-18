@@ -2,8 +2,10 @@ package com.hk.core.autoconfigure.authentication.security;
 
 import com.hk.core.authentication.api.PostAuthenticationHandler;
 import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.api.validatecode.ValidateCodeProcessor;
 import com.hk.core.authentication.security.authentication.sms.SMSAuthenticationFilter;
 import com.hk.core.authentication.security.authentication.sms.SMSAuthenticationProvider;
+import com.hk.core.authentication.security.authentication.sms.SMSSenderFilter;
 import lombok.Setter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -29,6 +31,8 @@ public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAd
     @Setter
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
+    private ValidateCodeProcessor validateCodeProcessor;
+
     /**
      * 认证失败后的处理
      */
@@ -38,17 +42,18 @@ public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAd
     private final PostAuthenticationHandler<UserPrincipal, String> authenticationHandler;
 
     public SmsAuthenticationSecurityConfiguration(AuthenticationProperties.SMSProperties smsProperties,
+                                                  ValidateCodeProcessor validateCodeProcessor,
                                                   PostAuthenticationHandler<UserPrincipal, String> authenticationHandler) {
         this.smsProperties = smsProperties;
+        this.validateCodeProcessor = validateCodeProcessor;
         this.authenticationHandler = authenticationHandler;
 
     }
 
     @Override
     public void configure(HttpSecurity http) {
-        /* ******************* Spring Security 配置 ********************************** */
         SMSAuthenticationFilter smsAuthenticationFilter = new SMSAuthenticationFilter(smsProperties.getPhoneParameter(),
-                smsProperties.getPhoneLoginUri(), smsProperties.isPostOnly());
+                smsProperties.getPhoneLoginUri(), smsProperties.isPostOnly(), validateCodeProcessor);
         smsAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
         if (this.authenticationSuccessHandler != null) {
             smsAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
@@ -57,6 +62,7 @@ public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAd
             smsAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
         }
         SMSAuthenticationProvider smsAuthenticationProvider = new SMSAuthenticationProvider(authenticationHandler);
+        http.addFilterBefore(new SMSSenderFilter(smsProperties.getSendUri(), validateCodeProcessor), UsernamePasswordAuthenticationFilter.class);
         http.authenticationProvider(smsAuthenticationProvider).addFilterAfter(smsAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

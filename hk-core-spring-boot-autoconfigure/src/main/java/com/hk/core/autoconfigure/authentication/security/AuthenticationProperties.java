@@ -237,6 +237,11 @@ public class AuthenticationProperties {
         private String codeParameter = "phoneCode";
 
         /**
+         * 登录短信发送地址
+         */
+        private String sendUri = "/mobile/sender";
+
+        /**
          * 手机号登陆请求地址
          */
         private String phoneLoginUri = "/mobile/login";

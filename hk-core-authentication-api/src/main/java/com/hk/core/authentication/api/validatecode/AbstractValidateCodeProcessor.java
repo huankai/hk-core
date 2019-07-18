@@ -5,6 +5,8 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import java.io.IOException;
+
 /**
  * @author kevin
  * @date 2018-07-27 13:44
@@ -36,7 +38,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     }
 
     @Override
-    public String create(ServletWebRequest request) throws Exception {
+    public String create(ServletWebRequest request) throws IOException, ServletRequestBindingException {
         C validateCode = doCreate();
         saveValidateCode(validateCode, request);
         send(validateCode, request);
@@ -49,7 +51,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      * @param validateCode 验证码
      * @param request      request
      */
-    protected abstract void send(C validateCode, ServletWebRequest request) throws Exception;
+    protected abstract void send(C validateCode, ServletWebRequest request) throws IOException, ServletRequestBindingException;
 
     /**
      * 保存生成的验证码

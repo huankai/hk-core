@@ -5,6 +5,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.imageio.ImageIO;
+import java.io.IOException;
 
 /**
  * 图片验证码生成器
@@ -19,7 +20,7 @@ public class ImageCodeProcessor extends AbstractValidateCodeProcessor<ImageCode>
     }
 
     @Override
-    protected void send(ImageCode imageCode, ServletWebRequest request) throws Exception {
+    protected void send(ImageCode imageCode, ServletWebRequest request) throws IOException {
         ImageIO.write(imageCode.getImage(), "JPEG", request.getResponse().getOutputStream());
     }
 

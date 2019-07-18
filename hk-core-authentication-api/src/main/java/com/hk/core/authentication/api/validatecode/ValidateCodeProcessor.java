@@ -3,6 +3,8 @@ package com.hk.core.authentication.api.validatecode;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import java.io.IOException;
+
 /**
  * 验证码处理器
  *
@@ -22,7 +24,7 @@ public interface ValidateCodeProcessor {
      * @param request request
      * @return 验证码
      */
-    String create(ServletWebRequest request) throws Exception;
+    String create(ServletWebRequest request) throws IOException, ServletRequestBindingException;
 
     /**
      * 校验验证码

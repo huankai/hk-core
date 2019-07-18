@@ -34,6 +34,7 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
 
     public AlipayCallbackAuthenticationFilter(String defaultFilterProcessesUrl, AlipayClient alipayClient, String state) {
         super(defaultFilterProcessesUrl);
+        setAuthenticationDetailsSource(new AlipayAuthenticationDetailsSource());
         this.alipayClient = alipayClient;
         this.state = state;
     }

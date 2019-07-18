@@ -58,6 +58,7 @@ public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationPr
     public WechatCallbackAuthenticationFilter(WxMpService wxMpService, String callbackUrl, String state) {
         /* 处理 微信回调的url请求  */
         super(new AntPathRequestMatcher(callbackUrl));
+        setAuthenticationDetailsSource(new WechatAuthenticationDetailsSource());
         this.wxService = wxMpService;
         this.state = state;
     }
