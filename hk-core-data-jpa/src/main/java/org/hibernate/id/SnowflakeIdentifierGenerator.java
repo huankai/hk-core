@@ -1,5 +1,6 @@
 package org.hibernate.id;
 
+import com.hk.commons.util.Lazy;
 import com.hk.commons.util.SnowflakeIdGenerator;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.core.data.commons.properties.SnowflakeProperties;
@@ -19,24 +20,14 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SnowflakeIdentifierGenerator implements IdentifierGenerator {
 
-    private static SnowflakeIdGenerator snowflakeIdGenerator;
+    private static final Lazy<SnowflakeIdGenerator> snowflakeIdGenerator = Lazy.of(() -> {
+        SnowflakeProperties snowflakeProperties = SpringContextHolder.getBean(SnowflakeProperties.class);
+        return new SnowflakeIdGenerator(snowflakeProperties.getWorkerId(), snowflakeProperties.getDataCenterId());
+    });
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
-        return getSnowflakeIdGenerator().generate();
-    }
-
-    private static SnowflakeIdGenerator getSnowflakeIdGenerator() {
-        if (null == SnowflakeIdentifierGenerator.snowflakeIdGenerator) {
-            synchronized (SnowflakeIdentifierGenerator.class) {
-                if (null == SnowflakeIdentifierGenerator.snowflakeIdGenerator) {
-                    SnowflakeProperties snowflakeProperties = SpringContextHolder.getBean(SnowflakeProperties.class);
-                    SnowflakeIdentifierGenerator.snowflakeIdGenerator = new SnowflakeIdGenerator(snowflakeProperties.getWorkerId(),
-                            snowflakeProperties.getDataCenterId());
-                }
-            }
-        }
-        return snowflakeIdGenerator;
+        return snowflakeIdGenerator.get().generate();
     }
 
 }

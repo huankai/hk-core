@@ -33,6 +33,11 @@ public enum DatePattern {
     YYYY_MM_DD("yyyy-MM-dd"),
 
     /**
+     * yyyyMMddHHmmss
+     */
+    YYYYMMDDHHMMSS("yyyyMMddHHmmss"),
+
+    /**
      * yyyyMMdd
      */
     YYYYMMDD("yyyyMMdd"),
@@ -126,6 +131,7 @@ public enum DatePattern {
      * yyyy年MM月dd日 HH:mm:ss
      */
     YYYY_MM_DD_HH_MM_SS_CN("yyyy年MM月dd日 HH:mm:ss"),
+
 
     /**
      * HH:mm

@@ -8,12 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 
 import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author kevin
@@ -27,8 +24,6 @@ public class DefaultSingleLogoutServiceMessageHandler implements SingleLogoutSer
 
     private final TokenRegistry tokenRegistry;
 
-    private final ConsumerTokenServices consumerTokenServices;
-
     @Setter
     private LogoutMessageCreator logoutMessageCreator = new SamlCompliantLogoutMessageCreator();
 
@@ -38,12 +33,7 @@ public class DefaultSingleLogoutServiceMessageHandler implements SingleLogoutSer
     @Override
     public void handle(Authentication authentication) {
         List<LogoutRequest> logoutRequests = tokenRegistry.destroyAccessToken(authentication);
-        Set<String> revokeToken = new HashSet<>();
         for (LogoutRequest logoutRequest : logoutRequests) {
-            if (!revokeToken.contains(logoutRequest.getAccessToken())) {
-                consumerTokenServices.revokeToken(logoutRequest.getAccessToken());
-                revokeToken.add(logoutRequest.getAccessToken());
-            }
             performBackChannelLogout(logoutRequest);
         }
     }
