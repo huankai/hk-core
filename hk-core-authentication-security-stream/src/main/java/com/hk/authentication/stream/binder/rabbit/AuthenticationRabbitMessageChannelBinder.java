@@ -275,7 +275,7 @@ public class AuthenticationRabbitMessageChannelBinder extends AbstractMessageCha
         List<String> headerPatterns = new ArrayList<>(extendedProperties.getHeaderPatterns().length + 1);
         headerPatterns.add("!" + BinderHeaders.PARTITION_HEADER);
         headerPatterns.addAll(Arrays.asList(extendedProperties.getHeaderPatterns()));
-        mapper.setRequestHeaderNames(headerPatterns.toArray(new String[headerPatterns.size()]));
+        mapper.setRequestHeaderNames(headerPatterns.toArray(new String[0]));
         endpoint.setHeaderMapper(mapper);
         endpoint.setDefaultDeliveryMode(extendedProperties.getDeliveryMode());
         endpoint.setBeanFactory(this.getBeanFactory());
