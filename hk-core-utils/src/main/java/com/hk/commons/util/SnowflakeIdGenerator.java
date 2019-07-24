@@ -1,5 +1,10 @@
 package com.hk.commons.util;
 
+import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * 雪花id算法
  *
@@ -59,12 +64,6 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
     private static final long sequenceMask = ~(-1L << sequenceBits);
 
     /**
-     * 最大容忍时间, 单位毫秒, 即如果时钟只是回拨了该变量指定的时间, 那么等待相应的时间即可;
-     * 考虑到sequence服务的高性能, 这个值不易过大
-     */
-    private static final long MAX_BACKWARD_MS = 3;
-
-    /**
      * 工作机器ID(0~31)
      */
     private int workerId;
@@ -75,7 +74,7 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
     private int dataCenterId;
 
     /**
-     * 毫秒内序列(0~4095)
+     * 并发控制
      */
     private long sequence = 0L;
 
@@ -83,6 +82,11 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
      * 上次生成ID的时间截
      */
     private long lastTimestamp = -1L;
+
+    public SnowflakeIdGenerator() {
+        this.dataCenterId = getDataCenterId((int) maxDataCenterId);
+        this.workerId = getMaxWorkerId(dataCenterId, (int) maxWorkerId);
+    }
 
     /**
      * 构造函数
@@ -99,6 +103,42 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
         }
         this.workerId = workerId;
         this.dataCenterId = dataCenterId;
+    }
+
+    protected static int getMaxWorkerId(int dataCenterId, int maxWorkerId) {
+        StringBuilder mpid = new StringBuilder();
+        mpid.append(dataCenterId);
+        String name = ManagementFactory.getRuntimeMXBean().getName();
+        if (StringUtils.isNotEmpty(name)) {
+            /*
+             * GET jvmPid
+             */
+            mpid.append(name.split("@")[0]);
+        }
+        /*
+         * MAC + PID 的 hashcode 获取16个低位
+         */
+        return (mpid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
+    }
+
+    protected static int getDataCenterId(int dataCenterId) {
+        int id = 0;
+        try {
+            InetAddress ip = InetAddress.getLocalHost();
+            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            if (network == null) {
+                id = 1;
+            } else {
+                byte[] mac = network.getHardwareAddress();
+                if (null != mac) {
+                    id = ((0x000000FF & mac[mac.length - 1]) | (0x0000FF00 & ((mac[mac.length - 2]) << 8))) >> 6;
+                    id = id % (dataCenterId + 1);
+                }
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        return id;
     }
 
     // ==============================Methods==========================================
@@ -123,49 +163,50 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
      * @return 当前时间(毫秒)
      */
     private long timeGen() {
-        return System.currentTimeMillis();
+        return SystemClock.now();
     }
 
     /**
-     * 获得下一个ID (该方法是线程安全的)
+     * 获得下一个ID (线程安全)
      *
      * @return SnowflakeId
      */
     @Override
     public synchronized Long generate() {
         long timestamp = timeGen();
-        //如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退
+        //闰秒
         if (timestamp < lastTimestamp) {
-            // 如果时钟回退在最大容忍时间内，线程等待
-            if (lastTimestamp - timestamp < MAX_BACKWARD_MS) {
+            long offset = lastTimestamp - timestamp;
+            if (offset <= 5) {
                 try {
-                    Thread.sleep(lastTimestamp - timestamp);
-                } catch (InterruptedException e) {
-                    // ignore
+                    wait(offset << 1);
+                    timestamp = timeGen();
+                    if (timestamp < lastTimestamp) {
+                        throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", offset));
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             } else {
-                throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
+                throw new RuntimeException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", offset));
             }
         }
-        //如果是同一时间生成的，则进行毫秒内序列
         if (lastTimestamp == timestamp) {
+            // 相同毫秒内，序列号自增
             sequence = (sequence + 1) & sequenceMask;
-            //毫秒内序列溢出
             if (sequence == 0) {
-                //阻塞到下一个毫秒,获得新的时间戳
+                // 同一毫秒的序列数已经达到最大
                 timestamp = tilNextMillis(lastTimestamp);
             }
+        } else {
+            // 不同毫秒内，序列号置为 1 - 3 随机数
+            sequence = ThreadLocalRandom.current().nextLong(1, 3);
         }
-        //时间戳改变，毫秒内序列重置
-        else {
-            sequence = 0L;
-        }
-        //上次生成ID的时间截
         lastTimestamp = timestamp;
-        //移位并通过或运算拼到一起组成64位的ID
-        return ((timestamp - START_STMP) << timestampLeftShift) //
-                | (dataCenterId << dataCenterIdShift) //
-                | (workerId << workerIdShift) //
+        // 时间戳部分 | 数据中心部分 | 机器标识部分 | 序列号部分
+        return ((timestamp - START_STMP) << timestampLeftShift)
+                | (dataCenterId << dataCenterIdShift)
+                | (workerId << workerIdShift)
                 | sequence;
     }
 

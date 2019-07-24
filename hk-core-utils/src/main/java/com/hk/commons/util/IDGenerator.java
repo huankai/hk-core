@@ -1,6 +1,7 @@
 package com.hk.commons.util;
 
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * ID生成器
@@ -20,10 +21,18 @@ public interface IDGenerator<T> {
     T generate();
 
     /**
-     * UUID生成
+     * UUID生成 ，去掉 "-"
      */
     IDGenerator<String> STRING_UUID = () -> UUID.randomUUID().toString()
             .replaceAll(StringUtils.RUNG, StringUtils.EMPTY);
+
+    /**
+     * 32 位 使用ThreadLocalRandom获取UUID获取更优的效果 去掉"-"
+     */
+    IDGenerator<String> UUID_32 = () -> {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        return new UUID(random.nextLong(), random.nextLong()).toString().replaceAll(StringUtils.RUNG, StringUtils.EMPTY);
+    };
 
     /**
      * MostSignificantBit

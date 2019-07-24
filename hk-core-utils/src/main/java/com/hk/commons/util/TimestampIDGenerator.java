@@ -33,7 +33,7 @@ public class TimestampIDGenerator implements IDGenerator<String> {
 
     @Override
     public String generate() {
-        return String.format("%s%d%s", prefix, System.currentTimeMillis(), suffix);
+        return String.format("%s%d%s", prefix, SystemClock.now(), suffix);
     }
 
 }

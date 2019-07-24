@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.data;
 
-import com.hk.commons.util.Contants;
 import com.hk.core.authentication.api.SecurityContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

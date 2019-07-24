@@ -21,8 +21,11 @@ import java.io.Serializable;
 public class SnowflakeIdentifierGenerator implements IdentifierGenerator {
 
     private static final Lazy<SnowflakeIdGenerator> snowflakeIdGenerator = Lazy.of(() -> {
-        SnowflakeProperties snowflakeProperties = SpringContextHolder.getBean(SnowflakeProperties.class);
-        return new SnowflakeIdGenerator(snowflakeProperties.getWorkerId(), snowflakeProperties.getDataCenterId());
+        SnowflakeProperties snowflakeProperties = SpringContextHolder.getBeanProvider(SnowflakeProperties.class);
+        if (null != snowflakeProperties) {
+            return new SnowflakeIdGenerator(snowflakeProperties.getWorkerId(), snowflakeProperties.getDataCenterId());
+        }
+        return new SnowflakeIdGenerator();
     });
 
     @Override

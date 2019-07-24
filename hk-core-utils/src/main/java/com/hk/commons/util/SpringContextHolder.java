@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.annotation.Order;
+import org.springframework.lang.Nullable;
 
 import java.util.Map;
 
@@ -48,6 +49,11 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     public static <T> T getBean(Class<T> clazz) throws BeansException {
         return applicationContext.getBean(clazz);
+    }
+
+    @Nullable
+    public static <T> T getBeanProvider(Class<T> clazz) {
+        return applicationContext.getBeanProvider(clazz).getIfAvailable();
     }
 
     /**
