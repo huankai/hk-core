@@ -16,7 +16,7 @@ import java.util.Optional;
  * @date 2018-10-10 10:11
  */
 @Configuration
-@ConditionalOnClass(value = {SecurityContext.class})
+@ConditionalOnClass(value = {AuditorAware.class, SecurityContext.class})
 public class AuditorConfiguration {
 
     @Bean

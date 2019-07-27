@@ -1,5 +1,6 @@
 package com.hk.authentication.rabbit.listener;
 
+import com.hk.authentication.headers.Header;
 import com.hk.commons.util.JsonUtils;
 import com.hk.core.authentication.api.UserPrincipal;
 import com.rabbitmq.client.Channel;
@@ -20,11 +21,9 @@ import java.util.Objects;
  * @date 2019-4-15 11:27
  * @see com.hk.authentication.interceptors.AuthenticationChannelInterceptor
  */
-public class AuthenticationMessageListenerContainer extends SimpleMessageListenerContainer {
+public class SimpleSecurityContextMessageListenerContainer extends SimpleMessageListenerContainer {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-
-    public AuthenticationMessageListenerContainer(ConnectionFactory connectionFactory) {
+    public SimpleSecurityContextMessageListenerContainer(ConnectionFactory connectionFactory) {
         super(connectionFactory);
     }
 
@@ -45,7 +44,7 @@ public class AuthenticationMessageListenerContainer extends SimpleMessageListene
     protected void executeListener(Channel channel, Message messageIn) {
         MessageProperties messageProperties = messageIn.getMessageProperties();
         Map<String, Object> headers = messageProperties.getHeaders();
-        Object authorization = headers.get(AUTHORIZATION_HEADER);
+        Object authorization = headers.get(Header.AUTHORIZATION_HEADER);
         if (Objects.nonNull(authorization)) {
             UserPrincipal userPrincipal = JsonUtils.deserialize(authorization.toString(), UserPrincipal.class);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userPrincipal, null, null);
@@ -53,7 +52,6 @@ public class AuthenticationMessageListenerContainer extends SimpleMessageListene
         }
         super.executeListener(channel, messageIn);
     }
-
 
     /*
      * oauth 2 实现

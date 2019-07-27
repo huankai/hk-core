@@ -1,7 +1,8 @@
 package com.hk.authentication.stream.binder.rabbit;
 
 import com.hk.authentication.interceptors.AuthenticationChannelInterceptor;
-import com.hk.authentication.rabbit.listener.AuthenticationMessageListenerContainer;
+import com.hk.authentication.rabbit.listener.DirectSecurityContextMessageListenerContainer;
+import com.hk.authentication.rabbit.listener.SimpleSecurityContextMessageListenerContainer;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Envelope;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -18,6 +19,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.core.support.BatchingStrategy;
 import org.springframework.amqp.rabbit.core.support.SimpleBatchingStrategy;
 import org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.exception.ListenerExecutionFailedException;
 import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
 import org.springframework.amqp.rabbit.retry.RepublishMessageRecoverer;
@@ -76,6 +79,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 /**
  * rabbit
@@ -289,7 +293,7 @@ public class AuthenticationRabbitMessageChannelBinder extends AbstractMessageCha
             if (!ackChannelBeanName.equals(IntegrationContextUtils.NULL_CHANNEL_BEAN_NAME)
                     && !getApplicationContext().containsBean(ackChannelBeanName)) {
                 GenericApplicationContext context = (GenericApplicationContext) getApplicationContext();
-                context.registerBean(ackChannelBeanName, DirectChannel.class, () -> new DirectChannel());
+                context.registerBean(ackChannelBeanName, DirectChannel.class, (Supplier<DirectChannel>) DirectChannel::new);
             }
             endpoint.setConfirmAckChannelName(ackChannelBeanName);
             endpoint.setConfirmCorrelationExpressionString("#root");
@@ -351,20 +355,21 @@ public class AuthenticationRabbitMessageChannelBinder extends AbstractMessageCha
         Assert.state(!HeaderMode.embeddedHeaders.equals(properties.getHeaderMode()),
                 "the RabbitMQ binder does not support embedded headers since RabbitMQ supports headers natively");
         String destination = consumerDestination.getName();
-        AuthenticationMessageListenerContainer listenerContainer = new AuthenticationMessageListenerContainer(
-                this.connectionFactory);
+        boolean directContainer = properties.getExtension().getContainerType().equals(RabbitProperties.ContainerType.DIRECT);
+        AbstractMessageListenerContainer listenerContainer = directContainer ?
+                new DirectSecurityContextMessageListenerContainer(this.connectionFactory)
+                : new SimpleSecurityContextMessageListenerContainer(this.connectionFactory);
         listenerContainer.setAcknowledgeMode(properties.getExtension().getAcknowledgeMode());
         listenerContainer.setChannelTransacted(properties.getExtension().isTransacted());
         listenerContainer.setDefaultRequeueRejected(properties.getExtension().isRequeueRejected());
-        int concurrency = properties.getConcurrency();
-        listenerContainer.setConcurrentConsumers(concurrency);
-        int maxConcurrency = properties.getExtension().getMaxConcurrency();
-        if (maxConcurrency > concurrency) {
-            listenerContainer.setMaxConcurrentConsumers(maxConcurrency);
+        int concurrency = properties.getConcurrency() > 0 ? properties.getConcurrency() : 1;
+        if (directContainer) {
+            setDMLCProperties(properties, (DirectMessageListenerContainer) listenerContainer, concurrency);
+        } else {
+            setSMLCProperties(properties, (SimpleMessageListenerContainer) listenerContainer, concurrency);
         }
         listenerContainer.setPrefetchCount(properties.getExtension().getPrefetch());
         listenerContainer.setRecoveryInterval(properties.getExtension().getRecoveryInterval());
-        listenerContainer.setTxSize(properties.getExtension().getTxSize());
         listenerContainer.setTaskExecutor(new SimpleAsyncTaskExecutor(consumerDestination.getName() + "-"));
         String[] queues = StringUtils.tokenizeToStringArray(destination, ",", true, true);
         listenerContainer.setQueueNames(queues);
@@ -373,9 +378,6 @@ public class AuthenticationRabbitMessageChannelBinder extends AbstractMessageCha
                 inboundMessagePropertiesConverter);
         listenerContainer.setExclusive(properties.getExtension().isExclusive());
         listenerContainer.setMissingQueuesFatal(properties.getExtension().getMissingQueuesFatal());
-        if (properties.getExtension().getQueueDeclarationRetries() != null) {
-            listenerContainer.setDeclarationRetries(properties.getExtension().getQueueDeclarationRetries());
-        }
         if (properties.getExtension().getFailedDeclarationRetryInterval() != null) {
             listenerContainer.setFailedDeclarationRetryInterval(
                     properties.getExtension().getFailedDeclarationRetryInterval());
@@ -409,6 +411,35 @@ public class AuthenticationRabbitMessageChannelBinder extends AbstractMessageCha
         }
         adapter.setMessageConverter(passThoughConverter);
         return adapter;
+    }
+
+    private void setDMLCProperties(ExtendedConsumerProperties<RabbitConsumerProperties> properties,
+                                   DirectMessageListenerContainer listenerContainer, int concurrency) {
+
+        listenerContainer.setConsumersPerQueue(concurrency);
+        if (properties.getExtension().getMaxConcurrency() > concurrency) {
+            this.logger.warn("maxConcurrency is not supported with a direct container type");
+        }
+        if (properties.getExtension().getTxSize() > 1) {
+            this.logger.warn("txSize is not supported with a direct container type");
+        }
+        if (properties.getExtension().getQueueDeclarationRetries() != null) {
+            this.logger.warn("queueDeclarationRetries is not supported with a direct container type");
+        }
+    }
+
+    private void setSMLCProperties(ExtendedConsumerProperties<RabbitConsumerProperties> properties,
+                                   SimpleMessageListenerContainer listenerContainer, int concurrency) {
+
+        listenerContainer.setConcurrentConsumers(concurrency);
+        int maxConcurrency = properties.getExtension().getMaxConcurrency();
+        if (maxConcurrency > concurrency) {
+            listenerContainer.setMaxConcurrentConsumers(maxConcurrency);
+        }
+        listenerContainer.setTxSize(properties.getExtension().getTxSize());
+        if (properties.getExtension().getQueueDeclarationRetries() != null) {
+            listenerContainer.setDeclarationRetries(properties.getExtension().getQueueDeclarationRetries());
+        }
     }
 
     @Override

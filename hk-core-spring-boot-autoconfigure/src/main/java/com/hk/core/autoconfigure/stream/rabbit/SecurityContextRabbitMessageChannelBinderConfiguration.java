@@ -27,32 +27,21 @@ import org.springframework.lang.Nullable;
  * @see RabbitMessageChannelBinderConfiguration
  */
 @Configuration
-@ConditionalOnClass(value = {AuthenticationRabbitMessageChannelBinder.class})
-@EnableConfigurationProperties(value = {RabbitBinderConfigurationProperties.class, RabbitExtendedBindingProperties.class})
-public class AuthenticationRabbitMessageChannelBinderConfiguration {
+@EnableConfigurationProperties({RabbitBinderConfigurationProperties.class, RabbitExtendedBindingProperties.class})
+@ConditionalOnClass(value = {AuthenticationRabbitMessageChannelBinder.class, RabbitBinderConfigurationProperties.class})
+public class SecurityContextRabbitMessageChannelBinderConfiguration {
+
+    @Autowired
+    private ConnectionFactory rabbitConnectionFactory;
 
     @Autowired
     private RabbitProperties rabbitProperties;
-    @Autowired
-    private ConnectionFactory rabbitConnectionFactory;
 
     @Autowired
     private RabbitBinderConfigurationProperties rabbitBinderConfigurationProperties;
 
     @Autowired
     private RabbitExtendedBindingProperties rabbitExtendedBindingProperties;
-
-    @Bean
-    MessagePostProcessor gZipPostProcessor() {
-        GZipPostProcessor gZipPostProcessor = new GZipPostProcessor();
-        gZipPostProcessor.setLevel(this.rabbitBinderConfigurationProperties.getCompressionLevel());
-        return gZipPostProcessor;
-    }
-
-    @Bean
-    MessagePostProcessor deCompressingPostProcessor() {
-        return new DelegatingDecompressingPostProcessor();
-    }
 
     /**
      * <pre>
@@ -75,6 +64,18 @@ public class AuthenticationRabbitMessageChannelBinderConfiguration {
         binder.setNodes(this.rabbitBinderConfigurationProperties.getNodes());
         binder.setExtendedBindingProperties(this.rabbitExtendedBindingProperties);
         return binder;
+    }
+
+    @Bean
+    MessagePostProcessor deCompressingPostProcessor() {
+        return new DelegatingDecompressingPostProcessor();
+    }
+
+    @Bean
+    MessagePostProcessor gZipPostProcessor() {
+        GZipPostProcessor gZipPostProcessor = new GZipPostProcessor();
+        gZipPostProcessor.setLevel(this.rabbitBinderConfigurationProperties.getCompressionLevel());
+        return gZipPostProcessor;
     }
 
     @Bean

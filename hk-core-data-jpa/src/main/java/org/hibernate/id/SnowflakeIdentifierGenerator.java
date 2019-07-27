@@ -20,17 +20,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SnowflakeIdentifierGenerator implements IdentifierGenerator {
 
-    private static final Lazy<SnowflakeIdGenerator> snowflakeIdGenerator = Lazy.of(() -> {
-        SnowflakeProperties snowflakeProperties = SpringContextHolder.getBeanProvider(SnowflakeProperties.class);
-        if (null != snowflakeProperties) {
-            return new SnowflakeIdGenerator(snowflakeProperties.getWorkerId(), snowflakeProperties.getDataCenterId());
-        }
-        return new SnowflakeIdGenerator();
-    });
+    private static final Lazy<SnowflakeIdGenerator> SNOWFLAKE_ID_GENERATOR = Lazy.of(() -> SpringContextHolder.getBeanIfExist(SnowflakeProperties.class)
+            .map(item -> new SnowflakeIdGenerator(item.getWorkerId(), item.getDataCenterId()))
+            .orElse(new SnowflakeIdGenerator()));
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
-        return snowflakeIdGenerator.get().generate();
+        return SNOWFLAKE_ID_GENERATOR.get().generate();
     }
 
 }

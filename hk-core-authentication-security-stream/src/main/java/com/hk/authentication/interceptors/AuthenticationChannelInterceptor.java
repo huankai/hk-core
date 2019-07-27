@@ -1,15 +1,14 @@
 package com.hk.authentication.interceptors;
 
+import com.hk.authentication.headers.Header;
+import com.hk.commons.util.JsonUtils;
+import com.hk.commons.util.StringUtils;
+import com.hk.core.authentication.api.SecurityContextUtils;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
-
-import com.hk.authentication.rabbit.listener.AuthenticationMessageListenerContainer;
-import com.hk.commons.util.JsonUtils;
-import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.api.SecurityContextUtils;
 
 /**
  * 认证头拦截器，将当前用户信息以请求头方式发送给消息服务器，消费者可以通过请求头信息获取用户信息
@@ -30,10 +29,10 @@ public class AuthenticationChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         MessageHeaders headers = message.getHeaders();
-        String authentication = (String) headers.get(AuthenticationMessageListenerContainer.AUTHORIZATION_HEADER);
+        String authentication = (String) headers.get(Header.AUTHORIZATION_HEADER);
         if (StringUtils.isEmpty(authentication) && SecurityContextUtils.isAuthenticated()) {
             return MessageBuilder.fromMessage(message)
-                    .setHeader(AuthenticationMessageListenerContainer.AUTHORIZATION_HEADER,
+                    .setHeader(Header.AUTHORIZATION_HEADER,
                             JsonUtils.serialize(SecurityContextUtils.getPrincipal())).build();
         }
         return message;
