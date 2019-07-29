@@ -60,6 +60,6 @@ abstract class AbstractExceptionHandler {
         sb.append(StringUtils.LF);
 
         sb.append("<------------------------->");
-        logger.error(sb.toString());
+        logger.error(sb.toString(), e);
     }
 }

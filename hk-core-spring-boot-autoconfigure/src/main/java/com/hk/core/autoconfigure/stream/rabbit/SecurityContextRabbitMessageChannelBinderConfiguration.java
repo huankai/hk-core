@@ -26,6 +26,7 @@ import org.springframework.lang.Nullable;
  * @date 2019-4-15 11:40
  * @see RabbitMessageChannelBinderConfiguration
  */
+@Deprecated
 @Configuration
 @EnableConfigurationProperties({RabbitBinderConfigurationProperties.class, RabbitExtendedBindingProperties.class})
 @ConditionalOnClass(value = {AuthenticationRabbitMessageChannelBinder.class, RabbitBinderConfigurationProperties.class})

@@ -1,6 +1,7 @@
 package com.hk.core.authentication.security.authentication.sms;
 
 import com.hk.commons.JsonResult;
+import com.hk.commons.Status;
 import com.hk.core.authentication.api.validatecode.ValidateCodeProcessor;
 import com.hk.core.web.Webs;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -37,7 +38,7 @@ public class SMSSenderFilter extends HttpFilter {
         if (requestMatcher.matches(request)) {
             try {
                 String result = validateCodeProcessor.create(new ServletWebRequest(request, response));
-                Webs.writeJson(response, 200, new JsonResult<>(JsonResult.Status.SUCCESS, null, result));
+                Webs.writeJson(response, 200, new JsonResult<>(Status.SUCCESS, null, result));
                 return;
             } catch (Exception e) {
                 // ignore

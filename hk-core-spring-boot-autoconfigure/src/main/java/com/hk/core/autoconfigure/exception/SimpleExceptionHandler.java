@@ -1,6 +1,7 @@
 package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.JsonResult;
+import com.hk.commons.Status;
 import com.hk.commons.util.EnumDisplayUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,8 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public JsonResult<Void> noHandlerFoundException(NoHandlerFoundException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return new JsonResult<>(JsonResult.Status.NOT_FOUND,
-                String.format("%s %s %s ", EnumDisplayUtils.getDisplayText(JsonResult.Status.NOT_FOUND.name(), JsonResult.Status.class), e.getHttpMethod(), e.getRequestURL()));
+        return new JsonResult<>(Status.NOT_FOUND,
+                String.format("%s %s %s ", EnumDisplayUtils.getDisplayText(Status.NOT_FOUND.name(), Status.class), e.getHttpMethod(), e.getRequestURL()));
     }
 
 
@@ -57,7 +58,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public JsonResult<Void> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return new JsonResult<>(JsonResult.Status.METHOD_NOT_ALLOWED, "您访问的资源不支持此方式 :" + e.getMethod());
+        return new JsonResult<>(Status.METHOD_NOT_ALLOWED, "您访问的资源不支持此方式 :" + e.getMethod());
     }
 
     /**

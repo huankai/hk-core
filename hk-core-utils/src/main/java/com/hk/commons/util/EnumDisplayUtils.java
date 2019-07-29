@@ -1,8 +1,10 @@
 package com.hk.commons.util;
 
 import com.hk.commons.annotations.EnumDisplay;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -65,7 +67,8 @@ public abstract class EnumDisplayUtils {
      * @param enumValue enumValue
      * @return {@link EnumDisplay}
      */
-    private static EnumDisplay getEnumDisplay(Object enumValue) {
+    @Nullable
+    public static EnumDisplay getEnumDisplay(Object enumValue) {
         if (null == enumValue) {
             return null;
         }
@@ -75,7 +78,7 @@ public abstract class EnumDisplayUtils {
             Field field = type.getField(en.name());
             return field.getAnnotation(EnumDisplay.class);
         } catch (NoSuchFieldException | SecurityException e) {
-            throw new RuntimeException(e);
+            return null;
         }
     }
 

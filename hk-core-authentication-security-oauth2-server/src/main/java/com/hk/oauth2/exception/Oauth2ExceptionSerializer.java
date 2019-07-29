@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.hk.commons.JsonResult;
+import com.hk.commons.Status;
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.EnumDisplayUtils;
 import com.hk.commons.util.StringUtils;
@@ -59,7 +60,7 @@ public class Oauth2ExceptionSerializer<T extends OAuth2Exception> extends StdSer
 	 * @see JsonResult#getStatusCode()
 	 */
 	protected int getStatus(T exception) {
-		return EnumDisplayUtils.getDisplayOrder(JsonResult.Status.BAD_REQUEST);
+		return EnumDisplayUtils.getDisplayOrder(Status.BAD_REQUEST);
 	}
 
 	public static class Oauth2ClientStatusExceptionJackson2Serializer

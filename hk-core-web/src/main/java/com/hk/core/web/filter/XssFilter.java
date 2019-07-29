@@ -22,9 +22,4 @@ public class XssFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         chain.doFilter(new XssHttpServletRequestWrapper(request), response);
     }
-
-//    @Override
-//    protected void doInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-//        chain.doFilter(new XssHttpServletRequestWrapper(request), response);
-//    }
 }

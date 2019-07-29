@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
  * @date 2018-08-17 12:15
  * @see org.springframework.boot.autoconfigure.security.oauth2.client.SsoSecurityConfigurer.OAuth2ClientAuthenticationConfigurer
  */
+@Deprecated
 public class OAuth2ClientAuthenticationConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     private OAuth2ClientAuthenticationProcessingFilter filter;
