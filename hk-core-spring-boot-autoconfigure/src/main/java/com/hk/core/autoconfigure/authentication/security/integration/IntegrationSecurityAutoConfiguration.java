@@ -1,7 +1,7 @@
 package com.hk.core.autoconfigure.authentication.security.integration;
 
 import com.hk.authentication.interceptors.AuthenticationChannelInterceptor;
-import com.hk.authentication.rabbit.advice.RabbitSecurityContextMethodBeforeAdvice;
+import com.hk.authentication.rabbit.advice.RabbitSecurityContextMethodAdvice;
 import org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.stream.config.ListenerContainerCustomizer;
@@ -36,7 +36,7 @@ public class IntegrationSecurityAutoConfiguration {
 
         @Bean
         public ListenerContainerCustomizer<AbstractMessageListenerContainer> containerCustomizer() {
-            return (container, dest, group) -> container.setAdviceChain(new RabbitSecurityContextMethodBeforeAdvice());
+            return (container, dest, group) -> container.setAdviceChain(new RabbitSecurityContextMethodAdvice());
         }
     }
 }
