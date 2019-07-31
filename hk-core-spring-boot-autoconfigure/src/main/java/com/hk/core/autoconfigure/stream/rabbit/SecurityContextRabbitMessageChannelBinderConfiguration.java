@@ -29,7 +29,7 @@ import org.springframework.lang.Nullable;
 @Deprecated
 @Configuration
 @EnableConfigurationProperties({RabbitBinderConfigurationProperties.class, RabbitExtendedBindingProperties.class})
-@ConditionalOnClass(value = {AuthenticationRabbitMessageChannelBinder.class, RabbitBinderConfigurationProperties.class})
+@ConditionalOnClass(value = {AuthenticationRabbitMessageChannelBinder.class})
 public class SecurityContextRabbitMessageChannelBinderConfiguration {
 
     @Autowired

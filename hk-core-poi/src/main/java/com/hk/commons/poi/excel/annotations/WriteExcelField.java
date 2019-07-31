@@ -1,5 +1,6 @@
 package com.hk.commons.poi.excel.annotations;
 
+import com.hk.commons.poi.excel.model.StyleTitle;
 import org.apache.poi.ss.usermodel.BorderStyle;
 
 import java.lang.annotation.Documented;
@@ -37,7 +38,7 @@ public @interface WriteExcelField {
      *
      * @return int
      */
-    int width() default 20;
+    int width() default StyleTitle.DEFAULT_COLUMN_WIDTH;
 
     /**
      * 是否在导出时统计，只有导出的单元格类型为NUMERIC并且不为日期类型才会统计

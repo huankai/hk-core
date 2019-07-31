@@ -48,8 +48,6 @@ public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationPr
      */
     private final WxMpService wxService;
 
-//    private final String callbackUrl;
-
     /**
      * 配置
      */

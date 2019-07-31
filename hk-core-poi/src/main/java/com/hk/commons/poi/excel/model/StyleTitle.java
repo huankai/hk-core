@@ -13,11 +13,13 @@ public class StyleTitle extends Title {
 
     private static final int WIDTH_UNITS = 256;
 
+    public static final int DEFAULT_COLUMN_WIDTH = 20;
+
     /**
      * 列宽
      */
     @Setter
-    private int columnWidth;
+    private int columnWidth = DEFAULT_COLUMN_WIDTH;
 
     /**
      * 样式

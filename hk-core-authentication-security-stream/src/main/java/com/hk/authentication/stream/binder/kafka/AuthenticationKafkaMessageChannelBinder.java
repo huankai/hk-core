@@ -18,6 +18,7 @@ import org.springframework.messaging.MessageChannel;
  * @author kevin
  * @date 2019-4-24 15:39
  */
+@Deprecated
 public class AuthenticationKafkaMessageChannelBinder extends KafkaMessageChannelBinder {
 
     public AuthenticationKafkaMessageChannelBinder(KafkaBinderConfigurationProperties configurationProperties, KafkaTopicProvisioner provisioningProvider) {

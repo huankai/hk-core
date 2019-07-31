@@ -17,7 +17,6 @@ import com.hk.core.web.interceptors.GlobalPropertyInterceptor;
 import com.hk.core.web.mvc.CustomRequestMappingHandlerMapping;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
@@ -48,14 +47,12 @@ import java.util.Map;
 public class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
     @Bean
-    @ConditionalOnClass(SpringContextHolder.class)
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
     }
 
     @Bean
     @ConditionalOnWebApplication
-    @ConditionalOnClass(ServletContextHolder.class)
     public ServletContextHolder servletContextHolder() {
         return new ServletContextHolder();
     }

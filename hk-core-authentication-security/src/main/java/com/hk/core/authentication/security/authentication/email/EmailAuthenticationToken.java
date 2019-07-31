@@ -1,9 +1,10 @@
 package com.hk.core.authentication.security.authentication.email;
 
-import java.util.Collection;
-
+import com.hk.core.authentication.api.UserPrincipal;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 /**
  * Email AuthenticationToken
@@ -50,6 +51,15 @@ public class EmailAuthenticationToken extends AbstractAuthenticationToken {
     @Override
     public Object getPrincipal() {
         return this.principal;
+    }
+
+    @Override
+    public String getName() {
+        Object principal = getPrincipal();
+        if (principal instanceof UserPrincipal) {
+            return ((UserPrincipal) principal).getAccount();
+        }
+        return super.getName();
     }
 
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {

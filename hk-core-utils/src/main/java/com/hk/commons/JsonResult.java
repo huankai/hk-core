@@ -1,14 +1,11 @@
 package com.hk.commons;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hk.commons.annotations.EnumDisplay;
-import com.hk.commons.util.EnumDisplayUtils;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.commons.util.StringUtils;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * Json返回结果

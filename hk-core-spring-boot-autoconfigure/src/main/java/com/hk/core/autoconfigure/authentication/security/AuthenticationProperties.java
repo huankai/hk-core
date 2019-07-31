@@ -1,6 +1,7 @@
 package com.hk.core.autoconfigure.authentication.security;
 
 import com.hk.core.authentication.api.PermitMatcher;
+import com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2ClientAutoConfiguration;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -42,6 +43,7 @@ public class AuthenticationProperties {
      *
      * @see com.hk.core.autoconfigure.exception.Oauth2ErrorController
      * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#defaultFailureUrl
+     * @see Oauth2ClientAutoConfiguration#beanPostProcessor()
      */
     private String defaultFailureUrl = "/oauth2-error";
 

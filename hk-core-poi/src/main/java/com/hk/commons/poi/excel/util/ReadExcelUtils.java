@@ -96,8 +96,10 @@ public abstract class ReadExcelUtils {
 
     public static int getMinColumnWithExcelCellAnnotations(Class<?> cls) {
         return getFieldWithExcelCellAnnotations(cls).stream()
-                .map(item -> item.getAnnotation(ReadExcelField.class)).sorted(Comparator.comparingInt(ReadExcelField::start))
-                .findFirst().get().start();
+                .map(item -> item.getAnnotation(ReadExcelField.class))
+                .min(Comparator.comparingInt(ReadExcelField::start))
+                .orElseThrow(() -> new IllegalArgumentException("The class not have @ReadExcelField Annotation Field."))
+                .start();
     }
 
     /**
@@ -134,13 +136,13 @@ public abstract class ReadExcelUtils {
         List<Field> fields = FieldUtils.getFieldsListWithAnnotation(beanClass, ReadExcelField.class);
         ReadExcelField excelCell = fields.stream().filter(field -> StringUtils.equals(field.getName(), propertyName))
                 .findFirst()
-                .orElseThrow(() -> new ExcelReadException(beanClass.getName() + "属性名[" + propertyName + "]的没有标示 " + ReadExcelField.class.getName()))
+                .orElseThrow(() -> new ExcelReadException(String.format("%s 属性名[%s]没有标示 @ReadExcelField", beanClass.getName(), propertyName)))
                 .getAnnotation(ReadExcelField.class);
         return getExcelCellAnnotationColumns(excelCell);
     }
 
     /**
-     * @param readExcel
+     * @param readExcel readExcel
      * @return
      */
     public static int[] getExcelCellAnnotationColumns(ReadExcelField readExcel) {

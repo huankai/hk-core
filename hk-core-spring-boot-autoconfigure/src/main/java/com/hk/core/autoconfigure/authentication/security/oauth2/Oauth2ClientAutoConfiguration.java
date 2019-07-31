@@ -1,0 +1,132 @@
+package com.hk.core.autoconfigure.authentication.security.oauth2;
+
+import com.hk.core.authentication.oauth2.client.token.grant.code.LogoutAuthorizationCodeAccessTokenProvider;
+import com.hk.core.authentication.oauth2.session.HashMapBackedSessionMappingStorage;
+import com.hk.core.authentication.oauth2.session.SessionMappingStorage;
+import com.hk.core.authentication.oauth2.session.SingleSignOutHttpSessionListener;
+import com.hk.core.autoconfigure.authentication.security.AuthenticationProperties;
+import com.hk.core.autoconfigure.authentication.security.SecurityAuthenticationAutoConfiguration;
+import com.hk.core.autoconfigure.exception.Oauth2ErrorController;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+
+import javax.servlet.Filter;
+import java.util.List;
+
+/**
+ * oauth2 client 自动 配置
+ *
+ * @author huangkai
+ * @date 2018-12-27 15:57
+ */
+@Configuration
+@AutoConfigureAfter(SecurityAuthenticationAutoConfiguration.class)
+@ConditionalOnBean(OAuth2ClientContext.class)
+public class Oauth2ClientAutoConfiguration {
+
+    private final AuthenticationProperties authenticationProperties;
+
+    public Oauth2ClientAutoConfiguration(AuthenticationProperties authenticationProperties) {
+        this.authenticationProperties = authenticationProperties;
+    }
+
+    /**
+     * 客户端登陆Oauth2 认证出错时的处理器
+     */
+    @Bean
+    public Oauth2ErrorController oauth2ErrorController() {
+        return new Oauth2ErrorController();
+    }
+
+    /**
+     * 自定义 {@link OAuth2RestTemplate}
+     *
+     * @return {@link UserInfoRestTemplateCustomizer}
+     */
+    @Bean
+    public UserInfoRestTemplateCustomizer userInfoRestTemplateCustomizer() {
+        return template -> {
+            AuthenticationProperties.LoginProperties loginProperties = authenticationProperties.getLogin();
+            LogoutAuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider = new LogoutAuthorizationCodeAccessTokenProvider();
+            authorizationCodeAccessTokenProvider.setLogoutUrl(loginProperties.getLogoutUrl());
+            authorizationCodeAccessTokenProvider.setForceHttps(loginProperties.isForceHttps());
+            template.setAccessTokenProvider(authorizationCodeAccessTokenProvider);//简化，只需要认证码模式
+
+        };
+    }
+
+    /**
+     * spring bean 后置处理器
+     * <p>
+     * 通过源码分析 ，没有找到怎么配置 {@link OAuth2ClientAuthenticationProcessingFilter} 其它属性值
+     *
+     * @see org.springframework.boot.autoconfigure.security.oauth2.client.SsoSecurityConfigurer.OAuth2ClientAuthenticationConfigurer
+     */
+    @Bean
+    public BeanPostProcessor beanPostProcessor() {
+        return new BeanPostProcessor() {
+
+            @Override
+            public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+                if (bean instanceof FilterChainProxy) {
+                    List<SecurityFilterChain> filterChains = ((FilterChainProxy) bean).getFilterChains();
+                    for (SecurityFilterChain filterChain : filterChains) {
+                        for (Filter filter : filterChain.getFilters()) {
+                            if (filter instanceof OAuth2ClientAuthenticationProcessingFilter) {
+                                OAuth2ClientAuthenticationProcessingFilter processingFilter = (OAuth2ClientAuthenticationProcessingFilter) filter;
+                                SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();
+                                authenticationFailureHandler.setAllowSessionCreation(authenticationProperties.isAllowSessionCreation());
+                                authenticationFailureHandler.setDefaultFailureUrl(authenticationProperties.getDefaultFailureUrl());
+                                authenticationFailureHandler.setUseForward(authenticationProperties.isForwardToDestination());
+                                processingFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
+                            }
+                        }
+                    }
+                }
+                return bean;
+            }
+        };
+    }
+
+    /**
+     * oauth2 client 单点退出配置
+     */
+    @Configuration
+    @ConditionalOnClass(SessionMappingStorage.class)
+    static class OAuth2ClientSingleSignOutAuthenticationConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean(value = {SessionMappingStorage.class})
+        public SessionMappingStorage sessionMappingStorage() {
+            return new HashMapBackedSessionMappingStorage();
+        }
+
+        /**
+         * oauth2 单点退出 session 监听器，必要配置，确保 {@link SessionMappingStorage} 中过期的 Session 自动清除
+         */
+        @Bean
+        public ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> singleSignOutHttpSessionListener(SessionMappingStorage sessionMappingStorage) {
+            ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> registrationBean = new ServletListenerRegistrationBean<>();
+            registrationBean.setListener(new SingleSignOutHttpSessionListener(sessionMappingStorage));
+            registrationBean.setOrder(0);
+            return registrationBean;
+        }
+
+    }
+
+
+}

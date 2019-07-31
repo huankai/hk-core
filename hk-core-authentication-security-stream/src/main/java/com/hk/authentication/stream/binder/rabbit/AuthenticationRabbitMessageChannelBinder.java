@@ -88,6 +88,7 @@ import java.util.function.Supplier;
  * @date 2019-4-24 15:39
  * @see org.springframework.cloud.stream.binder.rabbit.RabbitMessageChannelBinder
  */
+@Deprecated
 public class AuthenticationRabbitMessageChannelBinder extends AbstractMessageChannelBinder<ExtendedConsumerProperties<RabbitConsumerProperties>,
         ExtendedProducerProperties<RabbitProducerProperties>, RabbitExchangeQueueProvisioner>
         implements ExtendedPropertiesBinder<MessageChannel, RabbitConsumerProperties, RabbitProducerProperties>,

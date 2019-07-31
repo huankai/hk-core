@@ -25,7 +25,7 @@ public class AuditorConfiguration {
         return new UserAuditorAware(securityContext);
     }
 
-    private class UserAuditorAware implements AuditorAware<Long> {
+    private static class UserAuditorAware implements AuditorAware<Long> {
 
         private SecurityContext securityContext;
 

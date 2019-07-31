@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class AlipayAuthenticationDetailsSource implements AuthenticationDetailsSource<HttpServletRequest, AlipayAuthenticationDetails> {
 
-
     @Override
     public AlipayAuthenticationDetails buildDetails(HttpServletRequest context) {
         return new AlipayAuthenticationDetails(context);

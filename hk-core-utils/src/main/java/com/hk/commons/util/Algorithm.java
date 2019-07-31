@@ -17,7 +17,6 @@ public enum Algorithm {
     @Getter
     private String name;
 
-
     Algorithm(String name) {
         this.name = name;
     }

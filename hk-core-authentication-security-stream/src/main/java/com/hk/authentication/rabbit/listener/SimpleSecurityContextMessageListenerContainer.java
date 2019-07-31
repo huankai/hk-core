@@ -21,6 +21,7 @@ import java.util.Objects;
  * @date 2019-4-15 11:27
  * @see com.hk.authentication.interceptors.AuthenticationChannelInterceptor
  */
+@Deprecated
 public class SimpleSecurityContextMessageListenerContainer extends SimpleMessageListenerContainer {
 
     public SimpleSecurityContextMessageListenerContainer(ConnectionFactory connectionFactory) {
