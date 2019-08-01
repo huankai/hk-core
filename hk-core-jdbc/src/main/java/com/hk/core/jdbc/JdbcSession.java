@@ -162,10 +162,7 @@ public final class JdbcSession {
         Object[] params = stmt.parameters.toArray();
         List<T> queryResult = queryForList(stmt.selectSql.toString(), rowMapper, arguments.getStartRowIndex(),
                 arguments.getPageSize(), params);
-        long rowCount = queryResult.size();
-        if (retriveRowCount) {
-            rowCount = queryForScalar(stmt.countSql.toString(), Long.class, params);
-        }
+        long rowCount = retriveRowCount ? queryForScalar(stmt.countSql.toString(), Long.class, params) : queryResult.size();
         return new ListResult<>(rowCount, queryResult);
     }
 
@@ -274,7 +271,7 @@ public final class JdbcSession {
         return new SelectStatement(sql, countSql, parameters);
     }
 
-    private class SelectStatement {
+    private static class SelectStatement {
 
         StringBuilder selectSql;
 

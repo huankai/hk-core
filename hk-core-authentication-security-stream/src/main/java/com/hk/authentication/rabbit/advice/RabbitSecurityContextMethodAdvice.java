@@ -10,8 +10,6 @@ import org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer
 import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +37,7 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
      *
      * @param method 方法名 {@link AbstractMessageListenerContainer#executeListener(Channel, Message)}
      * @param args   方法参数
-     * @param target {@link org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer}
+     * @param target 目标对象 {@link org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer}
      *               {@link org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer}
      */
     @Override
@@ -49,9 +47,7 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
         Object authorization = message.getMessageProperties().getHeaders().get(Header.AUTHORIZATION_HEADER);
         if (Objects.nonNull(authorization)) {
             UserPrincipal userPrincipal = JsonUtils.deserialize(authorization.toString(), UserPrincipal.class);
-
             SecurityContext currentContext = SecurityContextHolder.getContext();
-
             Stack<SecurityContext> contextStack = ORIGINAL_CONTEXT.get();
             if (contextStack == null) {
                 contextStack = new Stack<>();
@@ -59,7 +55,7 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
             }
             contextStack.push(currentContext);
             SecurityContext context = SecurityContextHolder.createEmptyContext();
-            AccessTokenAuthenticationToken authenticationToken = new AccessTokenAuthenticationToken(userPrincipal, null);
+            RabbitAuthenticationToken authenticationToken = new RabbitAuthenticationToken(userPrincipal, null);
             context.setAuthentication(authenticationToken);
             SecurityContextHolder.setContext(context);
         }
@@ -70,7 +66,7 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
      *
      * @param method 方法名 {@link AbstractMessageListenerContainer#executeListener(Channel, Message)}
      * @param args   方法参数
-     * @param target {@link org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer}
+     * @param target 目标对象 {@link org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer}
      *               {@link org.springframework.amqp.rabbit.listener.DirectMessageListenerContainer}
      */
     @Override
@@ -95,16 +91,15 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
         }
     }
 
-    private class AccessTokenAuthenticationToken extends AbstractAuthenticationToken {
+    private static class RabbitAuthenticationToken extends AbstractAuthenticationToken {
 
         private UserPrincipal userPrincipal;
 
-        private AccessTokenAuthenticationToken(UserPrincipal userPrincipal, Collection<? extends GrantedAuthority> authorities) {
+        private RabbitAuthenticationToken(UserPrincipal userPrincipal, Collection<? extends GrantedAuthority> authorities) {
             super(authorities);
             this.userPrincipal = userPrincipal;
             setAuthenticated(true);
         }
-
 
         @Override
         public Object getCredentials() {
