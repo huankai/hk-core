@@ -1,6 +1,7 @@
 package com.hk.commons.http.delete;
 
 import com.hk.commons.http.AbstractHttpExecutor;
+import com.hk.commons.http.HttpExecutor;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpDelete;
 
@@ -28,7 +29,7 @@ public abstract class AbstractDeleteHttpExecutor<T> extends AbstractHttpExecutor
 
     protected HttpDelete buildHttpDelete(URI uri, Map<String, Object> params) {
         HttpDelete httpDelete = new HttpDelete();
-        String uri_ = generateUri(uri, params);
+        String uri_ = HttpExecutor.generateUri(uri, params);
         httpDelete.setURI(URI.create(uri_));
         return httpDelete;
     }

@@ -24,6 +24,7 @@ import java.util.Stack;
  *
  * @author kevin
  * @date 2019-7-31 16:31
+ * @see com.hk.authentication.interceptors.AuthenticationChannelInterceptor
  */
 @Slf4j
 public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, AfterReturningAdvice {
@@ -33,6 +34,7 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
     private static final ThreadLocal<Stack<SecurityContext>> ORIGINAL_CONTEXT = new ThreadLocal<>();
 
     /**
+     * 消费执行前: 将用户登陆信息放入上下文
      * before 增强的方法为 {@link AbstractMessageListenerContainer#executeListener(Channel, Message)}
      *
      * @param method 方法名 {@link AbstractMessageListenerContainer#executeListener(Channel, Message)}
@@ -62,6 +64,7 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
     }
 
     /**
+     * 消费执行后: 将用户登陆信息从上下文清除
      * afterReturning 增强的方法为 {@link AbstractMessageListenerContainer#executeListener(Channel, Message)}
      *
      * @param method 方法名 {@link AbstractMessageListenerContainer#executeListener(Channel, Message)}

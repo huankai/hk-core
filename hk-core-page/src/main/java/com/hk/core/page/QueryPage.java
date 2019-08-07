@@ -45,8 +45,11 @@ public interface QueryPage<T> extends Serializable {
      * @return 总页数
      */
     default long getTotalPage() {
-        long totalRow = getTotalRow();
         int pageSize = getPageSize();
+        if (pageSize <= 0) {
+            return 1;
+        }
+        long totalRow = getTotalRow();
         return totalRow == 0 ? 1 : totalRow / pageSize + (totalRow % pageSize > 0 ? 1 : 0);
     }
 

@@ -1,6 +1,7 @@
 package com.hk.core.authentication.api.validatecode;
 
 import com.hk.commons.util.StringUtils;
+import lombok.Setter;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -21,6 +22,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     /**
      * 验证码存储器
      */
+    @Setter
     private ValidateCodeStrategy validateCodeStrategy = InMemoryValidateCodeStrategy.INSTANCE;
 
     /**
@@ -31,10 +33,6 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     AbstractValidateCodeProcessor(ValidateCodeGenerator<C> validateCodeGenerator, String codeParameterName) {
         this.validateCodeGenerator = validateCodeGenerator;
         this.codeParameterName = codeParameterName;
-    }
-
-    public void setValidateCodeStrategy(ValidateCodeStrategy validateCodeStrategy) {
-        this.validateCodeStrategy = validateCodeStrategy;
     }
 
     @Override

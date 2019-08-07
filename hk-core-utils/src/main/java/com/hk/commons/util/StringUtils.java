@@ -7,6 +7,7 @@ import org.springframework.core.io.UrlResource;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,6 +68,35 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      * 空白字符
      */
     public static final String SPACE = org.apache.commons.lang3.StringUtils.SPACE;
+
+    /**
+     * ${xxx} ，其中 xxx 必须为 匹配字母或数字或下划线或数字。等价于 '[^A-Za-z0-9_]'
+     */
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{\\w+}");
+
+    /**
+     * 模板处理:
+     * <pre>
+     * 你好，你的验证码为 ${code},过期时间为 ${expire} 分钟
+     * 返回:  你好，你的验证码为 params.get("code"),过期时间为 params.get("expire") 分钟
+     * 注意: template 中的 变量必须是以 ${变量名} ，变量名正则 为 \\w {@link VARIABLE_PATTERN}
+     * </pre>
+     *
+     * @param template template
+     * @param params   params
+     * @return template
+     */
+    public static String processTemplate(String template, Map<String, ?> params) {
+        StringBuffer sb = new StringBuffer();
+        Matcher m = VARIABLE_PATTERN.matcher(template);
+        while (m.find()) {
+            String param = m.group();
+            Object value = params.get(param.substring(2, param.length() - 1));// 截取 ${  与  }
+            m.appendReplacement(sb, value == null ? EMPTY : value.toString());
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
 
     /**
      * 下划线转小驼峰

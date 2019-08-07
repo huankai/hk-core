@@ -359,6 +359,26 @@ public abstract class DateTimeUtils {
     }
 
     /**
+     * 返回日期所在月的最后天
+     *
+     * @param date date
+     * @return date
+     */
+    public static LocalDateTime getMonthMaxDate(LocalDateTime date) {
+        return date.with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
+    }
+
+    /**
+     * 返回日期所在月的第一天
+     *
+     * @param date date
+     * @return date
+     */
+    public static LocalDateTime getMonthMinDate(LocalDateTime date) {
+        return date.with(TemporalAdjusters.firstDayOfMonth()).with(LocalTime.MIN);
+    }
+
+    /**
      * 返回日期所在月的第一天
      *
      * @param date date

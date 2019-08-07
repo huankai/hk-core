@@ -1,6 +1,7 @@
 package com.hk.commons.http.get;
 
 import com.hk.commons.http.AbstractHttpExecutor;
+import com.hk.commons.http.HttpExecutor;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 
@@ -35,7 +36,7 @@ public abstract class AbstractGetHttpExecutor<T> extends AbstractHttpExecutor<T,
      */
     protected final HttpGet buildHttpGet(URI uri, Map<String, Object> params) {
         HttpGet get = new HttpGet();
-        String uri_ = generateUri(uri, params);
+        String uri_ = HttpExecutor.generateUri(uri, params);
         get.setHeaders(getHeaders());
         get.setURI(URI.create(uri_));
         return get;
