@@ -87,6 +87,9 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      * @return template
      */
     public static String processTemplate(String template, Map<String, ?> params) {
+        if (CollectionUtils.isEmpty(params)) {
+            return template;
+        }
         StringBuffer sb = new StringBuffer();
         Matcher m = VARIABLE_PATTERN.matcher(template);
         while (m.find()) {

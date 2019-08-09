@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author kevin
@@ -37,16 +38,14 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
      * @return authentication
      */
     @Override
-    @SuppressWarnings("unchecked")
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
-            Map<String, Object> m = (Map<String, Object>) map;
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            List<String> roleList = CollectionUtils.getValue(m, "roleSet", List.class);
-            Set<String> roles = new HashSet<>();
+            List<?> roleList = CollectionUtils.getValue(map, "roleSet", List.class);
+            Set<String> roles = null;
             if (null != roleList) {
-                roles.addAll(roleList);
-                roleList.forEach(role -> {
+                roles = roleList.stream().map(Object::toString).collect(Collectors.toSet());
+                roles.forEach(role -> {
                     if (!StringUtils.startsWith(role, SecurityUserPrincipal.ROLE_PREFIX)) {
                         role = SecurityUserPrincipal.ROLE_PREFIX + role;
                     }
@@ -54,28 +53,28 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                 });
             }
 
-            List<String> permissionList = CollectionUtils.getValue(m, "permissionSet", List.class);
-            Set<String> permissions = new HashSet<>();
+            List<?> permissionList = CollectionUtils.getValue(map, "permissionSet", List.class);
+            Set<String> permissions = null;
             if (null != permissionList) {
-                permissions.addAll(permissionList);
-                permissionList.forEach(permissionName -> authorities.add(new SimpleGrantedAuthority(permissionName)));
+                permissions = permissionList.stream().map(Object::toString).collect(Collectors.toSet());
+                permissions.forEach(permissionName -> authorities.add(new SimpleGrantedAuthority(permissionName)));
             }
 
-            UserPrincipal principal = new UserPrincipal(CollectionUtils.getLongValue(m, "userId"),
-                    CollectionUtils.getStringValue(m, "account", CollectionUtils.getStringValue(m, USERNAME)),
-                    CollectionUtils.getBooleanValue(m, "protectUser", false),
-                    CollectionUtils.getStringValue(m, "realName"),
-                    CollectionUtils.getByteValue(m, "userType"),
-                    CollectionUtils.getStringValue(m, "phone"),
-                    CollectionUtils.getStringValue(m, "email"),
-                    CollectionUtils.getByteValue(m, "sex"),
-                    CollectionUtils.getStringValue(m, "iconPath"), roles, permissions);
-            principal.setOrgId(CollectionUtils.getLongValue(m, "orgId"));
-            principal.setOrgName(CollectionUtils.getStringValue(m, "orgName"));
-            principal.setDeptId(CollectionUtils.getLongValue(m, "deptId"));
-            principal.setDeptName(CollectionUtils.getStringValue(m, "deptName"));
+            UserPrincipal principal = new UserPrincipal(CollectionUtils.getLongValue(map, "userId"),
+                    CollectionUtils.getStringValue(map, "account", CollectionUtils.getStringValue(map, USERNAME)),
+                    CollectionUtils.getBooleanValue(map, "protectUser", false),
+                    CollectionUtils.getStringValue(map, "realName"),
+                    CollectionUtils.getByteValue(map, "userType"),
+                    CollectionUtils.getStringValue(map, "phone"),
+                    CollectionUtils.getStringValue(map, "email"),
+                    CollectionUtils.getByteValue(map, "sex"),
+                    CollectionUtils.getStringValue(map, "iconPath"), roles, permissions);
+            principal.setOrgId(CollectionUtils.getLongValue(map, "orgId"));
+            principal.setOrgName(CollectionUtils.getStringValue(map, "orgName"));
+            principal.setDeptId(CollectionUtils.getLongValue(map, "deptId"));
+            principal.setDeptName(CollectionUtils.getStringValue(map, "deptName"));
 
-            Map<String, Object> clientAppInfo = CollectionUtils.getMapValue(m, "appInfo");
+            Map<?, ?> clientAppInfo = CollectionUtils.getMapValue(map, "appInfo");
             if (null != clientAppInfo) {
                 principal.setAppInfo(new ClientAppInfo(CollectionUtils.getLongValue(clientAppInfo, "appId"),
                         CollectionUtils.getStringValue(clientAppInfo, "appCode"),

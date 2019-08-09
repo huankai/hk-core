@@ -2,6 +2,7 @@ package com.hk.commons.http;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.nio.conn.NHttpClientConnectionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +27,27 @@ public class ClientIdleConnectionReaper extends Thread {
 
     private static final ArrayList<HttpClientConnectionManager> connectionManagers = new ArrayList<>();
 
+    private static final ArrayList<NHttpClientConnectionManager> nConnectionManager = new ArrayList<>();
+
     private ClientIdleConnectionReaper() {
         super("http_client_idle_connection_reaper");
         setDaemon(true);
     }
 
-    /**
-     * 注册 connectionManager ，并启动该守护进程
-     *
-     * @param connectionManager connectionManager
-     */
+    public static synchronized boolean registerNConnectionManager(NHttpClientConnectionManager connectionManager) {
+        if (instance == null) {
+            instance = new ClientIdleConnectionReaper();
+            instance.start();
+        }
+        return nConnectionManager.add(connectionManager);
+    }
+
+    public static synchronized boolean removeNConnectionManager(NHttpClientConnectionManager connectionManager) {
+        boolean b = nConnectionManager.remove(connectionManager);
+        shutdownIfEmptyTask();
+        return b;
+    }
+
     public static synchronized boolean registerConnectionManager(HttpClientConnectionManager connectionManager) {
         if (instance == null) {
             instance = new ClientIdleConnectionReaper();
@@ -44,15 +56,9 @@ public class ClientIdleConnectionReaper extends Thread {
         return connectionManagers.add(connectionManager);
     }
 
-    /**
-     * 删除 connectionManager，当 {@link #connectionManagers} 为空时，调用 {@link #shutdown()} 释放该实例对象
-     *
-     * @param connectionManager
-     */
     public static synchronized boolean removeConnectionManager(HttpClientConnectionManager connectionManager) {
         boolean b = connectionManagers.remove(connectionManager);
-        if (connectionManagers.isEmpty())
-            shutdown();
+        shutdownIfEmptyTask();
         return b;
     }
 
@@ -60,22 +66,18 @@ public class ClientIdleConnectionReaper extends Thread {
         shuttingDown = true;
     }
 
-    /**
-     * 停止线程，释放资源
-     */
-    public static synchronized boolean shutdown() {
-        if (instance != null) {
-            instance.markShuttingDown();
-            instance.interrupt();
-            connectionManagers.clear();
-            instance = null;
-            return true;
+    public static synchronized boolean shutdownIfEmptyTask() {
+        if (connectionManagers.isEmpty() && nConnectionManager.isEmpty()) {
+            if (instance != null) {
+                instance.markShuttingDown();
+                instance.interrupt();
+                connectionManagers.clear();
+                nConnectionManager.clear();
+                instance = null;
+                return true;
+            }
         }
         return false;
-    }
-
-    public static synchronized int size() {
-        return connectionManagers.size();
     }
 
     public static synchronized void setIdleConnectionTime(long idleTime) {
@@ -90,7 +92,6 @@ public class ClientIdleConnectionReaper extends Thread {
                 log.debug("Shutting down reaper thread.");
                 return;
             }
-
             try {
                 Thread.sleep(REAP_INTERVAL_MILLISECONDS);
             } catch (InterruptedException e) {
@@ -98,12 +99,21 @@ public class ClientIdleConnectionReaper extends Thread {
             }
             try {
                 List<HttpClientConnectionManager> connectionManagers;
+                List<NHttpClientConnectionManager> nConnectionManagers;
                 synchronized (ClientIdleConnectionReaper.class) {
                     connectionManagers = (List<HttpClientConnectionManager>) ClientIdleConnectionReaper.connectionManagers.clone();
+                    nConnectionManagers = (List<NHttpClientConnectionManager>) ClientIdleConnectionReaper.nConnectionManager.clone();
                 }
                 for (HttpClientConnectionManager connectionManager : connectionManagers) {
                     try {
-                        // 释放资源
+                        connectionManager.closeExpiredConnections();
+                        connectionManager.closeIdleConnections(idleConnectionTime, TimeUnit.MILLISECONDS);
+                    } catch (Exception ex) {
+                        log.warn("Unable to close idle connections", ex);
+                    }
+                }
+                for (NHttpClientConnectionManager connectionManager : nConnectionManagers) {
+                    try {
                         connectionManager.closeExpiredConnections();
                         connectionManager.closeIdleConnections(idleConnectionTime, TimeUnit.MILLISECONDS);
                     } catch (Exception ex) {
