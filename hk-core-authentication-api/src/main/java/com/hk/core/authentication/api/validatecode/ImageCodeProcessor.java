@@ -1,7 +1,6 @@
 package com.hk.core.authentication.api.validatecode;
 
 import com.hk.core.web.Webs;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.imageio.ImageIO;
@@ -15,8 +14,8 @@ import java.io.IOException;
  */
 public class ImageCodeProcessor extends AbstractValidateCodeProcessor<ImageCode> {
 
-    public ImageCodeProcessor(ValidateCodeGenerator<ImageCode> validateCodeGenerator, String codeParameterName) {
-        super(validateCodeGenerator, codeParameterName);
+    public ImageCodeProcessor() {
+        super(new ImageCodeGenerator());
     }
 
     @Override

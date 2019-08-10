@@ -26,7 +26,7 @@ public interface ValidateCodeStrategy {
      * @param name    name
      * @return value
      */
-    Object get(RequestAttributes request, String name);
+    <T> T get(RequestAttributes request, String name);
 
     /**
      * 删除验证码

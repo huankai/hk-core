@@ -11,7 +11,6 @@ import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -155,31 +154,41 @@ public class SimpleHttpClientFactoryBean implements FactoryBean<SimpleHttpClient
 
     @SneakyThrows
     private CloseableHttpClient buildHttpClient() {
-        final ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
-        final LayeredConnectionSocketFactory sslsf = this.sslSocketFactory;
         final Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", plainsf).register("https", sslsf).build();
-        final PoolingHttpClientConnectionManager connMgmr = new PoolingHttpClientConnectionManager(registry);
-        connMgmr.setMaxTotal(maxPooledConnections);
-        connMgmr.setDefaultMaxPerRoute(maxConnectionsPerRoute);
-        connMgmr.setValidateAfterInactivity(DEFAULT_TIMEOUT);
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", sslSocketFactory)
+                .build();
+        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
+        connectionManager.setMaxTotal(maxPooledConnections);
+        connectionManager.setDefaultMaxPerRoute(maxConnectionsPerRoute);
+        connectionManager.setValidateAfterInactivity(DEFAULT_TIMEOUT);
         final HttpHost httpHost = new HttpHost(InetAddress.getLocalHost());
         final HttpRoute httpRoute = new HttpRoute(httpHost);
-        connMgmr.setMaxPerRoute(httpRoute, MAX_CONNECTIONS_PER_ROUTE);
-        final RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(readTimeout)
-                .setConnectTimeout(connectionTimeout).setConnectionRequestTimeout(connectionTimeout)
-                .setCircularRedirectsAllowed(circularRedirectsAllowed).setRedirectsEnabled(redirectsEnabled)
-                .setAuthenticationEnabled(authenticationEnabled).build();
-        final HttpClientBuilder builder = HttpClients.custom().setConnectionManager(connMgmr)
-                .setDefaultRequestConfig(requestConfig).setSSLSocketFactory(sslsf)
-                .setSSLHostnameVerifier(hostnameVerifier).setRedirectStrategy(redirectionStrategy)
-                .setDefaultCredentialsProvider(credentialsProvider).setDefaultCookieStore(cookieStore)
+        connectionManager.setMaxPerRoute(httpRoute, MAX_CONNECTIONS_PER_ROUTE);
+        final RequestConfig requestConfig = RequestConfig
+                .custom()
+                .setSocketTimeout(readTimeout)
+                .setConnectTimeout(connectionTimeout)
+                .setConnectionRequestTimeout(connectionTimeout)
+                .setCircularRedirectsAllowed(circularRedirectsAllowed)
+                .setRedirectsEnabled(redirectsEnabled)
+                .setAuthenticationEnabled(authenticationEnabled)
+                .build();
+        return HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .setDefaultRequestConfig(requestConfig)
+                .setSSLSocketFactory(sslSocketFactory)
+                .setSSLHostnameVerifier(hostnameVerifier)
+                .setRedirectStrategy(redirectionStrategy)
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .setDefaultCookieStore(cookieStore)
                 .setConnectionReuseStrategy(connectionReuseStrategy)
                 .setConnectionBackoffStrategy(connectionBackoffStrategy)
                 .setServiceUnavailableRetryStrategy(serviceUnavailableRetryStrategy)
                 .setProxyAuthenticationStrategy(proxyAuthenticationStrategy)
-                .setDefaultHeaders(defaultHeaders).useSystemProperties();
-        return builder.build();
+                .setDefaultHeaders(defaultHeaders)
+                .useSystemProperties()
+                .build();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.hk.core.authentication.api.validatecode;
 
+import com.hk.commons.util.Lazy;
+import com.hk.commons.util.SpringContextHolder;
 import com.hk.commons.util.StringUtils;
 import lombok.Setter;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -22,22 +24,21 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     /**
      * 验证码存储器
      */
-    @Setter
-    private ValidateCodeStrategy validateCodeStrategy = InMemoryValidateCodeStrategy.INSTANCE;
+    private final Lazy<ValidateCodeStrategy> validateCodeStrategy = Lazy.of(() -> SpringContextHolder.getBean(ValidateCodeStrategy.class));
 
     /**
      * 验证码请求参数名
      */
-    private final String codeParameterName;
+    @Setter
+    private String codeParameterName = DEFAULT_CODE_PARAMETER_NAME;
 
-    AbstractValidateCodeProcessor(ValidateCodeGenerator<C> validateCodeGenerator, String codeParameterName) {
+    AbstractValidateCodeProcessor(ValidateCodeGenerator<C> validateCodeGenerator) {
         this.validateCodeGenerator = validateCodeGenerator;
-        this.codeParameterName = codeParameterName;
     }
 
     @Override
     public String create(ServletWebRequest request) throws IOException, ServletRequestBindingException {
-        C validateCode = doCreate();
+        C validateCode = validateCodeGenerator.generate();
         saveValidateCode(validateCode, request);
         send(validateCode, request);
         return validateCode.getCode();
@@ -58,7 +59,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      * @param request      request
      */
     protected void saveValidateCode(C validateCode, ServletWebRequest request) throws ServletRequestBindingException {
-        validateCodeStrategy.save(request, getStoreKey(request), validateCode);
+        validateCodeStrategy.get().save(request, getStoreKey(request), validateCode);
     }
 
     protected abstract String getSuffix(ServletWebRequest request) throws ServletRequestBindingException;
@@ -74,29 +75,20 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     }
 
     /**
-     * 创建验证码
-     *
-     * @return 生成的验证码
-     */
-    protected C doCreate() {
-        return validateCodeGenerator.generate();
-    }
-
-    /**
      * 验证验证码
      *
      * @param request request
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void validate(ServletWebRequest request) throws ValidateCodeException, ServletRequestBindingException {
         final String key = getStoreKey(request);
-        C inStoreValidateCode = (C) validateCodeStrategy.get(request, key);
+        ValidateCodeStrategy strategy = this.validateCodeStrategy.get();
+        C inStoreValidateCode = strategy.get(request, key);
         if (null == inStoreValidateCode) {
             throw new ValidateCodeException("验证码不存在");
         }
         if (inStoreValidateCode.isExpired()) {
-            validateCodeStrategy.remove(request, key);
+            strategy.remove(request, key);
             throw new ValidateCodeException("验证码已过期");
         }
         String codeInRequest;
@@ -111,6 +103,6 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
         if (StringUtils.notEquals(inStoreValidateCode.getCode(), codeInRequest)) {
             throw new ValidateCodeException("验证码不匹配");
         }
-        validateCodeStrategy.remove(request, key);
+        strategy.remove(request, key);
     }
 }

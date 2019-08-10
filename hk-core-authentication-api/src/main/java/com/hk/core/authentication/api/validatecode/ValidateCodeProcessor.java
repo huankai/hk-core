@@ -13,6 +13,8 @@ import java.io.IOException;
  */
 public interface ValidateCodeProcessor {
 
+    String DEFAULT_CODE_PARAMETER_NAME = "validateCode";
+
     /**
      * 生成验证码前缀
      */
