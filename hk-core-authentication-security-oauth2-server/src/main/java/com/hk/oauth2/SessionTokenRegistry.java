@@ -31,16 +31,20 @@ public class SessionTokenRegistry implements TokenRegistry, LogoutParameter {
         Object details = authentication.getUserAuthentication().getDetails();
         if (details instanceof WebAuthenticationDetails) {
             String sessionId = ((WebAuthenticationDetails) details).getSessionId();
-            List<LogoutRequest> logoutRequests = map.getOrDefault(sessionId, new ArrayList<>());
-            Map<String, String> requestParameters = oAuth2Request.getRequestParameters();
-            String logoutUri = requestParameters.get(LOGOUT_PARAMETER_NAME);
-            if (StringUtils.isNotEmpty(logoutUri)) {
-                LogoutRequest logoutRequest = new LogoutRequest(oAuth2Request.getClientId(), logoutUri, accessToken.getValue());
-                if (!logoutRequests.contains(logoutRequest)) {
-                    log.debug("add logoutRequest: sessionId:[{}],logoutRequest:\n{}", sessionId, logoutRequest.toString());
-                    logoutRequests.add(logoutRequest);
+            if (StringUtils.isNotEmpty(sessionId)) {
+                List<LogoutRequest> logoutRequests = map.getOrDefault(sessionId, new ArrayList<>());
+                Map<String, String> requestParameters = oAuth2Request.getRequestParameters();
+                String logoutUri = requestParameters.get(LOGOUT_PARAMETER_NAME);
+                if (StringUtils.isNotEmpty(logoutUri)) {
+                    LogoutRequest logoutRequest = new LogoutRequest(oAuth2Request.getClientId(), logoutUri, accessToken.getValue());
+                    if (!logoutRequests.contains(logoutRequest)) {
+                        log.debug("add logoutRequest: sessionId:[{}],logoutRequest:\n{}", sessionId, logoutRequest.toString());
+                        logoutRequests.add(logoutRequest);
+                    }
+                    map.put(sessionId, logoutRequests);
                 }
-                map.put(sessionId, logoutRequests);
+            } else {
+                log.debug("SessionId is null");
             }
         }
     }
