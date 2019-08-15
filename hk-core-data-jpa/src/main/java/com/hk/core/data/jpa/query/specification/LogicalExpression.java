@@ -28,8 +28,7 @@ public class LogicalExpression implements Criterion {
         }
         List<Predicate> predicates = new ArrayList<>();
         Criterion[] crits = criterions;
-        for (int index = 0; index < crits.length; ++index) {
-            Criterion criterion = crits[index];
+        for (Criterion criterion : crits) {
             if (criterion != null) {
                 predicates.add(criterion.toPredicate(root, cq, cb));
             }
@@ -38,9 +37,9 @@ public class LogicalExpression implements Criterion {
             return null;
         } else {
             if (andOr == AndOr.OR) {
-                return cb.or((Predicate[]) predicates.toArray(new Predicate[0]));
+                return cb.or(predicates.toArray(new Predicate[0]));
             }
-            return cb.and((Predicate[]) predicates.toArray(new Predicate[0]));
+            return cb.and(predicates.toArray(new Predicate[0]));
         }
     }
 }

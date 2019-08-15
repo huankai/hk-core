@@ -25,4 +25,5 @@ public class DeleteArguments {
 	 * 删除的条件 where conditions
 	 */
 	private CompositeCondition conditions = new CompositeCondition();
+
 }

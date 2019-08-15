@@ -5,7 +5,10 @@ import com.hk.commons.util.date.DateTimeUtils;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Calendar;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 /**
@@ -68,59 +71,41 @@ public class DateRangeCondition implements Condition {
 
     @Getter
     @Setter
-    private Calendar start;
+    private LocalDateTime start;
 
     @Getter
     @Setter
-    private Calendar end;
+    private LocalDateTime end;
 
     @Override
     public String toSqlString(List<Object> parameters) {
-        if (range == null)
+        if (range == null) {
             return null;
-
-        Calendar start, end;
-        start = DateTimeUtils.getDateWithOutTime(Calendar.getInstance());
-        end = (Calendar) start.clone();
+        }
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime start = DateTimeUtils.getLocalDateTimeStart(now), // 当天开始时间
+                end = DateTimeUtils.getLocalDateTimeEnd(now); //当天结束时间
         switch (range) {
             case TD:
                 break;
             case YD:
-                start.add(Calendar.DATE, -1);
-                end.add(Calendar.DATE, -1);
+                start = start.minusDays(1);
+                end = end.minusDays(1);
                 break;
             case TW:
-                int dayOfWeek = start.get(Calendar.DAY_OF_WEEK);
-                if (dayOfWeek == Calendar.SUNDAY) {
-                    dayOfWeek = 7;
-                }
-                start.add(Calendar.DATE, 1 - dayOfWeek);
-                end = (Calendar) start.clone();
-                end.add(Calendar.DATE, 6);
+                start = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)).with(LocalTime.MIN); //周日凌晨
                 break;
             case LW:
-                dayOfWeek = start.get(Calendar.DAY_OF_WEEK);
-                if (dayOfWeek == Calendar.SUNDAY) {
-                    dayOfWeek = 7;
-                }
-                start.add(Calendar.DATE, 1 - dayOfWeek - 7);
-                end = (Calendar) start.clone();
-                end.add(Calendar.DATE, 6);
+                start = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY)).with(LocalTime.MIN).minusDays(7); // 上周日凌晨
+                end = end.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)).with(LocalTime.MAX).minusDays(7);// 上周六凌晨
                 break;
             case TM:
-                start.add(Calendar.DATE, 1 - start.get(Calendar.DATE));
-                end = (Calendar) start.clone();
-                end.add(Calendar.MONTH, 1);
-                end.add(Calendar.DATE, -1);
+                start = start.with(TemporalAdjusters.firstDayOfMonth()).with(LocalTime.MIN); // 本月开始时间
                 break;
             case LM:
-                // 本月1号
-                start.add(Calendar.DATE, 1 - start.get(Calendar.DATE));
-                end = (Calendar) start.clone();
-                // 上月1号
-                start.add(Calendar.MONTH, -1);
-                // 本月1号减一，变成上月最后一天
-                end.add(Calendar.DATE, -1);
+                LocalDateTime minusMonths = start.minusMonths(1);
+                start = minusMonths.with(TemporalAdjusters.firstDayOfMonth()).with(LocalTime.MIN); // 上月开始时间
+                end = minusMonths.with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);  // 上月结束时间
                 break;
             case CUSTOM:
             default:
@@ -128,11 +113,7 @@ public class DateRangeCondition implements Condition {
                 end = this.end;
                 break;
         }
-        RangeCondition<Calendar> condition = new RangeCondition<>(field, start, end, true, false);
-        if (end != null) {
-            end.add(Calendar.DATE, 1);
-            condition.setEnd(end);
-        }
+        RangeCondition<LocalDateTime> condition = new RangeCondition<>(field, start, end, true, false);
         return condition.toSqlString(parameters);
     }
 }

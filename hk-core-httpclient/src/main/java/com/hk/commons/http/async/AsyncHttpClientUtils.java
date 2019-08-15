@@ -20,7 +20,6 @@ import org.apache.http.config.Lookup;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.impl.auth.*;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -32,6 +31,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.nio.conn.NoopIOSessionStrategy;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
+import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
@@ -185,7 +185,7 @@ public abstract class AsyncHttpClientUtils {
                 new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString()));
         CollectionUtils.addAllNotNull(headerList, headers);
         return execute(createDefaultHttpAsyncClient(),
-                HttpUtils.newHttpPost(uri, new StringEntity(JsonUtils.serialize(body), Consts.UTF_8), headerList.toArray(new Header[0])),
+                HttpUtils.newHttpPost(uri, new NStringEntity(JsonUtils.serialize(body), Consts.UTF_8), headerList.toArray(new Header[0])),
                 futureCallback);
     }
 

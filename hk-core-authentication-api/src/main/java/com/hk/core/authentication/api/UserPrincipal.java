@@ -25,7 +25,7 @@ public class UserPrincipal implements Serializable {
     /**
      *
      */
-    private static final long serialVersionUID = 899893192177859358L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 当前用户id

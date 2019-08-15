@@ -2,6 +2,7 @@ package com.hk.core.jdbc;
 
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.query.Order;
+import com.hk.core.query.QueryModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -69,5 +70,13 @@ public class SelectArguments extends DeleteArguments {
     public SelectArguments groupBys(String... groupBy) {
         CollectionUtils.addAllNotNull(this.groupBy, groupBy);
         return this;
+    }
+
+    public static SelectArguments newSelectArguments(QueryModel<?> query) {
+        SelectArguments arguments = new SelectArguments();
+        arguments.setOrders(query.getOrders());
+        arguments.setStartRowIndex(query.getStartRowIndex());
+        arguments.setPageSize(query.getPageSize());
+        return arguments;
     }
 }

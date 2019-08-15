@@ -24,6 +24,8 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * web相关的工具类
@@ -199,6 +201,24 @@ public abstract class Webs {
      */
     public static boolean isIPhone(HttpServletRequest request) {
         return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "iPhone");
+    }
+
+    /**
+     * 获取所有请求参数
+     *
+     * @param request request
+     * @return 请求参数
+     */
+    public static Map<String, String> getRequestParam(HttpServletRequest request) {
+        Map<String, String[]> requestParameterMap = request.getParameterMap();
+        Map<String, String> result = new HashMap<>();
+        for (Map.Entry<String, String[]> entry : requestParameterMap.entrySet()) {
+            String value = StringUtils.arrayToCommaDelimitedString(entry.getValue());
+            if (StringUtils.isNotEmpty(value)) {
+                result.put(entry.getKey(), value);
+            }
+        }
+        return result;
     }
 
     /**
