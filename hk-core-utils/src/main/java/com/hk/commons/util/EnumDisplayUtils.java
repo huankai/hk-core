@@ -98,9 +98,8 @@ public abstract class EnumDisplayUtils {
      * @param enumClass enumClass
      * @return {@link EnumDisplay#value()}
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static String getDisplayText(String enumValue, Class<? extends Enum> enumClass) {
-        Object value = Enum.valueOf(enumClass, enumValue);
+    public static <T extends Enum<T>> String getDisplayText(String enumValue, Class<T> enumClass) {
+        T value = Enum.valueOf(enumClass, enumValue);
         return getDisplayText(value);
     }
 

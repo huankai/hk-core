@@ -40,6 +40,10 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         return (T) applicationContext.getBean(name);
     }
 
+    public static boolean containsBean(String name) {
+        return applicationContext.containsBean(name);
+    }
+
     /**
      * 根据Bean类型获取bean
      *
@@ -54,6 +58,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     public static <T> Optional<T> getBeanIfExist(Class<T> clazz) {
         return Optional.ofNullable(applicationContext.getBeanProvider(clazz).getIfAvailable());
     }
+
 
     /**
      * 根据类型获取 Bean

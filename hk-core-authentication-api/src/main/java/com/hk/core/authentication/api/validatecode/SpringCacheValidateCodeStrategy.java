@@ -22,7 +22,8 @@ public class SpringCacheValidateCodeStrategy implements ValidateCodeStrategy {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(RequestAttributes request, String name) {
-        return (T) cache.get(name);
+        Cache.ValueWrapper valueWrapper = cache.get(name);
+        return valueWrapper == null ? null : (T) valueWrapper.get();
     }
 
     @Override

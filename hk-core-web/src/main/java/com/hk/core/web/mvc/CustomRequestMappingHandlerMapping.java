@@ -2,16 +2,9 @@ package com.hk.core.web.mvc;
 
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
-
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -67,12 +60,12 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
     @Override
     protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
         String requestMappingName = request.getParameter(requestMappingParameterName);
-        final boolean debug = log.isDebugEnabled();
+        final boolean traceEnabled = log.isTraceEnabled();
         if (StringUtils.isEmpty(requestMappingName)) {
             requestMappingName = request.getHeader(requestMappingParameterName);
             if (StringUtils.isEmpty(requestMappingName)) {
-                if (debug) {
-                    log.debug("request parameter [" + requestMappingParameterName + "] is null");
+                if (traceEnabled) {
+                    log.trace("request parameter [" + requestMappingParameterName + "] is null");
                 }
                 return super.lookupHandlerMethod(lookupPath, request);
             }
@@ -83,16 +76,16 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
         }
         long size = CollectionUtils.size(handlerMethods);
         if (size != 1) {
-            if (debug) {
-                log.debug("path_variable_event :{},handlerMethods 匹配数:{}", requestMappingName, size);
+            if (traceEnabled) {
+                log.trace("path_variable_event :{},handlerMethods 匹配数:{}", requestMappingName, size);
             }
             return super.lookupHandlerMethod(lookupPath, request);
         }
         HandlerMethod handlerMethod = handlerMethods.get(0);
         RequestMappingInfo mappingInfo = METHOD_REQUEST_MAPPING_INFO_MAP.get(handlerMethod);
         if (null == mappingInfo) {
-            if (debug) {
-                log.debug("mappingInfo is null.");
+            if (traceEnabled) {
+                log.trace("mappingInfo is null.");
             }
             return super.lookupHandlerMethod(lookupPath, request);
         }

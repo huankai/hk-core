@@ -1,6 +1,5 @@
 package com.hk.oauth2.logout;
 
-import com.hk.commons.util.StringUtils;
 import com.hk.oauth2.TokenRegistry;
 import com.hk.oauth2.http.HttpClient;
 import com.hk.oauth2.http.LogoutHttpMessage;
@@ -9,6 +8,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -33,16 +33,18 @@ public class DefaultSingleLogoutServiceMessageHandler implements SingleLogoutSer
     @Override
     public void handle(Authentication authentication) {
         List<LogoutRequest> logoutRequests = tokenRegistry.destroyAccessToken(authentication);
-        for (LogoutRequest logoutRequest : logoutRequests) {
-            performBackChannelLogout(logoutRequest);
-        }
+        logoutRequests.forEach(this::performBackChannelLogout);
     }
 
     private void performBackChannelLogout(LogoutRequest logoutRequest) {
         String logoutMessage = logoutMessageCreator.create(logoutRequest);
-        URL url = StringUtils.toURL(logoutRequest.getLogoutURL());
-        final LogoutHttpMessage msg = new LogoutHttpMessage(url, logoutMessage, asynchronous);
-        log.debug("Prepared logout message to send is [{}]. Sending...", msg);
-        httpClient.sendMessageToEndPoint(msg);
+        try {
+            URL url = new URL(logoutRequest.getLogoutURL());
+            final LogoutHttpMessage msg = new LogoutHttpMessage(url, logoutMessage, asynchronous);
+            log.debug("Prepared logout message to send is [{}]. Sending...", msg);
+            httpClient.sendMessageToEndPoint(msg);
+        } catch (MalformedURLException e) {
+            log.warn("Can not create URL for LogoutUrL: {}", logoutRequest.getLogoutURL());
+        }
     }
 }

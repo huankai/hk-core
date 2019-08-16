@@ -151,15 +151,15 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         registry.addConverter(new StringToLocalDateTimeConverter());
     }
 
-    /**
-     * 添加方法参数解析
-     *
-     * @param resolvers resolvers
-     */
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginUserHandlerMethodArgumentResolver());
-    }
+//    /**
+//     * 添加方法参数解析
+//     *
+//     * @param resolvers resolvers
+//     */
+//    @Override
+//    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+//        resolvers.add(new LoginUserHandlerMethodArgumentResolver());
+//    }
 
     /**
      * 添加拦截器

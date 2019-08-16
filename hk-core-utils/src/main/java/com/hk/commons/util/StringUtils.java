@@ -5,7 +5,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.core.io.UrlResource;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -501,17 +500,6 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      */
     public static String trimToEmpty(String str) {
         return org.apache.commons.lang3.StringUtils.trimToEmpty(str);
-    }
-
-    /**
-     * string url 地址转成 {@link URL}
-     *
-     * @param url url
-     * @return {@link URL}
-     */
-    @SneakyThrows(value = {MalformedURLException.class})
-    public static URL toURL(String url) {
-        return new URL(url);
     }
 
     /**

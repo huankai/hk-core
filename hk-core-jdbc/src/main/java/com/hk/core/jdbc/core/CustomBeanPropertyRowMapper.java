@@ -377,9 +377,8 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
     }
 
     @Nullable
-    @SuppressWarnings("unchecked")
     private <E> E getColumnValue(ResultSet rs, int index, Class<E> clazz) throws SQLException {
-        return (E) getResultSetValue(rs, index, clazz);
+        return clazz.cast(getResultSetValue(rs, index, clazz));
     }
 
     /**

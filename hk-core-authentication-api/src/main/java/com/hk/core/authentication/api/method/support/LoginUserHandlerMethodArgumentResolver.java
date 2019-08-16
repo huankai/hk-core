@@ -21,6 +21,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * }
  * </pre>
  */
+@Deprecated
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
