@@ -3,7 +3,7 @@ package com.hk.commons.sms;
 import com.hk.commons.JsonResult;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author kevin
@@ -13,7 +13,7 @@ import java.util.Collection;
 public class LoggerSmsSender extends AbstractSmsSender<Void> {
 
     @Override
-    protected JsonResult<Void> doSendSms(Collection<String> phones, String message) {
+    protected JsonResult<Void> doSendSms(Set<String> phones, String message) {
         log.info("Send Phone:{} ,Message: {}", phones, message);
         return JsonResult.success();
     }

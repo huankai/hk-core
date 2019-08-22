@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.web;
 
-import com.hk.commons.util.ClassUtils;
 import com.hk.core.authentication.api.SecurityContextUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -13,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author sjq-278
  * @date 2018-12-03 15:00
  */
-public class UserContextInterceptor extends HandlerInterceptorAdapter {
+class UserContextInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

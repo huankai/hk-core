@@ -4,8 +4,8 @@ import com.hk.commons.JsonResult;
 import com.hk.commons.util.StringUtils;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author kevin
@@ -31,7 +31,7 @@ public interface SmsSender<R> {
      * @return 结果
      * @throws IOException
      */
-    JsonResult<R> sendSms(Collection<String> phones, String message) throws IOException;
+    JsonResult<R> sendSms(Set<String> phones, String message) throws IOException;
 
     /**
      * @param phone             手机号
@@ -51,5 +51,5 @@ public interface SmsSender<R> {
      * @return 结果
      * @throws IOException
      */
-    JsonResult<R> sendTemplateSms(Collection<String> phones, String smsTemplateId, Map<String, ?> templateParameter) throws IOException;
+    JsonResult<R> sendTemplateSms(Set<String> phones, String smsTemplateId, Map<String, ?> templateParameter) throws IOException;
 }

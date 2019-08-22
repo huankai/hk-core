@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -36,10 +37,6 @@ public final class JsonUtils {
 
     public static final String IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID = "fieldFilter";
 
-    public static final String HANDLER = "handler";
-
-    public static final String HIBERNATE_LAZY_INITIALIZER = "hibernateLazyInitializer";
-
     private static ObjectMapper mapper;
 
     private static final Module[] modules;
@@ -66,7 +63,14 @@ public final class JsonUtils {
 
         moduleList.add(JAVA_TIME_MODULE);
         moduleList.add(new Jdk8Module());
-
+        /*
+            添加 hibernate 使用 getOne 查询 懒加载报错的问题
+            @see https://stackoverflow.com/questions/24994440/no-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-javassist
+        */
+        Hibernate5Module hibernate5Module = new Hibernate5Module();
+        hibernate5Module.enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
+        hibernate5Module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
+        moduleList.add(hibernate5Module);
         modules = moduleList.toArray(new Module[0]);
 
     }
@@ -88,11 +92,8 @@ public final class JsonUtils {
     }
 
     public static void configure(ObjectMapper om, String... exceptFields) {
-        Set<String> exceptSet = ArrayUtils.asHashSet(HANDLER, HIBERNATE_LAZY_INITIALIZER);
-        CollectionUtils.addAllNotNull(exceptSet, exceptFields);
-
+        Set<String> exceptSet = ArrayUtils.asHashSet(exceptFields);
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-        /* 忽略实体中的Hibernate getOne查询返回的 "handler", "hibernateLazyInitializer" 字段 */
         filterProvider.addFilter(IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
                 SimpleBeanPropertyFilter.serializeAllExcept(exceptSet));
         om.setDateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
