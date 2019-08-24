@@ -22,7 +22,7 @@ import java.util.*;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class DataSourceConfigStorage<T extends ID> implements ConfigStorage<T> {
+public class DataSourceConfigStorage<T extends ConfigID> implements ConfigStorage<T> {
 
     private final Lazy<DataSource> dataSource = Lazy.of(() -> SpringContextHolder.getBean(DataSource.class));
 

@@ -14,7 +14,7 @@ import java.util.Optional;
  * @date 2019-8-20 17:42
  */
 @RequiredArgsConstructor
-public class PropertiesConfigStorage<T extends ID> implements ConfigStorage<T> {
+public class PropertiesConfigStorage<T extends ConfigID> implements ConfigStorage<T> {
 
     private final List<T> data;
 

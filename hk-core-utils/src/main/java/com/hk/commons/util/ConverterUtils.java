@@ -21,7 +21,7 @@ public class ConverterUtils {
     /**
      * 默认转换
      */
-    public static DefaultConversionService DEFAULT_CONVERSION_SERVICE = new DefaultConversionService();
+    public static final DefaultConversionService DEFAULT_CONVERSION_SERVICE = new DefaultConversionService();
 
     /**
      * 转换

@@ -71,6 +71,14 @@ public final class JsonUtils {
         hibernate5Module.enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
         hibernate5Module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
         moduleList.add(hibernate5Module);
+        /*
+         *   这里使用 toArray 方法转换为数组时，toArray(new Module[0]) 与 toArray(new Module[moduleList.size()])的区别:
+         *   转换集合为数组的时候，有两种方式：使用初始化大小的数组（这里指的是初始化大小的时候使用了集合的size()方法）和空数组。
+         *   在低版本的 Java 中推荐使用初始化大小的数组，因为使用反射调用去创建一个合适大小的数组相对较慢。
+         *   但是在 openJDK 6 之后的高版本中方法被优化了，传入空数组相比传入初始化大小的数组，效果是相同的甚至有时候是更优的。
+         *   因为使用 concurrent 或 synchronized 集合时，如果集合进行了收缩，toArray()和size()方法可能会发生数据竞争，此时传入初始化大小的数组是危险的。
+         * @see https://stackoverflow.com/questions/174093/toarraynew-myclass0-or-toarraynew-myclassmylist-size
+         */
         modules = moduleList.toArray(new Module[0]);
 
     }

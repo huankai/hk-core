@@ -10,7 +10,7 @@ import java.util.Optional;
  * @author kevin
  * @date 2019-8-20 17:40
  */
-public interface ConfigStorage<T extends ID> {
+public interface ConfigStorage<T extends ConfigID> {
 
     List<T> getAll();
 
