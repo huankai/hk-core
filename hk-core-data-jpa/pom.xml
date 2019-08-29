@@ -14,12 +14,16 @@
         <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-jdbc</artifactId>
-
-            <!--
-                在使用 mysql json 类型的字段时，需要引用此依赖包
-                文档： https://github.com/vladmihalcea/hibernate-types
-            -->
         </dependency>
+        <!-- 引用 hibernate jackson 序列化 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-hibernate5</artifactId>
+        </dependency>
+        <!--
+            在使用 mysql json 类型的字段时，需要引用此依赖包
+            文档： https://github.com/vladmihalcea/hibernate-types
+        -->
         <dependency>
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-52</artifactId>

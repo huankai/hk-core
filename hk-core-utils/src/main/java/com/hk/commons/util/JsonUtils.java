@@ -41,6 +41,10 @@ public final class JsonUtils {
 
     private static final Module[] modules;
 
+    private static final boolean HIBERNATE_MODULE_ENABLED = ClassUtils.isPresent("org.hibernate.Session", null)
+            && ClassUtils.isPresent("com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module", null);
+
+
     static {
         List<Module> moduleList = new ArrayList<>();
 
@@ -67,10 +71,12 @@ public final class JsonUtils {
             添加 hibernate 使用 getOne 查询 懒加载报错的问题
             @see https://stackoverflow.com/questions/24994440/no-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-javassist
         */
-        Hibernate5Module hibernate5Module = new Hibernate5Module();
-        hibernate5Module.enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
-        hibernate5Module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
-        moduleList.add(hibernate5Module);
+        if (HIBERNATE_MODULE_ENABLED) {
+            Hibernate5Module hibernate5Module = new Hibernate5Module();
+            hibernate5Module.enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
+            hibernate5Module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
+            moduleList.add(hibernate5Module);
+        }
         /*
          *   这里使用 toArray 方法转换为数组时，toArray(new Module[0]) 与 toArray(new Module[moduleList.size()])的区别:
          *   转换集合为数组的时候，有两种方式：使用初始化大小的数组（这里指的是初始化大小的时候使用了集合的size()方法）和空数组。
@@ -80,7 +86,6 @@ public final class JsonUtils {
          * @see https://stackoverflow.com/questions/174093/toarraynew-myclass0-or-toarraynew-myclassmylist-size
          */
         modules = moduleList.toArray(new Module[0]);
-
     }
 
     public static Module[] modules() {

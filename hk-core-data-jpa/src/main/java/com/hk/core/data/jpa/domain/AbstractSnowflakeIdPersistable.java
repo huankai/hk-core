@@ -44,7 +44,11 @@ public abstract class AbstractSnowflakeIdPersistable implements Persistable<Long
         return null == id;
     }
 
-    @Override
+     public Long getXXX(){
+        return id;
+     }
+
+   @Override
     public String toString() {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
     }

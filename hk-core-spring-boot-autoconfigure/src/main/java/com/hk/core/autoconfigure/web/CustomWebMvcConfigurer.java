@@ -2,11 +2,10 @@ package com.hk.core.autoconfigure.web;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.hk.commons.converters.*;
-import com.hk.commons.util.ClassUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.JsonUtils;
-import com.hk.commons.util.SpringContextHolder;
+import com.hk.commons.util.*;
 import com.hk.commons.util.date.DatePattern;
 import com.hk.core.web.ServletContextHolder;
 import com.hk.core.web.filter.XssFilter;
@@ -68,7 +67,11 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         return jacksonObjectMapperBuilder -> {
+            SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+            filterProvider.addFilter(JsonUtils.IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
+                    SimpleBeanPropertyFilter.serializeAllExcept(AuditField.AUDIT_FIELD_ARRAY));
             jacksonObjectMapperBuilder.modules(JsonUtils.modules())
+                    .filters(filterProvider)
                     .dateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
                     .featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                     .failOnUnknownProperties(true)
