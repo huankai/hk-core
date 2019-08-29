@@ -2,6 +2,7 @@ package com.hk.commons.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.databind.type.MapType;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.hk.commons.jackson.LongToStringSerializer;
 import com.hk.commons.util.date.DatePattern;
 import lombok.SneakyThrows;
 
@@ -64,8 +66,10 @@ public final class JsonUtils {
                 new LocalTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
         JAVA_TIME_MODULE.addDeserializer(LocalTime.class,
                 new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
-
         moduleList.add(JAVA_TIME_MODULE);
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(Long.class, LongToStringSerializer.getInstance());
+        moduleList.add(simpleModule);
         moduleList.add(new Jdk8Module());
         /*
             添加 hibernate 使用 getOne 查询 懒加载报错的问题
