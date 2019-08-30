@@ -4,6 +4,7 @@ import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.data.jpa.repository.BaseJpaRepository;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
@@ -73,6 +74,11 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
     public QueryPage<T> queryForPage(QueryModel<T> query) {
         return getBaseRepository().findByPage(Example.of(checkNull(query.getParam()), ofExampleMatcher()),
                 query.getOrders(), query.getStartRowIndex(), query.getPageSize());
+    }
+
+    @Override
+    public QueryPage<T> queryForPage(ConditionQueryModel queryModel) {
+        return getBaseRepository().queryForPage(queryModel);
     }
 
     @Override

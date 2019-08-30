@@ -4,7 +4,9 @@ import com.hk.commons.util.ObjectUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.data.commons.query.MatchMode;
 import com.hk.core.data.commons.query.Operator;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.*;
 
@@ -12,6 +14,8 @@ import java.util.*;
  * @author kevin
  * @date 2018-09-19 11:00
  */
+@Data
+@NoArgsConstructor
 public class SimpleCondition implements Condition {
 
     @Getter
@@ -21,7 +25,7 @@ public class SimpleCondition implements Condition {
     private Operator operator;
 
     @Getter
-    private Object compareValue;
+    private Object value;
 
     private static Map<Operator, ComparableCondition> conditions;
 
@@ -58,20 +62,20 @@ public class SimpleCondition implements Condition {
     }
 
     /**
-     * @param field field
-     * @param operator operator
+     * @param field        field
+     * @param operator     operator
      * @param compareValue compareValue
      */
-    public SimpleCondition(String field, Operator operator, Object compareValue) {
+    public SimpleCondition(String field, Operator operator, Object value) {
         this.field = field;
         this.operator = operator;
-        this.compareValue = compareValue;
+        this.value = value;
     }
 
     @Override
     public String toSqlString(List<Object> parameters) {
         ComparableCondition c = getSubCondition(operator);
-        return null != c ? c.toSqlString(field, operator, compareValue, parameters) : null;
+        return null != c ? c.toSqlString(field, operator, value, parameters) : null;
     }
 
     private ComparableCondition getSubCondition(Operator operator) {

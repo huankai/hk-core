@@ -4,6 +4,7 @@ import com.hk.commons.util.ListResult;
 import com.hk.core.data.jdbc.repository.JdbcRepository;
 import com.hk.core.jdbc.SelectArguments;
 import com.hk.core.jdbc.query.CompositeCondition;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
@@ -37,6 +38,11 @@ public abstract class JdbcServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     public QueryPage<T> queryForPage(SelectArguments selectArguments) {
         return getBaseRepository().queryForPage(selectArguments);
+    }
+
+    @Override
+    public QueryPage<T> queryForPage(ConditionQueryModel queryModel) {
+        return getBaseRepository().queryForPage(queryModel);
     }
 
     @Override

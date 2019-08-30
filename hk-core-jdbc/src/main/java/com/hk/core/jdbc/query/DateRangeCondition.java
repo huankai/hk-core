@@ -3,6 +3,7 @@ package com.hk.core.jdbc.query;
 import com.hk.commons.annotations.EnumDisplay;
 import com.hk.commons.util.date.DateTimeUtils;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.DayOfWeek;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author kevin
  * @date 2018-09-19 11:05
  */
+@NoArgsConstructor
 public class DateRangeCondition implements Condition {
 
     public enum DateRange {

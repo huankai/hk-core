@@ -1,6 +1,7 @@
 package com.hk.core.data.jpa.repository;
 
 import com.hk.core.data.commons.utils.OrderUtils;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
@@ -52,5 +53,5 @@ public interface BaseJpaRepository<T extends Persistable<ID>, ID extends Seriali
         return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
     }
 
-
+    QueryPage<T> queryForPage(ConditionQueryModel queryModel);
 }

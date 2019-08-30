@@ -1,11 +1,16 @@
 package com.hk.core.data.jpa.repository;
 
-import com.hk.commons.util.AssertUtils;
-import com.hk.commons.util.BeanUtils;
-import com.hk.commons.util.ObjectUtils;
+import com.hk.commons.util.*;
+import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.data.jpa.convert.QueryByExamplePredicateBuilder;
 import com.hk.core.data.jpa.repository.support.DefaultQueryHints;
 import com.hk.core.data.jpa.repository.support.QueryHints;
+import com.hk.core.data.jpa.type.TypeFactory;
+import com.hk.core.jdbc.query.ConditionQueryModel;
+import com.hk.core.page.QueryPage;
+import com.hk.core.page.SimpleQueryPage;
+import com.hk.core.query.Order;
+import org.hibernate.jpa.TypedParameterValue;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,7 +25,9 @@ import org.springframework.util.Assert;
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.data.jpa.repository.query.QueryUtils.*;
 
@@ -271,7 +278,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
         }
 
         // Remove all Orders the Specifications might have applied
-        query.orderBy(Collections.<Order>emptyList());
+        query.orderBy(Collections.emptyList());
 
         return em.createQuery(query);
     }
@@ -424,6 +431,53 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
         BeanUtils.copyNotNullProperties(t, find);
         return save(find);
     }
+
+    @Override
+    public QueryPage<T> queryForPage(ConditionQueryModel queryModel) {
+        String entityName = entityInformation.getEntityName();
+        List<Object> parameters = new ArrayList<>();
+        String whereString = queryModel.getParam().toSqlString(parameters);
+        StringBuilder hql = new StringBuilder("FROM ");
+        StringBuilder sqlCount = new StringBuilder("SELECT COUNT(")
+                .append(entityInformation.getRequiredIdAttribute().getName())
+                .append(") FROM ")
+                .append(entityName);
+        hql.append(entityName);
+        if (StringUtils.isNotEmpty(whereString)) {
+            String where = HqlUtils.replaceHqlParameter(whereString);
+            hql.append(" WHERE ").append(where);
+            sqlCount.append(" WHERE ").append(where);
+        }
+        List<Order> orders = queryModel.getOrders();
+        Set<String> fieldNames = FieldUtils.getAllFieldsList(entityInformation.getJavaType())
+                .stream()
+                .map(Field::getName)
+                .collect(Collectors.toSet());
+        if (CollectionUtils.isNotEmpty(orders)) {
+            Set<Order> orderList = orders.stream()
+                    .filter(item -> fieldNames.contains(item.getField()))
+                    .collect(Collectors.toSet());
+            if (CollectionUtils.isNotEmpty(orderList)) {
+                hql.append(OrderUtils.toOrderSql(orderList));
+            }
+        }
+        TypedQuery<T> hqlQuery = em.createQuery(hql.toString(), entityInformation.getJavaType())
+                .setFirstResult(queryModel.getStartRowIndex() * queryModel.getPageSize()) // 查询记录数
+                .setMaxResults(queryModel.getPageSize());
+        TypedQuery<Long> countQuery = em.createQuery(sqlCount.toString(), Long.class); // 分页查询
+        TypedParameterValue parameterValue;
+        for (int index = 0, size = parameters.size(); index < size; index++) {
+            Object value = parameters.get(index);
+            parameterValue = new TypedParameterValue(TypeFactory.getType(value), value);
+            hqlQuery.setParameter(index, parameterValue);
+            countQuery.setParameter(index, parameterValue);
+        }
+        return new SimpleQueryPage<>(hqlQuery.getResultList(),
+                countQuery.getSingleResult(),
+                queryModel.getStartRowIndex(),
+                queryModel.getPageSize());
+    }
+
 
     @Override
     public boolean existsById(ID id) {

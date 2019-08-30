@@ -2,6 +2,7 @@ package com.hk.core.jdbc.query;
 
 import com.hk.core.data.commons.query.Operator;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @date 2018-09-19 11:02
  */
 @Data
+@NoArgsConstructor
 public class RangeCondition<T> implements Condition {
 
     private String field;
@@ -21,12 +23,6 @@ public class RangeCondition<T> implements Condition {
     private boolean includeStart;
 
     private boolean includeEnd;
-
-    /**
-     *
-     */
-    public RangeCondition() {
-    }
 
     /**
      * @param field        field

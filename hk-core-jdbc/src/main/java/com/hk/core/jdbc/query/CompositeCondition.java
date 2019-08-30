@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -55,6 +56,11 @@ public class CompositeCondition implements Condition {
      */
     public CompositeCondition addCondition(Condition condition) {
         conditions.add(condition);
+        return this;
+    }
+
+    public CompositeCondition addConditions(Collection<? extends Condition> conditions) {
+        this.conditions.addAll(conditions);
         return this;
     }
 

@@ -4,6 +4,7 @@ import com.hk.commons.util.ListResult;
 import com.hk.core.data.jdbc.exception.EntityNotFoundException;
 import com.hk.core.jdbc.SelectArguments;
 import com.hk.core.jdbc.query.CompositeCondition;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
@@ -70,6 +71,14 @@ public interface JdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID>
      * @return QueryPage
      */
     QueryPage<T> queryForPage(QueryModel<T> query);
+
+    /**
+     * 分页查询
+     *
+     * @param query query
+     * @return QueryPage
+     */
+    QueryPage<T> queryForPage(ConditionQueryModel query);
 
     /**
      * 分页查询

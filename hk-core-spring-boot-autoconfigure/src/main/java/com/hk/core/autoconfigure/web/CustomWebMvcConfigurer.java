@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.hk.commons.converters.*;
 import com.hk.commons.util.*;
 import com.hk.commons.util.date.DatePattern;
+import com.hk.core.jdbc.deserializer.ConditionQueryModelDeserializer;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.web.ServletContextHolder;
 import com.hk.core.web.filter.XssFilter;
 import com.hk.core.web.interceptors.GlobalPropertyInterceptor;
@@ -72,6 +74,7 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
                     SimpleBeanPropertyFilter.serializeAllExcept(AuditField.AUDIT_FIELD_ARRAY));
             jacksonObjectMapperBuilder.modules(JsonUtils.modules())
                     .filters(filterProvider)
+                    .deserializerByType(ConditionQueryModel.class, new ConditionQueryModelDeserializer())
                     .dateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
                     .featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                     .failOnUnknownProperties(true)

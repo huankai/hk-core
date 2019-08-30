@@ -3,9 +3,9 @@ package com.hk.core.service.jdbc;
 import com.hk.commons.util.ListResult;
 import com.hk.core.jdbc.SelectArguments;
 import com.hk.core.jdbc.query.CompositeCondition;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
-import com.hk.core.query.QueryModel;
 import com.hk.core.service.SelectService;
 import org.springframework.data.domain.Persistable;
 
@@ -75,7 +75,7 @@ public interface JdbcSelectService<T extends Persistable<ID>, ID extends Seriali
      * @param query query
      * @return {@link QueryPage}
      */
-    QueryPage<T> queryForPage(QueryModel<T> query);
+    QueryPage<T> queryForPage(ConditionQueryModel queryModel);
 
     /**
      * 查询分页

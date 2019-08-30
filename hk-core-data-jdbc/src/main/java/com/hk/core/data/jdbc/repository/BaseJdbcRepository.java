@@ -9,6 +9,7 @@ import com.hk.core.jdbc.DeleteArguments;
 import com.hk.core.jdbc.JdbcSession;
 import com.hk.core.jdbc.SelectArguments;
 import com.hk.core.jdbc.query.CompositeCondition;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.jdbc.query.SimpleCondition;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
@@ -95,6 +96,20 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         selectArguments.setStartRowIndex(query.getStartRowIndex());
         selectArguments.setPageSize(query.getPageSize());
         return jdbcSession.get().queryForPage(selectArguments, entity.getType());
+    }
+
+    @Override
+    public QueryPage<T> queryForPage(ConditionQueryModel query) {
+        PersistentEntityInfo persistentEntityInfo = persistentEntityMetadata.get().getPersistentEntityInfo(entity);
+        SelectArguments arguments = new SelectArguments();
+        arguments.setFields(persistentEntityInfo.getPropertyColumns().values());
+        arguments.setFrom(persistentEntityInfo.getTableName());
+        arguments.setConditions(query.getParam());
+        arguments.setCountField(persistentEntityInfo.getIdField());
+        arguments.setOrders(query.getOrders());
+        arguments.setStartRowIndex(query.getStartRowIndex());
+        arguments.setPageSize(query.getPageSize());
+        return jdbcSession.get().queryForPage(arguments, entity.getType());
     }
 
     @Override

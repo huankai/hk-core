@@ -1,6 +1,7 @@
 package com.hk.core.jdbc;
 
 import com.hk.commons.util.*;
+import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.jdbc.core.CustomBeanPropertyRowMapper;
 import com.hk.core.jdbc.core.HumpColumnMapRowMapper;
 import com.hk.core.jdbc.core.namedparam.SqlParameterSourceUtils;
@@ -9,7 +10,6 @@ import com.hk.core.jdbc.exception.NonUniqueResultException;
 import com.hk.core.jdbc.query.CompositeCondition;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
-import com.hk.core.query.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -256,18 +256,7 @@ public final class JdbcSession {
             countSql.append(" GROUP BY ").append(groupBySql).append(") result_");
             countSql.insert(0, "SELECT COUNT(*) FROM (");
         }
-
-        List<Order> orders = arguments.getOrders();
-        if (CollectionUtils.isNotEmpty(orders)) {
-            sql.append(" ORDER BY ");
-            int index = 0;
-            for (Order order : orders) {
-                if (index++ > 0) {
-                    sql.append(StringUtils.COMMA_SEPARATE);
-                }
-                sql.append(order.toString());
-            }
-        }
+        sql.append(OrderUtils.toOrderSql(arguments.getOrders()));
         return new SelectStatement(sql, countSql, parameters);
     }
 

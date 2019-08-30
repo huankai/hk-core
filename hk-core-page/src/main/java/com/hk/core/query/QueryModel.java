@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 public class QueryModel<T> {
 
-    private static final int DEFAULT_PAGE_SIZE = 10;
+    public static final int DEFAULT_PAGE_SIZE = 10;
 
     /**
      * 查询分页参数
