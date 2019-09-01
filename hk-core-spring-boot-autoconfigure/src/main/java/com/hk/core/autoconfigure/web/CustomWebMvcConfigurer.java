@@ -77,7 +77,7 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
                     .deserializerByType(ConditionQueryModel.class, new ConditionQueryModelDeserializer())
                     .dateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
                     .featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                    .failOnUnknownProperties(true)
+                    .failOnUnknownProperties(false)//当设置为 true时，如果对象中没有指定属性，而前端传过来了不存在的的属性将抛出异常
                     .failOnEmptyBeans(false)
                     .locale(Locale.CHINA);
         };

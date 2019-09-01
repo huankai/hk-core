@@ -5,10 +5,13 @@ import org.springframework.beans.FatalBeanException;
 import org.springframework.util.ClassUtils;
 
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 与Bean相关的工具类
@@ -45,6 +48,15 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
      */
     public static Map<String, Object> beanToMap(Object obj, String... ignoreProperties) {
         return beanToMap(obj, false, ignoreProperties);
+    }
+
+    public static Map<String, Object> beanToMapIgnoreEntityProperties(Object obj, String... ignoreProperties) {
+        Set<String> ignorePropertySet = ArrayUtils.asHashSet(AuditField.AUDIT_FIELD_ARRAY);
+        ignorePropertySet.add("new");
+        ignorePropertySet.add("class");
+        ignorePropertySet.add("hibernateLazyInitializer");
+        CollectionUtils.addAllNotNull(ignorePropertySet, ignoreProperties);
+        return beanToMap(obj, false, ignorePropertySet.toArray(new String[0]));
     }
 
     /**

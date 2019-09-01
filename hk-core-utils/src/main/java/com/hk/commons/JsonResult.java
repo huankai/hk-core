@@ -188,7 +188,7 @@ public final class JsonResult<T> implements Serializable {
 
     public String getMessage() {
         String message = StringUtils.isEmpty(this.message) ? Status.getMessage(statusCode) : this.message;
-        return SpringContextHolder.getMessage(message);
+        return SpringContextHolder.getMessageWithDefault(message, this.message);
     }
 
     @JsonIgnore
