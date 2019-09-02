@@ -1,6 +1,7 @@
 package com.hk.core.jdbc.query;
 
 import com.hk.commons.annotations.EnumDisplay;
+import com.hk.commons.util.date.DatePattern;
 import com.hk.commons.util.date.DateTimeUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -73,11 +74,11 @@ public class DateRangeCondition implements Condition {
 
     @Getter
     @Setter
-    private LocalDateTime start;
+    private String start;
 
     @Getter
     @Setter
-    private LocalDateTime end;
+    private String end;
 
     @Override
     public String toSqlString(List<Object> parameters) {
@@ -111,8 +112,8 @@ public class DateRangeCondition implements Condition {
                 break;
             case CUSTOM:
             default:
-                start = this.start;
-                end = this.end;
+                start = DateTimeUtils.stringToLocalDateTime(this.start, DatePattern.YYYY_MM_DD, DatePattern.YYYY_MM_DD_HH_MM_SS);
+                end = DateTimeUtils.stringToLocalDateTime(this.end, DatePattern.YYYY_MM_DD, DatePattern.YYYY_MM_DD_HH_MM_SS);
                 break;
         }
         RangeCondition<LocalDateTime> condition = new RangeCondition<>(field, start, end, true, false);

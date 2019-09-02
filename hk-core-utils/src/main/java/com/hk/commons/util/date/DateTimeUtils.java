@@ -143,8 +143,12 @@ public abstract class DateTimeUtils {
      * @param pattern pattern
      * @return localDateTime
      */
-    public static LocalDateTime stringToLocalDateTime(String date, DatePattern pattern) {
-        return LocalDateTime.parse(date, DateTimeFormatter.ofPattern(pattern.getPattern()));
+    public static LocalDateTime stringToLocalDateTime(String text, DatePattern... patterns) {
+        if (ArrayUtils.isEmpty(patterns)) {
+            return LocalDateTime.parse(text, DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()));
+        }
+        Date date = stringToDate(text, patterns);
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 
     /**
