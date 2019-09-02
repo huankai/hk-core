@@ -182,11 +182,11 @@ public final class JsonUtils {
      * @return byte[]
      */
     @SneakyThrows(value = {JsonProcessingException.class})
-    public static byte[] serializeToByte(Object obj) {
+    public static byte[] serializeToByte(Object obj, boolean indent) {
         if (null == obj) {
             return null;
         }
-        return getMapper().writeValueAsBytes(obj);
+        return indent ? getIndentMapper().writeValueAsBytes(obj) : getMapper().writeValueAsBytes(obj);
     }
 
     /**
