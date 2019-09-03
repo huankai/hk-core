@@ -1,8 +1,6 @@
 package com.hk.core.authentication.api.validatecode;
 
-import com.hk.commons.util.Lazy;
-import com.hk.commons.util.SpringContextHolder;
-import com.hk.commons.util.StringUtils;
+import com.hk.commons.util.*;
 import lombok.Setter;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -21,6 +19,8 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
      */
     private ValidateCodeGenerator<C> validateCodeGenerator;
 
+    private Class<C> validateCodeClass;
+
     /**
      * 验证码存储器
      */
@@ -34,6 +34,8 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 
     AbstractValidateCodeProcessor(ValidateCodeGenerator<C> validateCodeGenerator) {
         this.validateCodeGenerator = validateCodeGenerator;
+        this.validateCodeClass = ClassUtils.getGenericType(validateCodeGenerator.getClass(), 0);
+        AssertUtils.notNull(this.validateCodeClass, "validateCodeClass is null.");
     }
 
     @Override
@@ -83,7 +85,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     public void validate(ServletWebRequest request) throws ValidateCodeException, ServletRequestBindingException {
         final String key = getStoreKey(request);
         ValidateCodeStrategy strategy = this.validateCodeStrategy.get();
-        C inStoreValidateCode = strategy.get(request, key);
+        C inStoreValidateCode = strategy.get(request, key, validateCodeClass);
         if (null == inStoreValidateCode) {
             throw new ValidateCodeException("验证码不存在");
         }

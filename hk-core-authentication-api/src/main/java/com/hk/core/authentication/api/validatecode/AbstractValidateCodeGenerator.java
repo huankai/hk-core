@@ -10,8 +10,14 @@ import org.apache.commons.lang3.RandomStringUtils;
  */
 public abstract class AbstractValidateCodeGenerator {
 
+    /**
+     * 生成验证码默认长度
+     */
     private static final int DEFAULT_CODE_LENGTH = 6;
 
+    /**
+     * 生成验证码默认过期时间：单位: 秒
+     */
     private static final int DEFAULT_EXPIRE_SENDS = 60;
 
     @Getter

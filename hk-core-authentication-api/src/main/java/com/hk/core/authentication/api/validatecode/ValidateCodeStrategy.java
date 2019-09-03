@@ -17,7 +17,7 @@ public interface ValidateCodeStrategy {
      * @param name    name
      * @param value   value
      */
-    void save(RequestAttributes request, String name, Object value);
+    <C extends ValidateCode> void save(RequestAttributes request, String name, C value);
 
     /**
      * 获取验证码
@@ -26,7 +26,7 @@ public interface ValidateCodeStrategy {
      * @param name    name
      * @return value
      */
-    <T> T get(RequestAttributes request, String name);
+    <C extends ValidateCode> C get(RequestAttributes request, String name, Class<C> clazz);
 
     /**
      * 删除验证码

@@ -15,15 +15,14 @@ public class SpringCacheValidateCodeStrategy implements ValidateCodeStrategy {
     private Cache cache = new ConcurrentMapCache("ValidateCodeStrategy");
 
     @Override
-    public void save(RequestAttributes request, String name, Object value) {
+    public <C extends ValidateCode> void save(RequestAttributes request, String name, C value) {
         cache.put(name, value);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T get(RequestAttributes request, String name) {
+    public <C extends ValidateCode> C get(RequestAttributes request, String name, Class<C> clazz) {
         Cache.ValueWrapper valueWrapper = cache.get(name);
-        return valueWrapper == null ? null : (T) valueWrapper.get();
+        return valueWrapper == null ? null : clazz.cast(valueWrapper.get());
     }
 
     @Override

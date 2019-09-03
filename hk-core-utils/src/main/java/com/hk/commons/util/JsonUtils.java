@@ -15,6 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.hk.commons.jackson.Jackson2ArrayOrStringDeserializer;
 import com.hk.commons.jackson.LongToStringSerializer;
 import com.hk.commons.util.date.DatePattern;
 import lombok.SneakyThrows;
@@ -47,6 +48,12 @@ public final class JsonUtils {
             && ClassUtils.isPresent("com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module", null);
 
 
+    public static void main(String[] args) {
+        String text = "addd,dafs";
+        Object value = JsonUtils.deserialize(text, Collection.class, String.class);
+        System.out.println(value);
+    }
+
     static {
         List<Module> moduleList = new ArrayList<>();
 
@@ -69,6 +76,7 @@ public final class JsonUtils {
         moduleList.add(JAVA_TIME_MODULE);
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Long.class, LongToStringSerializer.getInstance());
+        simpleModule.addDeserializer(Set.class, new Jackson2ArrayOrStringDeserializer());
         moduleList.add(simpleModule);
         moduleList.add(new Jdk8Module());
         /*
