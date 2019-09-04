@@ -46,13 +46,6 @@ public final class JsonUtils {
     private static final boolean HIBERNATE_MODULE_ENABLED = ClassUtils.isPresent("org.hibernate.Session", null)
             && ClassUtils.isPresent("com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module", null);
 
-
-    public static void main(String[] args) {
-        String text = "addd,dafs";
-        Object value = JsonUtils.deserialize(text, Collection.class, String.class);
-        System.out.println(value);
-    }
-
     static {
         List<Module> moduleList = new ArrayList<>();
 
