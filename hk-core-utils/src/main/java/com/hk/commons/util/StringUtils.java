@@ -6,6 +6,8 @@ import org.springframework.core.io.UrlResource;
 
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -314,6 +316,15 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      */
     public static String[] splitByComma(String args) {
         return tokenizeToStringArray(args, COMMA_SEPARATE);
+    }
+
+    public static <T> List<T> splitByComma(String args, Class<T> clazz) {
+        String[] list = splitByComma(args);
+        List<T> result = new ArrayList<>(list.length);
+        for (String item : list) {
+            result.add(ConverterUtils.defaultConvert(item, clazz));
+        }
+        return result;
     }
 
     /**

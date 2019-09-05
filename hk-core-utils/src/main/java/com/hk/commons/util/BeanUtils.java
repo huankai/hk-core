@@ -5,10 +5,8 @@ import org.springframework.beans.FatalBeanException;
 import org.springframework.util.ClassUtils;
 
 import java.beans.PropertyDescriptor;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
