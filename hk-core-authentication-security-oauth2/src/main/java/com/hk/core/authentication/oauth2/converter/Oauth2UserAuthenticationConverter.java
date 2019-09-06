@@ -62,7 +62,6 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
 
             UserPrincipal principal = new UserPrincipal(CollectionUtils.getLongValue(map, "userId"),
                     CollectionUtils.getStringValue(map, "account", CollectionUtils.getStringValue(map, USERNAME)),
-                    CollectionUtils.getBooleanValue(map, "protectUser", false),
                     CollectionUtils.getStringValue(map, "realName"),
                     CollectionUtils.getByteValue(map, "userType"),
                     CollectionUtils.getStringValue(map, "phone"),

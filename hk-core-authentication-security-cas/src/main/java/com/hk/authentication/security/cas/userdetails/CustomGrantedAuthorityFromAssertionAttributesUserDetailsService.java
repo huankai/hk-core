@@ -37,7 +37,6 @@ public class CustomGrantedAuthorityFromAssertionAttributesUserDetailsService
                 CollectionUtils.getLongValue(attributes, "dept_id"),
                 CollectionUtils.getStringValue(attributes, "dept_name"),
                 principal.getName(),
-                CollectionUtils.getBooleanValue(attributes, "protect_user", false),
                 CollectionUtils.getStringValue(attributes, "real_name"),
                 CollectionUtils.getByteValue(attributes, "user_type"),
                 CollectionUtils.getStringValue(attributes, "phone"),

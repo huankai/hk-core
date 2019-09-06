@@ -74,13 +74,6 @@ public class UserPrincipal implements Serializable {
     private ClientAppInfo appInfo;
 
     /**
-     * 是否受保护的用户
-     * protectUser
-     */
-    @JsonIgnore
-    private boolean protectUser;
-
-    /**
      * 用户所在机构id
      */
     private Long orgId;
@@ -113,7 +106,6 @@ public class UserPrincipal implements Serializable {
     private Set<String> permissions;
 
     public UserPrincipal(Long userId, String account, Byte userType) {
-        this.protectUser = false;
         this.userId = userId;
         this.account = account;
         this.userType = userType;
@@ -121,12 +113,11 @@ public class UserPrincipal implements Serializable {
         this.permissions = new HashSet<>();
     }
 
-    public UserPrincipal(Long userId, String account, boolean protectUser, String realName,
+    public UserPrincipal(Long userId, String account, String realName,
                          Byte userType, String phone, String email,
                          Byte sex, String iconPath, Set<String> roles, Set<String> permissions) {
         this.userId = userId;
         this.account = account;
-        this.protectUser = protectUser;
         this.realName = realName;
         this.userType = userType;
         this.phone = phone;
@@ -176,7 +167,7 @@ public class UserPrincipal implements Serializable {
      */
     @JsonIgnore
     public final boolean isAdministrator() {
-        return protectUser;
+        return userType == 1;
     }
 
 }
