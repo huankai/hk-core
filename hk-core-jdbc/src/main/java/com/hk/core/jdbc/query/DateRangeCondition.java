@@ -112,8 +112,12 @@ public class DateRangeCondition implements Condition {
                 break;
             case CUSTOM:
             default:
-                start = DateTimeUtils.stringToLocalDateTime(this.start, DatePattern.YYYY_MM_DD, DatePattern.YYYY_MM_DD_HH_MM_SS);
-                end = DateTimeUtils.stringToLocalDateTime(this.end, DatePattern.YYYY_MM_DD, DatePattern.YYYY_MM_DD_HH_MM_SS);
+                if (null != this.start) {
+                    start = DateTimeUtils.stringToLocalDateTime(this.start, DatePattern.YYYY_MM_DD, DatePattern.YYYY_MM_DD_HH_MM_SS);
+                }
+                if (null != this.end) {
+                    end = DateTimeUtils.stringToLocalDateTime(this.end, DatePattern.YYYY_MM_DD, DatePattern.YYYY_MM_DD_HH_MM_SS);
+                }
                 break;
         }
         RangeCondition<LocalDateTime> condition = new RangeCondition<>(field, start, end, true, false);
