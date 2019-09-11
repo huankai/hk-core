@@ -1,6 +1,7 @@
 package com.hk.commons.util.date;
 
 import com.hk.commons.util.StringUtils;
+import lombok.Getter;
 
 import java.util.Arrays;
 
@@ -10,6 +11,7 @@ import java.util.Arrays;
  * @author kevin
  * @date 2017年9月15日下午5:46:30
  */
+@Getter
 public enum DatePattern {
 
     /**
@@ -152,10 +154,6 @@ public enum DatePattern {
 
     DatePattern(String pattern) {
         this.pattern = pattern;
-    }
-
-    public String getPattern() {
-        return pattern;
     }
 
     public static DatePattern parse(String pattern) {

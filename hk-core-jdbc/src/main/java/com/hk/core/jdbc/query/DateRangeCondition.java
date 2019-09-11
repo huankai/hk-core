@@ -1,6 +1,7 @@
 package com.hk.core.jdbc.query;
 
 import com.hk.commons.annotations.EnumDisplay;
+import com.hk.commons.util.StringUtils;
 import com.hk.commons.util.date.DatePattern;
 import com.hk.commons.util.date.DateTimeUtils;
 import lombok.Getter;
@@ -112,10 +113,10 @@ public class DateRangeCondition implements Condition {
                 break;
             case CUSTOM:
             default:
-                if (null != this.start) {
+                if (StringUtils.isNotEmpty(this.start)) {
                     start = DateTimeUtils.stringToLocalDateTime(this.start, DatePattern.YYYY_MM_DD, DatePattern.YYYY_MM_DD_HH_MM_SS);
                 }
-                if (null != this.end) {
+                if (StringUtils.isNotEmpty(this.end)) {
                     end = DateTimeUtils.stringToLocalDateTime(this.end, DatePattern.YYYY_MM_DD, DatePattern.YYYY_MM_DD_HH_MM_SS);
                 }
                 break;
