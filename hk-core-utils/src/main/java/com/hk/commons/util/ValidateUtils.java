@@ -29,7 +29,7 @@ public abstract class ValidateUtils {
     /**
      * 手机号校验 Pattern
      */
-    private static final Pattern PHONE_PARTTERN = Pattern.compile("^(1[3-8][0-9])\\d{8}$");
+    private static final Pattern PHONE_PARTTERN = Pattern.compile("^(1[3-9][0-9])\\d{8}$");
 
     /**
      * is id Card,必须是合法的身份证
