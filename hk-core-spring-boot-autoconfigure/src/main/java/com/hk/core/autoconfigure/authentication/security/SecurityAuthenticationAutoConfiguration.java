@@ -1,11 +1,8 @@
 package com.hk.core.autoconfigure.authentication.security;
 
-import com.hk.commons.sms.LoggerSmsSender;
-import com.hk.commons.sms.SmsSender;
-import com.hk.core.authentication.api.validatecode.*;
 import com.hk.core.authentication.security.SpringSecurityContext;
 import com.hk.core.authentication.security.savedrequest.GateWayHttpSessionRequestCache;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hk.core.autoconfigure.authentication.AuthenticationProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

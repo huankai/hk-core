@@ -166,14 +166,14 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        boolean securityContextPresent = ClassUtils.isPresent("com.hk.core.authentication.api.SecurityContextUtils", null);
-        if (securityContextPresent) {
-            registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
-        }
-        boolean accessTokenPresent = ClassUtils.isPresent("com.hk.core.authentication.oauth2.utils.AccessTokenUtils", null);
-        if (accessTokenPresent) {
-            registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**");
-        }
+//        boolean securityContextPresent = ClassUtils.isPresent("com.hk.core.authentication.api.SecurityContextUtils", null);
+//        if (securityContextPresent) {
+//            registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
+//        }
+//        boolean accessTokenPresent = ClassUtils.isPresent("com.hk.core.authentication.oauth2.utils.AccessTokenUtils", null);
+//        if (accessTokenPresent) {
+//            registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**");
+//        }
         GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
         Map<String, Object> property = requestProperty.getProperty();
         if (CollectionUtils.isNotEmpty(property)) {

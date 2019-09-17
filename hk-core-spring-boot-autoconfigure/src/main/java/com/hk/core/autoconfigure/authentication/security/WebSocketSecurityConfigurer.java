@@ -4,13 +4,10 @@ import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.SecurityContextUtils;
 import com.hk.core.autoconfigure.message.websocket.WebSocketProperties;
-import com.hk.message.websocket.WebsocketMessager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.concurrent.DefaultManagedTaskScheduler;
@@ -37,7 +34,7 @@ import org.springframework.web.socket.server.HandshakeHandler;
 @EnableWebSocketMessageBroker
 @EnableConfigurationProperties(WebSocketProperties.class)
 @ConditionalOnClass(value = {SecurityContextChannelInterceptor.class})
-public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMessageBrokerConfigurer {
+public class WebSocketSecurityConfigurer extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
     private final WebSocketProperties webSocketProperties;
 
@@ -53,20 +50,20 @@ public class WebSocketSecurityConfiguration extends AbstractSecurityWebSocketMes
      */
     private HandshakeHandler handshakeHandler;
 
-    public WebSocketSecurityConfiguration(WebSocketProperties webSocketProperties,
-                                          ObjectProvider<WebSocketHandlerDecoratorFactory> decoratorFactories,
+    public WebSocketSecurityConfigurer(WebSocketProperties webSocketProperties,
+                                       ObjectProvider<WebSocketHandlerDecoratorFactory> decoratorFactories,
 //			ObjectProvider<List<ChannelInterceptor>> channelInterceptors,
-                                          ObjectProvider<HandshakeHandler> handshakeHandler) {
+                                       ObjectProvider<HandshakeHandler> handshakeHandler) {
         this.webSocketProperties = webSocketProperties;
         this.webSocketHandlerDecoratorFactory = decoratorFactories.getIfAvailable();
 //		this.channelInterceptors = channelInterceptors.getIfAvailable();
         this.handshakeHandler = handshakeHandler.getIfAvailable();
     }
 
-    @Bean("websocketMessager")
-    public WebsocketMessager websocketMessager(SimpMessagingTemplate messagingTemplate) {
-        return new WebsocketMessager(messagingTemplate);
-    }
+//    @Bean("websocketMessager")
+//    public WebsocketMessager websocketMessager(SimpMessagingTemplate messagingTemplate) {
+//        return new WebsocketMessager(messagingTemplate);
+//    }
 
 //	/**
 //	 * 配置 {@link ChannelRegistration}，可以添加自定义拦截器

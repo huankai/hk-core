@@ -11,6 +11,8 @@ import org.springframework.integration.config.GlobalChannelInterceptor;
 import org.springframework.messaging.support.ChannelInterceptor;
 
 /**
+ * spring cloud stream 配置
+ *
  * @author huangkai
  * @date 2019-07-27 22:29
  */

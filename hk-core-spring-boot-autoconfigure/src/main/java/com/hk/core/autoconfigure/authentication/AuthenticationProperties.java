@@ -1,4 +1,4 @@
-package com.hk.core.autoconfigure.authentication.security;
+package com.hk.core.autoconfigure.authentication;
 
 import com.hk.core.authentication.api.PermitMatcher;
 import com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2ClientAutoConfiguration;
@@ -27,25 +27,22 @@ public class AuthenticationProperties {
     private SMSProperties sms = new SMSProperties();
 
     /**
-     * 登陆参数配置
+     * oauth2 认证参数配置
+     */
+    @NestedConfigurationProperty
+    private Oauth2Properties oauth2 = new Oauth2Properties();
+
+    /**
+     * 表单登陆参数配置
      */
     @NestedConfigurationProperty
     private LoginProperties login = new LoginProperties();
 
-    /**
-     * 图片验证码
-     */
-    @NestedConfigurationProperty
-    private ImageCodeProperties imageCode = new ImageCodeProperties();
-
-    /**
-     * oauth2 client 登陆默认失败地址
-     *
-     * @see com.hk.core.autoconfigure.exception.Oauth2ErrorController
-     * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#defaultFailureUrl
-     * @see Oauth2ClientAutoConfiguration#beanPostProcessor()
-     */
-    private String defaultFailureUrl = "/oauth2-error";
+//    /**
+//     * 图片验证码
+//     */
+//    @NestedConfigurationProperty
+//    private ImageCodeProperties imageCode = new ImageCodeProperties();
 
     /**
      * 是否请求重定向
@@ -60,6 +57,27 @@ public class AuthenticationProperties {
      * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#allowSessionCreation
      */
     private boolean allowSessionCreation = true;
+
+    /**
+     * oauth2 登陆属性
+     */
+    @Data
+    public static class Oauth2Properties {
+
+        /**
+         * oauth2 client 登陆默认失败地址
+         *
+         * @see com.hk.core.autoconfigure.exception.Oauth2ErrorController
+         * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#defaultFailureUrl
+         * @see Oauth2ClientAutoConfiguration#beanPostProcessor()
+         */
+        private String oauth2FailureUrl = "/oauth2-error";
+
+        /**
+         * 是否使用 https
+         */
+        private boolean forceHttps = false;
+    }
 
     /* ******************************************************************* */
 
@@ -110,12 +128,6 @@ public class AuthenticationProperties {
         private String logoutSuccessUrl = getLoginUrl();
 
         /**
-         * 是否使用 https
-         */
-        private boolean forceHttps = false;
-
-
-        /**
          * Session 失效/过期URL
          */
         private String sessionInvalidUrl = "/login";
@@ -144,63 +156,63 @@ public class AuthenticationProperties {
          */
         private String gateWayHost;
 
-        private RememberMeProperties rememberMe = new RememberMeProperties();
+//        private RememberMeProperties rememberMe = new RememberMeProperties();
     }
 
-    @Data
-    static class RememberMeProperties {
+//    @Data
+//    static class RememberMeProperties {
+//
+//        /**
+//         * 是否开始RememberMe 功能
+//         */
+//        private boolean enabledRememberMe = false;
+//
+//        /**
+//         * 记住我时间:单位 : 秒
+//         * 默认为一周
+//         */
+//        private int rememberMeSeconds = 3600 * 24 * 7;
+//
+//        /**
+//         * RememberMe Parameter
+//         *
+//         * @see org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer#rememberMeParameter
+//         */
+//        private String rememberMeParameter = "remember-me";
+//
+//        /**
+//         * RememberMe Parameter
+//         *
+//         * @see org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer#rememberMeCookieName
+//         */
+//        private String rememberMeCookieName = "remember-me";
+//
+//        private boolean useSecureCookie = true;
+//
+//    }
 
-        /**
-         * 是否开始RememberMe 功能
-         */
-        private boolean enabledRememberMe = false;
-
-        /**
-         * 记住我时间:单位 : 秒
-         * 默认为一周
-         */
-        private int rememberMeSeconds = 3600 * 24 * 7;
-
-        /**
-         * RememberMe Parameter
-         *
-         * @see org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer#rememberMeParameter
-         */
-        private String rememberMeParameter = "remember-me";
-
-        /**
-         * RememberMe Parameter
-         *
-         * @see org.springframework.security.config.annotation.web.configurers.RememberMeConfigurer#rememberMeCookieName
-         */
-        private String rememberMeCookieName = "remember-me";
-
-        private boolean useSecureCookie = true;
-
-    }
-
-    @Data
-    static class ImageCodeProperties {
-
-        private boolean enabled = false;
-
-        private int width = 67;
-
-        private int height = 23;
-
-        /**
-         * 生成的验证码长度
-         */
-        private byte codeLength = 4;
-
-        /**
-         * 验证码过期时间,单位:秒
-         */
-        private int codeExpireIn;
-
-        private String codeParameter = "code";
-
-    }
+//    @Data
+//    static class ImageCodeProperties {
+//
+//        private boolean enabled = false;
+//
+//        private int width = 67;
+//
+//        private int height = 23;
+//
+//        /**
+//         * 生成的验证码长度
+//         */
+//        private byte codeLength = 4;
+//
+//        /**
+//         * 验证码过期时间,单位:秒
+//         */
+//        private int codeExpireIn;
+//
+//        private String codeParameter = "code";
+//
+//    }
 
 
     /**
@@ -241,12 +253,12 @@ public class AuthenticationProperties {
         /**
          * 登录短信发送地址
          */
-        private String sendUri = "/mobile/sender";
+        private String sendUri = "/phone/sender";
 
         /**
          * 手机号登陆请求地址
          */
-        private String phoneLoginUri = "/mobile/login";
+        private String phoneLoginUri = "/phone/login";
 
         /**
          * oauth2 认证服务器 手机号登陆返回 access_token 信息 的 clientId
