@@ -50,18 +50,4 @@
         <module>hk-core-test</module>
     </modules>
 
-    <!--发布到 nexus 地址-->
-    <distributionManagement>
-        <repository>
-            <id>nexus</id>
-            <name>Releases</name>
-            <url>http://182.61.40.18:8081/repository/maven-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus</id>
-            <name>Snapshot</name>
-            <url>http://182.61.40.18:8081/repository/maven-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
 </project>
