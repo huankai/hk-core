@@ -97,20 +97,18 @@ public class UserPrincipal implements Serializable {
      * 用户角色
      */
     @JsonIgnore
-    private Set<String> roles;
+    private Set<String> roles = new HashSet<>();
 
     /**
      * 用户权限
      */
     @JsonIgnore
-    private Set<String> permissions;
+    private Set<String> permissions = new HashSet<>();
 
     public UserPrincipal(Long userId, String account, Byte userType) {
         this.userId = userId;
         this.account = account;
         this.userType = userType;
-        this.roles = new HashSet<>();
-        this.permissions = new HashSet<>();
     }
 
     public UserPrincipal(Long userId, String account, String realName,
@@ -124,8 +122,13 @@ public class UserPrincipal implements Serializable {
         this.email = email;
         this.sex = sex;
         this.iconPath = iconPath;
-        this.roles = (roles == null) ? new HashSet<>() : roles;
-        this.permissions = (permissions == null) ? new HashSet<>() : permissions;
+        if (CollectionUtils.isNotEmpty(roles)) {
+            this.roles.addAll(roles);
+        }
+        if (CollectionUtils.isNotEmpty(permissions)) {
+            this.permissions.addAll(permissions);
+        }
+
     }
 
     /**
