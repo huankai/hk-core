@@ -11,10 +11,6 @@
     <artifactId>hk-core-data-mybatis</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <pagehelper.mapper.version>1.2.12</pagehelper.mapper.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
@@ -27,7 +23,6 @@
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>${pagehelper.mapper.version}</version>
         </dependency>
     </dependencies>
 </project>
