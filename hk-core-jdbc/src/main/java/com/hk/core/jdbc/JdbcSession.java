@@ -160,9 +160,18 @@ public final class JdbcSession {
     private <T> ListResult<T> queryForList(SelectArguments arguments, boolean retriveRowCount, RowMapper<T> rowMapper) {
         SelectStatement stmt = buildSelect(arguments);
         Object[] params = stmt.parameters.toArray();
+        long rowCount = 0;
+        if (retriveRowCount) {// 如果是分页查询，先查询记录数，如果记录数为 0 ，直接返回，不再查询数据集
+            rowCount = queryForScalar(stmt.countSql.toString(), Long.class, params);
+            if (rowCount == 0) {
+                return new ListResult<>(rowCount, new ArrayList<>());
+            }
+        }
         List<T> queryResult = queryForList(stmt.selectSql.toString(), rowMapper, arguments.getStartRowIndex(),
                 arguments.getPageSize(), params);
-        long rowCount = retriveRowCount ? queryForScalar(stmt.countSql.toString(), Long.class, params) : queryResult.size();
+        if (0 == rowCount) {
+            rowCount = queryResult.size();
+        }
         return new ListResult<>(rowCount, queryResult);
     }
 

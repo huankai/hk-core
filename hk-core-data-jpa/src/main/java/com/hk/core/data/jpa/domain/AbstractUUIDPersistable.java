@@ -10,10 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -42,6 +39,7 @@ public abstract class AbstractUUIDPersistable implements Persistable<String>, Se
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Getter
     @Setter
+    @Column(name = "id", updatable = false)
     private String id;
 
     @Transient // DATAJPA-622

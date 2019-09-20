@@ -9,10 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.ClassUtils;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -36,6 +33,7 @@ public abstract class AbstractSnowflakeIdPersistable implements Persistable<Long
     @GenericGenerator(name = "system-snowflake-id", strategy = "org.hibernate.id.SnowflakeIdentifierGenerator")
     @Getter
     @Setter
+    @Column(name = "id", updatable = false)
     private Long id;
 
     @Transient // DATAJPA-622

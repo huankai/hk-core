@@ -33,7 +33,7 @@ public class LogicalExpression implements Criterion {
                 predicates.add(criterion.toPredicate(root, cq, cb));
             }
         }
-        if (predicates.size() == 0) {
+        if (predicates.isEmpty()) {
             return null;
         } else {
             if (andOr == AndOr.OR) {

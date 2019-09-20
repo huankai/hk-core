@@ -472,10 +472,9 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
             hqlQuery.setParameter(index, parameterValue);
             countQuery.setParameter(index, parameterValue);
         }
-        return new SimpleQueryPage<>(hqlQuery.getResultList(),
-                countQuery.getSingleResult(),
-                queryModel.getStartRowIndex(),
-                queryModel.getPageSize());
+        Long count = countQuery.getSingleResult();
+        List<T> result = (count == 0) ? new ArrayList<>() : hqlQuery.getResultList();//当查询记录为 0 时，不再需要查询数据集
+        return new SimpleQueryPage<>(result, count, queryModel.getStartRowIndex(), queryModel.getPageSize());
     }
 
 
