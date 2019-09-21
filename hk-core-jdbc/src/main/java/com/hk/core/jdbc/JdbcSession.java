@@ -90,11 +90,11 @@ public final class JdbcSession {
      * 集合查询
      *
      * @param arguments       arguments
-     * @param retriveRowCount retriveRowCount
+     * @param retrieveRowCount retrieveRowCount
      * @return {@link ListResult}
      */
-    public ListResult<Map<String, Object>> queryForList(SelectArguments arguments, boolean retriveRowCount) {
-        return queryForList(arguments, retriveRowCount, new HumpColumnMapRowMapper());
+    public ListResult<Map<String, Object>> queryForList(SelectArguments arguments, boolean retrieveRowCount) {
+        return queryForList(arguments, retrieveRowCount, new HumpColumnMapRowMapper());
     }
 
     /**
@@ -126,14 +126,14 @@ public final class JdbcSession {
      * 查询返回对象，支持驼峰命名的属性
      *
      * @param arguments       arguments
-     * @param retriveRowCount retriveRowCount
+     * @param retrieveRowCount retrieveRowCount
      * @param clazz           clazz
      * @return {@link ListResult}
      */
-    public <T> ListResult<T> queryForList(SelectArguments arguments, boolean retriveRowCount, Class<T> clazz) {
+    public <T> ListResult<T> queryForList(SelectArguments arguments, boolean retrieveRowCount, Class<T> clazz) {
         CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
 //        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
-        return queryForList(arguments, retriveRowCount, rowMapper);
+        return queryForList(arguments, retrieveRowCount, rowMapper);
     }
 
     /**
@@ -153,15 +153,15 @@ public final class JdbcSession {
      * 集合查询
      *
      * @param arguments       arguments
-     * @param retriveRowCount retriveRowCount
+     * @param retrieveRowCount retrieveRowCount
      * @param rowMapper       rowMapper
      * @return {@link ListResult}
      */
-    private <T> ListResult<T> queryForList(SelectArguments arguments, boolean retriveRowCount, RowMapper<T> rowMapper) {
+    private <T> ListResult<T> queryForList(SelectArguments arguments, boolean retrieveRowCount, RowMapper<T> rowMapper) {
         SelectStatement stmt = buildSelect(arguments);
         Object[] params = stmt.parameters.toArray();
         long rowCount = 0;
-        if (retriveRowCount) {// 如果是分页查询，先查询记录数，如果记录数为 0 ，直接返回，不再查询数据集
+        if (retrieveRowCount) {// 如果是分页查询，先查询记录数，如果记录数为 0 ，直接返回，不再查询数据集
             rowCount = queryForScalar(stmt.countSql.toString(), Long.class, params);
             if (rowCount == 0) {
                 return new ListResult<>(rowCount, new ArrayList<>());

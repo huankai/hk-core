@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 
 /**
  * @author kevin
@@ -23,8 +24,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestControllerAdvice
 public class SimpleExceptionHandler extends AbstractExceptionHandler {
-
-
 
     /**
      * 404
@@ -41,6 +40,13 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
         error(e, e.getMessage(), request);
         return new JsonResult<>(Status.NOT_FOUND,
                 String.format("%s %s %s ", EnumDisplayUtils.getDisplayText(Status.NOT_FOUND.name(), Status.class), e.getHttpMethod(), e.getRequestURL()));
+    }
+
+    @ExceptionHandler(value = FileNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public JsonResult<Void> fileNotFountException(FileNotFoundException e, HttpServletRequest request) {
+        error(e, e.getMessage(), request);
+        return JsonResult.badRequest("文件不存在或已删除");
     }
 
 

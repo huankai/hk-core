@@ -302,8 +302,8 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
             } else if (mappedObject instanceof Auditable) {
                 Auditable auditable = (Auditable) mappedObject;
                 if (StringUtils.equals(field, AuditField.CREATED_BY)) {
-                    String columnValue = getColumnValue(rs, index, String.class);
-                    if (StringUtils.hasText(columnValue)) {
+                    Long columnValue = getColumnValue(rs, index, Long.class);
+                    if (null != columnValue) {
                         auditable.setCreatedBy(columnValue);
                     }
                 } else if (StringUtils.equals(field, AuditField.CREATED_DATE)) {
@@ -312,8 +312,8 @@ public class CustomBeanPropertyRowMapper<T> implements RowMapper<T> {
                         auditable.setCreatedDate(columnValue.toLocalDateTime());
                     }
                 } else if (StringUtils.equals(field, AuditField.LAST_MODIFIED_BY)) {
-                    String columnValue = getColumnValue(rs, index, String.class);
-                    if (StringUtils.hasText(columnValue)) {
+                    Long columnValue = getColumnValue(rs, index, Long.class);
+                    if (null != columnValue) {
                         auditable.setLastModifiedBy(columnValue);
                     }
                 } else if (StringUtils.equals(field, AuditField.LAST_MODIFIED_DATE)) {
