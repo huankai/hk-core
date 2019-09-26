@@ -14,6 +14,7 @@ import javax.persistence.Table;
  * @author huangkai
  * @date 2018-10-13 0:52
  */
+@Deprecated
 public class JpaPersistentEntityMetadata extends AbstractPersistentEntityMetadata {
 
     @Override

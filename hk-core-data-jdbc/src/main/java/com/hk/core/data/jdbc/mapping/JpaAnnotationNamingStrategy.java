@@ -18,6 +18,7 @@ import java.util.Optional;
  * @date 2018-10-25 12:37
  * @see JdbcConfiguration#jdbcMappingContext(Optional)
  */
+@Deprecated
 public class JpaAnnotationNamingStrategy implements NamingStrategy {
 
     @Override

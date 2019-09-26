@@ -8,9 +8,11 @@ import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * 使用 spring data 注解
+ *
  * @author huangkai
  * @date 2018-10-13 11:00
  */
+@Deprecated
 public class SpringJdbcPersistentEntityMetadata extends AbstractPersistentEntityMetadata {
 
     @Override

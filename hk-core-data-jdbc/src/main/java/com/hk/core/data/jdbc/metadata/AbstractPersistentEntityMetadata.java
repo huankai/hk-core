@@ -14,6 +14,7 @@ import java.util.Map;
  * @author huangkai
  * @date 2018-10-13 11:03
  */
+@Deprecated
 public abstract class AbstractPersistentEntityMetadata implements PersistentEntityMetadata, AuditField {
 
     private Cache cache = new ConcurrentMapCache("PERSISTENT_ENTITY_METADATA", false);

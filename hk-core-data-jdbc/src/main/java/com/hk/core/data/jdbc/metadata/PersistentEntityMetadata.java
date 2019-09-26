@@ -7,6 +7,7 @@ import org.springframework.data.mapping.PersistentProperty;
  * @author kevin
  * @date 2018-10-13 00:28
  */
+@Deprecated
 public interface PersistentEntityMetadata {
 
     PersistentEntityInfo getPersistentEntityInfo(PersistentEntity<?, ? extends PersistentProperty<?>> persistentEntity);

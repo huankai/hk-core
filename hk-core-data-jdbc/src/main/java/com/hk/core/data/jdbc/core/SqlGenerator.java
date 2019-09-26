@@ -2,7 +2,6 @@ package com.hk.core.data.jdbc.core;
 
 import com.hk.commons.util.ClassUtils;
 import com.hk.core.data.jdbc.annotations.NonUpdate;
-import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.PersistentPropertyPath;
 import org.springframework.data.mapping.PropertyHandler;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
@@ -13,7 +12,6 @@ import org.springframework.data.util.StreamUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-import javax.persistence.Column;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -88,20 +86,20 @@ class SqlGenerator {
                 if (!entity.isIdProperty(p)) {
                     nonIdColumnNames.add(p.getColumnName());
                 }
-                if (!p.isAnnotationPresent(NonUpdate.class) || isAnnotationPresent(p)) {
+                if (!p.isAnnotationPresent(NonUpdate.class)/* || isAnnotationPresent(p)*/) {
                     updateColumnNames.add(p.getColumnName());
                 }
             }
         });
     }
 
-    private boolean isAnnotationPresent(PersistentProperty<?> p) {
-        if (JPA_PERSISTENCE) {
-            Column column = p.findAnnotation(Column.class);
-            return column == null || column.updatable();
-        }
-        return false;
-    }
+//    private boolean isAnnotationPresent(PersistentProperty<?> p) {
+//        if (JPA_PERSISTENCE) {
+//            Column column = p.findAnnotation(Column.class);
+//            return column == null || column.updatable();
+//        }
+//        return false;
+//    }
 
     /**
      * Returns a query for selecting all simple properties of an entitty, including those for one-to-one relationhships.

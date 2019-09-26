@@ -32,15 +32,5 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @EnableJpaRepositories(basePackages = {"**.repository.jpa"}, repositoryFactoryBeanClass = BaseJpaRepositoryFactoryBean.class)
 public class JpaAutoConfiguration {
 
-    @Bean
-    public JdbcSession jdbcSession(NamedParameterJdbcTemplate namedParameterJdbcTemplate, Dialect dialect) {
-        return new JdbcSession(namedParameterJdbcTemplate, dialect);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(Dialect.class)
-    public Dialect mysqlDialect() {
-        return new MysqlDialect();
-    }
 
 }

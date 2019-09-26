@@ -10,6 +10,7 @@ import java.util.Map;
  * @date 2018-10-12 13:55
  */
 @Data
+@Deprecated
 public class PersistentEntityInfo {
 
     private Map<String, String> propertyColumns = new LinkedHashMap<>();
