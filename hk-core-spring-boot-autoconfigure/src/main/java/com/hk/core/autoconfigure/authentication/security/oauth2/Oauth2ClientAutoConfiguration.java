@@ -4,7 +4,7 @@ import com.hk.core.authentication.oauth2.client.token.grant.code.LogoutAuthoriza
 import com.hk.core.authentication.oauth2.session.HashMapBackedSessionMappingStorage;
 import com.hk.core.authentication.oauth2.session.SessionMappingStorage;
 import com.hk.core.authentication.oauth2.session.SingleSignOutHttpSessionListener;
-import com.hk.core.autoconfigure.authentication.security.AuthenticationProperties;
+import com.hk.core.autoconfigure.authentication.AuthenticationProperties;
 import com.hk.core.autoconfigure.authentication.security.SecurityAuthenticationAutoConfiguration;
 import com.hk.core.autoconfigure.exception.Oauth2ErrorController;
 import org.springframework.beans.BeansException;
@@ -63,7 +63,7 @@ public class Oauth2ClientAutoConfiguration {
             AuthenticationProperties.LoginProperties loginProperties = authenticationProperties.getLogin();
             LogoutAuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider = new LogoutAuthorizationCodeAccessTokenProvider();
             authorizationCodeAccessTokenProvider.setLogoutUrl(loginProperties.getLogoutUrl());
-            authorizationCodeAccessTokenProvider.setForceHttps(loginProperties.isForceHttps());
+            authorizationCodeAccessTokenProvider.setForceHttps(authenticationProperties.getOauth2().isForceHttps());
             template.setAccessTokenProvider(authorizationCodeAccessTokenProvider);//简化，只需要认证码模式
 
         };
@@ -90,7 +90,7 @@ public class Oauth2ClientAutoConfiguration {
                                 OAuth2ClientAuthenticationProcessingFilter processingFilter = (OAuth2ClientAuthenticationProcessingFilter) filter;
                                 SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();
                                 authenticationFailureHandler.setAllowSessionCreation(authenticationProperties.isAllowSessionCreation());
-                                authenticationFailureHandler.setDefaultFailureUrl(authenticationProperties.getDefaultFailureUrl());
+                                authenticationFailureHandler.setDefaultFailureUrl(authenticationProperties.getOauth2().getOauth2FailureUrl());
                                 authenticationFailureHandler.setUseForward(authenticationProperties.isForwardToDestination());
                                 processingFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
                             }

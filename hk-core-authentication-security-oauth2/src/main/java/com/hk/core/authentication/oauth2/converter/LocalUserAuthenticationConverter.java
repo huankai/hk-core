@@ -18,6 +18,7 @@ import java.util.*;
  * @author kevin
  * @date 2018-08-21 13:07
  */
+@Deprecated
 public class LocalUserAuthenticationConverter implements UserAuthenticationConverter {
 
     private final UserDetailClientService userDetailClientService;

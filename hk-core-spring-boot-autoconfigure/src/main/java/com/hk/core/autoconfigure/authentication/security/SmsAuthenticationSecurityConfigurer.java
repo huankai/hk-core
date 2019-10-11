@@ -6,6 +6,7 @@ import com.hk.core.authentication.api.validatecode.ValidateCodeProcessor;
 import com.hk.core.authentication.security.authentication.sms.SMSAuthenticationFilter;
 import com.hk.core.authentication.security.authentication.sms.SMSAuthenticationProvider;
 import com.hk.core.authentication.security.authentication.sms.SMSSenderFilter;
+import com.hk.core.autoconfigure.authentication.AuthenticationProperties;
 import lombok.Setter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -16,12 +17,13 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
+ *
  * 短信验证配置
  *
  * @author kevin
  * @date 2018-07-27 09:07
  */
-public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+public class SmsAuthenticationSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     private final AuthenticationProperties.SMSProperties smsProperties;
 
@@ -41,7 +43,7 @@ public class SmsAuthenticationSecurityConfiguration extends SecurityConfigurerAd
 
     private final PostAuthenticationHandler<UserPrincipal, String> authenticationHandler;
 
-    public SmsAuthenticationSecurityConfiguration(AuthenticationProperties.SMSProperties smsProperties,
+    public SmsAuthenticationSecurityConfigurer(AuthenticationProperties.SMSProperties smsProperties,
                                                   ValidateCodeProcessor validateCodeProcessor,
                                                   PostAuthenticationHandler<UserPrincipal, String> authenticationHandler) {
         this.smsProperties = smsProperties;

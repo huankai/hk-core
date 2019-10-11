@@ -26,7 +26,7 @@ public class Oauth2ErrorController {
      * @param request
      * @return
      */
-    @RequestMapping(path = "${hk.authentication.default-failure-url:/oauth2-error}")
+    @RequestMapping(path = "${hk.authentication.oauth2.oauth2-failure-url:/oauth2-error}")
     public JsonResult<Void> oauth2AuthenticationError(HttpServletRequest request) {
         AuthenticationException exception = (AuthenticationException) request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         if (null == exception) {
