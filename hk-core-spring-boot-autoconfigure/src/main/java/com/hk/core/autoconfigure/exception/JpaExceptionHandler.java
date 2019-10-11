@@ -10,6 +10,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * jpa 异常处理器
+ *
  * @author huangkai
  * @date 2018-10-22 22:22
  */
@@ -24,11 +26,11 @@ public class JpaExceptionHandler extends AbstractExceptionHandler {
      *
      * @param e       e
      * @param request request
-     * @return jsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = {EntityNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public JsonResult<Void> e(EntityNotFoundException e, HttpServletRequest request) {
+    public JsonResult<Void> entityNotFoundException(EntityNotFoundException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return new JsonResult<>(JsonResult.Status.NOT_FOUND, "您访问的资源可能不存在!");
     }

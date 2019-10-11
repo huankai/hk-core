@@ -1,6 +1,5 @@
 package com.hk.core.data.jpa.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hk.core.data.commons.audit.AuditField;
 import org.springframework.data.annotation.CreatedBy;
@@ -28,9 +27,9 @@ import java.util.Optional;
  *
  * @author kevin
  */
+@SuppressWarnings("serial")
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
-@SuppressWarnings("serial")
 @JsonIgnoreProperties(value = {"createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate"})
 public abstract class AbstractAuditable extends AbstractUUIDPersistable implements Auditable<String, String, LocalDateTime>, AuditField {
 
@@ -48,7 +47,6 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * </pre>
      */
     @CreatedBy
-    @JsonIgnore
     @Column(name = CREATED_BY, updatable = false)
     private String createdBy;
 
@@ -56,7 +54,6 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * 创建时间
      */
     @CreatedDate
-    @JsonIgnore
     @Column(name = CREATED_DATE, updatable = false)
     private LocalDateTime createdDate;
 
@@ -64,7 +61,6 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * 最后更新用户
      */
     @Column(name = LAST_MODIFIED_BY)
-    @JsonIgnore
     @LastModifiedBy
     private String lastModifiedBy;
 
@@ -72,7 +68,6 @@ public abstract class AbstractAuditable extends AbstractUUIDPersistable implemen
      * 最后更新时间
      */
     @LastModifiedDate
-    @JsonIgnore
     @Column(name = LAST_MODIFIED_DATE)
     private LocalDateTime lastModifiedDate;
 

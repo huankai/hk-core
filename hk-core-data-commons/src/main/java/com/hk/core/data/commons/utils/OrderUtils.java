@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 排序工具类
+ * SQL排序工具类
  *
  * @author kevin
  * @date 2018-07-24 16:37

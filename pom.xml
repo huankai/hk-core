@@ -4,18 +4,28 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hk</groupId>
     <artifactId>hk-core</artifactId>
-    <version>2.1.0.RELEASE</version>
+    <version>2.1.2.RELEASE</version>
     <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-
     </properties>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.hk</groupId>
+                <artifactId>hk-core-spring-boot-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <modules>
-        <module>hk-core-exception</module>
         <module>hk-core-page</module>
         <module>hk-core-data-commons</module>
         <module>hk-core-web</module>
@@ -23,10 +33,13 @@
         <module>hk-core-data-jpa</module>
         <module>hk-core-data-mybatis</module>
         <module>hk-core-data-solr</module>
+        <module>hk-core-data-elasticsearch</module>
         <module>hk-core-authentication-api</module>
         <module>hk-core-authentication-security</module>
+        <module>hk-core-authentication-security-cas</module>
         <module>hk-core-authentication-shiro</module>
         <module>hk-core-authentication-weixin-mp</module>
+        <module>hk-core-authentication-alipay</module>
         <module>hk-core-authentication-security-oauth2</module>
         <module>hk-core-service</module>
         <module>hk-core-cache</module>
@@ -36,6 +49,7 @@
         <module>hk-core-message-websocket</module>
         <module>hk-core-message-weixin</module>
         <module>hk-core-message-redis</module>
+        <module>hk-core-stream-rabbitmq</module>
         <module>hk-core-stream-kafka</module>
         <module>hk-swagger-ui</module>
         <module>hk-core-test</module>
@@ -48,12 +62,12 @@
         <repository>
             <id>nexus</id>
             <name>Releases</name>
-            <url>http://182.61.40.18:8081/repository/maven-releases</url>
+            <url>http://172.16.0.4:8081/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
             <id>nexus</id>
             <name>Snapshot</name>
-            <url>http://182.61.40.18:8081/repository/maven-snapshots</url>
+            <url>http://172.16.0.4:8081/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 

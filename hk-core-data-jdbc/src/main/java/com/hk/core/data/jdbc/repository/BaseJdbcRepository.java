@@ -10,9 +10,9 @@ import com.hk.core.data.jdbc.metadata.PersistentEntityInfo;
 import com.hk.core.data.jdbc.metadata.PersistentEntityMetadata;
 import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.data.jdbc.query.SimpleCondition;
-import com.hk.core.query.QueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
+import com.hk.core.query.QueryModel;
 import lombok.NonNull;
 import org.springframework.data.domain.*;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
@@ -52,11 +52,11 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
         return jdbcSession.get().queryForList(selectArguments, false, entity.getType());
     }
 
-    private void fillSelectArguments(SelectArguments arguments, PersistentEntityInfo persistentEntityInfo, T t) {
+    private void fillSelectArguments(SelectArguments arguments, PersistentEntityInfo persistentEntityInfo, T entity) {
         arguments.setFrom(persistentEntityInfo.getTableName());
         arguments.setFields(persistentEntityInfo.getPropertyColumns().values());
         CompositeCondition conditions = arguments.getConditions();
-        Map<String, Object> propertyMap = BeanUtils.beanToMap(t);
+        Map<String, Object> propertyMap = BeanUtils.beanToMap(entity);
         for (Map.Entry<String, Object> entry : propertyMap.entrySet()) {
             if (ArrayUtils.noContains(persistentEntityInfo.getIgnoreConditionFields(), entry.getKey())) {
                 String column = persistentEntityInfo.getPropertyColumns().get(entry.getKey());
@@ -77,7 +77,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
     public final T updateByIdSelective(T t) {
         if (t instanceof Persistable) {
             Persistable<ID> persistable = (Persistable<ID>) t;
-            AssertUtils.isTrue(!persistable.isNew(), "update.id.notEmpty");
+            AssertUtils.isTrueWithI18n(!persistable.isNew(), "update.id.notEmpty");
             T find = getById(persistable.getId());
             BeanUtils.copyNotNullProperties(t, find);
             return save(find);
@@ -110,6 +110,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
 
     @Override
     public T getById(ID id) throws EntityNotFoundException {
+        AssertUtils.notNull(id, "id 不能为 null");
         return findById(id).orElseThrow(EntityNotFoundException::new);
     }
 

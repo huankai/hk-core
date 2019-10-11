@@ -19,7 +19,6 @@ import java.util.Optional;
  */
 public interface JdbcSelectService<T extends Persistable<ID>, ID extends Serializable> extends SelectService<T, ID> {
 
-
     /**
      * 条件查询
      *

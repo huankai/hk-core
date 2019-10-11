@@ -18,13 +18,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Objects;
 
 /**
  * web相关的工具类
@@ -37,6 +37,8 @@ public abstract class Webs {
     private static final String USER_AGENT_HEADER_NAME = "User-Agent";
 
     private static final String MSIE_USER_AGENT_HEADER_VALUE = "MSIE";
+
+    private static final String EDGE_USER_AGENT_HEADER_VALUE = "Edge";
 
     private static final String TRIDENT_USER_AGENT_HEADER_VALUE = "Trident";
 
@@ -66,8 +68,8 @@ public abstract class Webs {
      * @param name name
      * @return request attribute by give name.
      */
-    public static <T> T getAttributeFromRequest(String name) {
-        return getAttribute(name, RequestAttributes.SCOPE_REQUEST);
+    public static <T> T getAttributeFromRequest(String name, Class<T> clazz) {
+        return getAttribute(name, RequestAttributes.SCOPE_REQUEST, clazz);
     }
 
     /**
@@ -76,8 +78,8 @@ public abstract class Webs {
      * @param name name
      * @return session value by give name
      */
-    public static <T> T getAttributeFromSession(String name) {
-        return getAttribute(name, RequestAttributes.SCOPE_SESSION);
+    public static <T> T getAttributeFromSession(String name, Class<T> clazz) {
+        return getAttribute(name, RequestAttributes.SCOPE_SESSION, clazz);
     }
 
     /**
@@ -121,9 +123,18 @@ public abstract class Webs {
      * @param scope scope
      * @return Value
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T getAttribute(String name, int scope) {
-        return (T) getRequestAttribute().getAttribute(name, scope);
+    public static <T> T getAttribute(String name, int scope, Class<T> clazz) throws ClassCastException {
+        return clazz.cast(getRequestAttribute().getAttribute(name, scope));
+    }
+
+    /**
+     * session 失效
+     */
+    public static void invalidateSession() {
+        HttpSession session = getRequestAttribute().getRequest().getSession(false);
+        if (null != session) {
+            session.invalidate();
+        }
     }
 
     /**
@@ -146,7 +157,7 @@ public abstract class Webs {
      * @return true if Request Header contains X-Requested-With
      */
     public static boolean isAjax(HttpServletRequest request) {
-        return null != request.getHeader("X-Requested-With");
+        return StringUtils.isNotEmpty(request.getHeader("X-Requested-With"));
     }
 
     /**
@@ -165,8 +176,37 @@ public abstract class Webs {
      * @return true if Request Header contains MicroMessenger
      */
     public static boolean isWeiXin(HttpServletRequest request) {
-        String userAgent = request.getHeader("user-agent");
-        return StringUtils.contains(userAgent, "MicroMessenger");
+        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "MicroMessenger");
+    }
+
+    /**
+     * 判断是否是支付宝发出的请求
+     *
+     * @param request request
+     * @return true or false
+     */
+    public static boolean isAliPay(HttpServletRequest request) {
+        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "AlipayClient");
+    }
+
+    /**
+     * 判断是否是 android 发出的请求
+     *
+     * @param request request
+     * @return true or false
+     */
+    public static boolean isAndroid(HttpServletRequest request) {
+        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "Android");
+    }
+
+    /**
+     * 判断是否是 苹果手机应用发送的请求
+     *
+     * @param request request
+     * @return true or false
+     */
+    public static boolean isIPhone(HttpServletRequest request) {
+        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "iPhone");
     }
 
     /**
@@ -219,7 +259,8 @@ public abstract class Webs {
      */
     public static ResponseEntity<InputStreamResource> toImageViewResponseEntity(Resource resource) {
         try {
-            return toDownloadResponseEntity(null, MediaType.IMAGE_JPEG, resource.contentLength(), new InputStreamResource(resource.getInputStream()));
+            return toDownloadResponseEntity(resource.getFilename(), MediaType.IMAGE_JPEG, resource.contentLength(),
+                    new InputStreamResource(resource.getInputStream()));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -230,23 +271,16 @@ public abstract class Webs {
      * @param in       in
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, long contextLength, InputStream in) {
+    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, long contextLength,
+                                                                               InputStream in) {
         InputStreamResource streamResource = new InputStreamResource(in);
-        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
-        try {
-            if (streamResource.isFile()) {
-                File file = streamResource.getFile();
-                if (FileUtils.isImage(file)) {
-                    mediaType = MediaType.IMAGE_JPEG;
-                }
-            }
-            return toDownloadResponseEntity(fileName, mediaType, contextLength, streamResource);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        MediaType mediaType = (streamResource.isFile() && FileUtils.isImage(streamResource.getFilename()))
+                ? MediaType.IMAGE_JPEG : MediaType.APPLICATION_OCTET_STREAM;
+        return toDownloadResponseEntity(fileName, mediaType, contextLength, streamResource);
     }
 
-    private static <T> ResponseEntity<T> toDownloadResponseEntity(String fileName, MediaType mediaType, long contextLength, T body) {
+    private static <T> ResponseEntity<T> toDownloadResponseEntity(String fileName, MediaType mediaType,
+                                                                  long contextLength, T body) {
         HttpHeaders httpHeaders = new HttpHeaders();
         if (StringUtils.isNotEmpty(fileName)) {
             httpHeaders.setContentDispositionFormData("attachment", getAttachFileName(fileName));
@@ -268,9 +302,10 @@ public abstract class Webs {
         try {
             String agent = request.getHeader(USER_AGENT_HEADER_NAME);
             if (StringUtils.isNotEmpty(agent)) {
-                if (agent.contains(MSIE_USER_AGENT_HEADER_VALUE) || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {//IE
+                if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
+                        || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE
                     encodeFileName = URLEncoder.encode(fileName, Contants.UTF_8);
-                } else if (agent.contains(MOZILLA_USER_AGENT_HEADER_VALUE)) {//火狐,谷歌
+                } else if (agent.contains(MOZILLA_USER_AGENT_HEADER_VALUE)) {// 火狐,谷歌
                     encodeFileName = StringUtils.newStringIso8859_1(StringUtils.getByteUtf8(fileName));
                 }
             }
@@ -322,14 +357,14 @@ public abstract class Webs {
      *
      * @param response response
      * @param status   status
-     * @param result   result
+     * @param data     data
      */
-    public static <T> void writeJson(HttpServletResponse response, int status, JsonResult<T> result) {
+    public static void writeJson(HttpServletResponse response, int status, Object data) {
         response.setCharacterEncoding(Contants.UTF_8);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try (PrintWriter writer = response.getWriter()) {
             response.setStatus(status);
-            writer.write(JsonUtils.serialize(result));
+            writer.write(JsonUtils.serialize(data));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -337,6 +372,7 @@ public abstract class Webs {
 
     public static String getClearContextPathUri(HttpServletRequest request) {
         String contextPath = request.getContextPath();
-        return StringUtils.isEmpty(contextPath) ? request.getRequestURI() : StringUtils.substring(request.getRequestURI(), contextPath.length());
+        return StringUtils.isEmpty(contextPath) ? request.getRequestURI()
+                : StringUtils.substring(request.getRequestURI(), contextPath.length());
     }
 }

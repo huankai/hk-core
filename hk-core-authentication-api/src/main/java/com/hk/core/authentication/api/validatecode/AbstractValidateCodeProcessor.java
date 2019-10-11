@@ -98,6 +98,10 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
         if (null == inStoreValidateCode) {
             throw new ValidateCodeException("验证码不存在");
         }
+        if (inStoreValidateCode.isExpired()) {
+            validateCodeStrategy.remove(request, key);
+            throw new ValidateCodeException("验证码已过期");
+        }
         String codeInRequest;
         try {
             codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), codeParameterName);
@@ -106,10 +110,6 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
         }
         if (StringUtils.isEmpty(codeInRequest)) {
             throw new ValidateCodeException("验证码不能为空");
-        }
-        if (inStoreValidateCode.isExpired()) {
-            validateCodeStrategy.remove(request, key);
-            throw new ValidateCodeException("验证码已过期");
         }
         if (StringUtils.notEquals(inStoreValidateCode.getCode(), codeInRequest)) {
             throw new ValidateCodeException("验证码不匹配");

@@ -1,12 +1,13 @@
 package com.hk.core.query;
 
 
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.BeanUtils;
 import lombok.Data;
+import org.springframework.core.ResolvableType;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hk.commons.util.ArrayUtils;
 
 
 /**
@@ -50,6 +51,16 @@ public class QueryModel<T> {
         return (startRow - 1) * getPageSize();
     }
 
+    @SuppressWarnings("unchecked")
+    public T getParam() {
+        if (null == param) {
+            ResolvableType resolvableType = ResolvableType.forClass(QueryModel.class);
+            param = BeanUtils.instantiateClass(
+                    (Class<T>) resolvableType.getGeneric(0).resolve());
+        }
+        return param;
+    }
+
     /**
      * 不能小于等于0
      *
@@ -59,10 +70,25 @@ public class QueryModel<T> {
         return pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize;
     }
 
+    /**
+     * 添加排序到第一个
+     *
+     * @param order order
+     * @return {@link QueryModel}
+     */
+    public QueryModel<T> addOrderToFirst(Order order) {
+        this.orders.add(0, order);
+        return this;
+    }
+
+    /**
+     * 添加排序
+     *
+     * @param orders Orders
+     * @return {@link QueryModel}
+     */
     public QueryModel<T> addOrders(Order... orders) {
         this.orders.addAll(ArrayUtils.asArrayList(orders));
         return this;
     }
-
-
 }

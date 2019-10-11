@@ -1,6 +1,7 @@
 package com.hk.core.web.interceptors;
 
 import com.hk.commons.util.CollectionUtils;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -39,17 +40,10 @@ public class GlobalPropertyInterceptor extends HandlerInterceptorAdapter {
     /**
      * request属性
      */
+    @Data
     @ConfigurationProperties(prefix = "hk.request")
     public static class RequestPropertyProperties {
-    	
+
         private Map<String, Object> property;
-
-        public Map<String, Object> getProperty() {
-            return property;
-        }
-
-        public void setProperty(Map<String, Object> property) {
-            this.property = property;
-        }
     }
 }

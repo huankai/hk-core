@@ -10,7 +10,10 @@
 	- 使用Spring Security oauth2实现单点登陆.
 
 - hk-core-authentication-weixin-mp 
-	- 使用Spring Security oauth2实现微信扫码登陆.
+	- 使用Spring Security oauth2实现微信登陆.
+	
+- hk-core-authentication-alipay
+	- 使用Spring Security 实现支付宝登陆.
 
 - hk-core-cache 
 	- 缓存功能的自动配置
@@ -36,10 +39,7 @@ Spring 默认需要在标记有缓存注解的方法上定义缓存名 、或在
 
 - hk-core-data-solr 
 	- 支持基于 AOP增量导入
-	- 使用 spring-data-solr 再次封装，方便查询  
-
-- hk-core-exception 
-	- 异常包
+	- 使用 spring-data-solr 再次封装，方便查询
 	 
 - hk-core-redis
 	- redis 依赖包

@@ -6,6 +6,8 @@ com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2FeignAutoConfigur
 com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2AutoConfiguration,\
 com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2JWTAccessTokenConverterConfiguration,\
 com.hk.core.autoconfigure.authentication.shiro.ShiroAutoConfiguration,\
+com.hk.core.autoconfigure.alipay.AlipayAutoConfiguration,\
+com.hk.core.autoconfigure.authentication.apereo.cas.SecurityCasClientConfiguration,\
 com.hk.core.autoconfigure.cache.redis.CacheRedisAutoConfiguration,\
 com.hk.core.autoconfigure.cache.FixUseSupperClassAutoConfiguration,\
 com.hk.core.autoconfigure.web.CustomWebMvcConfigurer,\
@@ -14,6 +16,7 @@ com.hk.core.autoconfigure.data.AuditorConfiguration,\
 com.hk.core.autoconfigure.data.jpa.JpaAutoConfiguration,\
 com.hk.core.autoconfigure.data.jdbc.JdbcAutoConfiguration,\
 com.hk.core.autoconfigure.data.solr.SolrAutoConfiguration,\
+com.hk.core.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,\
 com.hk.core.autoconfigure.message.websocket.WebSocketAutoConfiguration,\
 com.hk.core.autoconfigure.message.weixin.WeixinMessageAutoConfiguration,\
 com.hk.core.autoconfigure.weixin.WechatMpConfiguration,\

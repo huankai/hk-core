@@ -20,7 +20,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 @EnableJpaAuditing
 @ConditionalOnClass(BaseJpaRepository.class)
-@EnableJpaRepositories(basePackages = {"com.hk.**.repository.jpa"}, repositoryFactoryBeanClass = BaseJpaRepositoryFactoryBean.class)
+@EnableJpaRepositories(basePackages = {"**.repository.jpa"}, repositoryFactoryBeanClass = BaseJpaRepositoryFactoryBean.class)
 public class JpaAutoConfiguration {
 
 

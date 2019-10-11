@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * 基本CRUD操作
@@ -46,19 +45,8 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @return {@link List}
      */
     default List<T> insertOrUpdate(Collection<T> entities) {
-        return insertOrUpdate(entities, Function.identity());
-    }
-
-    /**
-     * 批量保存或更新
-     *
-     * @param entities entitys
-     * @param function 每条记录执行器
-     * @return {@link List}
-     */
-    default List<T> insertOrUpdate(Collection<T> entities, Function<T, T> function) {
         List<T> result = new ArrayList<>(entities.size());
-        entities.forEach(entity -> result.add(insertOrUpdate(function.apply(entity))));
+        entities.forEach(entity -> result.add(insertOrUpdate(entity)));
         return result;
     }
 
@@ -69,20 +57,8 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @return {@link List}
      */
     default List<T> insertOrUpdateSelective(Collection<T> entities) {
-        return insertOrUpdateSelective(entities, Function.identity());
-    }
-
-
-    /**
-     * 批量保存或更新，在更新时，只更新不为 null 的字段
-     *
-     * @param entities entitys
-     * @param function 每条记录执行器
-     * @return {@link List}
-     */
-    default List<T> insertOrUpdateSelective(Collection<T> entities, Function<T, T> function) {
         List<T> result = new ArrayList<>(entities.size());
-        entities.forEach(entity -> result.add(insertOrUpdateSelective(function.apply(entity))));
+        entities.forEach(entity -> result.add(insertOrUpdateSelective(entity)));
         return result;
     }
 }

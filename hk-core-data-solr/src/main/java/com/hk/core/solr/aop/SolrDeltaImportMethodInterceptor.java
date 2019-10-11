@@ -1,15 +1,16 @@
 package com.hk.core.solr.aop;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.core.solr.SolrDeltaImport;
-import com.hk.core.solr.SolrDeltaImportUtils;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import com.hk.commons.util.ArrayUtils;
+import com.hk.core.solr.SolrDeltaImport;
+import com.hk.core.solr.SolrDeltaImportUtils;
 
 /**
  * Solr 增量导入 Aop 拦截器
@@ -32,7 +33,7 @@ public class SolrDeltaImportMethodInterceptor implements AfterReturningAdvice {
     private String solrCore;
 
     @Override
-    public synchronized void afterReturning(Object returnValue, Method method, Object[] args, Object target) {
+    public void afterReturning(Object returnValue, Method method, Object[] args, Object target) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("增量同步索引...");
         }

@@ -221,7 +221,7 @@ public class Restrictions {
      * @return LogicalExpression
      */
     public static LogicalExpression and(Criterion... criterions) {
-        return ArrayUtils.isEmpty(criterions) ? null : new LogicalExpression(criterions, AndOr.AND);
+        return ArrayUtils.isEmpty(criterions) ? null : new LogicalExpression(AndOr.AND, criterions);
     }
 
     /**
@@ -229,7 +229,7 @@ public class Restrictions {
      * @return LogicalExpression
      */
     public static LogicalExpression or(Criterion... criterions) {
-        return ArrayUtils.isEmpty(criterions) ? null : new LogicalExpression(criterions, AndOr.OR);
+        return ArrayUtils.isEmpty(criterions) ? null : new LogicalExpression(AndOr.OR, criterions);
     }
 
 }

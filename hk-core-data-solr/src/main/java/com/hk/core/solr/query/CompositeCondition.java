@@ -24,7 +24,6 @@ public class CompositeCondition implements Condition {
     @Setter
     private List<Condition> conditions;
 
-
     public CompositeCondition() {
         this.andOr = AndOr.AND;
     }
@@ -89,14 +88,7 @@ public class CompositeCondition implements Condition {
     public Criteria toSolrCriteria() {
         SimpleQuery query = new SimpleQuery();
         query.setDefaultOperator(andOr == AndOr.AND ? Query.Operator.AND : Query.Operator.OR);
-        if (CollectionUtils.isNotEmpty(conditions)) {
-            for (Condition condition : conditions) {
-                Criteria criteria = condition.toSolrCriteria();
-                if (null != criteria) {
-                    query.addCriteria(criteria);
-                }
-            }
-        }
+        Condition.addCriteria(query, this.conditions);
         return query.getCriteria();
     }
 }

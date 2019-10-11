@@ -1,10 +1,12 @@
 package com.hk.core.autoconfigure.exception;
 
-import com.hk.commons.util.EnumDisplayUtils;
-import com.hk.core.exception.ServiceException;
 import com.hk.commons.JsonResult;
+import com.hk.commons.util.EnumDisplayUtils;
+import com.hk.core.service.exception.ServiceException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,13 +29,12 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      * 对于 ServiceException
      *
      * @param e ServiceException
-     * @return jsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = ServiceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public JsonResult<Void> serviceException(ServiceException e, HttpServletRequest request) {
+    public ResponseEntity<JsonResult<?>> serviceException(ServiceException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return JsonResult.badRequest(e.getMessage());
+        return ResponseEntity.status(e.getStatusCode()).body(e.getResult());
     }
 
     /**
@@ -43,7 +44,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      *
      * @param e       e
      * @param request request
-     * @return jsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -62,13 +63,27 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      *
      * @param e       e
      * @param request request
-     * @return jsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public JsonResult<Void> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return new JsonResult<>(JsonResult.Status.METHOD_NOT_ALLOWED, "您访问的资源不支持此方式 :" + e.getMethod());
+    }
+
+    /**
+     * 当使用 {@link org.springframework.web.bind.annotation.RequestBody} 获取请求体数据时，如果body 为 null，则抛出此异常
+     *
+     * @param e       e
+     * @param request request
+     * @return {@link JsonResult}
+     */
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public JsonResult<Void> HttpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request) {
+        error(e, e.getMessage(), request);
+        return JsonResult.badRequest("请求体为空");
     }
 
     /**
@@ -79,7 +94,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      *
      * @param e       e
      * @param request request
-     * @return jsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = {ServletRequestBindingException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -92,7 +107,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      * 对数据库操作出现的所有异常： DataAccessException
      *
      * @param e DataAccessException
-     * @return jsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = {DataAccessException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -106,7 +121,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      *
      * @param e       MethodArgumentNotValidException
      * @param request request
-     * @return JsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -121,7 +136,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      * 服务器异常
      *
      * @param e Throwable
-     * @return jsonResult
+     * @return {@link JsonResult}
      */
     @ExceptionHandler(value = {Throwable.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

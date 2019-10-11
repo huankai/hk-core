@@ -4,6 +4,7 @@ import com.hk.commons.util.ListResult;
 import com.hk.core.query.QueryModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -12,18 +13,16 @@ import java.util.List;
  * @author kevin
  * @date 2018-07-04 11:30
  */
+@SuppressWarnings("serial")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@SuppressWarnings("serial")
+@NoArgsConstructor
 public class AdditionalSimpleQueryPage<T> extends SimpleQueryPage<T> {
 
     /**
      * 其它扩展参数
      */
     private Object additional;
-
-    public AdditionalSimpleQueryPage() {
-    }
 
     public AdditionalSimpleQueryPage(QueryModel<?> query, ListResult<T> result, Object additional) {
         this(query, result.getResult(), result.getTotalRowCount(), additional);

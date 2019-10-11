@@ -34,7 +34,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public String getParameter(String name) {
-        String value = super.getParameter(StringEscapeUtils.escapeHtml4(name));
+        String value = super.getParameter(name);
         return StringUtils.isEmpty(value) ? value : StringEscapeUtils.escapeHtml4(value);
     }
 
@@ -53,7 +53,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public String getHeader(String name) {
-        String value = super.getHeader(StringEscapeUtils.escapeHtml4(name));
+        String value = super.getHeader(name);
         return StringUtils.isNotEmpty(value) ? StringEscapeUtils.escapeHtml4(value) : value;
     }
 

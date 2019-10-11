@@ -1,6 +1,7 @@
 package com.hk.core.service;
 
 import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public interface DeleteService<T extends Persistable<ID>, ID extends Serializabl
      * @param ids ids
      */
     default void deleteByIds(Iterable<ID> ids) {
-        if (null != ids) {
+        if (CollectionUtils.isNotEmpty(ids)) {
             ids.forEach(this::deleteById);
         }
     }
@@ -28,7 +29,7 @@ public interface DeleteService<T extends Persistable<ID>, ID extends Serializabl
     /**
      * @param ids ids
      */
-    default void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
+    default void deleteByIds(ID... ids) {
         deleteByIds(ArrayUtils.asArrayList(ids));
     }
 

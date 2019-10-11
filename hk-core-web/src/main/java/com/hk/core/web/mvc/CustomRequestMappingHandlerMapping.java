@@ -3,6 +3,7 @@ package com.hk.core.web.mvc;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.StringUtils;
 
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import java.util.Map;
  * <p>
  * 优化 Spring webmvc 对于 restful URL 使用 {@link PathVariable } 注解性能低下的问题
  * </p>
+ *
  * <pre>
  * 在请求参数或请求头中添加 {@value #requestMappingParameterName }}} 信息，
  * 当参数值等于 {@link RequestMapping}} 或 {@link GetMapping}} 或 {@link PostMapping}} 或 {@link DeleteMapping}} 等的name 属性值时 ，
@@ -33,10 +35,10 @@ import java.util.Map;
  * <pre>
  * 	使用方式 ：
  * 		如  定义的 mapping 如下：
- * 		@ RequestMapping(path = "{id}",name = "test")
+ * 		&#64;RequestMapping(path = "{id}",name = "test")
  * 		public String test(@PathVariable String id) {
  * 			return "hello," + id;
- *        }
+ *      }
  *
  * 		则请求方式：https://localhost:${port}/test?path_variable_event=test
  * 		或在请求头添加 path_variable_event=test ：https://localhost:${port}/test
@@ -53,11 +55,8 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
 
     private static final Map<HandlerMethod, RequestMappingInfo> METHOD_REQUEST_MAPPING_INFO_MAP = new HashMap<>(64);
 
+    @Setter
     private String requestMappingParameterName = "path_variable_event";
-
-    public void setRequestMappingParameterName(String requestMappingParameterName) {
-        this.requestMappingParameterName = requestMappingParameterName;
-    }
 
     @Override
     protected void registerHandlerMethod(Object handler, Method method, RequestMappingInfo mapping) {
@@ -79,10 +78,13 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
             }
         }
         List<HandlerMethod> handlerMethods = super.getHandlerMethodsForMappingName(requestMappingName);
+        if (CollectionUtils.isEmpty(handlerMethods)) {
+            return super.lookupHandlerMethod(lookupPath, request);
+        }
         long size = CollectionUtils.size(handlerMethods);
         if (size != 1) {
             if (debug) {
-                LOGGER.debug("path_variable_event :{},handlerMethods 匹配数:{},使用", requestMappingName, size);
+                LOGGER.debug("path_variable_event :{},handlerMethods 匹配数:{}", requestMappingName, size);
             }
             return super.lookupHandlerMethod(lookupPath, request);
         }

@@ -7,6 +7,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
+ * <pre>
+ *
+ * 获取用户信息与 clientId 应用信息接口，如果不是集成单点登陆或 Oauth2 登陆的客户端认证，请直接使用 {@link UserDetailsService}
+ * </pre>
+ *
  * @author kevin
  */
 public interface UserDetailClientService extends UserDetailsService {
@@ -17,6 +22,12 @@ public interface UserDetailClientService extends UserDetailsService {
         return loadUserByLoginUsername(username);
     }
 
+    /**
+     * 获取用户信息
+     *
+     * @param username username
+     * @return {@link SecurityUserPrincipal}
+     */
     SecurityUserPrincipal loadUserByLoginUsername(String username);
 
     /**

@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  *
  * @author kevin
  */
-public final class SpringSecurityContext implements SecurityContext {
+public class SpringSecurityContext implements SecurityContext {
 
     @Override
     public UserPrincipal getPrincipal() {
@@ -20,7 +20,7 @@ public final class SpringSecurityContext implements SecurityContext {
             throw new AuthenticationServiceException("未认证的用户");
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return UserPrincipal.class.cast(authentication.getPrincipal());
+        return (UserPrincipal) authentication.getPrincipal();
     }
 
     /**

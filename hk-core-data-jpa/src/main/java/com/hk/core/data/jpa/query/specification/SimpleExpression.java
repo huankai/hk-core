@@ -1,6 +1,8 @@
 package com.hk.core.data.jpa.query.specification;
 
 import com.hk.core.data.commons.query.Operator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import javax.persistence.criteria.*;
 import javax.persistence.criteria.CriteriaBuilder.In;
@@ -9,24 +11,19 @@ import java.util.Iterator;
 
 
 /**
+ *
  */
+@AllArgsConstructor
 public class SimpleExpression implements Criterion {
 
+    @Getter
     private String propertyName;
 
+    @Getter
     private Operator operator;
 
+    @Getter
     private Object value;
-
-    public SimpleExpression(String propertyName, Object value) {
-        this(propertyName, Operator.EQ, value);
-    }
-
-    public SimpleExpression(String propertyName, Operator operator, Object value) {
-        this.propertyName = propertyName;
-        this.operator = operator;
-        this.value = value;
-    }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -73,18 +70,6 @@ public class SimpleExpression implements Criterion {
             default:
         }
         return null;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public Operator getOperator() {
-        return operator;
-    }
-
-    public Object getValue() {
-        return value;
     }
 
 }

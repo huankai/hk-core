@@ -1,18 +1,25 @@
 package com.hk.core.authentication.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import com.hk.commons.util.CollectionUtils;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 当前登陆的用户
+ * 当前登陆的用户，所有获取当前登陆用户信息必须继承此类
  *
  * @author kevin
  * @date 2017年9月28日上午9:45:55
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserPrincipal implements Serializable {
 
     /**
@@ -23,6 +30,7 @@ public class UserPrincipal implements Serializable {
     /**
      * 当前用户id
      */
+
     private String userId;
 
     /**
@@ -55,15 +63,13 @@ public class UserPrincipal implements Serializable {
      */
     private Byte sex;
 
-    private String sexChinese;
-
     /**
      * 用户头像
      */
     private String iconPath;
 
     /**
-     * appId
+     * 获取 app 信息，对于 单点登陆，或 oauth2 登陆时有效
      */
     private ClientAppInfo appInfo;
 
@@ -75,22 +81,22 @@ public class UserPrincipal implements Serializable {
     private boolean protectUser;
 
     /**
-     * orgId
+     * 用户所在机构id
      */
     private String orgId;
 
     /**
-     * orgName
+     * 用户所在机构名称
      */
     private String orgName;
 
     /**
-     * deptId
+     * 用户所在部门Id
      */
     private String deptId;
 
     /**
-     * deptNames
+     * 用户所在部门名称
      */
     private String deptName;
 
@@ -98,21 +104,26 @@ public class UserPrincipal implements Serializable {
      * 用户角色
      */
     @JsonIgnore
-    private Set<String> roleSet;
+    private Set<String> roles;
 
     /**
      * 用户权限
      */
     @JsonIgnore
-    private Set<String> permissionSet;
+    private Set<String> permissions;
 
-    public UserPrincipal() {
-
+    public UserPrincipal(String userId, String account, Byte userType) {
+        this.protectUser = false;
+        this.userId = userId;
+        this.account = account;
+        this.userType = userType;
+        this.roles = new HashSet<>();
+        this.permissions = new HashSet<>();
     }
 
     public UserPrincipal(String userId, String account, boolean protectUser, String realName,
                          Byte userType, String phone, String email,
-                         Byte sex, String iconPath) {
+                         Byte sex, String iconPath, Set<String> roles, Set<String> permissions) {
         this.userId = userId;
         this.account = account;
         this.protectUser = protectUser;
@@ -122,6 +133,40 @@ public class UserPrincipal implements Serializable {
         this.email = email;
         this.sex = sex;
         this.iconPath = iconPath;
+        this.roles = (roles == null) ? new HashSet<>() : roles;
+        this.permissions = (permissions == null) ? new HashSet<>() : permissions;
+    }
+
+    /**
+     * 获取用户所有权限
+     */
+    public Set<String> getPermissions() {
+        return Collections.unmodifiableSet(permissions);
+    }
+
+    /**
+     * 获取用户所有角色
+     */
+    public Set<String> getRoles() {
+        return Collections.unmodifiableSet(roles);
+    }
+
+    /**
+     * 判断用户是否有权限
+     *
+     * @param permissionName 权限名
+     */
+    public final boolean hasPermission(String permissionName) {
+        return isAdministrator() || CollectionUtils.contains(permissions, permissionName);
+    }
+
+    /**
+     * 判断用户是否有角色
+     *
+     * @param roleName 角色名
+     */
+    public final boolean hasRole(String roleName) {
+        return isAdministrator() || CollectionUtils.contains(permissions, roleName);
     }
 
     /**

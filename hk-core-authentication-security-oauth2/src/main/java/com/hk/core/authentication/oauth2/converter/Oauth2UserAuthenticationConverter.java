@@ -41,6 +41,26 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
             Map<String, Object> m = (Map<String, Object>) map;
+            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            List<String> roleList = CollectionUtils.getValue(m, "roleSet", List.class);
+            Set<String> roles = new HashSet<>();
+            if (null != roleList) {
+                roles.addAll(roleList);
+                roleList.forEach(role -> {
+                    if (!StringUtils.startsWith(role, SecurityUserPrincipal.ROLE_PREFIX)) {
+                        role = SecurityUserPrincipal.ROLE_PREFIX + role;
+                    }
+                    authorities.add(new SimpleGrantedAuthority(role));
+                });
+            }
+
+            List<String> permissionList = CollectionUtils.getValue(m, "permissionSet", List.class);
+            Set<String> permissions = new HashSet<>();
+            if (null != permissionList) {
+                permissions.addAll(permissionList);
+                permissionList.forEach(permissionName -> authorities.add(new SimpleGrantedAuthority(permissionName)));
+            }
+
             UserPrincipal principal = new UserPrincipal(CollectionUtils.getStringValue(m, "userId"),
                     CollectionUtils.getStringValue(m, "account", CollectionUtils.getStringValue(m, USERNAME)),
                     CollectionUtils.getBooleanValue(m, "protectUser", false),
@@ -49,8 +69,7 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                     CollectionUtils.getStringValue(m, "phone"),
                     CollectionUtils.getStringValue(m, "email"),
                     CollectionUtils.getByteValue(m, "sex"),
-                    CollectionUtils.getStringValue(m, "iconPath"));
-            principal.setSexChinese(CollectionUtils.getStringValue(m, "sexChinese"));
+                    CollectionUtils.getStringValue(m, "iconPath"), roles, permissions);
             principal.setOrgId(CollectionUtils.getStringValue(m, "orgId"));
             principal.setOrgName(CollectionUtils.getStringValue(m, "orgName"));
             principal.setDeptId(CollectionUtils.getStringValue(m, "deptId"));
@@ -62,26 +81,6 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                         CollectionUtils.getStringValue(clientAppInfo, "appCode"),
                         CollectionUtils.getStringValue(clientAppInfo, "appName"),
                         CollectionUtils.getStringValue(clientAppInfo, "appIcon")));
-            }
-
-            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            List<String> roleList = CollectionUtils.getValue(m, "roleSet", List.class);
-            if (null != roleList) {
-                Set<String> roleSet = new HashSet<>(roleList);
-                principal.setRoleSet(roleSet);
-                roleSet.forEach(role -> {
-                    if (!StringUtils.startsWith(role, SecurityUserPrincipal.ROLE_PREFIX)) {
-                        role = SecurityUserPrincipal.ROLE_PREFIX + role;
-                    }
-                    authorities.add(new SimpleGrantedAuthority(role));
-                });
-            }
-
-            List<String> permissionList = CollectionUtils.getValue(m, "permissionSet", List.class);
-            if (null != permissionList) {
-                Set<String> permissionSet = new HashSet<>(permissionList);
-                principal.setPermissionSet(permissionSet);
-                permissionSet.forEach(permissionName -> authorities.add(new SimpleGrantedAuthority(permissionName)));
             }
             return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
         }

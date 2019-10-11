@@ -24,7 +24,7 @@ import org.springframework.data.solr.repository.config.EnableSolrRepositories;
  */
 @Configuration
 @ConditionalOnClass(SolrClient.class)
-@EnableSolrRepositories(basePackages = {"com.hk.**.repository.solr"}, repositoryFactoryBeanClass = BaseSolrRepositoryFactoryBean.class)
+@EnableSolrRepositories(basePackages = {"**.repository.solr"}, repositoryFactoryBeanClass = BaseSolrRepositoryFactoryBean.class)
 public class SolrAutoConfiguration {
 
     @Bean

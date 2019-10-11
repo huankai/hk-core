@@ -15,7 +15,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class UserContextInterceptor extends HandlerInterceptorAdapter {
 
-    private static boolean PUT_CURRENT_USER = ClassUtils.isPresent("com.hk.core.authentication.api.SecurityContextUtils", null);
+    private static final boolean PUT_CURRENT_USER;
+
+    static {
+        PUT_CURRENT_USER = ClassUtils.isPresent("com.hk.core.authentication.api.SecurityContextUtils", null);
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

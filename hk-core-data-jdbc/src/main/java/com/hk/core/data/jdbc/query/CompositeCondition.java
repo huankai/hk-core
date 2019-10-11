@@ -104,12 +104,12 @@ public class CompositeCondition implements Condition {
                 String sql = c.toSqlString(parameters);
                 if (StringUtils.isNotEmpty(sql)) {
                     if (index++ > 0) {
-                        sb.append(" ").append(andOr.toSqlString()).append(" ");
+                        sb.append(StringUtils.SPACE).append(andOr.toSqlString()).append(StringUtils.SPACE);
                     }
                     sb.append(sql);
                 }
             }
         }
-        return sb.length() > 0 ? sb.toString() : null;
+        return sb.toString();
     }
 }
