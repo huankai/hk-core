@@ -18,6 +18,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.JdkSerializationStrategy;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
 
+import lombok.Setter;
+
 /**
  * 奇怪，什么也没有改，会报 java.lang.NoSuchMethodError: org.springframework.data.redis.connection.RedisConnection.set([B[B)V
  *
@@ -46,26 +48,17 @@ public class RedisTokenStore implements TokenStore {
 
     private final RedisConnectionFactory connectionFactory;
 
+    @Setter
     private AuthenticationKeyGenerator authenticationKeyGenerator = new DefaultAuthenticationKeyGenerator();
 
+    @Setter
     private RedisTokenStoreSerializationStrategy serializationStrategy = new JdkSerializationStrategy();
 
+    @Setter
     private String prefix = "";
 
     public RedisTokenStore(RedisConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
-    }
-
-    public void setAuthenticationKeyGenerator(AuthenticationKeyGenerator authenticationKeyGenerator) {
-        this.authenticationKeyGenerator = authenticationKeyGenerator;
-    }
-
-    public void setSerializationStrategy(RedisTokenStoreSerializationStrategy serializationStrategy) {
-        this.serializationStrategy = serializationStrategy;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
     }
 
     private RedisConnection getConnection() {

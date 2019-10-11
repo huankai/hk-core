@@ -29,7 +29,7 @@ public interface DeleteService<T extends Persistable<ID>, ID extends Serializabl
     /**
      * @param ids ids
      */
-    default void deleteByIds(ID... ids) {
+    default void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
         deleteByIds(ArrayUtils.asArrayList(ids));
     }
 

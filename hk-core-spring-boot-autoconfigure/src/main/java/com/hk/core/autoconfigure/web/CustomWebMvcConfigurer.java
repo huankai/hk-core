@@ -1,31 +1,32 @@
 package com.hk.core.autoconfigure.web;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.hk.commons.converters.*;
+import com.hk.commons.util.ClassUtils;
 import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.Contants;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.SpringContextHolder;
+import com.hk.commons.util.date.DatePattern;
 import com.hk.core.authentication.api.method.support.LoginUserHandlerMethodArgumentResolver;
 import com.hk.core.web.ServletContextHolder;
 import com.hk.core.web.filter.XssFilter;
 import com.hk.core.web.interceptors.GlobalPropertyInterceptor;
 import com.hk.core.web.mvc.CustomRequestMappingHandlerMapping;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -33,7 +34,9 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.Filter;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -58,16 +61,42 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     }
 
     /**
+     * <pre>
+     * spring 会自动 注入{@link ObjectMapper},但此 bean在序列化 与反序列化 json 时，不支持 JDK 8的 日期 API，
+     * 所在这里配置 支持JDK 8 的日期 API 功能，以及其它功能
+     * </pre>
+     * <pre>
+     *     在使用 spring cloud stream 接受消息时,也会使用 {@link org.springframework.cloud.stream.converter.ApplicationJsonMessageMarshallingConverter#objectMapper}
+     *     进行序列化,此对象配置在 {@link org.springframework.cloud.stream.config.ContentTypeConfiguration#compositeMessageConverterFactory(ObjectProvider, List)}
+     * </pre>
+     *
+     * @see org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration.JacksonObjectMapperConfiguration#jacksonObjectMapper(Jackson2ObjectMapperBuilder)
+     */
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+        return jacksonObjectMapperBuilder -> {
+            SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+            filterProvider.addFilter(JsonUtils.IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
+                    SimpleBeanPropertyFilter.serializeAllExcept(JsonUtils.HANDLER, JsonUtils.HIBERNATE_LAZY_INITIALIZER));
+            jacksonObjectMapperBuilder.modules(JsonUtils.modules())
+                    .dateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
+                    .featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                    .filters(filterProvider).failOnUnknownProperties(true)
+                    .locale(Locale.CHINA);
+        };
+    }
+
+    /**
      * 使用配置方式
      */
     @Bean
-    @Order(value = 1)
     public FilterRegistrationBean<Filter> xssFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setAsyncSupported(true);
-        filterRegistrationBean.addUrlPatterns("/**");
+        filterRegistrationBean.addUrlPatterns("/*");// 这里是 /* ,不是 /**
         filterRegistrationBean.setFilter(new XssFilter());
         filterRegistrationBean.setName("xssFilter");
+        filterRegistrationBean.setOrder(0);
         return filterRegistrationBean;
     }
 
@@ -92,22 +121,24 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         };
     }
 
-    @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.forEach(converter -> {
-            if (converter instanceof StringHttpMessageConverter) {
-                ((StringHttpMessageConverter) converter).setDefaultCharset(Contants.CHARSET_UTF_8);
-            } else if (converter instanceof MappingJackson2HttpMessageConverter) {
-                MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
-                ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().defaultUseWrapper(true)
-                        .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-                        .modules(JsonUtils.modules()).build();
-                JsonUtils.configure(objectMapper);
-                mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
-                mappingJackson2HttpMessageConverter.setDefaultCharset(Contants.CHARSET_UTF_8);
-            }
-        });
-    }
+//    /**
+//     * @see #jackson2ObjectMapperBuilderCustomizer()
+//     */
+//    @Override
+//    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        converters.forEach(converter -> {
+//            if (converter instanceof StringHttpMessageConverter) {
+//                ((StringHttpMessageConverter) converter).setDefaultCharset(Contants.CHARSET_UTF_8);
+//            } else if (converter instanceof MappingJackson2HttpMessageConverter) {
+////                SimpleModule module = new SimpleModule();
+////                module.addDeserializer(QueryPage.class,
+////                        new QueryPageReferenceTypeDeserializer()));
+//                MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
+////                mappingJackson2HttpMessageConverter.setObjectMapper();
+//                mappingJackson2HttpMessageConverter.setDefaultCharset(Contants.CHARSET_UTF_8);
+//            }
+//        });
+//    }
 
     /**
      * 添加转换
@@ -138,13 +169,20 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
+        boolean securityContextPresent = ClassUtils.isPresent("com.hk.core.authentication.api.SecurityContextUtils", null);
+        if (securityContextPresent) {
+            registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
+        }
+        boolean accessTokenPresent = ClassUtils.isPresent("com.hk.core.authentication.oauth2.utils.AccessTokenUtils", null);
+        if (accessTokenPresent) {
+            registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**");
+        }
+        GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
         Map<String, Object> property = requestProperty.getProperty();
         if (CollectionUtils.isNotEmpty(property)) {
-            GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
             propertyInterceptor.setProperty(property);
-            registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
         }
+        registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
 
         /* ****************** 国际化支持******************* */
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
@@ -152,4 +190,42 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(localeChangeInterceptor);
     }
 
+//    private class QueryPageReferenceTypeDeserializer extends ReferenceTypeDeserializer<QueryPage<?>> {
+//
+//
+//        public QueryPageReferenceTypeDeserializer(JavaType fullType, ValueInstantiator vi,
+//                                                  TypeDeserializer typeDeser, JsonDeserializer<?> deser) {
+//            super(fullType, vi, typeDeser, deser);
+//        }
+//
+//        @Override
+//        protected ReferenceTypeDeserializer<QueryPage<?>> withResolved(TypeDeserializer typeDeser, JsonDeserializer<?> valueDeser) {
+//            return new QueryPageReferenceTypeDeserializer(_fullType, _valueInstantiator, typeDeser, valueDeser);
+//        }
+//
+//        @Override
+//        public QueryPage<?> getNullValue(DeserializationContext ctxt) {
+//            return new SimpleQueryPage<>();
+//        }
+//
+//        @Override
+//        public QueryPage<?> referenceValue(Object contents) {
+//            SimpleQueryPage<Object> queryPage = new SimpleQueryPage<>();
+//            queryPage.setData((List<Object>) contents);
+//            return queryPage;
+//        }
+//
+//        @Override
+//        public QueryPage<?> updateReference(QueryPage<?> reference, Object contents) {
+//            SimpleQueryPage<Object> queryPage = new SimpleQueryPage<>();
+//            queryPage.setData((List<Object>) contents);
+//            return queryPage;
+//        }
+//
+//        @Override
+//        public Object getReferenced(QueryPage<?> reference) {
+//            return reference.getData();
+//        }
+//    }
 }
+

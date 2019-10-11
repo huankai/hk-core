@@ -1,5 +1,6 @@
 package com.hk.core.authentication.security.authentication.sms;
 
+import com.hk.commons.util.AssertUtils;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -38,6 +39,7 @@ public class SMSAuthenticationToken extends AbstractAuthenticationToken {
      */
     public SMSAuthenticationToken(Object principal, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
+        AssertUtils.notNull(principal, "principal must not be null");
         this.principal = principal;
         super.setAuthenticated(true); // must use super, as we override
     }

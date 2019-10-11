@@ -24,6 +24,23 @@ import java.util.function.Function;
  */
 public abstract class EnableJpaCacheServiceImpl<T extends Persistable<ID>, ID extends Serializable> extends JpaServiceImpl<T, ID> implements JpaCacheService<T, ID> {
 
+    /**
+     * <pre>
+     *
+     * cacheNames/values: 指定缓存名称
+     * key: 缓存数据时的 key，可能使用 spel 表达式，默认 key 为方法参数值
+     * keyGenerator: 可以指定key 的生成器，与 属性 key 二选一即可。
+     * cacheManager: 指定缓存管理器，或者指定 cacheResolver，二选一
+     * cacheResolver:
+     * condition: 符合条件的情况下才缓存， spel 表达式
+     * unless: 否定缓存，当 unless 的条件为 true ，方法的返回值不缓存，与 condition 相反。可以获取到结果进行判断
+     * sync: 是否使用异步模式
+     *
+     * </pre>
+     *
+     * @param pk
+     * @return
+     */
     @Override
     @Cacheable(key = "'id'+#root.args[0]")
     public T getOne(ID pk) {
@@ -120,7 +137,7 @@ public abstract class EnableJpaCacheServiceImpl<T extends Persistable<ID>, ID ex
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(ID... ids) {
+    public void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
         super.deleteByIds(ids);
     }
 

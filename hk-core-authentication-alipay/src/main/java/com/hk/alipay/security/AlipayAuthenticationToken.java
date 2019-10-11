@@ -1,9 +1,10 @@
 package com.hk.alipay.security;
 
-import java.util.Collection;
-
+import com.hk.core.authentication.api.UserPrincipal;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 /**
  * 支付宝
@@ -39,6 +40,15 @@ public class AlipayAuthenticationToken extends AbstractAuthenticationToken {
     @Override
     public Object getCredentials() {
         return null;
+    }
+
+    @Override
+    public String getName() {
+        Object principal = getPrincipal();
+        if (principal instanceof UserPrincipal) {
+            return ((UserPrincipal) principal).getAccount();
+        }
+        return super.getName();
     }
 
     @Override

@@ -1,11 +1,10 @@
 package com.hk.core.elasticsearch.repository;
 
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.repository.support.ElasticsearchRepositoryFactoryBean;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.util.Assert;
-
-import java.io.Serializable;
 
 
 /**
@@ -15,7 +14,7 @@ import java.io.Serializable;
  * @param <S>
  * @see ElasticsearchRepositoryFactoryBean
  */
-public class BaseElasticsearchRepositoryFactoryBean<T extends BaseElasticsearchRepository<S>, S extends Serializable>
+public class BaseElasticsearchRepositoryFactoryBean<T extends BaseElasticsearchRepository<S>, S extends Persistable<String>>
         extends ElasticsearchRepositoryFactoryBean<T, S, String> {
 
     private ElasticsearchOperations operations;

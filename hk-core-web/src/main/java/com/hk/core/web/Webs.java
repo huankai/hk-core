@@ -1,6 +1,5 @@
 package com.hk.core.web;
 
-import com.hk.commons.JsonResult;
 import com.hk.commons.util.Contants;
 import com.hk.commons.util.FileUtils;
 import com.hk.commons.util.JsonUtils;
@@ -24,7 +23,6 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Objects;
 
 /**
  * web相关的工具类
@@ -33,8 +31,6 @@ import java.util.Objects;
  * @date 2017年9月22日下午2:51:02
  */
 public abstract class Webs {
-
-    private static final String USER_AGENT_HEADER_NAME = "User-Agent";
 
     private static final String MSIE_USER_AGENT_HEADER_VALUE = "MSIE";
 
@@ -58,7 +54,7 @@ public abstract class Webs {
      *
      * @return HttpServletResponse
      */
-    public static HttpServletResponse getHttpservletResponse() {
+    public static HttpServletResponse getHttpServletResponse() {
         return getRequestAttribute().getResponse();
     }
 
@@ -90,7 +86,6 @@ public abstract class Webs {
      */
     public static void setAttributeFromSession(String name, Object value) {
         setAttributeFromSession(name, value, false);
-
     }
 
     /**
@@ -124,26 +119,12 @@ public abstract class Webs {
      * @return Value
      */
     public static <T> T getAttribute(String name, int scope, Class<T> clazz) throws ClassCastException {
-        return clazz.cast(getRequestAttribute().getAttribute(name, scope));
-    }
-
-    /**
-     * session 失效
-     */
-    public static void invalidateSession() {
-        HttpSession session = getRequestAttribute().getRequest().getSession(false);
-        if (null != session) {
-            session.invalidate();
+        ServletRequestAttributes requestAttribute = getRequestAttribute();
+        if (requestAttribute == null) {
+            return null;
         }
-    }
-
-    /**
-     * 获取SessionId
-     *
-     * @return Session Id
-     */
-    public static String getSessionId() {
-        return getRequestAttribute().getSessionId();
+        Object value = requestAttribute.getAttribute(name, scope);
+        return value == null ? null : clazz.cast(value);
     }
 
     private static ServletRequestAttributes getRequestAttribute() {
@@ -160,14 +141,14 @@ public abstract class Webs {
         return StringUtils.isNotEmpty(request.getHeader("X-Requested-With"));
     }
 
-    /**
-     * 是否为ajax请求
-     *
-     * @return true if Request Header contains X-Requested-With
-     */
-    public static boolean isAjax() {
-        return isAjax(getHttpServletRequest());
-    }
+//    /**
+//     * 是否为ajax请求
+//     *
+//     * @return true if Request Header contains X-Requested-With
+//     */
+//    public static boolean isAjax() {
+//        return isAjax(getHttpServletRequest());
+//    }
 
     /**
      * 是否是微信浏览器请求
@@ -176,7 +157,7 @@ public abstract class Webs {
      * @return true if Request Header contains MicroMessenger
      */
     public static boolean isWeiXin(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "MicroMessenger");
+        return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "MicroMessenger");
     }
 
     /**
@@ -186,7 +167,7 @@ public abstract class Webs {
      * @return true or false
      */
     public static boolean isAliPay(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "AlipayClient");
+        return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "AlipayClient");
     }
 
     /**
@@ -196,7 +177,17 @@ public abstract class Webs {
      * @return true or false
      */
     public static boolean isAndroid(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "Android");
+        return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "Android");
+    }
+
+    /**
+     * 判断是否手机端请求
+     *
+     * @param request
+     * @return
+     */
+    public static boolean isMobile(HttpServletRequest request) {
+        return isAndroid(request) || isIPhone(request);
     }
 
     /**
@@ -206,60 +197,60 @@ public abstract class Webs {
      * @return true or false
      */
     public static boolean isIPhone(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader(USER_AGENT_HEADER_NAME), "iPhone");
+        return StringUtils.contains(request.getHeader(HttpHeaders.USER_AGENT), "iPhone");
     }
 
     /**
-     * 下载文件
+     * 文件下载或预览
      *
      * @param fileName fileName
      * @param body     body
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, byte[] body) {
-        return toDownloadResponseEntity(fileName, new ByteArrayResource(body));
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, byte[] body) {
+        return toResponseEntity(fileName, new ByteArrayResource(body));
     }
 
     /**
-     * 下载文件
+     * 文件下载或预览
      *
      * @param fileName fileName
      * @param url      url
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, URL url) {
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, URL url) {
         try {
             URLConnection connection = url.openConnection();
-            return toDownloadResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
+            return toResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     /**
-     * 文件下载
+     * 文件下载或预览
      *
      * @param fileName fileName
      * @param resource resource
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, Resource resource) {
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, Resource resource) {
         try {
-            return toDownloadResponseEntity(fileName, resource.contentLength(), resource.getInputStream());
+            return toResponseEntity(fileName, resource.contentLength(), resource.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     /**
-     * 图片预览
+     * 文件下载或预览
      *
      * @param resource resource
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toImageViewResponseEntity(Resource resource) {
+    public static ResponseEntity<InputStreamResource> toResponseEntity(Resource resource) {
         try {
-            return toDownloadResponseEntity(resource.getFilename(), MediaType.IMAGE_JPEG, resource.contentLength(),
+            return toResponseEntity(resource.getFilename(), MediaType.IMAGE_JPEG, resource.contentLength(),
                     new InputStreamResource(resource.getInputStream()));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -267,23 +258,26 @@ public abstract class Webs {
     }
 
     /**
+     * 文件下载或预览
+     *
      * @param fileName fileName
      * @param in       in
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toDownloadResponseEntity(String fileName, long contextLength,
-                                                                               InputStream in) {
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, long contextLength,
+                                                                       InputStream in) {
         InputStreamResource streamResource = new InputStreamResource(in);
-        MediaType mediaType = (streamResource.isFile() && FileUtils.isImage(streamResource.getFilename()))
+        MediaType mediaType = StringUtils.isEmpty(fileName)
+                || (streamResource.isFile() && FileUtils.isImage(streamResource.getFilename()))
                 ? MediaType.IMAGE_JPEG : MediaType.APPLICATION_OCTET_STREAM;
-        return toDownloadResponseEntity(fileName, mediaType, contextLength, streamResource);
+        return toResponseEntity(fileName, mediaType, contextLength, streamResource);
     }
 
-    private static <T> ResponseEntity<T> toDownloadResponseEntity(String fileName, MediaType mediaType,
-                                                                  long contextLength, T body) {
+    private static <T> ResponseEntity<T> toResponseEntity(String fileName, MediaType mediaType,
+                                                          long contextLength, T body) {
         HttpHeaders httpHeaders = new HttpHeaders();
         if (StringUtils.isNotEmpty(fileName)) {
-            httpHeaders.setContentDispositionFormData("attachment", getAttachFileName(fileName));
+            httpHeaders.setContentDispositionFormData("attachment", obtainAttachFileName(fileName));
         }
         httpHeaders.setContentType(mediaType);
         httpHeaders.setContentLength(contextLength);
@@ -296,11 +290,11 @@ public abstract class Webs {
      * @param fileName fileName
      * @return fileName
      */
-    private static String getAttachFileName(String fileName) {
+    private static String obtainAttachFileName(String fileName) {
         String encodeFileName = fileName;
         HttpServletRequest request = getHttpServletRequest();
         try {
-            String agent = request.getHeader(USER_AGENT_HEADER_NAME);
+            String agent = request.getHeader(HttpHeaders.USER_AGENT);
             if (StringUtils.isNotEmpty(agent)) {
                 if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
                         || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE
@@ -313,15 +307,6 @@ public abstract class Webs {
             throw new RuntimeException(e.getMessage(), e);
         }
         return encodeFileName;
-    }
-
-    /**
-     * 获取请求地址
-     *
-     * @return ip address
-     */
-    public static String getRemoteAddr() {
-        return getRemoteAddr(getHttpServletRequest());
     }
 
     /**
@@ -350,6 +335,16 @@ public abstract class Webs {
             }
         }
         return ip;
+    }
+
+    /**
+     * 获取 user-Agent 信息
+     *
+     * @param request request
+     * @return User-Agent
+     */
+    public static String getUserAgent(HttpServletRequest request) {
+        return request.getHeader(HttpHeaders.USER_AGENT);
     }
 
     /**

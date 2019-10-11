@@ -2,10 +2,8 @@ package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.JsonResult;
 import com.hk.commons.util.EnumDisplayUtils;
-import com.hk.core.service.exception.ServiceException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -25,17 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class SimpleExceptionHandler extends AbstractExceptionHandler {
 
-    /**
-     * 对于 ServiceException
-     *
-     * @param e ServiceException
-     * @return {@link JsonResult}
-     */
-    @ExceptionHandler(value = ServiceException.class)
-    public ResponseEntity<JsonResult<?>> serviceException(ServiceException e, HttpServletRequest request) {
-        error(e, e.getMessage(), request);
-        return ResponseEntity.status(e.getStatusCode()).body(e.getResult());
-    }
+
 
     /**
      * 404
@@ -48,7 +36,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public JsonResult<Void> serviceException(NoHandlerFoundException e, HttpServletRequest request) {
+    public JsonResult<Void> noHandlerFoundException(NoHandlerFoundException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return new JsonResult<>(JsonResult.Status.NOT_FOUND,
                 String.format("%s %s %s ", EnumDisplayUtils.getDisplayText(JsonResult.Status.NOT_FOUND.name(), JsonResult.Status.class), e.getHttpMethod(), e.getRequestURL()));
@@ -81,7 +69,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
      */
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public JsonResult<Void> HttpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request) {
+    public JsonResult<Void> httpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
         return JsonResult.badRequest("请求体为空");
     }

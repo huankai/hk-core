@@ -10,8 +10,7 @@ import com.hk.core.data.jdbc.query.CompositeCondition;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -23,9 +22,8 @@ import java.util.stream.Collectors;
  * @author kevin
  * @date 2018-09-19 10:16
  */
+@Slf4j
 public final class JdbcSession {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(JdbcSession.class);
 
     private JdbcTemplate jdbcTemplate;
 
@@ -204,11 +202,11 @@ public final class JdbcSession {
         String sql = dialect.getLimitSql(originalSql, 0, 2); // 分页两条,如果返回有多条记录,抛出异常
         List<T> result = queryForList(sql, rowMapper, stmt.parameters.toArray());
         if (result.size() > 1) {
-            if (LOGGER.isErrorEnabled()) {
-                LOGGER.error("查询结果不唯一,返回多条记录: SQL : {},args:{}", originalSql, stmt.parameters);
+            if (log.isErrorEnabled()) {
+                log.error("查询结果不唯一,返回多条记录: SQL : {},args:{}", originalSql, stmt.parameters);
                 List<Object> parameters = stmt.parameters;
                 if (CollectionUtils.isNotEmpty(parameters)) {
-                    LOGGER.error("args:{}", parameters);
+                    log.error("args:{}", parameters);
                 }
             }
             throw new NonUniqueResultException("查询结果不唯一,SQL:" + originalSql);

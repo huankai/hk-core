@@ -1,5 +1,7 @@
 package com.hk.alipay;
 
+import com.hk.core.web.ServletContextHolder;
+
 /**
  * 支付宝地址常量
  *
@@ -52,9 +54,10 @@ public interface AlipayConstants {
      * @see https://docs.open.alipay.com/289/105656
      */
     static String getPublicAppAuthorizeUrl(AlipayProperties properties, String scope) {
+        String redirectUri = String.format("%s%s%s", properties.getCallHost(), ServletContextHolder.getContextPath(), properties.getCallbackUrl());
         return String.format("%spublicAppAuthorize.htm?app_id=%s&scope=%s&redirect_uri=%s",
                 oauth2(properties.isDev()), properties.getAppId(), scope,
-                properties.getCallHost() + properties.getCallbackUrl());
+                redirectUri);
     }
 
     /**

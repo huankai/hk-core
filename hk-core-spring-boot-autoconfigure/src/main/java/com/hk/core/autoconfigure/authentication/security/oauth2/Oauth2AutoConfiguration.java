@@ -1,10 +1,11 @@
 package com.hk.core.autoconfigure.authentication.security.oauth2;
 
-import com.hk.core.autoconfigure.exception.Oauth2ErrorController;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+
+import com.hk.core.autoconfigure.exception.Oauth2ErrorController;
 
 /**
  * @author huangkai
@@ -21,4 +22,5 @@ public class Oauth2AutoConfiguration {
     public Oauth2ErrorController oauth2ErrorController() {
         return new Oauth2ErrorController();
     }
+
 }

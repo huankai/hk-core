@@ -4,8 +4,7 @@ import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.api.validatecode.ValidateCodeException;
 import com.hk.core.authentication.api.validatecode.ValidateCodeProcessor;
 import com.hk.core.web.Webs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -24,9 +23,8 @@ import java.io.IOException;
  * @author kevin
  * @date 2018-07-26 15:35
  */
+@Slf4j
 public class ValidateCodeFilter extends OncePerRequestFilter {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(ValidateCodeFilter.class);
 
 	/**
 	 * 验证处理器
@@ -72,7 +70,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
 			try {
 				validate(new ServletWebRequest(request, response));
 			} catch (ValidateCodeException e) {
-				LOGGER.error(e.getMessage(), e);
+				log.error(e.getMessage(), e);
 				authenticationFailureHandler.onAuthenticationFailure(request, response,
 						new AuthenticationServiceException(e.getMessage(), e));
 				return;

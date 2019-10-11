@@ -13,6 +13,7 @@ import com.hk.core.service.jpa.JpaBaseService;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -55,13 +56,11 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<T> findOne(T t) {
         return getBaseRepository().findOne(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @Override
-    @Transactional(readOnly = true)
     public T getOne(ID id) {
         return getBaseRepository().getOne(id);
     }
@@ -78,23 +77,23 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    @Transactional(readOnly = true)
     public long count(T t) {
         return getBaseRepository().count(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean exists(T t) {
         return getBaseRepository().exists(Example.of(checkNull(t), ofExampleMatcher()));
     }
 
     @Override
+    @Transactional(rollbackFor = {Throwable.class})
     public List<T> batchUpdate(Collection<T> entities) {
         return getBaseRepository().saveAll(entities);
     }
 
     @Override
+    @Transactional(rollbackFor = {Throwable.class})
     public T updateByIdSelective(T t) {
         return getBaseRepository().updateByIdSelective(t);
     }

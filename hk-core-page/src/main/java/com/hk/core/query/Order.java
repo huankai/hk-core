@@ -55,6 +55,6 @@ public final class Order implements Serializable {
 
     @Override
     public String toString() {
-        return field + (desc ? " DESC" : " ASC");
+        return String.format("%s %s", field, (desc ? "DESC" : "ASC"));
     }
 }

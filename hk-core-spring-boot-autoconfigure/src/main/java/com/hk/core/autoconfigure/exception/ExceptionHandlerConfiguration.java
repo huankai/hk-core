@@ -1,6 +1,7 @@
 package com.hk.core.autoconfigure.exception;
 
 import com.hk.core.authentication.security.SpringSecurityContext;
+import com.hk.core.service.exception.ServiceException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +29,23 @@ public class ExceptionHandlerConfiguration {
 
 
     /**
-     * JDbc Exception
+     * Service Exception
      */
     @Configuration
-    @ConditionalOnClass(com.hk.core.data.jdbc.exception.EntityNotFoundException.class)
+    @ConditionalOnClass(value = {ServiceException.class})
+    public class ServiceExceptionHandlerConfiguration {
+
+        @Bean
+        public ServiceExceptionHandler jdbcExceptionHandler() {
+            return new ServiceExceptionHandler();
+        }
+    }
+
+    /**
+     * Jdbc Exception
+     */
+    @Configuration
+    @ConditionalOnClass(value = {com.hk.core.data.jdbc.exception.EntityNotFoundException.class})
     public class JdbcExceptionHandlerConfiguration {
 
         @Bean
@@ -44,7 +58,7 @@ public class ExceptionHandlerConfiguration {
      * Jpa　Exception
      */
     @Configuration
-    @ConditionalOnClass(EntityNotFoundException.class)
+    @ConditionalOnClass(value = {EntityNotFoundException.class})
     public class JpaExceptionHandlerConfiguration {
 
         @Bean
@@ -58,7 +72,7 @@ public class ExceptionHandlerConfiguration {
      * Spring Security Exception
      */
     @Configuration
-    @ConditionalOnClass(SpringSecurityContext.class)
+    @ConditionalOnClass(value = {SpringSecurityContext.class})
     public class SpringSecurityExceptionHandlerConfiguration {
 
         @Bean

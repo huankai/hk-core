@@ -1,5 +1,6 @@
 package com.hk.weixin.security;
 
+import com.hk.core.authentication.api.UserPrincipal;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
@@ -7,7 +8,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import java.util.Collection;
 
 /**
- * Wechat 二维码认证 Token
+ * Wechat 认证 Token
  *
  * @author kevin
  * @date 2018年2月8日上午11:14:18
@@ -23,7 +24,6 @@ public class WechatAuthenticationToken extends AbstractAuthenticationToken {
 
     /**
      * 微信用户，未认证
-     *
      */
     public WechatAuthenticationToken(Object principal) {
         super(null);
@@ -55,6 +55,15 @@ public class WechatAuthenticationToken extends AbstractAuthenticationToken {
     @Override
     public Object getCredentials() {
         return null;
+    }
+
+    @Override
+    public String getName() {
+        Object principal = getPrincipal();
+        if (principal instanceof UserPrincipal) {
+            return ((UserPrincipal) principal).getAccount();
+        }
+        return super.getName();
     }
 
     @Override

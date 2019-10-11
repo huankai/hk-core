@@ -1,17 +1,21 @@
 package com.hk.core.elasticsearch.repository;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.data.repository.NoRepositoryBean;
+
 import com.hk.core.elasticsearch.query.Condition;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import org.springframework.data.repository.NoRepositoryBean;
-
-import java.io.Serializable;
-import java.util.List;
 
 @NoRepositoryBean
-public interface BaseElasticsearchRepository<T extends Serializable>
+public interface BaseElasticsearchRepository<T extends Persistable<String>>
         extends ElasticsearchRepository<T, String> {
 
     /**
@@ -56,5 +60,28 @@ public interface BaseElasticsearchRepository<T extends Serializable>
      * @return 查询结果集
      */
     List<T> findAll(List<Condition> conditions, Order... orders);
+
+    /**
+     * 根据不为空的字段更新
+     *
+     * @param t t
+     */
+    default void partialUpdate(T t) {
+    	partialUpdates(Collections.singletonList(t));
+    }
+    
+    /**
+     *  批量更新多少不为空的属性值
+     * @param entities
+     */
+    void partialUpdates(Collection<T> entities);
+
+    /**
+     * 分页查询，支持高亮
+     *
+     * @param searchQuery searchQuery
+     * @return {@link QueryPage}
+     */
+    QueryPage<T> queryForPage(SearchQuery searchQuery);
 
 }

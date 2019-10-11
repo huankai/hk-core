@@ -1,7 +1,8 @@
 package com.hk.core.autoconfigure.message.websocket;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import lombok.Data;
 
 /**
  * @author kevin
@@ -21,6 +22,8 @@ public class WebSocketProperties {
 
     private String[] applicationDestinationPrefixes;
 
-    private boolean needLogin = true;
+    private boolean originDisabled = true;
+    
+    private Integer cacheLimit;
 
 }

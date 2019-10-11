@@ -8,12 +8,23 @@
 
 - hk-core-authentication-security-oauth2 
 	- 使用Spring Security oauth2实现单点登陆.
-
+	
+- hk-core-authentication-security-oauth2-client
+	- spring security oauth2 client 实现单点退出
+	
+- hk-core-authentication-security-oauth2-server
+	- spring security oauth2 server 实现单点退出
+	
 - hk-core-authentication-weixin-mp 
 	- 使用Spring Security oauth2实现微信登陆.
 	
 - hk-core-authentication-alipay
 	- 使用Spring Security 实现支付宝登陆.
+	
+- hk-core-authentication-security-stream-rabbit
+	- 使用Spring Security 与 spring cloud stream rabbit实现消息发送与接受认证.
+	    实现思路：
+	        在生产者发送消息时，在消息请求头中添加用户认证信息，在消费者消费消息时，先从认证头中获取用户认证信息，再设置到　spring security context 中。
 
 - hk-core-cache 
 	- 缓存功能的自动配置

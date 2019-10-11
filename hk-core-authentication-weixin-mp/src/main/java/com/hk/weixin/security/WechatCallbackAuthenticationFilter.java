@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 微信二维码回调过滤器
+ * 微信回调过滤器
  *
  * @author kevin
  * @date 2018年2月8日上午11:18:31

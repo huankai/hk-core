@@ -28,11 +28,11 @@ public class Oauth2ErrorController {
      */
     @RequestMapping(path = "${hk.authentication.default-failure-url:/oauth2-error}")
     public JsonResult<Void> oauth2AuthenticationError(HttpServletRequest request) {
-        AuthenticationException exception = AuthenticationException.class.cast(request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION));
+        AuthenticationException exception = (AuthenticationException) request.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         if (null == exception) {
-            exception = AuthenticationException.class.cast(request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION));
+            exception = (AuthenticationException) request.getSession().getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         }
-        String message = null;
+        String message;
         if (exception != null) {
             //为什么错误信息要这么拿，因为Spring 封装了三层Exception，可通过源码查看
             // OAuth2AccessTokenSupport.retrieveToken(AccessTokenRequest, OAuth2ProtectedResourceDetails, MultiValueMap<String, String>, HttpHeaders) 方法中的 OAuth2Exception 捕捉后封装为 OAuth2AccessDeniedException 一层

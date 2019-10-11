@@ -2,6 +2,8 @@ package com.hk.alipay.security;
 
 import com.alipay.api.AlipayClient;
 import com.hk.alipay.AlipayProperties;
+import com.hk.core.authentication.api.PostAuthenticationHandler;
+import com.hk.core.authentication.api.UserPrincipal;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -24,11 +26,13 @@ public class AlipayAuthenticationSecurityConfigurer extends SecurityConfigurerAd
 
     private AlipayProperties properties;
 
+    private PostAuthenticationHandler<UserPrincipal, UserPrincipal> authenticationHandler;
+
     @Override
     public void configure(HttpSecurity builder) {
         AlipayCallbackAuthenticationFilter filter = new AlipayCallbackAuthenticationFilter(processesUrl, alipayClient, properties);
         filter.setAuthenticationManager(builder.getSharedObject(AuthenticationManager.class));
-        AlipayAuthenticationProvider provider = new AlipayAuthenticationProvider();
+        AlipayAuthenticationProvider provider = new AlipayAuthenticationProvider(authenticationHandler);
         builder.authenticationProvider(provider).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
     }
 }

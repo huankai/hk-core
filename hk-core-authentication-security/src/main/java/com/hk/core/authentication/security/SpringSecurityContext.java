@@ -16,11 +16,11 @@ public class SpringSecurityContext implements SecurityContext {
 
     @Override
     public UserPrincipal getPrincipal() {
-        if (!isAuthenticated()) {
-            throw new AuthenticationServiceException("未认证的用户");
+        if (isAuthenticated()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            return (UserPrincipal) authentication.getPrincipal();
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (UserPrincipal) authentication.getPrincipal();
+        throw new AuthenticationServiceException("未认证的用户");
     }
 
     /**
