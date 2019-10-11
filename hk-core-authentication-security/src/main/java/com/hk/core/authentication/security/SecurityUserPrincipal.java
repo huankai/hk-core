@@ -44,10 +44,10 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     @JsonIgnore
     private Byte userStatus;
 
-    public SecurityUserPrincipal(String userId, String orgId, String orgName, String deptId, String deptName, String account, boolean protectUser,
+    public SecurityUserPrincipal(Long userId, Long orgId, String orgName, Long deptId, String deptName, String account,
                                  String realName, Byte userType, String phone,
                                  String email, Byte sex, String iconPath, String password, Byte userStatus, Set<String> roles, Set<String> permissions) {
-        super(userId, account, protectUser, realName, userType, phone, email, sex, iconPath, roles, permissions);
+        super(userId, account, realName, userType, phone, email, sex, iconPath, roles, permissions);
         setOrgId(orgId);
         setOrgName(orgName);
         setDeptId(deptId);

@@ -2,8 +2,11 @@ package com.hk.commons.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -12,8 +15,9 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.hk.commons.jackson.introspect.DisableAnnotationIntrospector;
+import com.hk.commons.jackson.LongToStringSerializer;
 import com.hk.commons.util.date.DatePattern;
+import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,39 +39,57 @@ public final class JsonUtils {
 
     public static final String IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID = "fieldFilter";
 
-    public static final String HANDLER = "handler";
-
-    public static final String HIBERNATE_LAZY_INITIALIZER = "hibernateLazyInitializer";
-
     private static ObjectMapper mapper;
 
     private static final Module[] modules;
+
+    private static final boolean HIBERNATE_MODULE_ENABLED = ClassUtils.isPresent("org.hibernate.Session", null)
+            && ClassUtils.isPresent("com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module", null);
 
     static {
         List<Module> moduleList = new ArrayList<>();
 
         JavaTimeModule JAVA_TIME_MODULE = new JavaTimeModule();
-        JAVA_TIME_MODULE.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(
-                DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
+        JAVA_TIME_MODULE.addSerializer(LocalDateTime.class,
+                new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
 
         JAVA_TIME_MODULE.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(
                 DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
 
-        JAVA_TIME_MODULE.addSerializer(LocalDate.class, new LocalDateSerializer(
-                DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
-        JAVA_TIME_MODULE.addDeserializer(LocalDate.class, new LocalDateDeserializer(
-                DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
+        JAVA_TIME_MODULE.addSerializer(LocalDate.class,
+                new LocalDateSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
+        JAVA_TIME_MODULE.addDeserializer(LocalDate.class,
+                new LocalDateDeserializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD.getPattern())));
 
-        JAVA_TIME_MODULE.addSerializer(LocalTime.class, new LocalTimeSerializer(
-                DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
-        JAVA_TIME_MODULE.addDeserializer(LocalTime.class, new LocalTimeDeserializer(
-                DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
-
+        JAVA_TIME_MODULE.addSerializer(LocalTime.class,
+                new LocalTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
+        JAVA_TIME_MODULE.addDeserializer(LocalTime.class,
+                new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DatePattern.HH_MM_SS.getPattern())));
         moduleList.add(JAVA_TIME_MODULE);
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(Long.class, LongToStringSerializer.getInstance());
+//        simpleModule.addDeserializer(Set.class, new Jackson2ArrayOrStringDeserializer());
+        moduleList.add(simpleModule);
         moduleList.add(new Jdk8Module());
-
+        /*
+            添加 hibernate 使用 getOne 查询 懒加载报错的问题
+            @see https://stackoverflow.com/questions/24994440/no-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-javassist
+        */
+        if (HIBERNATE_MODULE_ENABLED) {
+            Hibernate5Module hibernate5Module = new Hibernate5Module();
+            hibernate5Module.enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
+            hibernate5Module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
+            moduleList.add(hibernate5Module);
+        }
+        /*
+         *   这里使用 toArray 方法转换为数组时，toArray(new Module[0]) 与 toArray(new Module[moduleList.size()])的区别:
+         *   转换集合为数组的时候，有两种方式：使用初始化大小的数组（这里指的是初始化大小的时候使用了集合的size()方法）和空数组。
+         *   在低版本的 Java 中推荐使用初始化大小的数组，因为使用反射调用去创建一个合适大小的数组相对较慢。
+         *   但是在 openJDK 6 之后的高版本中方法被优化了，传入空数组相比传入初始化大小的数组，效果是相同的甚至有时候是更优的。
+         *   因为使用 concurrent 或 synchronized 集合时，如果集合进行了收缩，toArray()和size()方法可能会发生数据竞争，此时传入初始化大小的数组是危险的。
+         * @see https://stackoverflow.com/questions/174093/toarraynew-myclass0-or-toarraynew-myclassmylist-size
+         */
         modules = moduleList.toArray(new Module[0]);
-
     }
 
     public static Module[] modules() {
@@ -79,37 +101,26 @@ public final class JsonUtils {
             synchronized (JsonUtils.class) {
                 if (mapper == null) {
                     mapper = new ObjectMapper();
-                    configure(mapper, true);
+                    configure(mapper, AuditField.AUDIT_FIELD_ARRAY);
                 }
             }
         }
         return mapper;
     }
 
-    public static void configure(ObjectMapper om, boolean disableAnnotation) {
-//        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-//        om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-
-        om.setDateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()));
-        // 空值处理为空串
-//        om.getSerializerProvider().setNullValueSerializer(NullEmptyJsonSerializer.INSTANCE);
-        // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
-        om.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-        om.configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false);
-        /*  */
-        om.registerModules(modules());
-//        om.configure(MapperFeature.USE_ANNOTATIONS, false);//忽略注解
+    public static void configure(ObjectMapper om, String... exceptFields) {
+        Set<String> exceptSet = ArrayUtils.asHashSet(exceptFields);
         SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-
-        /* 忽略实体中的Hibernate getOne查询返回的  "handler", "hibernateLazyInitializer" 字段 */
         filterProvider.addFilter(IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
-                SimpleBeanPropertyFilter.serializeAllExcept(HANDLER, HIBERNATE_LAZY_INITIALIZER));
-        om.setFilterProvider(filterProvider);
-
-        if (disableAnnotation) {
-            om.setAnnotationIntrospector(DisableAnnotationIntrospector.getInstance());
-        }
+                SimpleBeanPropertyFilter.serializeAllExcept(exceptSet));
+        om.setDateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)// 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
+                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                .configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false)
+//                .enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL)// 如果配置为了会输出类名
+                .registerModules(modules()) // 注册java 8 日期 module
+                .setFilterProvider(filterProvider);
+//                .getSerializerProvider().setNullValueSerializer(NullEmptyJsonSerializer.INSTANCE);// 空值处理为空串
     }
 
     private static ObjectMapper indentMapper;
@@ -120,7 +131,7 @@ public final class JsonUtils {
                 if (indentMapper == null) {
                     indentMapper = new ObjectMapper();
                     indentMapper.enable(SerializationFeature.INDENT_OUTPUT);
-                    configure(indentMapper, true);
+                    configure(indentMapper, AuditField.AUDIT_FIELD_ARRAY);
                 }
             }
         }
@@ -144,16 +155,12 @@ public final class JsonUtils {
      * @param indent indent
      * @return json str
      */
+    @SneakyThrows(value = {JsonProcessingException.class})
     public static String serialize(Object obj, boolean indent) {
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return null;
         }
-        ObjectMapper mapper = indent ? getIndentMapper() : getMapper();
-        try {
-            return mapper.writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return indent ? getIndentMapper().writeValueAsString(obj) : getMapper().writeValueAsString(obj);
     }
 
     /**
@@ -174,15 +181,12 @@ public final class JsonUtils {
      * @param obj obj
      * @return byte[]
      */
-    public static byte[] serializeToByte(Object obj) {
+    @SneakyThrows(value = {JsonProcessingException.class})
+    public static byte[] serializeToByte(Object obj, boolean indent) {
         if (null == obj) {
             return null;
         }
-        try {
-            return getMapper().writeValueAsBytes(obj);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        return indent ? getIndentMapper().writeValueAsBytes(obj) : getMapper().writeValueAsBytes(obj);
     }
 
     /**
@@ -191,15 +195,11 @@ public final class JsonUtils {
      * @param obj          obj
      * @param outputStream outputStream
      */
+    @SneakyThrows(value = {IOException.class})
     public static void serializeToOutputStream(Object obj, OutputStream outputStream) {
         if (Objects.nonNull(obj)) {
-            try {
-                getMapper().writeValue(outputStream, obj);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            getMapper().writeValue(outputStream, obj);
         }
-
     }
 
     /**
@@ -208,13 +208,10 @@ public final class JsonUtils {
      * @param obj  obj
      * @param file file
      */
+    @SneakyThrows(value = {IOException.class})
     public static void serializeToFile(Object obj, File file) {
         if (Objects.nonNull(obj)) {
-            try {
-                getMapper().writeValue(file, obj);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            getMapper().writeValue(file, obj);
         }
     }
 
@@ -226,16 +223,12 @@ public final class JsonUtils {
      * @param <T>   T
      * @return T
      */
+    @SneakyThrows(value = {IOException.class})
     public static <T> T deserialize(String json, Class<T> clazz) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
-        ObjectMapper mapper = getMapper();
-        try {
-            return mapper.readValue(json, clazz);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return getMapper().readValue(json, clazz);
     }
 
     /**
@@ -247,15 +240,7 @@ public final class JsonUtils {
      * @return 序列化的List
      */
     public static <T> List<T> deserializeList(String json, Class<T> clazz) {
-        if (StringUtils.isEmpty(json)) {
-            return null;
-        }
-        ObjectMapper mapper = getMapper();
-        try {
-            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(List.class, clazz));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return deserialize(json, ArrayList.class, clazz);
     }
 
     /**
@@ -267,34 +252,41 @@ public final class JsonUtils {
      * @return 序列化的List
      */
     public static <T> Set<T> deserializeSet(String json, Class<T> clazz) {
+        return deserialize(json, HashSet.class, clazz);
+    }
+
+    @SneakyThrows(value = {IOException.class})
+    public static <T> T deserialize(String json, Class<?> rawType, Class<?> parametrized) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
         ObjectMapper mapper = getMapper();
-        try {
-            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(Set.class, clazz));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, parametrized));
+    }
+
+    @SneakyThrows(value = {IOException.class})
+    public static <K, V> Map<K, V> deserializeMap(String json, Class<K> keyClass, Class<V> valueClass) {
+        if (StringUtils.isEmpty(json)) {
+            return null;
         }
+        ObjectMapper mapper = getMapper();
+        MapType mapType = mapper.getTypeFactory().constructMapType(HashMap.class, keyClass, valueClass);
+        return mapper.readValue(json, mapType);
     }
 
     /**
-     * 反序列化json 字符串到对象
-     * 二级泛型: 如：JsonResult<List<SysUser>>
+     * 反序列化json 字符串到对象 二级泛型: 如：JsonResult<List<SysUser>>
      *
      * @return 序列化的对象
      */
-    public static <T> T deserialize(String json, Class<T> rawType, Class<?> parametrized, Class<?> parameterClasses) {
+    @SneakyThrows(value = {IOException.class})
+    public static <T> T deserialize(String json, Class<?> rawType, Class<?> parametrized, Class<?> parameterClasses) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
         ObjectMapper mapper = getMapper();
-        try {
-            JavaType type = mapper.getTypeFactory().constructParametricType(parametrized, parameterClasses);
-            return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, type));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        JavaType type = mapper.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+        return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, type));
     }
+
 }

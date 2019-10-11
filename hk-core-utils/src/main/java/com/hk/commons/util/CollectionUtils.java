@@ -90,15 +90,23 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @return {@link ArrayList}
      */
     public static <T> Collection<T> toCollection(Iterable<T> iterable, int estimatedSize) {
+        return toList(iterable, estimatedSize);
+    }
+
+    public static <T> List<T> toList(Iterable<T> iterable) {
+        return toList(iterable, 10);
+    }
+
+    public static <T> List<T> toList(Iterable<T> iterable, int estimatedSize) {
         if (iterable == null) {
             return new ArrayList<>(estimatedSize);
         }
-        if (iterable instanceof Collection) {
-            return (Collection<T>) iterable;
+        if (iterable instanceof List) {
+            return (List<T>) iterable;
         }
-        Collection<T> coll = new ArrayList<>(estimatedSize);
-        iterable.forEach(coll::add);
-        return coll;
+        List<T> list = new ArrayList<>(estimatedSize);
+        iterable.forEach(list::add);
+        return list;
     }
 
     /**
@@ -130,7 +138,13 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @return boolean
      */
     public static boolean contains(Iterable<?> it, Object element) {
-        return it != null && StreamSupport.stream(it.spliterator(), false).anyMatch(item -> ObjectUtils.nullSafeEquals(item, element));
+        if (it == null) {
+            return false;
+        }
+        if (it instanceof Collection) {
+            return ((Collection<?>) it).contains(element);
+        }
+        return StreamSupport.stream(it.spliterator(), false).anyMatch(item -> ObjectUtils.nullSafeEquals(item, element));
     }
 
     /**
@@ -187,7 +201,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static String getStringValue(Map<String, Object> map, Object key) {
+    public static String getStringValue(Map<?, ?> map, Object key) {
         return getValue(map, key, String.class);
     }
 
@@ -198,7 +212,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static String getStringValue(Map<String, Object> map, Object key, String defaultValue) {
+    public static String getStringValue(Map<?, ?> map, Object key, String defaultValue) {
         return getValueOrDefault(map, key, defaultValue, String.class);
     }
 
@@ -209,7 +223,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static Boolean getBooleanValue(Map<String, Object> map, Object key) {
+    public static Boolean getBooleanValue(Map<?, ?> map, Object key) {
         return getValue(map, key, Boolean.class);
     }
 
@@ -221,7 +235,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param defaultValue defaultValue
      * @return defaultValue
      */
-    public static Boolean getBooleanValue(Map<String, Object> map, Object key, Boolean defaultValue) {
+    public static Boolean getBooleanValue(Map<?, ?> map, Object key, Boolean defaultValue) {
         return getValueOrDefault(map, key, defaultValue, Boolean.class);
     }
 
@@ -232,7 +246,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static Long getLongValue(Map<String, Object> map, Object key) {
+    public static Long getLongValue(Map<?, ?> map, Object key) {
         return getValue(map, key, Long.class);
     }
 
@@ -243,7 +257,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return defaultValue defaultValue
      */
-    public static Long getLongValue(Map<String, Object> map, Object key, Long defaultValue) {
+    public static Long getLongValue(Map<?, ?> map, Object key, Long defaultValue) {
         return getValueOrDefault(map, key, defaultValue, Long.class);
     }
 
@@ -254,7 +268,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static Integer getIntegerValue(Map<String, Object> map, Object key) {
+    public static Integer getIntegerValue(Map<?, ?> map, Object key) {
         return getValue(map, key, Integer.class);
     }
 
@@ -266,7 +280,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param defaultValue defaultValue
      * @return value
      */
-    public static Integer getIntegerValue(Map<String, Object> map, Object key, Integer defaultValue) {
+    public static Integer getIntegerValue(Map<?, ?> map, Object key, Integer defaultValue) {
         return getValueOrDefault(map, key, defaultValue, Integer.class);
     }
 
@@ -277,7 +291,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static Byte getByteValue(Map<String, Object> map, Object key) {
+    public static Byte getByteValue(Map<?, ?> map, Object key) {
         return getValue(map, key, Byte.class);
     }
 
@@ -288,7 +302,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static Byte getByteValue(Map<String, Object> map, Object key, Byte defaultValue) {
+    public static Byte getByteValue(Map<?, ?> map, Object key, Byte defaultValue) {
         return getValueOrDefault(map, key, defaultValue, Byte.class);
     }
 
@@ -299,7 +313,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static Short getShortValue(Map<String, Object> map, Object key) {
+    public static Short getShortValue(Map<?, ?> map, Object key) {
         return getValue(map, key, Short.class);
     }
 
@@ -310,7 +324,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static Short getByteValue(Map<String, Object> map, Object key, Short defaultValue) {
+    public static Short getByteValue(Map<?, ?> map, Object key, Short defaultValue) {
         return getValueOrDefault(map, key, defaultValue, Short.class);
     }
 
@@ -321,8 +335,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return Map
      */
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> getMapValue(Map<String, Object> map, Object key) {
+    public static Map<?, ?> getMapValue(Map<?, ?> map, Object key) {
         return getValue(map, key, Map.class);
     }
 
@@ -333,7 +346,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return T
      */
-    public static <T> T getValue(Map<String, Object> map, Object key, Class<T> clazz) {
+    public static <T> T getValue(Map<?, ?> map, Object key, Class<T> clazz) {
         return getValueOrDefault(map, key, null, clazz);
     }
 
@@ -344,7 +357,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
      * @param key key
      * @return value
      */
-    public static <T> T getValueOrDefault(Map<String, Object> map, Object key, T defaultValue, Class<T> clazz) {
+    public static <T> T getValueOrDefault(Map<?, ?> map, Object key, T defaultValue, Class<T> clazz) {
         if (isEmpty(map)) {
             return defaultValue;
         }

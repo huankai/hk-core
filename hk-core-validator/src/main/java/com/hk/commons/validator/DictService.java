@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface DictService {
 
-    List<Byte> getDictValueListByCodeId(String codeId);
+    List<Byte> getDictValueListByCodeId(Long codeId);
 
-    String getCodeName(String baseCodeId, Number value);
+    String getCodeName(Long baseCodeId, Number value);
 }

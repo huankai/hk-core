@@ -21,7 +21,6 @@ public class SimpleWriteableHandler<T> extends AbstractWriteableHandler<T> {
 		}
 		sheet.setDisplayGridlines(params.isDisplayGridLines());
 		writeSheet(sheet);
-
 	}
 
 	protected void writeSheet(Sheet sheet) {

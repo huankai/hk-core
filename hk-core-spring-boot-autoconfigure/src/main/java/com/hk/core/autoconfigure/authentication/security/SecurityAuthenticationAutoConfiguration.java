@@ -1,7 +1,7 @@
 package com.hk.core.autoconfigure.authentication.security;
 
-import com.hk.commons.sms.LoggerSmsCodeSender;
-import com.hk.commons.sms.SmsCodeSender;
+import com.hk.commons.sms.LoggerSmsSender;
+import com.hk.commons.sms.SmsSender;
 import com.hk.core.authentication.api.validatecode.*;
 import com.hk.core.authentication.security.SpringSecurityContext;
 import com.hk.core.authentication.security.savedrequest.GateWayHttpSessionRequestCache;
@@ -94,47 +94,50 @@ public class SecurityAuthenticationAutoConfiguration {
 //    }
 
 
-    /**
-     * <p>
-     * 默认短信发送配置
-     * </p>
-     *
-     * <p>
-     * 必须要在 application.yml 配置文件中配置 hk.authentication.sms.enabled = true 才会有效
-     * </p>
-     *
-     * @return
-     */
-    @Configuration
-    @ConditionalOnProperty(prefix = "hk.authentication.sms", name = "enabled", havingValue = "true")
-    protected class SmsAutoConfiguration {
-
-        @Bean
-        @ConditionalOnMissingBean(SmsCodeSender.class)
-        public SmsCodeSender defaultSmsCodeSender() {
-            return new LoggerSmsCodeSender();
-        }
-
-        @Bean("smsValidateCodeGenerator")
-        @ConditionalOnMissingBean(DefaultValidateCodeGenerator.class)
-        public ValidateCodeGenerator<ValidateCode> validateCodeGenerator() {
-            AuthenticationProperties.SMSProperties sms = properties.getSms();
-            return new DefaultValidateCodeGenerator(sms.getCodeLength(), sms.getCodeExpireIn());
-        }
-
-        @Autowired(required = false)
-        private ValidateCodeStrategy validateCodeStrategy;
-
-        @Bean("smsValidateCodeProcessor")
-        public ValidateCodeProcessor validateCodeProcessor(SmsCodeSender smsCodeSender, ValidateCodeGenerator<ValidateCode> validateCodeGenerator) {
-            AuthenticationProperties.SMSProperties sms = properties.getSms();
-            SmsCodeProcessor smsCodeProcessor = new SmsCodeProcessor(validateCodeGenerator, smsCodeSender,
-                    sms.getPhoneParameter(), sms.getCodeParameter());
-            if (null != validateCodeStrategy) {
-                smsCodeProcessor.setValidateCodeStrategy(validateCodeStrategy);
-            }
-            return smsCodeProcessor;
-        }
-    }
+//    /**
+//     * <p>
+//     * 默认短信发送配置
+//     * </p>
+//     *
+//     * <p>
+//     * 必须要在 application.yml 配置文件中配置 hk.authentication.sms.enabled = true 才会有效
+//     * </p>
+//     *
+//     * @return
+//     */
+//    @Configuration
+//    @ConditionalOnProperty(prefix = "hk.authentication.sms", name = "enabled", havingValue = "true")
+//    protected class SmsAutoConfiguration {
+//
+//        @Bean
+//        @ConditionalOnMissingBean(SmsSender.class)
+//        public SmsSender<?> defaultSmsCodeSender() {
+//            return new LoggerSmsSender();
+//        }
+//
+//        @Bean("smsValidateCodeGenerator")
+//        @ConditionalOnMissingBean(DefaultValidateCodeGenerator.class)
+//        public ValidateCodeGenerator<ValidateCode> validateCodeGenerator() {
+//            AuthenticationProperties.SMSProperties sms = properties.getSms();
+//            DefaultValidateCodeGenerator codeGenerator = new DefaultValidateCodeGenerator();
+//            codeGenerator.setCodeLength(sms.getCodeLength());
+//            codeGenerator.setExpireSends(codeGenerator.getExpireSends());
+//            return codeGenerator;
+//        }
+//
+//        @Autowired(required = false)
+//        private ValidateCodeStrategy validateCodeStrategy;
+//
+////        @Bean("smsValidateCodeProcessor")
+////        public ValidateCodeProcessor validateCodeProcessor(SmsSender<?> smsCodeSender, ValidateCodeGenerator<ValidateCode> validateCodeGenerator) {
+////            AuthenticationProperties.SMSProperties sms = properties.getSms();
+////             smsCodeProcessor = new SmsCodeProcessor(validateCodeGenerator, smsCodeSender,
+////                    sms.getPhoneParameter(), sms.getCodeParameter());
+////            if (null != validateCodeStrategy) {
+////                smsCodeProcessor.setValidateCodeStrategy(validateCodeStrategy);
+////            }
+////            return smsCodeProcessor;
+////        }
+//    }
 
 }

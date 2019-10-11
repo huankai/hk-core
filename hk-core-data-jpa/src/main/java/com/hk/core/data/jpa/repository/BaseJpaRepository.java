@@ -1,6 +1,7 @@
 package com.hk.core.data.jpa.repository;
 
 import com.hk.core.data.commons.utils.OrderUtils;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -38,6 +40,12 @@ public interface BaseJpaRepository<T extends Persistable<ID>, ID extends Seriali
 
     T updateByIdSelective(T t);
 
+    default QueryPage<T> queryForPage(Specification<T> specification, List<Order> orders, int pageIndex, int pageSize) {
+        Page<T> page = findAll(specification, PageRequest.of(pageIndex, pageSize, OrderUtils.toSort(orders)));
+        return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
+
+    }
+
     /**
      * 分页查询
      *
@@ -52,5 +60,5 @@ public interface BaseJpaRepository<T extends Persistable<ID>, ID extends Seriali
         return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
     }
 
-
+    QueryPage<T> queryForPage(ConditionQueryModel queryModel);
 }

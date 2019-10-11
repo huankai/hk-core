@@ -10,7 +10,7 @@ import java.util.Random;
  * @author kevin
  * @date 2018-07-27 14:53
  */
-public class ImageCodeGenerator implements ValidateCodeGenerator<ImageCode> {
+public class ImageCodeGenerator extends AbstractValidateCodeGenerator implements ValidateCodeGenerator<ImageCode> {
 
     /**
      * 宽度
@@ -22,21 +22,13 @@ public class ImageCodeGenerator implements ValidateCodeGenerator<ImageCode> {
      */
     private int height;
 
-    /**
-     * 生成的验证码字符长度
-     */
-    private byte codeLength;
+    public ImageCodeGenerator() {
+        this(200, 50);
+    }
 
-    /**
-     * 验证码过期时间,单位:秒
-     */
-    private int codeExpireIn;
-
-    public ImageCodeGenerator(int width, int height, byte codeLength, int codeExpireIn) {
+    public ImageCodeGenerator(int width, int height) {
         this.width = width;
         this.height = height;
-        this.codeLength = codeLength;
-        this.codeExpireIn = codeExpireIn;
     }
 
     @Override
@@ -60,14 +52,14 @@ public class ImageCodeGenerator implements ValidateCodeGenerator<ImageCode> {
         }
 
         StringBuilder sRand = new StringBuilder();
-        for (int i = 0; i < codeLength; i++) {
+        for (int i = 0; i < getCodeLength(); i++) {
             String rand = String.valueOf(random.nextInt(10));
             sRand.append(rand);
             g.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
             g.drawString(rand, 13 * i + 6, 16);
         }
         g.dispose();
-        return new ImageCode(image, sRand.toString(), codeExpireIn);
+        return new ImageCode(image, sRand.toString(), getExpireSends());
     }
 
     /**

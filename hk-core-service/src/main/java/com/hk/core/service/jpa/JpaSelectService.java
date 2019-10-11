@@ -1,5 +1,6 @@
 package com.hk.core.service.jpa;
 
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.service.SelectService;
@@ -48,6 +49,8 @@ public interface JpaSelectService<T extends Persistable<ID>, ID extends Serializ
      * @return 查询结果集
      */
     QueryPage<T> findAll(Specification<T> spec, int pageIndex, int pageSize, Order... orders);
+
+    QueryPage<T> queryForPage(ConditionQueryModel queryModel);
 
     /**
      * 集合查询

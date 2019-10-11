@@ -1,5 +1,7 @@
 package com.hk.commons.util;
 
+import com.hk.commons.converters.JsonStringToCollectionConverter;
+import com.hk.commons.converters.JsonStringToMapConverter;
 import com.hk.commons.converters.StringToBooleanConverter;
 import com.hk.commons.converters.StringToDateConverter;
 import com.hk.commons.converters.StringToNumberConverter.StringToBigIntegerConverter;
@@ -19,7 +21,7 @@ public class ConverterUtils {
     /**
      * 默认转换
      */
-    public static DefaultConversionService DEFAULT_CONVERSION_SERVICE = new DefaultConversionService();
+    public static final DefaultConversionService DEFAULT_CONVERSION_SERVICE = new DefaultConversionService();
 
     /**
      * 转换
@@ -32,6 +34,10 @@ public class ConverterUtils {
         DEFAULT_CONVERSION_SERVICE.addConverter(new StringToLongConverter());
         DEFAULT_CONVERSION_SERVICE.addConverter(new StringToIntegerConverter());
         DEFAULT_CONVERSION_SERVICE.addConverter(new StringToBigIntegerConverter());
+        /* json string to 集合 */
+        DEFAULT_CONVERSION_SERVICE.addConverter(new JsonStringToCollectionConverter());
+        /* json string to Map */
+        DEFAULT_CONVERSION_SERVICE.addConverter(new JsonStringToMapConverter());
     }
 
     private ConverterUtils() {

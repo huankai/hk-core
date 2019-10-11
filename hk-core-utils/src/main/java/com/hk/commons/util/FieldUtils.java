@@ -1,5 +1,6 @@
 package com.hk.commons.util;
 
+import lombok.SneakyThrows;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -89,6 +90,11 @@ public abstract class FieldUtils {
             currentClass = currentClass.getSuperclass();
         }
         return allFields;
+    }
+
+    @SneakyThrows
+    public static Field getFiled(Class<?> cls, String name) {
+        return cls.getDeclaredField(name);
     }
 
 }

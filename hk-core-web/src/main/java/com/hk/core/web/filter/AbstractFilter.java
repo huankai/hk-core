@@ -6,9 +6,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * 在 servlet 4 规范中，可以使用 {@link javax.servlet.http.HttpFilter}
+ *
  * @author kevin
  * @date 2018-06-07 17:17
+ * @see  javax.servlet.http.HttpFilter
  */
+@Deprecated
 public abstract class AbstractFilter implements Filter {
 
     @Override

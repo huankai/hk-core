@@ -1,7 +1,7 @@
 package com.hk.core.cache.service.impl;
 
 import com.hk.core.cache.service.JdbcCacheService;
-import com.hk.core.data.jdbc.query.CompositeCondition;
+import com.hk.core.jdbc.query.CompositeCondition;
 import com.hk.core.service.jdbc.impl.JdbcServiceImpl;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -121,7 +121,7 @@ public abstract class EnableJdbcCacheServiceImpl<T extends Persistable<ID>, ID e
 
     @Override
     @CacheEvict(allEntries = true)
-    public void deleteByIds(@SuppressWarnings("unchecked") ID... ids) {
+    public void deleteByIds(ID... ids) {
         super.deleteByIds(ids);
     }
 

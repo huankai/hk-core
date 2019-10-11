@@ -1,8 +1,5 @@
 package com.hk.commons.util;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 /**
  * 常量接口
  *
@@ -21,8 +18,5 @@ public interface Contants {
      */
     String DEFAULT_VALUE = "0";
 
-    /**
-     * UTF-8 Charset
-     */
-    Charset CHARSET_UTF_8 = StandardCharsets.UTF_8;
+    Long DEFAULT_VALUE_LONG = 0L;
 }

@@ -18,7 +18,7 @@ public class DateIdGenerator extends TimestampIDGenerator {
      * 日期模式
      */
     @Getter
-    private DatePattern pattern = DatePattern.YYYY_MM_DD_EN;
+    private DatePattern pattern = DatePattern.YYYYMMDDHHMMSS;
 
     public DateIdGenerator() {
         this(null, null);

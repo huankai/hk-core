@@ -4,6 +4,7 @@ import com.hk.commons.util.Contants;
 import com.hk.commons.util.FileUtils;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
+import lombok.SneakyThrows;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -23,6 +24,8 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * web相关的工具类
@@ -201,6 +204,24 @@ public abstract class Webs {
     }
 
     /**
+     * 获取所有请求参数
+     *
+     * @param request request
+     * @return 请求参数
+     */
+    public static Map<String, String> getRequestParam(HttpServletRequest request) {
+        Map<String, String[]> requestParameterMap = request.getParameterMap();
+        Map<String, String> result = new HashMap<>();
+        for (Map.Entry<String, String[]> entry : requestParameterMap.entrySet()) {
+            String value = StringUtils.arrayToCommaDelimitedString(entry.getValue());
+            if (StringUtils.isNotEmpty(value)) {
+                result.put(entry.getKey(), value);
+            }
+        }
+        return result;
+    }
+
+    /**
      * 文件下载或预览
      *
      * @param fileName fileName
@@ -215,31 +236,25 @@ public abstract class Webs {
      * 文件下载或预览
      *
      * @param fileName fileName
-     * @param url      url
+     * @param resource resource
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, URL url) {
-        try {
-            URLConnection connection = url.openConnection();
-            return toResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+    @SneakyThrows(value = {IOException.class})
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, Resource resource) {
+        return toResponseEntity(fileName, resource.contentLength(), resource.getInputStream());
     }
 
     /**
      * 文件下载或预览
      *
      * @param fileName fileName
-     * @param resource resource
+     * @param url      url
      * @return ResponseEntity
      */
-    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, Resource resource) {
-        try {
-            return toResponseEntity(fileName, resource.contentLength(), resource.getInputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+    @SneakyThrows(value = {IOException.class})
+    public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, URL url) {
+        URLConnection connection = url.openConnection();
+        return toResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
     }
 
     /**
@@ -248,13 +263,10 @@ public abstract class Webs {
      * @param resource resource
      * @return ResponseEntity
      */
+    @SneakyThrows(value = {IOException.class})
     public static ResponseEntity<InputStreamResource> toResponseEntity(Resource resource) {
-        try {
-            return toResponseEntity(resource.getFilename(), MediaType.IMAGE_JPEG, resource.contentLength(),
-                    new InputStreamResource(resource.getInputStream()));
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        return toResponseEntity(resource.getFilename(), MediaType.IMAGE_JPEG, resource.contentLength(),
+                new InputStreamResource(resource.getInputStream()));
     }
 
     /**
@@ -290,21 +302,18 @@ public abstract class Webs {
      * @param fileName fileName
      * @return fileName
      */
+    @SneakyThrows
     private static String obtainAttachFileName(String fileName) {
         String encodeFileName = fileName;
         HttpServletRequest request = getHttpServletRequest();
-        try {
-            String agent = request.getHeader(HttpHeaders.USER_AGENT);
-            if (StringUtils.isNotEmpty(agent)) {
-                if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
-                        || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE
-                    encodeFileName = URLEncoder.encode(fileName, Contants.UTF_8);
-                } else if (agent.contains(MOZILLA_USER_AGENT_HEADER_VALUE)) {// 火狐,谷歌
-                    encodeFileName = StringUtils.newStringIso8859_1(StringUtils.getByteUtf8(fileName));
-                }
+        String agent = request.getHeader(HttpHeaders.USER_AGENT);
+        if (StringUtils.isNotEmpty(agent)) {
+            if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
+                    || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE
+                encodeFileName = URLEncoder.encode(fileName, Contants.UTF_8);
+            } else if (agent.contains(MOZILLA_USER_AGENT_HEADER_VALUE)) {// 火狐,谷歌
+                encodeFileName = StringUtils.newStringIso8859_1(StringUtils.getByteUtf8(fileName));
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
         }
         return encodeFileName;
     }
@@ -354,14 +363,13 @@ public abstract class Webs {
      * @param status   status
      * @param data     data
      */
+    @SneakyThrows(value = {IOException.class})
     public static void writeJson(HttpServletResponse response, int status, Object data) {
         response.setCharacterEncoding(Contants.UTF_8);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try (PrintWriter writer = response.getWriter()) {
             response.setStatus(status);
             writer.write(JsonUtils.serialize(data));
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

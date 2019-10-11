@@ -1,5 +1,7 @@
 package com.hk.commons.util;
 
+import org.springframework.lang.Nullable;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -36,17 +38,19 @@ public abstract class ClassUtils extends org.springframework.util.ClassUtils {
     }
 
     /**
-     * 获取一个类的泛型类型,如果未获取到返回Object.class
+     * 获取一个类的泛型类型,如果未获取到返回 null
      *
      * @param clazz 要获取的类
      * @param index 泛型索引
      * @return 泛型
      */
-    public static Class<?> getGenericType(Class<?> clazz, int index) {
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getGenericType(Class<?> clazz, int index) {
         List<Type> arrays = new ArrayList<>();
         arrays.add(clazz.getGenericSuperclass());
         arrays.addAll(Arrays.asList(clazz.getGenericInterfaces()));
-        return arrays.stream()
+        return (Class<T>) arrays.stream()
                 .filter(Objects::nonNull)
                 .map(type -> {
                     if (clazz != Object.class && !(type instanceof ParameterizedType)) {
@@ -57,7 +61,7 @@ public abstract class ClassUtils extends org.springframework.util.ClassUtils {
                 .filter(Objects::nonNull)
                 .filter(res -> res != Object.class)
                 .findFirst()
-                .orElse(Object.class);
+                .orElse(null);
     }
 
 }

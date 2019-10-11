@@ -3,10 +3,10 @@
  */
 package com.hk.commons.util;
 
-import org.springframework.core.ResolvableType;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+
+import org.springframework.core.ResolvableType;
 
 /**
  * @author kevin
@@ -49,7 +49,7 @@ public abstract class TypeUtils {
         if (type.getClass() == Class.class) {
             return (Class<T>) type;
         }
-        return (Class) ResolvableType.forField(field).getGeneric(index).resolve();
+        return (Class<T>) ResolvableType.forField(field).getGeneric(index).resolve();
     }
 
 }

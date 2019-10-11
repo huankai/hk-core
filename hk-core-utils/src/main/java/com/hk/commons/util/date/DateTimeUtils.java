@@ -143,8 +143,12 @@ public abstract class DateTimeUtils {
      * @param pattern pattern
      * @return localDateTime
      */
-    public static LocalDateTime stringToLocalDateTime(String date, DatePattern pattern) {
-        return LocalDateTime.parse(date, DateTimeFormatter.ofPattern(pattern.getPattern()));
+    public static LocalDateTime stringToLocalDateTime(String text, DatePattern... patterns) {
+        if (ArrayUtils.isEmpty(patterns)) {
+            return LocalDateTime.parse(text, DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()));
+        }
+        Date date = stringToDate(text, patterns);
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 
     /**
@@ -356,6 +360,26 @@ public abstract class DateTimeUtils {
         LocalDateTime dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
                 .with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
         return localDateTimeToDate(dateTime);
+    }
+
+    /**
+     * 返回日期所在月的最后天
+     *
+     * @param date date
+     * @return date
+     */
+    public static LocalDateTime getMonthMaxDate(LocalDateTime date) {
+        return date.with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
+    }
+
+    /**
+     * 返回日期所在月的第一天
+     *
+     * @param date date
+     * @return date
+     */
+    public static LocalDateTime getMonthMinDate(LocalDateTime date) {
+        return date.with(TemporalAdjusters.firstDayOfMonth()).with(LocalTime.MIN);
     }
 
     /**

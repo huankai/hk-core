@@ -1,13 +1,11 @@
 package com.hk.commons;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hk.commons.annotations.EnumDisplay;
-import com.hk.commons.util.EnumDisplayUtils;
+import com.hk.commons.util.SpringContextHolder;
 import com.hk.commons.util.StringUtils;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * Json返回结果
@@ -16,66 +14,9 @@ import java.util.Objects;
  * @date 2017年9月27日上午11:09:08
  */
 @SuppressWarnings("serial")
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public final class JsonResult<T> implements Serializable {
 
-    public enum Status {
-
-        /**
-         * 成功
-         */
-        @EnumDisplay(value = "operation.success", order = 10200)
-        SUCCESS,
-
-        /**
-         * 失败
-         */
-        @EnumDisplay(value = "operation.failure", order = -1)
-        FAILURE,
-
-        /**
-         * 重定向
-         */
-        @EnumDisplay(value = "operation.redirect", order = 10302)
-        REDIRECT,
-
-        /**
-         * 坏的请求
-         */
-        @EnumDisplay(value = "operation.bad_request", order = 10400)
-        BAD_REQUEST,
-
-        /**
-         * 未认证
-         */
-        @EnumDisplay(value = "operation.unauthorized", order = 10401)
-        UNAUTHORIZED,
-
-        /**
-         * 无权限
-         */
-        @EnumDisplay(value = "operation.forbidden", order = 10403)
-        FORBIDDEN,
-
-        /**
-         * 资源不存在
-         */
-        @EnumDisplay(value = "operation.not_found", order = 10404)
-        NOT_FOUND,
-
-        /**
-         * 请求方法不支持
-         */
-        @EnumDisplay(value = "operation.method_not_allowed", order = 10405)
-        METHOD_NOT_ALLOWED,
-
-        /**
-         * 服务器错误
-         */
-        @EnumDisplay(value = "operation.server_error", order = 10500)
-        SERVER_ERROR;
-
-    }
 
     /**
      * 返回状态
@@ -240,22 +181,19 @@ public final class JsonResult<T> implements Serializable {
     }
 
     public JsonResult(Status status, String message, T data) {
-        this.statusCode = EnumDisplayUtils.getDisplayOrder(status);
+        this.statusCode = Status.getOrder(status);
         this.data = data;
         this.message = message;
     }
 
     public String getMessage() {
-        EnumDisplay enumDisplay = EnumDisplayUtils.getEnumDisplayByOrder(Status.class, statusCode);
-        if (Objects.isNull(enumDisplay)) {
-            return message;
-        }
-        return StringUtils.isEmpty(message) || StringUtils.equals(message, enumDisplay.value()) ? EnumDisplayUtils.getDisplayText(Status.class, statusCode) : message;
+        String message = StringUtils.isEmpty(this.message) ? Status.getMessage(statusCode) : this.message;
+        return SpringContextHolder.getMessageWithDefault(message, this.message);
     }
 
     @JsonIgnore
     public boolean isSuccess() {
-        return this.statusCode == 10200;
+        return this.statusCode == Status.SUCCESS_STATUS;
     }
 
     public <E> JsonResult<E> of(E data) {

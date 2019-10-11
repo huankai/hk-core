@@ -1,6 +1,8 @@
 package com.hk.core.query;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -12,6 +14,8 @@ import java.io.Serializable;
  */
 @Data
 @SuppressWarnings("serial")
+@NoArgsConstructor
+@AllArgsConstructor
 public final class Order implements Serializable {
 
     /**
@@ -24,20 +28,11 @@ public final class Order implements Serializable {
      */
     private boolean desc;
 
-    public Order() {
-
-    }
-
-    public Order(String field, boolean desc) {
-        this.field = field;
-        this.desc = desc;
-    }
-
     /**
      * ASC
      *
-     * @param field
-     * @return
+     * @param field field
+     * @return Order asc
      */
     public static Order asc(String field) {
         return new Order(field, false);
@@ -46,8 +41,8 @@ public final class Order implements Serializable {
     /**
      * DESC
      *
-     * @param field
-     * @return
+     * @param field field
+     * @return Order desc
      */
     public static Order desc(String field) {
         return new Order(field, true);

@@ -25,13 +25,13 @@ public class UserPrincipal implements Serializable {
     /**
      *
      */
-    private static final long serialVersionUID = 899893192177859358L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 当前用户id
      */
 
-    private String userId;
+    private Long userId;
 
     /**
      * 用户账号
@@ -74,16 +74,9 @@ public class UserPrincipal implements Serializable {
     private ClientAppInfo appInfo;
 
     /**
-     * 是否受保护的用户
-     * protectUser
-     */
-    @JsonIgnore
-    private boolean protectUser;
-
-    /**
      * 用户所在机构id
      */
-    private String orgId;
+    private Long orgId;
 
     /**
      * 用户所在机构名称
@@ -93,7 +86,7 @@ public class UserPrincipal implements Serializable {
     /**
      * 用户所在部门Id
      */
-    private String deptId;
+    private Long deptId;
 
     /**
      * 用户所在部门名称
@@ -112,8 +105,7 @@ public class UserPrincipal implements Serializable {
     @JsonIgnore
     private Set<String> permissions;
 
-    public UserPrincipal(String userId, String account, Byte userType) {
-        this.protectUser = false;
+    public UserPrincipal(Long userId, String account, Byte userType) {
         this.userId = userId;
         this.account = account;
         this.userType = userType;
@@ -121,12 +113,11 @@ public class UserPrincipal implements Serializable {
         this.permissions = new HashSet<>();
     }
 
-    public UserPrincipal(String userId, String account, boolean protectUser, String realName,
+    public UserPrincipal(Long userId, String account, String realName,
                          Byte userType, String phone, String email,
                          Byte sex, String iconPath, Set<String> roles, Set<String> permissions) {
         this.userId = userId;
         this.account = account;
-        this.protectUser = protectUser;
         this.realName = realName;
         this.userType = userType;
         this.phone = phone;
@@ -176,7 +167,7 @@ public class UserPrincipal implements Serializable {
      */
     @JsonIgnore
     public final boolean isAdministrator() {
-        return protectUser;
+        return userType == 1;
     }
 
 }

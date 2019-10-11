@@ -32,6 +32,11 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public abstract class AbstractUUIDPersistable implements Persistable<String>, Serializable {
 
+    /**
+     * id 生成策略,strategy 的值可以为 {@link org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory} 中注册的key，也可以为 class 的全类名
+     *
+     * @see org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory
+     */
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")

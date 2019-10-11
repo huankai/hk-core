@@ -28,7 +28,7 @@ public class ListResult<T> implements Iterable<T> {
     private List<T> result;
 
     public List<T> getResult() {
-        return result == null ? Collections.emptyList() : result;
+        return result == null ? new ArrayList<>() : result;
     }
 
     @Override

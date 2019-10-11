@@ -204,12 +204,14 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
      */
     protected final CellType getCellType(Class<?> propertyType) {
         CellType cellType = CellType.STRING;
-        if (ClassUtils.isAssignable(Number.class, propertyType)
-                || ClassUtils.isAssignable(Date.class, propertyType)
-                || ClassUtils.isAssignable(Temporal.class, propertyType)) {
-            cellType = CellType.NUMERIC;
-        } else if (ClassUtils.isAssignable(propertyType, Boolean.class)) {
-            cellType = CellType.BOOLEAN;
+        if (Objects.nonNull(propertyType)) {
+            if (ClassUtils.isAssignable(Number.class, propertyType)
+                    || ClassUtils.isAssignable(Date.class, propertyType)
+                    || ClassUtils.isAssignable(Temporal.class, propertyType)) {
+                cellType = CellType.NUMERIC;
+            } else if (ClassUtils.isAssignable(Boolean.class, propertyType)) {
+                cellType = CellType.BOOLEAN;
+            }
         }
         return cellType;
     }
@@ -242,8 +244,9 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
                             StringUtils.substringAfter(title.getPropertyName(), WriteExcelUtils.NESTED_PROPERTY));
                 }
             }
+            BeanWrapper beanWrapper;
             for (T item : dataList) {
-                BeanWrapper beanWrapper = BeanWrapperUtils.createBeanWrapper(item);
+                beanWrapper = BeanWrapperUtils.createBeanWrapper(item);
                 if (StringUtils.isEmpty(nestedPropertyPrefix)) {
                     Row row = createDataRow(sheet, item, rowIndex++);
                     for (ExcelColumnInfo excelColumnInfo : columnInfoList) {
@@ -306,7 +309,30 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
             String cellAddress = cell.getAddress().formatAsString();
             statisFormula.put(columnIndex, StringUtils.isEmpty(formula) ? cellAddress + separate : formula + separate + cellAddress);
         }
+    }
 
+    /**
+     * 获取属性类型
+     *
+     * @param data         data
+     * @param beanWrapper  beanWrapper
+     * @param propertyName propertyName
+     * @return propertyType
+     */
+    protected Class<?> getPropertyType(T data, BeanWrapper beanWrapper, String propertyName) {
+        return beanWrapper.getPropertyType(propertyName);
+    }
+
+    /**
+     * 获取属性值
+     *
+     * @param data         data
+     * @param beanWrapper  beanWrapper
+     * @param propertyName propertyName
+     * @return propertyValue
+     */
+    protected Object getBeanValue(T data, BeanWrapper beanWrapper, String propertyName) {
+        return beanWrapper.getPropertyValue(propertyName);
     }
 
     /**
@@ -322,8 +348,7 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
     private Cell createCell(Row row, T data, ExcelColumnInfo excelColumnInfo, String nestedPropertyName, BeanWrapper beanWrapper,
                             CreationHelper helper, Drawing<?> drawing) {
         StyleTitle title = excelColumnInfo.getTitle();
-        Class<?> propertyType = beanWrapper.getPropertyType(nestedPropertyName);
-        Object value = beanWrapper.getPropertyValue(nestedPropertyName);
+        Class<?> propertyType = getPropertyType(data, beanWrapper, nestedPropertyName);
         Cell cell = row.createCell(title.getColumn(), getCellType(propertyType));
         setCellComment(drawing, helper, cell, getCommentText(data, nestedPropertyName, propertyType),
                 excelColumnInfo.getCommentAuthor(), excelColumnInfo.isCommentVisible());
@@ -331,7 +356,7 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
             nestedPropertyName = StringUtils.substringAfterLast(nestedPropertyName, WriteExcelUtils.NESTED_PROPERTY);
         }
         setCellStyle(cell, excelColumnInfo.getDataStyle(), nestedPropertyName, propertyType);
-        setCellValue(cell, nestedPropertyName, value);
+        setCellValue(cell, nestedPropertyName, getBeanValue(data, beanWrapper, nestedPropertyName));
         return cell;
     }
 
@@ -452,7 +477,6 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
         }
     }
 
-
     private String toStringValue(String propertyName, Object value) {
         Class<?> clazz = value.getClass();
         DataFormat format = params.getValueFormat().getFormat(propertyName, clazz);
@@ -470,12 +494,20 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
         cell.setCellValue(Objects.isNull(value) ? StringUtils.EMPTY : toStringValue(propertyName, value));
     }
 
-
-    public List<ExcelColumnInfo> getColumnInfoList() {
+    private List<ExcelColumnInfo> getColumnInfoList() {
         if (null == columnInfoList) {
-            columnInfoList = WriteExcelUtils.parse(params.getBeanClazz(), params.getTitleRow());
+            columnInfoList = buildExcelColumnInfo();
         }
         return columnInfoList;
+    }
+
+    /**
+     * build ExcelColumnInfo
+     *
+     * @return
+     */
+    protected List<ExcelColumnInfo> buildExcelColumnInfo() {
+        return WriteExcelUtils.parse(params.getBeanClazz(), params.getTitleRow());
     }
 
 }

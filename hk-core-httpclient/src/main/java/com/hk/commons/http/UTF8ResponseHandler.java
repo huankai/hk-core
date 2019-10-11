@@ -16,6 +16,12 @@ import java.io.IOException;
  */
 public class UTF8ResponseHandler extends BasicResponseHandler {
 
+    private static final UTF8ResponseHandler UTF_8_RESPONSE_HANDLER = new UTF8ResponseHandler();
+
+    public static UTF8ResponseHandler getInstance() {
+        return UTF_8_RESPONSE_HANDLER;
+    }
+
     @Override
     public String handleEntity(HttpEntity entity) throws IOException {
         return EntityUtils.toString(entity, Consts.UTF_8);

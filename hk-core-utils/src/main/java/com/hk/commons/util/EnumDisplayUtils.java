@@ -3,6 +3,8 @@ package com.hk.commons.util;
 import com.hk.commons.annotations.EnumDisplay;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.SneakyThrows;
+import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -28,7 +30,8 @@ public abstract class EnumDisplayUtils {
      */
     public static String getDisplayText(Object enumValue) {
         EnumDisplay enumDisplay = getEnumDisplay(enumValue);
-        return SpringContextHolder.getMessageWithDefault(enumDisplay.value(), enumDisplay.value());
+        return null == enumDisplay ? null :
+                SpringContextHolder.getMessageWithDefault(enumDisplay.value(), enumDisplay.value());
     }
 
     /**
@@ -65,18 +68,16 @@ public abstract class EnumDisplayUtils {
      * @param enumValue enumValue
      * @return {@link EnumDisplay}
      */
-    private static EnumDisplay getEnumDisplay(Object enumValue) {
+    @Nullable
+    @SneakyThrows(value = {NoSuchFieldException.class, SecurityException.class})
+    public static EnumDisplay getEnumDisplay(Object enumValue) {
         if (null == enumValue) {
             return null;
         }
         Class<?> type = enumValue.getClass();
         Enum<?> en = (Enum<?>) enumValue;
-        try {
-            Field field = type.getField(en.name());
-            return field.getAnnotation(EnumDisplay.class);
-        } catch (NoSuchFieldException | SecurityException e) {
-            throw new RuntimeException(e);
-        }
+        Field field = type.getField(en.name());
+        return field.getAnnotation(EnumDisplay.class);
     }
 
     /**
@@ -97,9 +98,8 @@ public abstract class EnumDisplayUtils {
      * @param enumClass enumClass
      * @return {@link EnumDisplay#value()}
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static String getDisplayText(String enumValue, Class<? extends Enum> enumClass) {
-        Object value = Enum.valueOf(enumClass, enumValue);
+    public static <T extends Enum<T>> String getDisplayText(String enumValue, Class<T> enumClass) {
+        T value = Enum.valueOf(enumClass, enumValue);
         return getDisplayText(value);
     }
 
@@ -111,28 +111,25 @@ public abstract class EnumDisplayUtils {
      * 2.如果枚举项有@EnumDisplay标注，text则取标注的value属性，order取标注的order属性
      * 3.如果没有@EnumDisplay标注，text值为枚举值value，order为0
      */
+    @SneakyThrows(value = {IllegalAccessException.class})
     public static <TEnum extends Enum<?>> List<EnumItem> getEnumItemList(Class<TEnum> enumClass) {
         List<EnumItem> items = new ArrayList<>();
         Field[] fields = enumClass.getFields();
         EnumItem item;
-        try {
-            for (Field field : fields) {
-                if (field.isEnumConstant()) {
-                    item = new EnumItem();
-                    Object value = field.get(null);
-                    item.setValue(value);
-                    item.setText(value.toString());
-                    item.setOrder(0);
-                    EnumDisplay ed = field.getAnnotation(EnumDisplay.class);
-                    if (null != ed) {
-                        item.setText(SpringContextHolder.getMessageWithDefault(ed.value(), null));
-                        item.setOrder(ed.order());
-                    }
-                    items.add(item);
+        for (Field field : fields) {
+            if (field.isEnumConstant()) {
+                item = new EnumItem();
+                Object value = field.get(null);
+                item.setValue(value);
+                item.setText(value.toString());
+                item.setOrder(0);
+                EnumDisplay ed = field.getAnnotation(EnumDisplay.class);
+                if (null != ed) {
+                    item.setText(SpringContextHolder.getMessageWithDefault(ed.value(), null));
+                    item.setOrder(ed.order());
                 }
+                items.add(item);
             }
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException(e);
         }
         return items.stream()
                 .sorted(Comparator.comparingInt(EnumItem::getOrder))

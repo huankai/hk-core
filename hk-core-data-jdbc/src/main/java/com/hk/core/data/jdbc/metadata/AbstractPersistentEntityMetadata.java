@@ -1,6 +1,6 @@
 package com.hk.core.data.jdbc.metadata;
 
-import com.hk.core.data.commons.audit.AuditField;
+import com.hk.commons.util.AuditField;
 import org.springframework.cache.Cache;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.data.domain.Auditable;

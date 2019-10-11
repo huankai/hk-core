@@ -4,16 +4,16 @@ import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.core.data.commons.utils.OrderUtils;
 import com.hk.core.data.jpa.repository.BaseJpaRepository;
-import com.hk.core.page.SimpleQueryPage;
-import com.hk.core.query.QueryModel;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.page.QueryPage;
+import com.hk.core.page.SimpleQueryPage;
 import com.hk.core.query.Order;
+import com.hk.core.query.QueryModel;
 import com.hk.core.service.impl.BaseServiceImpl;
 import com.hk.core.service.jpa.JpaBaseService;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -46,11 +46,11 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
         return ObjectUtils.defaultIfNull(t, BeanUtils.instantiateClass(getDomainClass()));
     }
 
-    @SuppressWarnings(("unchecked"))
+    @SuppressWarnings("unchecked")
     private Class<T> getDomainClass() {
         if (null == domainClass) {
             ResolvableType resolvableType = ResolvableType.forClass(getClass());
-            domainClass = (Class<T>) resolvableType.getSuperType().getGeneric(0).resolve();
+            this.domainClass = (Class<T>) resolvableType.getSuperType().getGeneric(0).resolve();
         }
         return domainClass;
     }
@@ -74,6 +74,11 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
     public QueryPage<T> queryForPage(QueryModel<T> query) {
         return getBaseRepository().findByPage(Example.of(checkNull(query.getParam()), ofExampleMatcher()),
                 query.getOrders(), query.getStartRowIndex(), query.getPageSize());
+    }
+
+    @Override
+    public QueryPage<T> queryForPage(ConditionQueryModel queryModel) {
+        return getBaseRepository().queryForPage(queryModel);
     }
 
     @Override

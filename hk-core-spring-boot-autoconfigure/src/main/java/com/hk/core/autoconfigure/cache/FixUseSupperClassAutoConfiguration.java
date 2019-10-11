@@ -1,10 +1,8 @@
 package com.hk.core.autoconfigure.cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hk.commons.util.JsonUtils;
 import com.hk.core.cache.LogCacheErrorHandler;
-import com.hk.core.cache.NullCacheProperties;
 import com.hk.core.cache.interceptor.LockCacheInterceptor;
 import com.hk.core.cache.redis.CustomRedisCacheManager;
 import com.hk.core.cache.spring.FixUseSupperClassAnnotationParser;
@@ -64,17 +62,14 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
         return new FixUseSupperClassCacheOperationSource(new FixUseSupperClassAnnotationParser());
     }
 
-
     @Override
     public CacheManager cacheManager() {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory);
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
                 .json()
-                .defaultUseWrapper(true)
-                .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
                 .build();
-        JsonUtils.configure(objectMapper, false);
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        JsonUtils.configure(objectMapper);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);// 会写入类名
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
 
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair

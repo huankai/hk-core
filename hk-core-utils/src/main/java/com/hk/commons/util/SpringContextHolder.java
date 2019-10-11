@@ -6,8 +6,10 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.annotation.Order;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Spring Bean 工具类
@@ -16,6 +18,7 @@ import java.util.Map;
  * @date 2018-04-16 09:41
  */
 @Slf4j
+@Order(0)
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext;
@@ -37,6 +40,10 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         return (T) applicationContext.getBean(name);
     }
 
+    public static boolean containsBean(String name) {
+        return applicationContext.containsBean(name);
+    }
+
     /**
      * 根据Bean类型获取bean
      *
@@ -47,6 +54,11 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     public static <T> T getBean(Class<T> clazz) throws BeansException {
         return applicationContext.getBean(clazz);
     }
+
+    public static <T> Optional<T> getBeanIfExist(Class<T> clazz) {
+        return Optional.ofNullable(applicationContext.getBeanProvider(clazz).getIfAvailable());
+    }
+
 
     /**
      * 根据类型获取 Bean

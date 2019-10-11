@@ -17,9 +17,9 @@ public abstract class ValidateUtils {
     private static final Pattern IDCARD_PATTERN = Pattern
             .compile("^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0-2]\\d)|(3[0-1]))\\d{3}[\\dX]$");
 
-    private static final int[] IDCARD_WEIGHT = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+    private static final int[] ID_CARD_WEIGHT = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
 
-    private static final char[] IDCARD_VALIDATE_CODE = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
+    private static final char[] ID_CARD_VALIDATE_CODE = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
 
     /**
      * 邮箱号校验 pattern
@@ -29,7 +29,7 @@ public abstract class ValidateUtils {
     /**
      * 手机号校验 Pattern
      */
-    public static final Pattern MOBILEPHONE_PARTTERN = Pattern.compile("^(1[3-8][0-9])\\d{8}$");
+    private static final Pattern PHONE_PARTTERN = Pattern.compile("^(1[3-9][0-9])\\d{8}$");
 
     /**
      * is id Card,必须是合法的身份证
@@ -42,10 +42,10 @@ public abstract class ValidateUtils {
         if (matcher.find()) {
             int sum = 0;
             for (int i = 0, size = idCard.length() - 1; i < size; i++) {
-                sum += Integer.parseInt(String.valueOf(idCard.charAt(i))) * IDCARD_WEIGHT[i];
+                sum += Integer.parseInt(String.valueOf(idCard.charAt(i))) * ID_CARD_WEIGHT[i];
             }
             int mod = sum % 11;
-            return idCard.charAt(idCard.length() - 1) == IDCARD_VALIDATE_CODE[mod];
+            return idCard.charAt(idCard.length() - 1) == ID_CARD_VALIDATE_CODE[mod];
         }
         return false;
     }
@@ -66,7 +66,7 @@ public abstract class ValidateUtils {
      * @param args args
      * @return true or false
      */
-    public static boolean isMobilephone(CharSequence args) {
-        return StringUtils.isNotEmpty(args) && MOBILEPHONE_PARTTERN.matcher(args).find();
+    public static boolean isMobilePhone(CharSequence args) {
+        return StringUtils.isNotEmpty(args) && PHONE_PARTTERN.matcher(args).find();
     }
 }

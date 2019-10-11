@@ -1,10 +1,6 @@
 package com.hk.weixin.security;
 
-import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.api.UserPrincipal;
-
-import com.hk.weixin.WechatMpProperties;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
@@ -55,13 +51,14 @@ public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationPr
     /**
      * 配置
      */
-    private final WechatMpProperties.Authentication authentication;
+    private final String state;
 
-    public WechatCallbackAuthenticationFilter(WxMpService wxMpService, WechatMpProperties.Authentication authentication) {
+    public WechatCallbackAuthenticationFilter(WxMpService wxMpService, String callbackUrl, String state) {
         /* 处理 微信回调的url请求  */
-        super(new AntPathRequestMatcher(authentication.getCallbackUrl()));
+        super(new AntPathRequestMatcher(callbackUrl));
+        setAuthenticationDetailsSource(new WechatAuthenticationDetailsSource());
         this.wxService = wxMpService;
-        this.authentication = authentication;
+        this.state = state;
     }
 
     @Override
@@ -69,16 +66,14 @@ public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationPr
             throws AuthenticationException {
         final String code = request.getParameter(CODE_PARAM_NAME);
         final String state = request.getParameter(STATE_PARAM_NAME);
-        if (StringUtils.isNotEmpty(authentication.getState()) && StringUtils.notEquals(authentication.getState(), state)) {
+        if (StringUtils.isNotEmpty(this.state) && StringUtils.notEquals(this.state, state)) {
             throw new AuthenticationServiceException("登录失败，跨站请求伪造攻击");
         }
         if (StringUtils.isNotEmpty(code)) { // 用户同意授权
             try {
                 WxMpOAuth2AccessToken accessToken = wxService.oauth2getAccessToken(code);
                 WxMpUser mpUser = wxService.oauth2getUserInfo(accessToken, null);
-                UserPrincipal principal = new UserPrincipal(mpUser.getOpenId(), mpUser.getNickname(), false, mpUser.getNickname(), ByteConstants.ZERO, null, null,
-                        Byte.valueOf(String.valueOf(mpUser.getSex())), mpUser.getHeadImgUrl(), null, null);
-                WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(principal);
+                WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(mpUser);
                 setDetails(request, authenticationToken);
                 return getAuthenticationManager().authenticate(authenticationToken);
             } catch (WxErrorException e) {

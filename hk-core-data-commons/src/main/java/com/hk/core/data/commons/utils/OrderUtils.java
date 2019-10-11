@@ -2,6 +2,7 @@ package com.hk.core.data.commons.utils;
 
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.StringUtils;
 import com.hk.core.query.Order;
 import org.springframework.data.domain.Sort;
 
@@ -57,5 +58,20 @@ public abstract class OrderUtils {
         Iterator<Sort.Order> iterator = sort.iterator();
         iterator.forEachRemaining(item -> orders.add(new Order(item.getProperty(), item.isDescending())));
         return orders;
+    }
+
+    public static String toOrderSql(Collection<Order> orders) {
+        StringBuilder orderSql = new StringBuilder();
+        if (CollectionUtils.isNotEmpty(orders)) {
+            orderSql.append(" ORDER BY ");
+            int index = 0;
+            for (Order order : orders) {
+                if (index++ > 0) {
+                    orderSql.append(StringUtils.COMMA_SEPARATE);
+                }
+                orderSql.append(order.toString());
+            }
+        }
+        return orderSql.toString();
     }
 }

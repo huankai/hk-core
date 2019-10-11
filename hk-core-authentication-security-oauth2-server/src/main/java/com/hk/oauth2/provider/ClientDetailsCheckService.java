@@ -18,5 +18,5 @@ public interface ClientDetailsCheckService extends ClientDetailsService {
      * @return true or false，如果为 false ,抛出 {@link Oauth2ClientStatusException} 异常
      * @throws Oauth2ClientStatusException Oauth2ClientStatusException
      */
-    boolean isEnabled(String clientId) throws Oauth2ClientStatusException;
+    void check(String clientId) throws Oauth2ClientStatusException;
 }

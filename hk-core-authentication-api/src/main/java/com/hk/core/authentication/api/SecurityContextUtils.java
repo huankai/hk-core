@@ -1,5 +1,6 @@
 package com.hk.core.authentication.api;
 
+import com.hk.commons.util.Lazy;
 import com.hk.commons.util.SpringContextHolder;
 
 /**
@@ -8,7 +9,7 @@ import com.hk.commons.util.SpringContextHolder;
  */
 public abstract class SecurityContextUtils {
 
-    private static final SecurityContext SECURITY_CONTEXT = SpringContextHolder.getBean(SecurityContext.class);
+    private static final Lazy<SecurityContext> SECURITY_CONTEXT = Lazy.of(() -> SpringContextHolder.getBean(SecurityContext.class));
 
     /**
      * 获取当前登陆用户信息
@@ -16,7 +17,7 @@ public abstract class SecurityContextUtils {
      * @return {@link UserPrincipal}
      */
     public static UserPrincipal getPrincipal() {
-        return SECURITY_CONTEXT.getPrincipal();
+        return SECURITY_CONTEXT.get().getPrincipal();
     }
 
     /**
@@ -25,6 +26,6 @@ public abstract class SecurityContextUtils {
      * @return 登陆返回 true,否则返回 false
      */
     public static boolean isAuthenticated() {
-        return SECURITY_CONTEXT.isAuthenticated();
+        return SECURITY_CONTEXT.get().isAuthenticated();
     }
 }

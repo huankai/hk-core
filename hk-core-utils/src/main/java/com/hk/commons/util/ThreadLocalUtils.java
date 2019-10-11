@@ -15,8 +15,8 @@ public class ThreadLocalUtils {
     /**
      * 添加一个值
      *
-     * @param key
-     * @param value
+     * @param key   key
+     * @param value value
      * @return value
      */
     public static <T> T put(String key, T value) {
@@ -52,9 +52,8 @@ public class ThreadLocalUtils {
      * @see Map#get(Object)
      * @see ClassCastException
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T get(String key) {
-        return ((T) localMap.get().get(key));
+    public static <T> T get(String key, Class<T> clazz) {
+        return clazz.cast(localMap.get().get(key));
     }
 
     /**
@@ -77,9 +76,9 @@ public class ThreadLocalUtils {
      * @see this#get(String)
      * @see this#remove(String)
      */
-    public static <T> T getAndRemove(String key) {
+    public static <T> T getAndRemove(String key, Class<T> clazz) {
         try {
-            return get(key);
+            return get(key, clazz);
         } finally {
             remove(key);
         }

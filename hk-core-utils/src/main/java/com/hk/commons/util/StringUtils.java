@@ -1,11 +1,14 @@
 package com.hk.commons.util;
 
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.core.io.UrlResource;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,6 +69,38 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      * 空白字符
      */
     public static final String SPACE = org.apache.commons.lang3.StringUtils.SPACE;
+
+    /**
+     * ${xxx} ，其中 xxx 必须为 匹配字母或数字或下划线或数字。等价于 '[^A-Za-z0-9_]'
+     */
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{\\w+}");
+
+    /**
+     * 模板处理:
+     * <pre>
+     * 你好，你的验证码为 ${code},过期时间为 ${expire} 分钟
+     * 返回:  你好，你的验证码为 params.get("code"),过期时间为 params.get("expire") 分钟
+     * 注意: template 中的 变量必须是以 ${变量名} ，变量名正则 为 \\w {@link VARIABLE_PATTERN}
+     * </pre>
+     *
+     * @param template template
+     * @param params   params
+     * @return template
+     */
+    public static String processTemplate(String template, Map<String, ?> params) {
+        if (CollectionUtils.isEmpty(params)) {
+            return template;
+        }
+        StringBuffer sb = new StringBuffer();
+        Matcher m = VARIABLE_PATTERN.matcher(template);
+        while (m.find()) {
+            String param = m.group();
+            Object value = params.get(param.substring(2, param.length() - 1));// 截取 ${  与  }
+            m.appendReplacement(sb, value == null ? EMPTY : value.toString());
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
 
     /**
      * 下划线转小驼峰
@@ -280,7 +315,16 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
      * @return 切割后的数组
      */
     public static String[] splitByComma(String args) {
-        return tokenizeToStringArray(args, "\\,");
+        return tokenizeToStringArray(args, COMMA_SEPARATE);
+    }
+
+    public static <T> List<T> splitByComma(String args, Class<T> clazz) {
+        String[] list = splitByComma(args);
+        List<T> result = new ArrayList<>(list.length);
+        for (String item : list) {
+            result.add(ConverterUtils.defaultConvert(item, clazz));
+        }
+        return result;
     }
 
     /**
@@ -470,33 +514,14 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
     }
 
     /**
-     * string url 地址转成 {@link URL}
-     *
-     * @param url url
-     * @return {@link URL}
-     * @throws IllegalArgumentException 如果转换失败，抛出此异常
-     */
-    public static URL toURL(String url) {
-        try {
-            return new URL(url);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Failed to create url for : " + url);
-        }
-    }
-
-    /**
      * String url 转换成 {@link UrlResource}
      *
      * @param url url
      * @return {@link UrlResource}
-     * @throws IllegalArgumentException 如果转换失败，抛出此异常
      */
+    @SneakyThrows(value = {MalformedURLException.class})
     public static UrlResource createResource(String url) {
-        try {
-            return new UrlResource(url);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Failed to create url for : " + url);
-        }
+        return new UrlResource(url);
     }
 
 }

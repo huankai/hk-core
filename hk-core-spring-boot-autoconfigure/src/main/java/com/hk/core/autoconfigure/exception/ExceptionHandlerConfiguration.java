@@ -20,7 +20,6 @@ public class ExceptionHandlerConfiguration {
     /**
      * 公用异常处理
      *
-     * @return
      */
     @Bean
     public SimpleExceptionHandler simpleExceptionHandler() {
@@ -33,7 +32,7 @@ public class ExceptionHandlerConfiguration {
      */
     @Configuration
     @ConditionalOnClass(value = {ServiceException.class})
-    public class ServiceExceptionHandlerConfiguration {
+    static class ServiceExceptionHandlerConfiguration {
 
         @Bean
         public ServiceExceptionHandler jdbcExceptionHandler() {
@@ -46,7 +45,7 @@ public class ExceptionHandlerConfiguration {
      */
     @Configuration
     @ConditionalOnClass(value = {com.hk.core.data.jdbc.exception.EntityNotFoundException.class})
-    public class JdbcExceptionHandlerConfiguration {
+    static class JdbcExceptionHandlerConfiguration {
 
         @Bean
         public JdbcExceptionHandler jdbcExceptionHandler() {
@@ -59,7 +58,7 @@ public class ExceptionHandlerConfiguration {
      */
     @Configuration
     @ConditionalOnClass(value = {EntityNotFoundException.class})
-    public class JpaExceptionHandlerConfiguration {
+    static class JpaExceptionHandlerConfiguration {
 
         @Bean
         public JpaExceptionHandler jpaExceptionHandler() {
@@ -73,7 +72,7 @@ public class ExceptionHandlerConfiguration {
      */
     @Configuration
     @ConditionalOnClass(value = {SpringSecurityContext.class})
-    public class SpringSecurityExceptionHandlerConfiguration {
+    static class SpringSecurityExceptionHandlerConfiguration {
 
         @Bean
         public SpringSecurityExceptionHandler springSecurityExceptionHandler() {

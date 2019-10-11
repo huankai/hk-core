@@ -1,12 +1,12 @@
 package com.hk.core.solr;
 
+import com.hk.commons.http.HttpExecutor;
+import com.hk.commons.http.get.HttpGetHttpExecutor;
+import com.hk.commons.util.StringUtils;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.hk.commons.http.HttpExecutor;
-import com.hk.commons.http.get.SimpleGetHttpExecutor;
-import com.hk.commons.util.StringUtils;
 
 /**
  * Solr 增量导入
@@ -22,8 +22,8 @@ public abstract class SolrDeltaImportUtils {
      * @param entity   entity
      * @throws RuntimeException RuntimeException
      */
-    public static String simpleGetDeltaImport(String hostUrl, String solrCore, String entity) {
-        return deltaImport(new SimpleGetHttpExecutor(), hostUrl, solrCore, entity);
+    public static String httpGetDeltaImport(String hostUrl, String solrCore, String entity) {
+        return deltaImport(new HttpGetHttpExecutor(), hostUrl, solrCore, entity);
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class SolrDeltaImportUtils {
      * @param entity entity
      * @return P
      */
-    private static Map<String, Object> getDeltaImportParams(String entity) {
+    public static Map<String, Object> getDeltaImportParams(String entity) {
         Map<String, Object> params = new HashMap<>();
         params.put("verbose", "false");
         params.put("command", "delta-import");
@@ -63,10 +63,10 @@ public abstract class SolrDeltaImportUtils {
      * @param solrCore solrCore
      * @return solr dataImportUrl
      */
-    private static String getDataImportUrl(String hostUrl, String solrCore) {
+    public static String getDataImportUrl(String hostUrl, String solrCore) {
         if (!StringUtils.endsWith(hostUrl, "/")) {
             hostUrl += "/";
         }
-        return hostUrl + solrCore + "/dataimport";
+        return String.format("%s%s%s", hostUrl, solrCore, "/dataimport");
     }
 }

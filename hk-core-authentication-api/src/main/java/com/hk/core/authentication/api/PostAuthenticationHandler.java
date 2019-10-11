@@ -13,8 +13,7 @@ public interface PostAuthenticationHandler<T extends UserPrincipal, P> {
      * 认证处理
      *
      * @param principal principal
-     * @param <T>
-     * @return
+     * @return T
      */
     T handler(P principal);
 

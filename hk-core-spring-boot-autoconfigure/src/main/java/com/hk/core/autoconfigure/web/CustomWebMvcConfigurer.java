@@ -5,19 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.hk.commons.converters.*;
-import com.hk.commons.util.ClassUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.JsonUtils;
-import com.hk.commons.util.SpringContextHolder;
+import com.hk.commons.util.*;
 import com.hk.commons.util.date.DatePattern;
-import com.hk.core.authentication.api.method.support.LoginUserHandlerMethodArgumentResolver;
+import com.hk.core.jdbc.deserializer.ConditionQueryModelDeserializer;
+import com.hk.core.jdbc.query.ConditionQueryModel;
 import com.hk.core.web.ServletContextHolder;
 import com.hk.core.web.filter.XssFilter;
 import com.hk.core.web.interceptors.GlobalPropertyInterceptor;
 import com.hk.core.web.mvc.CustomRequestMappingHandlerMapping;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
@@ -27,7 +24,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -48,14 +44,12 @@ import java.util.Map;
 public class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
     @Bean
-    @ConditionalOnClass(SpringContextHolder.class)
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
     }
 
     @Bean
     @ConditionalOnWebApplication
-    @ConditionalOnClass(ServletContextHolder.class)
     public ServletContextHolder servletContextHolder() {
         return new ServletContextHolder();
     }
@@ -77,11 +71,14 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         return jacksonObjectMapperBuilder -> {
             SimpleFilterProvider filterProvider = new SimpleFilterProvider();
             filterProvider.addFilter(JsonUtils.IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
-                    SimpleBeanPropertyFilter.serializeAllExcept(JsonUtils.HANDLER, JsonUtils.HIBERNATE_LAZY_INITIALIZER));
+                    SimpleBeanPropertyFilter.serializeAllExcept(AuditField.AUDIT_FIELD_ARRAY));
             jacksonObjectMapperBuilder.modules(JsonUtils.modules())
+                    .filters(filterProvider)
+                    .deserializerByType(ConditionQueryModel.class, new ConditionQueryModelDeserializer())
                     .dateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
                     .featuresToDisable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                    .filters(filterProvider).failOnUnknownProperties(true)
+                    .failOnUnknownProperties(false)//当设置为 true时，如果对象中没有指定属性，而前端传过来了不存在的的属性将抛出异常
+                    .failOnEmptyBeans(false)
                     .locale(Locale.CHINA);
         };
     }
@@ -154,15 +151,15 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         registry.addConverter(new StringToLocalDateTimeConverter());
     }
 
-    /**
-     * 添加方法参数解析
-     *
-     * @param resolvers resolvers
-     */
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginUserHandlerMethodArgumentResolver());
-    }
+//    /**
+//     * 添加方法参数解析
+//     *
+//     * @param resolvers resolvers
+//     */
+//    @Override
+//    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+//        resolvers.add(new LoginUserHandlerMethodArgumentResolver());
+//    }
 
     /**
      * 添加拦截器

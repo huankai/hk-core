@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author kevin
  * @date 2019-06-19 09:30:05
  */
-public class AccessTokenInterceptor extends HandlerInterceptorAdapter {
+class AccessTokenInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

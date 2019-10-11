@@ -1,6 +1,6 @@
 package com.hk.core.service.jdbc;
 
-import com.hk.core.data.jdbc.query.CompositeCondition;
+import com.hk.core.jdbc.query.CompositeCondition;
 import com.hk.core.service.DeleteService;
 import org.springframework.data.domain.Persistable;
 

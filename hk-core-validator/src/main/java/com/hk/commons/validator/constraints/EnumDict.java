@@ -32,7 +32,7 @@ public @interface EnumDict {
     /**
      * 字典id
      */
-    String codeId();
+    long codeId();
 
     /**
      * 错误提示信息

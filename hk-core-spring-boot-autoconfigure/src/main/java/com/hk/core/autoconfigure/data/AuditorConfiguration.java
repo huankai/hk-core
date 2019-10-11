@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.data;
 
-import com.hk.commons.util.Contants;
 import com.hk.core.authentication.api.SecurityContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,16 +16,16 @@ import java.util.Optional;
  * @date 2018-10-10 10:11
  */
 @Configuration
-@ConditionalOnClass(value = {SecurityContext.class})
+@ConditionalOnClass(value = {AuditorAware.class, SecurityContext.class})
 public class AuditorConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(value = AuditorAware.class)
-    public AuditorAware<String> userIdAuditor(SecurityContext securityContext) {
+    public AuditorAware<Long> userIdAuditor(SecurityContext securityContext) {
         return new UserAuditorAware(securityContext);
     }
 
-    private class UserAuditorAware implements AuditorAware<String> {
+    private static class UserAuditorAware implements AuditorAware<Long> {
 
         private SecurityContext securityContext;
 
@@ -35,9 +34,9 @@ public class AuditorConfiguration {
         }
 
         @Override
-        public Optional<String> getCurrentAuditor() {
+        public Optional<Long> getCurrentAuditor() {
             return Optional.of(securityContext.isAuthenticated() ? securityContext.getPrincipal().getUserId()
-                    : Contants.DEFAULT_VALUE);
+                    : 0L);
         }
     }
 }

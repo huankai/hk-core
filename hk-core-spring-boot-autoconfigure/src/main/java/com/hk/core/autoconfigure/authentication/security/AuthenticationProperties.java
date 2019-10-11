@@ -1,9 +1,11 @@
 package com.hk.core.autoconfigure.authentication.security;
 
 import com.hk.core.authentication.api.PermitMatcher;
+import com.hk.core.autoconfigure.authentication.security.oauth2.Oauth2ClientAutoConfiguration;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashSet;
@@ -14,6 +16,7 @@ import java.util.Set;
  * @date 2018-07-26 16:59
  */
 @Data
+@RefreshScope
 @ConfigurationProperties(prefix = "hk.authentication")
 public class AuthenticationProperties {
 
@@ -36,10 +39,11 @@ public class AuthenticationProperties {
     private ImageCodeProperties imageCode = new ImageCodeProperties();
 
     /**
-     * 默认失败页面
+     * oauth2 client 登陆默认失败地址
      *
      * @see com.hk.core.autoconfigure.exception.Oauth2ErrorController
      * @see org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler#defaultFailureUrl
+     * @see Oauth2ClientAutoConfiguration#beanPostProcessor()
      */
     private String defaultFailureUrl = "/oauth2-error";
 
@@ -103,7 +107,7 @@ public class AuthenticationProperties {
         /**
          * 退出成功后的请求地址
          */
-        private String logoutSuccessUrl = "/";
+        private String logoutSuccessUrl = getLoginUrl();
 
         /**
          * 是否使用 https
@@ -235,9 +239,24 @@ public class AuthenticationProperties {
         private String codeParameter = "phoneCode";
 
         /**
+         * 登录短信发送地址
+         */
+        private String sendUri = "/mobile/sender";
+
+        /**
          * 手机号登陆请求地址
          */
         private String phoneLoginUri = "/mobile/login";
+
+        /**
+         * oauth2 认证服务器 手机号登陆返回 access_token 信息 的 clientId
+         */
+        private String clientId;
+
+        /**
+         * oauth2 认证服务器 手机号登陆返回 access_token 信息 的 clientSecret
+         */
+        private String clientSecret;
     }
 
 }
