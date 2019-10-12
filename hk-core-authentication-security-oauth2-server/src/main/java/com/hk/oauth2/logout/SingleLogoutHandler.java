@@ -1,5 +1,7 @@
 package com.hk.oauth2.logout;
 
+import com.hk.commons.util.StringUtils;
+import com.hk.core.authentication.oauth2.utils.AccessTokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -22,8 +24,9 @@ public class SingleLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        if (authentication != null) {
-            singleLogoutServiceMessageHandler.handle(authentication);
+        String tokenValue = AccessTokenUtils.getAccessToken(request);
+        if (StringUtils.isNotEmpty(tokenValue)) {
+            singleLogoutServiceMessageHandler.handle(tokenValue);
         }
     }
 }

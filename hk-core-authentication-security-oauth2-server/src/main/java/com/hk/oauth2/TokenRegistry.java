@@ -1,7 +1,6 @@
 package com.hk.oauth2;
 
 import com.hk.oauth2.logout.LogoutRequest;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
@@ -22,18 +21,12 @@ public interface TokenRegistry {
     void addAccessToken(OAuth2Authentication authentication, OAuth2AccessToken accessToken);
 
     /**
-     * 删除 token
+     * 销毁
      *
-     * @param authentication authentication
-     * @return List<LogoutRequest>
+     * @param tokenValue
+     * @return
      */
-    List<LogoutRequest> destroyAccessToken(Authentication authentication);
+    List<LogoutRequest> destroy(String tokenValue);
 
-    /**
-     * 根据 sessionId 删除 token
-     *
-     * @param id id，sessionId
-     */
-    void deleteById(String id);
 
 }

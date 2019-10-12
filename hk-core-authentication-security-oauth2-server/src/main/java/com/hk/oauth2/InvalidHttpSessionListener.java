@@ -12,7 +12,6 @@ public class InvalidHttpSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        String sessionId = se.getSession().getId();
-        tokenRegistry.deleteById(sessionId);
+        tokenRegistry.destroy(se.getSession().getId());
     }
 }
