@@ -8,6 +8,7 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public abstract class AbstractHttpExecutor<T> {
         this.responseHandler = responseHandler;
     }
 
-    protected final T doExecute(HttpUriRequest request) {
+    protected final T doExecute(HttpUriRequest request)throws IOException {
         return HttpClientUtils.execute(this.httpClient, request, this.responseHandler);
     }
 

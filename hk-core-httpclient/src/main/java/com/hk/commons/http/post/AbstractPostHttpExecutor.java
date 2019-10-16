@@ -5,6 +5,8 @@ import com.hk.commons.http.utils.HttpUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ResponseHandler;
 
+import java.io.IOException;
+
 /**
  * Post 请求
  *
@@ -25,7 +27,7 @@ public abstract class AbstractPostHttpExecutor<T, P> extends AbstractHttpExecuto
      * @param params 请求参数
      * @return 响应结果
      */
-    public T execute(String uri, P params) {
+    public T execute(String uri, P params) throws IOException {
         return doExecute(HttpUtils.newHttpPost(uri, generateEntity(params), getHeaders()));
     }
 

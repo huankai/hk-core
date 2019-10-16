@@ -12,6 +12,11 @@
         <version>2.1.8.RELEASE</version>
     </parent>
 
+    <properties>
+        <springboot.rocketmq.version>2.0.3</springboot.rocketmq.version>
+        <rocketmq.version>4.5.2</rocketmq.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.hk</groupId>
@@ -19,7 +24,38 @@
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-bus-rocketmq</artifactId>
+            <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.rocketmq</groupId>
+                    <artifactId>rocketmq-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <version>${springboot.rocketmq.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>rocketmq-client</artifactId>
+                    <groupId>org.apache.rocketmq</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>rocketmq-acl</artifactId>
+                    <groupId>org.apache.rocketmq</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>rocketmq-client</artifactId>
+            <groupId>org.apache.rocketmq</groupId>
+            <version>${rocketmq.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>rocketmq-acl</artifactId>
+            <groupId>org.apache.rocketmq</groupId>
+            <version>${rocketmq.version}</version>
         </dependency>
     </dependencies>
 

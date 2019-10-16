@@ -36,9 +36,11 @@ import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.nio.charset.CodingErrorAction;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * http client 异步 工具类
@@ -110,7 +112,8 @@ public abstract class AsyncHttpClientUtils {
      * @param headers        　请求头
      * @return 结果，如果 futureCallback 不为 null，结果需要在此回调中获得
      */
-    public static String get(String uri, Map<String, ?> params, FutureCallback<HttpResponse> futureCallback, Header... headers) {
+    public static String get(String uri, Map<String, ?> params, FutureCallback<HttpResponse> futureCallback,
+                             Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0));
         CollectionUtils.addAllNotNull(headerList, headers);
         return execute(createDefaultHttpAsyncClient(),
@@ -127,7 +130,8 @@ public abstract class AsyncHttpClientUtils {
      * @param headers        　请求头
      * @return 结果，如果 futureCallback 不为 null，结果需要在此回调中获得
      */
-    public static String delete(String uri, Map<String, ?> params, FutureCallback<HttpResponse> futureCallback, Header... headers) {
+    public static String delete(String uri, Map<String, ?> params, FutureCallback<HttpResponse> futureCallback,
+                                Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0));
         CollectionUtils.addAllNotNull(headerList, headers);
         return execute(createDefaultHttpAsyncClient(),
@@ -135,8 +139,9 @@ public abstract class AsyncHttpClientUtils {
                 futureCallback);
     }
 
-    @SneakyThrows
-    public static String execute(CloseableHttpAsyncClient asyncClient, HttpUriRequest request, FutureCallback<HttpResponse> futureCallback) {
+    @SneakyThrows(value = {InterruptedException.class, ExecutionException.class})
+    public static String execute(CloseableHttpAsyncClient asyncClient, HttpUriRequest request,
+                                 FutureCallback<HttpResponse> futureCallback) throws IOException {
         try (CloseableHttpAsyncClient asyncHttpClient = asyncClient) {
             asyncClient.start();
             HttpResponse httpResponse = asyncHttpClient.execute(request, futureCallback).get();
@@ -163,7 +168,8 @@ public abstract class AsyncHttpClientUtils {
      * @param headers        　请求头
      * @return 结果，如果 futureCallback 不为 null，结果需要在此回调中获得
      */
-    public static String simplePost(String uri, Map<String, ?> params, FutureCallback<HttpResponse> futureCallback, Header... headers) {
+    public static String simplePost(String uri, Map<String, ?> params, FutureCallback<HttpResponse> futureCallback,
+                                    Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0));
         CollectionUtils.addAllNotNull(headerList, headers);
         return execute(createDefaultHttpAsyncClient(),
@@ -175,12 +181,12 @@ public abstract class AsyncHttpClientUtils {
      * json http Post 异步调用，添加请求头： Content-Type:application/json;charset=utf-8
      *
      * @param uri            请求地址
-     * @param params         请求参数
      * @param futureCallback 异步回调，如果 为 null　时，直接返回结果
      * @param headers        　请求头
      * @return 结果，如果 futureCallback 不为 null，结果需要在此回调中获得
      */
-    public static String jsonPost(String uri, Object body, FutureCallback<HttpResponse> futureCallback, Header... headers) {
+    public static String jsonPost(String uri, Object body, FutureCallback<HttpResponse> futureCallback,
+                                  Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0),
                 new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString()));
         CollectionUtils.addAllNotNull(headerList, headers);
@@ -193,12 +199,12 @@ public abstract class AsyncHttpClientUtils {
      * 附件 http Post 异步调用
      *
      * @param uri            请求地址
-     * @param params         请求参数
      * @param futureCallback 异步回调，如果 为 null　时，直接返回结果
      * @param headers        　请求头
      * @return 结果，如果 futureCallback 不为 null，结果需要在此回调中获得
      */
-    public static String mimePost(String uri, Map<String, ContentBody> contentBody, FutureCallback<HttpResponse> futureCallback, Header... headers) {
+    public static String mimePost(String uri, Map<String, ContentBody> contentBody, FutureCallback<HttpResponse> futureCallback,
+                                  Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0));
         CollectionUtils.addAllNotNull(headerList, headers);
         HttpPost httpPost = HttpUtils.newHttpPost(uri, HttpUtils.contentBodyToHttpEntity(contentBody), headerList.toArray(new Header[0]));

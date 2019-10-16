@@ -7,13 +7,13 @@ import com.hk.commons.http.utils.HttpUtils;
 import org.apache.http.Header;
 import org.apache.http.concurrent.FutureCallback;
 
+import java.io.IOException;
 import java.util.Map;
 
 
 /**
  * Http Get 请求
  *
- * @param <T>
  * @author kevin
  * @see com.hk.commons.http.HttpClientUtils#get(String, Map, Header...)
  * @see com.hk.commons.http.async.AsyncHttpClientUtils#get(String, Map, FutureCallback, Header...)
@@ -25,7 +25,7 @@ public final class HttpGetHttpExecutor extends AbstractHttpExecutor<String> impl
     }
 
     @Override
-    public String execute(String uri, Map<String, Object> params) {
+    public String execute(String uri, Map<String, Object> params) throws IOException {
         return doExecute(HttpUtils.newHttpGet(uri, params, getHeaders()));
     }
 }

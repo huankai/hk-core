@@ -83,7 +83,7 @@ public abstract class HttpUtils {
      * 创建 http Post 请求
      *
      * @param uri     　uri
-     * @param params  请求参数
+     * @param entity  请求参数
      * @param headers 请求头
      * @return {@link HttpPost}
      */
@@ -120,7 +120,7 @@ public abstract class HttpUtils {
     /**
      * uri 请求参数 转换为 请求体
      *
-     * @param contentBody 　params
+     * @param params 　params
      * @return {@link HttpEntity}
      */
     public static HttpEntity toHttpEntity(Map<String, ?> params) {

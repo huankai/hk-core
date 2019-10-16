@@ -5,7 +5,6 @@ import com.hk.commons.http.utils.HttpUtils;
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.JsonUtils;
-import lombok.SneakyThrows;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -22,6 +21,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +72,7 @@ public abstract class HttpClientUtils {
      * @return 字符串表现形式的响应内容
      * @see com.hk.commons.http.get.HttpGetHttpExecutor
      */
-    public static String get(String uri, Map<String, ?> params, Header... headers) {
+    public static String get(String uri, Map<String, ?> params, Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0));
         CollectionUtils.addAllNotNull(headerList, headers);
         return execute(DEFAULT_HTTP_CLIENT,
@@ -88,7 +88,7 @@ public abstract class HttpClientUtils {
      * @return 字符串表现形式的响应内容
      * @see com.hk.commons.http.delete.HttpDeleteHttpExecutor
      */
-    public static String delete(String uri, Map<String, ?> params, Header... headers) {
+    public static String delete(String uri, Map<String, ?> params, Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0));
         CollectionUtils.addAllNotNull(headerList, headers);
         return execute(DEFAULT_HTTP_CLIENT,
@@ -102,7 +102,7 @@ public abstract class HttpClientUtils {
      * @param request    request
      * @return 字符串表现形式的响应内容
      */
-    public static String execute(CloseableHttpClient httpClient, HttpUriRequest request) {
+    public static String execute(CloseableHttpClient httpClient, HttpUriRequest request) throws IOException {
         return execute(httpClient, request, UTF8ResponseHandler.getInstance());
     }
 
@@ -113,7 +113,7 @@ public abstract class HttpClientUtils {
      * @param responseHandler 响应数据处理器
      * @return 响应内容
      */
-    public static <T> T execute(HttpUriRequest request, ResponseHandler<T> responseHandler) {
+    public static <T> T execute(HttpUriRequest request, ResponseHandler<T> responseHandler) throws IOException {
         return execute(DEFAULT_HTTP_CLIENT, request, responseHandler);
     }
 
@@ -125,8 +125,7 @@ public abstract class HttpClientUtils {
      * @param responseHandler 响应数据处理器
      * @return 响应内容
      */
-    @SneakyThrows
-    public static <T> T execute(CloseableHttpClient httpClient, HttpUriRequest request, ResponseHandler<T> responseHandler) {
+    public static <T> T execute(CloseableHttpClient httpClient, HttpUriRequest request, ResponseHandler<T> responseHandler) throws IOException {
         try (CloseableHttpClient closeableHttpClient = httpClient) {
             return closeableHttpClient.execute(request, responseHandler);
         }
@@ -141,7 +140,7 @@ public abstract class HttpClientUtils {
      * @return
      * @see com.hk.commons.http.post.SimplePostHttpExecutor
      */
-    public static String simplePost(String uri, Map<String, ?> params, Header... headers) {
+    public static String simplePost(String uri, Map<String, ?> params, Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0));
         CollectionUtils.addAllNotNull(headerList, headers);
         return execute(DEFAULT_HTTP_CLIENT, HttpUtils.newHttpPost(uri,
@@ -157,7 +156,7 @@ public abstract class HttpClientUtils {
      * @return
      * @see com.hk.commons.http.post.JsonPostHttpExecutor
      */
-    public static String jsonPost(String uri, Object body, Header... headers) {
+    public static String jsonPost(String uri, Object body, Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0),
                 new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString()));
         CollectionUtils.addAllNotNull(headerList, headers);
@@ -174,7 +173,7 @@ public abstract class HttpClientUtils {
      * @return
      * @see com.hk.commons.http.post.MimePostHttpExecutor
      */
-    public static String mimePost(String uri, Map<String, ContentBody> contentBody, Header... headers) {
+    public static String mimePost(String uri, Map<String, ContentBody> contentBody, Header... headers) throws IOException {
         List<Header> headerList = ArrayUtils.asArrayList(HttpUtils.DEFAULT_HEADER.get(0));
         CollectionUtils.addAllNotNull(headerList, headers);
         return execute(DEFAULT_HTTP_CLIENT,
