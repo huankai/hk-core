@@ -1,10 +1,12 @@
 package com.hk.core.autoconfigure.weixin;
 
-import me.chanjar.weixin.mp.api.WxMpConfigStorage;
-import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
-import org.springframework.boot.autoconfigure.condition.*;
+import me.chanjar.weixin.mp.config.WxMpConfigStorage;
+import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +30,8 @@ public class WechatMpConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public WxMpConfigStorage configStorage() {
-        WxMpInMemoryConfigStorage configStorage = new WxMpInMemoryConfigStorage();
+    public WxMpDefaultConfigImpl configStorage() {
+        WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
         configStorage.setAppId(properties.getAppId());
         configStorage.setSecret(properties.getSecret());
         configStorage.setToken(properties.getToken());
