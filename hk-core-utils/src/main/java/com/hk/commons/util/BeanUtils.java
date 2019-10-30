@@ -1,7 +1,9 @@
 package com.hk.commons.util;
 
+import com.hk.commons.cglib.BeanConverter;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.FatalBeanException;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.util.ClassUtils;
 
 import java.beans.PropertyDescriptor;
@@ -77,6 +79,17 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
             }
         }
         return result;
+    }
+
+    /**
+     * 使用此方法进行拷贝时，类型必须一样，基本类型也必须一样，否则拷贝不成功。如 int -> Integer 不会拷贝成功
+     *
+     * @param source 源对象
+     * @param target 拷贝后的对象
+     */
+    public static void copicerCopyNotNullProperties(Object source, Object target) {
+        BeanCopier beanCopier = BeanCopier.create(source.getClass(), target.getClass(), true);
+        beanCopier.copy(source, target, new BeanConverter(target));
     }
 
     /**

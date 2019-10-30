@@ -428,7 +428,7 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
         ID id = t.getId();
         AssertUtils.isTrueWithI18n(ObjectUtils.isNotEmpty(id), "update.id.notEmpty");
         T find = getOne(id);
-        BeanUtils.copyNotNullProperties(t, find);
+        BeanUtils.copicerCopyNotNullProperties(t, find);
         return save(find);
     }
 

@@ -41,7 +41,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     }
 
     public static boolean containsBean(String name) {
-        return applicationContext.containsBean(name);
+        return applicationContext != null && applicationContext.containsBean(name);
     }
 
     /**
@@ -52,11 +52,11 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * @throws BeansException {@link BeansException}
      */
     public static <T> T getBean(Class<T> clazz) throws BeansException {
-        return applicationContext.getBean(clazz);
+        return applicationContext == null ? null : applicationContext.getBean(clazz);
     }
 
     public static <T> Optional<T> getBeanIfExist(Class<T> clazz) {
-        return Optional.ofNullable(applicationContext.getBeanProvider(clazz).getIfAvailable());
+        return Optional.ofNullable(applicationContext == null ? null : applicationContext.getBeanProvider(clazz).getIfAvailable());
     }
 
 

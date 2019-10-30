@@ -2,8 +2,8 @@ package org.hibernate.id;
 
 import com.hk.commons.util.Lazy;
 import com.hk.commons.util.SnowflakeIdGenerator;
+import com.hk.commons.util.SnowflakeProperties;
 import com.hk.commons.util.SpringContextHolder;
-import com.hk.core.data.commons.properties.SnowflakeProperties;
 import lombok.NoArgsConstructor;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

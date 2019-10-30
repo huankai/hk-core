@@ -2,8 +2,8 @@ package com.hk.core.autoconfigure.data.jdbc;
 
 import com.hk.commons.util.Lazy;
 import com.hk.commons.util.SnowflakeIdGenerator;
+import com.hk.commons.util.SnowflakeProperties;
 import com.hk.commons.util.SpringContextHolder;
-import com.hk.core.data.commons.properties.SnowflakeProperties;
 import com.hk.core.data.jdbc.repository.BaseJdbcRepositoryFactoryBean;
 import com.hk.core.data.jpa.domain.AbstractSnowflakeIdPersistable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

@@ -1,4 +1,4 @@
-package com.hk.core.data.commons.properties;
+package com.hk.commons.util;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

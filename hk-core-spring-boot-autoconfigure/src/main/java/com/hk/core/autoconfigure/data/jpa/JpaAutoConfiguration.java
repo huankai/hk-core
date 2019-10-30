@@ -1,18 +1,12 @@
 package com.hk.core.autoconfigure.data.jpa;
 
-import com.hk.core.data.commons.properties.SnowflakeProperties;
+import com.hk.commons.util.SnowflakeProperties;
 import com.hk.core.data.jpa.BaseJpaRepositoryFactoryBean;
 import com.hk.core.data.jpa.repository.BaseJpaRepository;
-import com.hk.core.jdbc.JdbcSession;
-import com.hk.core.jdbc.dialect.Dialect;
-import com.hk.core.jdbc.dialect.MysqlDialect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
  * <p>
