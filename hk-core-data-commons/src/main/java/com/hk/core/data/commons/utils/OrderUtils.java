@@ -63,15 +63,16 @@ public abstract class OrderUtils {
     public static String toOrderSql(Collection<Order> orders) {
         StringBuilder orderSql = new StringBuilder();
         if (CollectionUtils.isNotEmpty(orders)) {
-            orderSql.append(" ORDER BY ");
             int index = 0;
             for (Order order : orders) {
-                if (index++ > 0) {
-                    orderSql.append(StringUtils.COMMA_SEPARATE);
+                if (StringUtils.isNotEmpty(SqlEscapeUtils.escape(order.getField()))) {
+                    if (index++ > 0) {
+                        orderSql.append(StringUtils.COMMA_SEPARATE);
+                    }
+                    orderSql.append(order.toString());
                 }
-                orderSql.append(order.toString());
             }
         }
-        return orderSql.toString();
+        return StringUtils.isEmpty(orderSql.toString()) ? StringUtils.EMPTY : orderSql.insert(0, " ORDER BY ").toString();
     }
 }
