@@ -6,6 +6,7 @@ import com.hk.commons.util.EnumDisplayUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -125,6 +126,14 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
         String message = fieldError.getField() + fieldError.getDefaultMessage();
         error(e, message, request);
         return JsonResult.badRequest(message);
+    }
+
+    @ExceptionHandler(value = BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public JsonResult<Void> bindException(BindException bindException, HttpServletRequest request) {
+        FieldError fieldError = bindException.getBindingResult().getFieldError();
+        error(bindException, fieldError.getDefaultMessage(), request);
+        return JsonResult.badRequest(fieldError.getDefaultMessage());
     }
 
     /**
