@@ -34,4 +34,8 @@ public abstract class Base64Utils extends org.springframework.util.Base64Utils {
         return encodeToString(IOUtils.toByteArray(is));
     }
 
+    public static byte[] decodeFromBas64String(String base64String) {
+        return decodeFromString(StringUtils.substringAfter(base64String, ";base64,"));
+    }
+
 }
