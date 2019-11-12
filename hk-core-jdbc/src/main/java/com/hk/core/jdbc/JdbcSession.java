@@ -89,7 +89,7 @@ public final class JdbcSession {
     /**
      * 集合查询
      *
-     * @param arguments       arguments
+     * @param arguments        arguments
      * @param retrieveRowCount retrieveRowCount
      * @return {@link ListResult}
      */
@@ -125,9 +125,9 @@ public final class JdbcSession {
     /**
      * 查询返回对象，支持驼峰命名的属性
      *
-     * @param arguments       arguments
+     * @param arguments        arguments
      * @param retrieveRowCount retrieveRowCount
-     * @param clazz           clazz
+     * @param clazz            clazz
      * @return {@link ListResult}
      */
     public <T> ListResult<T> queryForList(SelectArguments arguments, boolean retrieveRowCount, Class<T> clazz) {
@@ -152,9 +152,9 @@ public final class JdbcSession {
     /**
      * 集合查询
      *
-     * @param arguments       arguments
+     * @param arguments        arguments
      * @param retrieveRowCount retrieveRowCount
-     * @param rowMapper       rowMapper
+     * @param rowMapper        rowMapper
      * @return {@link ListResult}
      */
     private <T> ListResult<T> queryForList(SelectArguments arguments, boolean retrieveRowCount, RowMapper<T> rowMapper) {
@@ -173,6 +173,11 @@ public final class JdbcSession {
             rowCount = queryResult.size();
         }
         return new ListResult<>(rowCount, queryResult);
+    }
+
+    public <T> T queryForScalar(SelectArguments arguments, Class<T> clazz) {
+        SelectStatement statement = buildSelect(arguments);
+        return queryForScalar(statement.selectSql.toString(), clazz, statement.parameters.toArray());
     }
 
     /**
