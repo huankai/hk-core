@@ -18,6 +18,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 public final class Order implements Serializable {
 
+    private static final String DESC = "DESC";
+
+    private static final String ASC = "ASC";
+
     /**
      * 排序字段
      */
@@ -50,6 +54,6 @@ public final class Order implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s %s", field, (desc ? "DESC" : "ASC"));
+        return String.format("%s %s", field, (desc ? DESC : ASC));
     }
 }

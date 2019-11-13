@@ -111,8 +111,8 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     @Override
     public void destroy() {
-        if (log.isInfoEnabled()) {
-            log.info("applicationContext destroy......");
+        if (log.isDebugEnabled()) {
+            log.debug("applicationContext destroy......");
         }
         applicationContext = null;
     }
