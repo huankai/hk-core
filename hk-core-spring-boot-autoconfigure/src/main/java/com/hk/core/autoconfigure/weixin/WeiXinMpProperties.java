@@ -17,8 +17,8 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @RefreshScope
-@ConfigurationProperties(prefix = "wechat.mp")
-public class WechatMpProperties {
+@ConfigurationProperties(prefix = "wx.mp")
+public class WeiXinMpProperties {
 
     private boolean enabled;
     /**

@@ -146,7 +146,7 @@ public final class JdbcSession {
      */
     public <T> QueryPage<T> queryForPage(SelectArguments arguments, Class<T> clazz) {
         ListResult<T> result = queryForList(arguments, true, clazz);
-        return new SimpleQueryPage<>(result.getResult(), result.getTotalRowCount(), arguments.getStartRowIndex(), arguments.getPageSize());
+        return new SimpleQueryPage<>(result.getResult(), result.getTotalRowCount(), arguments.getStartRowIndex() + 1, arguments.getPageSize());
     }
 
     /**
@@ -167,7 +167,8 @@ public final class JdbcSession {
                 return new ListResult<>(rowCount, new ArrayList<>());
             }
         }
-        List<T> queryResult = queryForList(stmt.selectSql.toString(), rowMapper, arguments.getStartRowIndex(),
+        List<T> queryResult = queryForList(stmt.selectSql.toString(), rowMapper,
+                arguments.getStartRowIndex() * arguments.getPageSize(),
                 arguments.getPageSize(), params);
         if (0 == rowCount) {
             rowCount = queryResult.size();

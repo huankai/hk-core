@@ -70,7 +70,7 @@ public enum Status {
     /**
      * 成功状态码
      */
-    static final int SUCCESS_STATUS = 100200;
+    static final int SUCCESS_STATUS = 10200;
 
     private static final Map<Status, EnumDisplayUtils.EnumItem> map;
 

@@ -17,7 +17,7 @@ import org.springframework.security.core.AuthenticationException;
  * @date 2018年2月8日上午11:25:39
  */
 @RequiredArgsConstructor
-public class WechatAuthenticationProvider implements AuthenticationProvider {
+public class WeiXinAuthenticationProvider implements AuthenticationProvider {
 
     private final PostAuthenticationHandler<UserPrincipal, WxMpUser> authenticationHandler;
 
@@ -25,12 +25,12 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         UserPrincipal principal = authenticationHandler.handler((WxMpUser) authentication.getPrincipal());
         AssertUtils.notNull(principal, "principal Must not be null.");
-        return new WechatAuthenticationToken(principal, null);
+        return new WeiXinAuthenticationToken(principal, null);
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return WechatAuthenticationToken.class.isAssignableFrom(authentication);
+        return WeiXinAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
 }

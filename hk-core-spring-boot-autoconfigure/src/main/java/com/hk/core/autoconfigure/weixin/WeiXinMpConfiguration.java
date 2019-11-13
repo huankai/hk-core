@@ -17,14 +17,14 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnClass(WxMpService.class)
-//@Conditional(WechatMpConfiguration.WeixinMpCondition.class)
+//@Conditional(WeiXinMpConfiguration.WeixinMpCondition.class)
 @ConditionalOnProperty(prefix = "wechat.mp", name = "enabled", havingValue = "true")
-@EnableConfigurationProperties(WechatMpProperties.class)
-public class WechatMpConfiguration {
+@EnableConfigurationProperties(WeiXinMpProperties.class)
+public class WeiXinMpConfiguration {
 
-    private WechatMpProperties properties;
+    private WeiXinMpProperties properties;
 
-    public WechatMpConfiguration(WechatMpProperties properties) {
+    public WeiXinMpConfiguration(WeiXinMpProperties properties) {
         this.properties = properties;
     }
 

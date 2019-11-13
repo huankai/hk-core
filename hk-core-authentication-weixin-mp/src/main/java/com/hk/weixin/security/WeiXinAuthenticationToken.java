@@ -13,7 +13,7 @@ import java.util.Collection;
  * @author kevin
  * @date 2018年2月8日上午11:14:18
  */
-public class WechatAuthenticationToken extends AbstractAuthenticationToken {
+public class WeiXinAuthenticationToken extends AbstractAuthenticationToken {
 
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
@@ -25,7 +25,7 @@ public class WechatAuthenticationToken extends AbstractAuthenticationToken {
     /**
      * 微信用户，未认证
      */
-    public WechatAuthenticationToken(Object principal) {
+    public WeiXinAuthenticationToken(Object principal) {
         super(null);
         this.principal = principal;
         setAuthenticated(false);
@@ -37,7 +37,7 @@ public class WechatAuthenticationToken extends AbstractAuthenticationToken {
      * @param principal   认证对象
      * @param authorities 权限
      */
-    public WechatAuthenticationToken(Object principal, Collection<? extends GrantedAuthority> authorities) {
+    public WeiXinAuthenticationToken(Object principal, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         super.setAuthenticated(true);

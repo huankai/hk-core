@@ -139,8 +139,8 @@ public abstract class DateTimeUtils {
     /**
      * string To LocalDateTime
      *
-     * @param date    date
-     * @param pattern pattern
+     * @param text     date
+     * @param patterns pattern
      * @return localDateTime
      */
     public static LocalDateTime stringToLocalDateTime(String text, DatePattern... patterns) {

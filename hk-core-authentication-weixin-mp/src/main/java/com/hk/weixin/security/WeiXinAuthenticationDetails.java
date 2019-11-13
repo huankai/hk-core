@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author kevin
  * @date 2019-7-18 18:01
  */
-public class WechatAuthenticationDetails extends WebAuthenticationDetails {
+public class WeiXinAuthenticationDetails extends WebAuthenticationDetails {
 
-    public WechatAuthenticationDetails(HttpServletRequest request) {
+    public WeiXinAuthenticationDetails(HttpServletRequest request) {
         super(request);
     }
 }

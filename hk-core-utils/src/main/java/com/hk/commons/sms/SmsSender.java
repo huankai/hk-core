@@ -46,7 +46,7 @@ public interface SmsSender<R> {
 
     /**
      * @param phones            手机号
-     * @param messageTemplateId 模板 id
+     * @param smsTemplateId     模板 id
      * @param templateParameter 模板参数
      * @return 结果
      * @throws IOException

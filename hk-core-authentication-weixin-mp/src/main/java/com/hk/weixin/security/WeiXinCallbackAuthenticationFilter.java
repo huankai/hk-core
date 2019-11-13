@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author kevin
  * @date 2018年2月8日上午11:18:31
  */
-public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class WeiXinCallbackAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     /**
      * <pre>
@@ -53,10 +53,10 @@ public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationPr
      */
     private final String state;
 
-    public WechatCallbackAuthenticationFilter(WxMpService wxMpService, String callbackUrl, String state) {
+    public WeiXinCallbackAuthenticationFilter(WxMpService wxMpService, String callbackUrl, String state) {
         /* 处理 微信回调的url请求  */
         super(new AntPathRequestMatcher(callbackUrl));
-        setAuthenticationDetailsSource(new WechatAuthenticationDetailsSource());
+        setAuthenticationDetailsSource(new WeiXinAuthenticationDetailsSource());
         this.wxService = wxMpService;
         this.state = state;
     }
@@ -73,7 +73,7 @@ public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationPr
             try {
                 WxMpOAuth2AccessToken accessToken = wxService.oauth2getAccessToken(code);
                 WxMpUser mpUser = wxService.oauth2getUserInfo(accessToken, null);
-                WechatAuthenticationToken authenticationToken = new WechatAuthenticationToken(mpUser);
+                WeiXinAuthenticationToken authenticationToken = new WeiXinAuthenticationToken(mpUser);
                 setDetails(request, authenticationToken);
                 return getAuthenticationManager().authenticate(authenticationToken);
             } catch (WxErrorException e) {
@@ -86,7 +86,7 @@ public class WechatCallbackAuthenticationFilter extends AbstractAuthenticationPr
         return null;
     }
 
-    private void setDetails(HttpServletRequest request, WechatAuthenticationToken authenticationToken) {
+    private void setDetails(HttpServletRequest request, WeiXinAuthenticationToken authenticationToken) {
         authenticationToken.setDetails(authenticationDetailsSource.buildDetails(request));
     }
 

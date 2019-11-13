@@ -35,7 +35,6 @@ import java.lang.reflect.Method;
  *
  * @see WebAuthenticationDetails#getSessionId()
  * @see org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter#authenticationDetailsSource
- * @see com.hk.oauth2.provider.token.SessionAuthenticationKeyGenerator#extractKey(OAuth2Authentication)
  * @see org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy
  */
 @Slf4j
