@@ -66,6 +66,14 @@ public class WeiXinMpProperties {
         private String state;
 
         /**
+         * <pre>
+         *     snsapi_base: 静默授权，用户无感知，只能获取用户的 openid
+         *     snsapi_userinfo: 非静默授权，需要用户同意授权，可获取用户更多信息
+         * </pre>
+         */
+        private String scope = "snsapi_base";
+
+        /**
          * @param callbackUrl the callbackUrl to set
          */
         public void setCallbackUrl(String callbackUrl) {

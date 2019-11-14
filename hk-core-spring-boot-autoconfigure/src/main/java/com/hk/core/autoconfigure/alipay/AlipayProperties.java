@@ -73,6 +73,18 @@ public class AlipayProperties {
     private String callbackUrl = "/alipay/callback";
 
     /**
+     * <pre>
+     * auth_user（获取用户信息、网站支付宝登录）、
+     * auth_base（用户信息授权）、
+     * auth_ecard（商户会员卡）、
+     * auth_invoice_info（支付宝闪电开票）、
+     * auth_puc_charge（生活缴费）五个值;
+     * 多个scope时用”,”分隔，如scope为”auth_user,auth_ecard”时
+     * </pre>
+     */
+    private String scope = "auth_base";
+
+    /**
      * 参数返回格式
      *
      * @see https://docs.open.alipay.com/218/105326/

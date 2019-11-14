@@ -66,7 +66,7 @@ public class PhoneAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
             OAuth2Request oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
             OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
             OAuth2AccessToken token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
-            Webs.writeJson(response, 200, token);
+            Webs.writeJson(response, HttpServletResponse.SC_OK, token);
         } else {
             super.onAuthenticationSuccess(request, response, authentication);
         }

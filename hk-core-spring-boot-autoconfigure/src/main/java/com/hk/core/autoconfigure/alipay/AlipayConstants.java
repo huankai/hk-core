@@ -53,10 +53,10 @@ public interface AlipayConstants {
      * @return authorize Url
      * @see https://docs.open.alipay.com/289/105656
      */
-    static String getPublicAppAuthorizeUrl(AlipayProperties properties, String scope) {
+    static String getPublicAppAuthorizeUrl(AlipayProperties properties) {
         String redirectUri = String.format("%s%s%s", properties.getCallHost(), ServletContextHolder.getContextPath(), properties.getCallbackUrl());
         return String.format("%spublicAppAuthorize.htm?app_id=%s&scope=%s&redirect_uri=%s",
-                oauth2(properties.isDev()), properties.getAppId(), scope,
+                oauth2(properties.isDev()), properties.getAppId(), properties.getScope(),
                 redirectUri);
     }
 

@@ -12,7 +12,7 @@ public final class StaticTemplateMessageService implements TemplateMessageServic
     private static final Map<String, String> TEMPLATE_MAP;
 
     static {
-        TEMPLATE_MAP = new HashMap<>();
+        TEMPLATE_MAP = new HashMap<>(5);
         TEMPLATE_MAP.put("1", "【机构标识】注册，短信验证码为${code}，请在${expire}分钟内输入");
         TEMPLATE_MAP.put("2", "【机构标识】绑定手机，短信验证码为${code}，请在${expire}分钟内输入");
         TEMPLATE_MAP.put("3", "【机构标识】忘记密码短信验证，验证码为${code}，请在${expire}分钟内输入");
@@ -21,9 +21,6 @@ public final class StaticTemplateMessageService implements TemplateMessageServic
     }
 
     public static boolean add(String templateId, String templateContent) {
-        if (TEMPLATE_MAP.containsKey(templateId)) {
-            return false;
-        }
         TEMPLATE_MAP.put(templateId, templateContent);
         return true;
     }
