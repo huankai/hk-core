@@ -3,12 +3,9 @@ package com.hk.core.data.jpa.query.specification;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
+@Deprecated
 @AllArgsConstructor
 public class AggregateProjection implements Projection {
 
@@ -35,5 +32,4 @@ public class AggregateProjection implements Projection {
                 return null;
         }
     }
-
 }

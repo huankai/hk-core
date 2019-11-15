@@ -61,7 +61,7 @@ public class QueryByExamplePredicateBuilder {
             return predicates.iterator().next();
         }
 
-        Predicate[] array = predicates.toArray(new Predicate[predicates.size()]);
+        Predicate[] array = predicates.toArray(new Predicate[0]);
 
         return matcher.isAllMatching() ? cb.and(array) : cb.or(array);
     }

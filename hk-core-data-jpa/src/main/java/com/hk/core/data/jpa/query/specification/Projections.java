@@ -1,5 +1,6 @@
 package com.hk.core.data.jpa.query.specification;
 
+@Deprecated
 public class Projections {
 
 	public static AggregateProjection max(String propertyName) {

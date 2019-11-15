@@ -305,8 +305,7 @@ public abstract class Webs {
     @SneakyThrows
     private static String obtainAttachFileName(String fileName) {
         String encodeFileName = fileName;
-        HttpServletRequest request = getHttpServletRequest();
-        String agent = request.getHeader(HttpHeaders.USER_AGENT);
+        String agent = getUserAgent(getHttpServletRequest());
         if (StringUtils.isNotEmpty(agent)) {
             if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
                     || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE

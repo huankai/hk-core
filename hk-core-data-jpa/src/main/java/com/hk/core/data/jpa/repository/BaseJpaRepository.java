@@ -43,7 +43,6 @@ public interface BaseJpaRepository<T extends Persistable<ID>, ID extends Seriali
     default QueryPage<T> queryForPage(Specification<T> specification, List<Order> orders, int pageIndex, int pageSize) {
         Page<T> page = findAll(specification, PageRequest.of(pageIndex, pageSize, OrderUtils.toSort(orders)));
         return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), pageIndex, pageSize);
-
     }
 
     /**

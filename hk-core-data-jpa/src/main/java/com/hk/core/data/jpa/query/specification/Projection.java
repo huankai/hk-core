@@ -5,6 +5,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 
+@Deprecated
 public interface Projection {
 
     @SuppressWarnings("rawtypes")

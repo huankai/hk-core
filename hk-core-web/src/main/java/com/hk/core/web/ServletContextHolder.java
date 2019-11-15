@@ -22,8 +22,8 @@ public class ServletContextHolder implements ServletContextAware {
     }
 
     /**
-     * @param path
-     * @return
+     * @param path path
+     * @return Resource
      */
     public static URL getResource(String path) {
         try {
@@ -36,14 +36,14 @@ public class ServletContextHolder implements ServletContextAware {
     /**
      * get ServletContext
      *
-     * @return
+     * @return ServletContext
      */
     public static ServletContext getServletContext() {
         return servletContext;
     }
 
     /**
-     * @return
+     * @return contextPath
      */
     public static String getContextPath() {
         return servletContext.getContextPath();
