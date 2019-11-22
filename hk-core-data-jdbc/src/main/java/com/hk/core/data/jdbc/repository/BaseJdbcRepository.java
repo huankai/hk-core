@@ -71,7 +71,7 @@ public class BaseJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID> imple
             Persistable<ID> persistable = (Persistable<ID>) t;
             AssertUtils.isTrueWithI18n(!persistable.isNew(), "update.id.notEmpty");
             T find = getById(persistable.getId());
-            BeanUtils.copicerCopyNotNullProperties(t, find);
+            BeanUtils.copyNotNullProperties(t, find);
             return save(find);
         }
         throw new IllegalArgumentException("不能识别的实体");

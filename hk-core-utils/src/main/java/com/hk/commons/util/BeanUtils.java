@@ -87,7 +87,7 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
      * @param source 源对象
      * @param target 拷贝后的对象
      */
-    public static void copicerCopyNotNullProperties(Object source, Object target) {
+    public static void copierCopyNotNullProperties(Object source, Object target) {
         BeanCopier beanCopier = BeanCopier.create(source.getClass(), target.getClass(), true);
         beanCopier.copy(source, target, new BeanConverter(target));
     }

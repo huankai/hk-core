@@ -20,9 +20,9 @@ public class SingleSignOutFilter extends HttpFilter {
 
     private final SingleSignOutHandler singleSignOutHandler;
 
-
     @Override
-    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         if (singleSignOutHandler.process(request)) {
             chain.doFilter(request, response);
         }

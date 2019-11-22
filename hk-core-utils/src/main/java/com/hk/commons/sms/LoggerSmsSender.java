@@ -10,11 +10,11 @@ import java.util.Set;
  * @date 2019-8-10 14:44
  */
 @Slf4j
-public class LoggerSmsSender extends AbstractSmsSender<Void> {
+public class LoggerSmsSender extends AbstractSmsSender {
 
     @Override
-    protected JsonResult<Void> doSendSms(Set<String> phones, String message) {
+    protected JsonResult<SmsSenderResult> doSendSms(Set<String> phones, String message) {
         log.info("Send Phone:{} ,Message: {}", phones, message);
-        return JsonResult.success();
+        return new JsonResult<>(new SmsSenderResult().setSuccessPhones(phones));
     }
 }

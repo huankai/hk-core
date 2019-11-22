@@ -46,12 +46,12 @@ public class Oauth2DefaultWebResponseExceptionTranslator implements WebResponseE
         if (ase != null) {
             return handleOAuth2Exception(new Oauth2DefaultWebResponseExceptionTranslator.UnauthorizedException(e.getMessage(), e));
         }
-        ase = (AccessDeniedException) throwableAnalyzer.getFirstThrowableOfType(AccessDeniedException.class, causeChain);
+        ase = (Exception) throwableAnalyzer.getFirstThrowableOfType(AccessDeniedException.class, causeChain);
         if (ase instanceof AccessDeniedException) {
             return handleOAuth2Exception(new Oauth2DefaultWebResponseExceptionTranslator.ForbiddenException(ase.getMessage(), ase));
         }
 
-        ase = (HttpRequestMethodNotSupportedException) throwableAnalyzer
+        ase = (Exception) throwableAnalyzer
                 .getFirstThrowableOfType(HttpRequestMethodNotSupportedException.class, causeChain);
         if (ase instanceof HttpRequestMethodNotSupportedException) {
             return handleOAuth2Exception(new Oauth2DefaultWebResponseExceptionTranslator.MethodNotAllowedException(ase.getMessage(), ase));

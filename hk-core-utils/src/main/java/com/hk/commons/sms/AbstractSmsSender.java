@@ -13,7 +13,7 @@ import java.util.Set;
  * @author kevin
  * @date 2019-8-10 14:37
  */
-public abstract class AbstractSmsSender<R> implements SmsSender<R> {
+public abstract class AbstractSmsSender implements SmsSender<SmsSenderResult> {
 
     private static Lazy<TemplateMessageService> templateMessageService = Lazy.of(() -> SpringContextHolder.getBean(TemplateMessageService.class));
 
@@ -33,7 +33,7 @@ public abstract class AbstractSmsSender<R> implements SmsSender<R> {
     private SmsSenderFilter smsSenderFilter;
 
     @Override
-    public final JsonResult<R> sendSms(Set<String> phones, String message) throws IOException {
+    public final JsonResult<SmsSenderResult> sendSms(Set<String> phones, String message) throws IOException {
         validatePhone(phones);
         AssertUtils.notEmpty(message, "发送消息不能为空");
         if (null != smsSenderFilter) {
@@ -43,7 +43,7 @@ public abstract class AbstractSmsSender<R> implements SmsSender<R> {
     }
 
     @Override
-    public final JsonResult<R> sendTemplateSms(Set<String> phones, String smsTemplateId, Map<String, ?> templateParameter) throws IOException {
+    public final JsonResult<SmsSenderResult> sendTemplateSms(Set<String> phones, String smsTemplateId, Map<String, ?> templateParameter) throws IOException {
         validatePhone(phones);
         if (null != smsSenderFilter) {
             phones = smsSenderFilter.filter(phones.toArray(new String[0]));
@@ -51,7 +51,7 @@ public abstract class AbstractSmsSender<R> implements SmsSender<R> {
         return doSendSms(phones, StringUtils.processTemplate(templateMessageService.get().getTemplateContent(smsTemplateId), templateParameter));
     }
 
-    protected abstract JsonResult<R> doSendSms(Set<String> phones, String message) throws IOException;
+    protected abstract JsonResult<SmsSenderResult> doSendSms(Set<String> phones, String message) throws IOException;
 
     private void validatePhone(Collection<String> phones) {
         AssertUtils.notNull(phones, "验证手机号不能为空");
