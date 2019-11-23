@@ -234,6 +234,14 @@ public final class JsonUtils {
         return getMapper().readValue(json, clazz);
     }
 
+    @SneakyThrows(value = {IOException.class})
+    public static <T> T deserialize(byte[] json, Class<T> clazz) {
+        if (ArrayUtils.isEmpty(json)) {
+            return null;
+        }
+        return getMapper().readValue(json, clazz);
+    }
+
     /**
      * 将json 字符串反序列化为对象集合
      *
@@ -244,6 +252,10 @@ public final class JsonUtils {
      */
     public static <T> List<T> deserializeList(String json, Class<T> clazz) {
         return deserialize(json, ArrayList.class, clazz);
+    }
+
+    public static <T> List<T> deserializeList(byte[] json, Class<T> clazz) {
+        return deserialize(json, List.class, clazz);
     }
 
     /**
@@ -260,6 +272,15 @@ public final class JsonUtils {
 
     @SneakyThrows(value = {IOException.class})
     public static <T> T deserialize(String json, Class<?> rawType, Class<?> parametrized) {
+        if (StringUtils.isEmpty(json)) {
+            return null;
+        }
+        ObjectMapper mapper = getMapper();
+        return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, parametrized));
+    }
+
+    @SneakyThrows(value = {IOException.class})
+    public static <T> T deserialize(byte[] json, Class<?> rawType, Class<?> parametrized) {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
