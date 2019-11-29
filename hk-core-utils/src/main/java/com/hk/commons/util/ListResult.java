@@ -29,7 +29,7 @@ public class ListResult<T> implements Iterable<T> {
     private List<T> result;
 
     public List<T> getResult() {
-        return result == null ? new ArrayList<>() : result;
+        return result == null ? new ArrayList<>(0) : result;
     }
 
     @Override

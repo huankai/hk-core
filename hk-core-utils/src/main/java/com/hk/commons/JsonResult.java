@@ -3,7 +3,9 @@ package com.hk.commons;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.commons.util.StringUtils;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -16,7 +18,6 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 @AllArgsConstructor
 public final class JsonResult<T> implements Serializable {
-
 
     /**
      * 返回状态
@@ -187,8 +188,11 @@ public final class JsonResult<T> implements Serializable {
     }
 
     public String getMessage() {
-        String message = StringUtils.isEmpty(this.message) ? Status.getMessage(statusCode) : this.message;
-        return SpringContextHolder.getMessageWithDefault(message, message);
+        if (StringUtils.isEmpty(this.message)) {
+            String message = Status.getMessage(statusCode);
+            return SpringContextHolder.getMessageWithDefault(message, message);
+        }
+        return this.message;
     }
 
     @JsonIgnore

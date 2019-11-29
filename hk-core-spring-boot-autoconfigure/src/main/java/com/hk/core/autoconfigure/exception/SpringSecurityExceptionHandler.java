@@ -1,6 +1,7 @@
 package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.JsonResult;
+import com.hk.commons.util.SpringContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,6 @@ public class SpringSecurityExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public JsonResult<Void> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return JsonResult.forbidden("您无权限访问，请与管理员联系！");
+        return JsonResult.forbidden(SpringContextHolder.getMessage("no.permission.access.message"));
     }
 }

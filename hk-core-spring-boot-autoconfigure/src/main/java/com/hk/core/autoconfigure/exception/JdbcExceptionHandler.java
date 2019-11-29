@@ -35,4 +35,5 @@ public class JdbcExceptionHandler extends AbstractExceptionHandler {
         error(e, e.getMessage(), request);
         return new JsonResult<>(Status.NOT_FOUND, "您访问的资源可能不存在!");
     }
+
 }

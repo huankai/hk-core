@@ -2,6 +2,7 @@ package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.JsonResult;
 import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.SpringContextHolder;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.WebAttributes;
@@ -46,7 +47,7 @@ public class Oauth2ErrorController {
                 message = cause.getMessage();
             }
         } else {
-            message = "未知错误";
+            message = SpringContextHolder.getMessage("unknown.error.message");
         }
         return JsonResult.failure(message);
     }

@@ -3,6 +3,7 @@ package com.hk.core.autoconfigure.exception;
 import com.hk.commons.JsonResult;
 import com.hk.commons.Status;
 import com.hk.commons.util.EnumDisplayUtils;
+import com.hk.commons.util.SpringContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -47,9 +48,8 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public JsonResult<Void> fileNotFountException(FileNotFoundException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return JsonResult.badRequest("文件不存在或已删除");
+        return JsonResult.badRequest(SpringContextHolder.getMessage("file.not.found.message"));
     }
-
 
     /**
      * <p>
@@ -65,7 +65,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public JsonResult<Void> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return new JsonResult<>(Status.METHOD_NOT_ALLOWED, "您访问的资源不支持此方式 :" + e.getMethod());
+        return new JsonResult<>(Status.METHOD_NOT_ALLOWED, SpringContextHolder.getMessage("access.resources.no.support.message", e.getMethod()));
     }
 
     /**
@@ -79,7 +79,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public JsonResult<Void> httpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return JsonResult.badRequest("请求体为空");
+        return JsonResult.badRequest(SpringContextHolder.getMessage("request.body.empty.message"));
     }
 
     /**
@@ -96,7 +96,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public JsonResult<Void> servletRequestBindingException(ServletRequestBindingException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return JsonResult.badRequest("请求出错");
+        return JsonResult.badRequest(SpringContextHolder.getMessage("request.error.message"));
     }
 
     /**
@@ -109,7 +109,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public JsonResult<Void> dataAccessException(DataAccessException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return JsonResult.error("服务器开了点小差，请稍后再试！");
+        return JsonResult.error(SpringContextHolder.getMessage("server.error.message"));
     }
 
     /**

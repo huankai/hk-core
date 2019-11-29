@@ -342,7 +342,8 @@ public abstract class Webs {
                 ip = request.getRemoteAddr();
             }
         }
-        return ip;
+        // 在使用 nginx 做多层代理时， 获取的 ip 格式 为 ip1,ip2, 这里只获取到第一个 ip
+        return StringUtils.substringBefore(ip, StringUtils.COMMA_SEPARATE);
     }
 
     /**

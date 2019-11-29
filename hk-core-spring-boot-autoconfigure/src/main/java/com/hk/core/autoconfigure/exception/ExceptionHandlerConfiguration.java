@@ -26,7 +26,6 @@ public class ExceptionHandlerConfiguration {
         return new SimpleExceptionHandler();
     }
 
-
     /**
      * Service Exception
      */

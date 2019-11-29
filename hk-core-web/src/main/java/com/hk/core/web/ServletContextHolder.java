@@ -3,9 +3,11 @@
  */
 package com.hk.core.web;
 
+import lombok.SneakyThrows;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -25,12 +27,9 @@ public class ServletContextHolder implements ServletContextAware {
      * @param path path
      * @return Resource
      */
+    @SneakyThrows(value = {MalformedURLException.class})
     public static URL getResource(String path) {
-        try {
-            return servletContext.getResource(path);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return servletContext.getResource(path);
     }
 
     /**

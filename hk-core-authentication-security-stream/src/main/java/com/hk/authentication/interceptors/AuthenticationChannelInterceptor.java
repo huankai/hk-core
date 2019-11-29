@@ -36,7 +36,7 @@ public class AuthenticationChannelInterceptor implements ChannelInterceptor {
         String authentication = (String) headers.get(Header.AUTHORIZATION_HEADER);
         if (StringUtils.isEmpty(authentication) && SecurityContextUtils.isAuthenticated()) {
             UserPrincipal principal = SecurityContextUtils.getPrincipal();
-            Map<String, Object> attributes = new HashMap<>();
+            Map<String, Object> attributes = new HashMap<>(3);
             attributes.put("userId", principal.getUserId());// 减少请求头的信息，在消费端则只能获取这里传入的字段
             attributes.put("orgId", principal.getOrgId());
             attributes.put("userType", principal.getUserType());

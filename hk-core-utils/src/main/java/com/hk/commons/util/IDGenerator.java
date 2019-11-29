@@ -37,6 +37,6 @@ public interface IDGenerator<T> {
     /**
      * MostSignificantBit
      */
-    IDGenerator<Long> MOSTSIGN_UUID = () -> UUID.randomUUID().getMostSignificantBits();
+    IDGenerator<Long> MOST_SIGN_UUID = () -> UUID.randomUUID().getMostSignificantBits();
 
 }

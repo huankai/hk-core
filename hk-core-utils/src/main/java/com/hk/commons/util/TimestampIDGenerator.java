@@ -8,18 +8,17 @@ import lombok.Getter;
  * @author kevin
  * @date 2017年9月12日上午10:13:20
  */
+@Getter
 public class TimestampIDGenerator implements IDGenerator<String> {
 
     /**
      * 前缀
      */
-    @Getter
     private final String prefix;
 
     /**
      * 后缀
      */
-    @Getter
     private final String suffix;
 
     public TimestampIDGenerator() {

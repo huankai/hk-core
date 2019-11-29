@@ -91,7 +91,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * @return i18n Message
      */
     public static String getMessage(String code, Object... args) {
-        return getMessageWithDefault(code, null, args);
+        return getMessageWithDefault(code, code, args);
     }
 
     /**

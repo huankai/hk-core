@@ -29,17 +29,17 @@ public class WeiXinAuthenticationSecurityConfigurer
 
     private final WeiXinMpProperties.Authentication authentication;
 
-    private final PostAuthenticationHandler<UserPrincipal, WxMpUser> authenticaionHandler;
+    private final PostAuthenticationHandler<UserPrincipal, WxMpUser> authenticationHandler;
 
     /**
-     * 此方法是将 WechatAuthenticationProvider 注册到spring security的filter 中
+     * 此方法是将 WeiXinAuthenticationProvider 注册到spring security的filter 中
      */
     @Override
     public void configure(HttpSecurity http) {
         WeiXinCallbackAuthenticationFilter filter = new WeiXinCallbackAuthenticationFilter(wxMpService, authentication.getCallbackUrl(),
                 authentication.getState());
         filter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        WeiXinAuthenticationProvider provider = new WeiXinAuthenticationProvider(authenticaionHandler);
+        WeiXinAuthenticationProvider provider = new WeiXinAuthenticationProvider(authenticationHandler);
         http.authenticationProvider(provider).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
     }
 }

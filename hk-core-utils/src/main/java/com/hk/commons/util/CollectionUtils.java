@@ -3,6 +3,7 @@ package com.hk.commons.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -362,10 +363,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
             return defaultValue;
         }
         Object value = map.get(key);
-        if (value == null) {
-            return defaultValue;
-        }
-        return ConverterUtils.defaultConvert(value, clazz);
+        return null == value ? defaultValue : ConverterUtils.defaultConvert(value, clazz);
     }
 
     /**
@@ -390,14 +388,13 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     public static <K extends Comparable<? super K>> Map<K, Object> sortMapByKey(Map<K, Object> result,
                                                                                 boolean reversed) {
         if (isEmpty(result)) {
-            return Collections.emptyMap();
+            return new LinkedHashMap<>(0);
         }
-        Map<K, Object> finalMap = new LinkedHashMap<>();
-        result.entrySet().stream()
+        return result.entrySet().stream()
                 .sorted(reversed ? Map.Entry.<K, Object>comparingByKey().reversed()
                         : Map.Entry.comparingByKey())
-                .forEachOrdered(e -> finalMap.put(e.getKey(), e.getValue()));
-        return finalMap;
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
     /**
@@ -449,7 +446,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     @SafeVarargs
     public static Map<String, Integer> addOrMergeIntegerValues(Map<String, Integer>... values) {
         if (ArrayUtils.isEmpty(values)) {
-            return Collections.emptyMap();
+            return new HashMap<>(0);
         }
         Map<String, Integer> result = new HashMap<>();
         for (Map<String, Integer> map : values) {
@@ -475,7 +472,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     @SafeVarargs
     public static Map<String, Double> addOrMergeDoubleValues(Map<String, Double>... values) {
         if (ArrayUtils.isEmpty(values)) {
-            return Collections.emptyMap();
+            return new HashMap<>(0);
         }
         Map<String, Double> result = new HashMap<>();
         for (Map<String, Double> map : values) {
@@ -501,7 +498,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     @SafeVarargs
     public static Map<String, Long> addOrMergeLongValues(Map<String, Long>... values) {
         if (ArrayUtils.isEmpty(values)) {
-            return Collections.emptyMap();
+            return new HashMap<>(0);
         }
         Map<String, Long> result = new HashMap<>();
         for (Map<String, Long> map : values) {
@@ -527,7 +524,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     @SafeVarargs
     public static Map<String, BigDecimal> addOrMergeBigDecimalValues(Map<String, BigDecimal>... values) {
         if (ArrayUtils.isEmpty(values)) {
-            return Collections.emptyMap();
+            return new HashMap<>(0);
         }
         Map<String, BigDecimal> result = new HashMap<>();
         for (Map<String, BigDecimal> map : values) {
@@ -553,7 +550,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     @SafeVarargs
     public static Map<String, BigInteger> addOrMergeBigIntegerValues(Map<String, BigInteger>... values) {
         if (ArrayUtils.isEmpty(values)) {
-            return Collections.emptyMap();
+            return new HashMap<>(0);
         }
         Map<String, BigInteger> result = new HashMap<>();
         for (Map<String, BigInteger> map : values) {

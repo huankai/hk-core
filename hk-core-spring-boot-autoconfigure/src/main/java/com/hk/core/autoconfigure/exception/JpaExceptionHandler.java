@@ -2,6 +2,7 @@ package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.JsonResult;
 import com.hk.commons.Status;
+import com.hk.commons.util.SpringContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,6 +34,6 @@ public class JpaExceptionHandler extends AbstractExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public JsonResult<Void> entityNotFoundException(EntityNotFoundException e, HttpServletRequest request) {
         error(e, e.getMessage(), request);
-        return new JsonResult<>(Status.NOT_FOUND, "您访问的资源可能不存在!");
+        return new JsonResult<>(Status.NOT_FOUND, SpringContextHolder.getMessage("access.resource.not.found.message"));
     }
 }

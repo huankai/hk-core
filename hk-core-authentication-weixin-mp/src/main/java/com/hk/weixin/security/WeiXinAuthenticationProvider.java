@@ -23,9 +23,15 @@ public class WeiXinAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UserPrincipal principal = authenticationHandler.handler((WxMpUser) authentication.getPrincipal());
-        AssertUtils.notNull(principal, "principal Must not be null.");
-        return new WeiXinAuthenticationToken(principal, null);
+        WxMpUser wxMpUser = (WxMpUser) authentication.getPrincipal();
+        UserPrincipal userPrincipal;
+        if (null == authenticationHandler) {
+            userPrincipal = new UserPrincipal(null, wxMpUser.getNickname(), null);
+        } else {
+            userPrincipal = authenticationHandler.handler((WxMpUser) authentication.getPrincipal());
+            AssertUtils.notNull(userPrincipal, "principal Must not be null.");
+        }
+        return new WeiXinAuthenticationToken(userPrincipal, null);
     }
 
     @Override
