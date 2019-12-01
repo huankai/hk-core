@@ -52,10 +52,10 @@ public class AlipayProperties {
      * 支付宝公钥，在应用信息 -> 开发设置 -> 加签方式 ->  查看支付宝公钥
      *
      * 需要先在支付宝文档中下载 secret_key_tools_RSA256_win 包后执行 支付宝RAS密钥生成器SHAwithRSA2048_V1.0.bat 文件，将生成的 RSA 公钥上传到
-     *  应用信息 -> 开发设置 -> 加签方式 ->  查看应用公钥 中。
+     *  应用信息 -> 开发设置 -> 加签方式 ->  查看支付宝公钥 中。
      * </pre>
      */
-    private String publicKey;
+    private String alipayPublicKey;
 
     /**
      * 签名模式,目前支持RSA2和RSA，推荐使用RSA2

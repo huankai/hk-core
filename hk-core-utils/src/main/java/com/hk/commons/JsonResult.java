@@ -184,7 +184,7 @@ public final class JsonResult<T> implements Serializable {
     public JsonResult(Status status, String message, T data) {
         this.statusCode = Status.getOrder(status);
         this.data = data;
-        this.message = message;
+        this.message = SpringContextHolder.getMessageWithDefault(message, message);
     }
 
     public String getMessage() {

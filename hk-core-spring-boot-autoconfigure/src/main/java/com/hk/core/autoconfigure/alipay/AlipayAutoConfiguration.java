@@ -32,6 +32,6 @@ public class AlipayAutoConfiguration {
         String gatewayUrl = AlipayConstants.gateway(alipayProperties.isDev());
         return new DefaultAlipayClient(gatewayUrl, alipayProperties.getAppId(),
                 alipayProperties.getPrivateKey(), alipayProperties.getFormat().name(), Contants.UTF_8,
-                alipayProperties.getPublicKey(), alipayProperties.getSignType().name());
+                alipayProperties.getAlipayPublicKey(), alipayProperties.getSignType().name());
     }
 }

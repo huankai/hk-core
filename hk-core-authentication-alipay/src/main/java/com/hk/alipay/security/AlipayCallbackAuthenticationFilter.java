@@ -32,11 +32,15 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
 
     private final String state;
 
-    public AlipayCallbackAuthenticationFilter(String defaultFilterProcessesUrl, AlipayClient alipayClient, String state) {
+    private final String scope;
+
+    public AlipayCallbackAuthenticationFilter(String defaultFilterProcessesUrl,
+                                              AlipayClient alipayClient, String state, String scope) {
         super(defaultFilterProcessesUrl);
         setAuthenticationDetailsSource(new AlipayAuthenticationDetailsSource());
         this.alipayClient = alipayClient;
         this.state = state;
+        this.scope = scope;
     }
 
     @Override
@@ -55,10 +59,15 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
         try {
 //             根据 authCode 获取  accessToken
             AlipaySystemOauthTokenResponse tokenResponse = alipayClient.execute(oauthTokenRequest);
-            AlipayUserInfoShareRequest userInfoShareRequest = new AlipayUserInfoShareRequest();
-////            根据 accessToken 获取用户信息
-            AlipayUserInfoShareResponse userInfo = alipayClient.execute(userInfoShareRequest, tokenResponse.getAccessToken());
-            AlipayAuthenticationToken authenticationToken = new AlipayAuthenticationToken(userInfo);
+            AlipayAuthenticationToken authenticationToken;
+////            根据 accessToken 获取用户其它信息,只有授权在 auth_user 才可以获取用户其它信息，需要用户同意授权
+            if (StringUtils.contains(scope, "auth_user")) {
+                AlipayUserInfoShareRequest userInfoShareRequest = new AlipayUserInfoShareRequest();
+                AlipayUserInfoShareResponse userInfo = alipayClient.execute(userInfoShareRequest, tokenResponse.getAccessToken());
+                authenticationToken = new AlipayAuthenticationToken(userInfo);
+            } else { // 静默授权  scope = auth_base
+                authenticationToken = new AlipayAuthenticationToken(tokenResponse);
+            }
             setDetails(request, authenticationToken);
             return getAuthenticationManager().authenticate(authenticationToken);
         } catch (AlipayApiException e) {
