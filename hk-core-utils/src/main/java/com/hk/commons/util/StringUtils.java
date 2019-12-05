@@ -361,6 +361,27 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
     }
 
     /**
+     * 手机号中间四位打码 : 18888888888  -> 188****8888
+     *
+     * @param phone 手机号
+     * @return 打码后的手机号
+     */
+    public static String phoneMiddleMosaic(String phone) {
+        return ValidateUtils.isMobilePhone(phone) ?
+                String.format("%s****%s", phone.substring(0, 3), phone.substring(7, 11)) : phone;
+    }
+
+    /**
+     * 手机号最后四位打码 : 18888888888  -> 1888888****
+     *
+     * @param phone 手机号
+     * @return 打码后的手机号
+     */
+    public static String phoneLastMosaic(String phone) {
+        return ValidateUtils.isMobilePhone(phone) ? phone.substring(0, 7) + "****" : phone;
+    }
+
+    /**
      * 相等
      *
      * @param cs1 cs1
