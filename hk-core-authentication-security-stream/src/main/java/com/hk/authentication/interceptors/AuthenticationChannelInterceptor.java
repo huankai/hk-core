@@ -19,7 +19,6 @@ import java.util.Map;
  *
  * @author huangkai
  * @date 2019-4-15 11:25
- * @see AuthenticationMessageListenerContainer#executeListener(Channel, org.springframework.amqp.core.Message)
  */
 public class AuthenticationChannelInterceptor implements ChannelInterceptor {
 

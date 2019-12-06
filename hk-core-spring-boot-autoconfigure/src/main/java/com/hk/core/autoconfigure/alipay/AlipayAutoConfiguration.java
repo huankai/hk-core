@@ -2,7 +2,7 @@ package com.hk.core.autoconfigure.alipay;
 
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
-import com.hk.commons.util.Contants;
+import com.hk.commons.util.Constants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -31,7 +31,7 @@ public class AlipayAutoConfiguration {
     public AlipayClient alipayClient() {
         String gatewayUrl = AlipayConstants.gateway(alipayProperties.isDev());
         return new DefaultAlipayClient(gatewayUrl, alipayProperties.getAppId(),
-                alipayProperties.getPrivateKey(), alipayProperties.getFormat().name(), Contants.UTF_8,
+                alipayProperties.getPrivateKey(), alipayProperties.getFormat().name(), Constants.UTF_8,
                 alipayProperties.getAlipayPublicKey(), alipayProperties.getSignType().name());
     }
 }

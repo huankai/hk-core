@@ -14,7 +14,7 @@ public abstract class ValidateUtils {
     /**
      * 身份证校验 pattern
      */
-    private static final Pattern IDCARD_PATTERN = Pattern
+    private static final Pattern ID_CARD_PATTERN = Pattern
             .compile("^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0-2]\\d)|(3[0-1]))\\d{3}[\\dX]$");
 
     private static final int[] ID_CARD_WEIGHT = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
@@ -38,7 +38,7 @@ public abstract class ValidateUtils {
      * @return true or false
      */
     public static boolean isIDCard(CharSequence idCard) {
-        Matcher matcher = IDCARD_PATTERN.matcher(idCard);
+        Matcher matcher = ID_CARD_PATTERN.matcher(idCard);
         if (matcher.find()) {
             int sum = 0;
             for (int i = 0, size = idCard.length() - 1; i < size; i++) {

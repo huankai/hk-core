@@ -17,10 +17,10 @@ import java.io.IOException;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LongToStringSerializer extends JsonSerializer<Long> {
 
-    private static LongToStringSerializer instance = new LongToStringSerializer();
+    private static LongToStringSerializer INSTANCE = new LongToStringSerializer();
 
     public static LongToStringSerializer getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     @Override

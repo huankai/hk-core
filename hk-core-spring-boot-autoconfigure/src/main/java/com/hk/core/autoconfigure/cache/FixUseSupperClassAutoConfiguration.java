@@ -69,7 +69,7 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
                 .json()
                 .build();
         JsonUtils.configure(objectMapper);
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);// 会写入类名
+        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);// 会写入类名
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
 
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair

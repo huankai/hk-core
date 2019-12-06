@@ -1,7 +1,6 @@
 package com.hk.core.autoconfigure.cache.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hk.commons.util.JsonUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +30,7 @@ public class CacheRedisAutoConfiguration {
                 .json()
                 .build();
         JsonUtils.configure(objectMapper);
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL); // 会写入类名
+        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL); // 会写入类名
         GenericJackson2JsonRedisSerializer redisSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
         redisTemplate.setKeySerializer(serializer);
         redisTemplate.setValueSerializer(redisSerializer);

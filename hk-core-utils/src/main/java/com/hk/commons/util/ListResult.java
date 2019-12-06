@@ -4,9 +4,11 @@ package com.hk.commons.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**

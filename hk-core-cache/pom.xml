@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.hk</groupId>
         <artifactId>hk-core</artifactId>
-        <version>2.1.8.RELEASE</version>
+        <version>2.2.1.RELEASE</version>
     </parent>
     <artifactId>hk-core-cache</artifactId>
     <packaging>jar</packaging>
@@ -23,11 +23,6 @@
         <dependency>
             <groupId>com.hk</groupId>
             <artifactId>hk-core-data-jpa</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.hk</groupId>
-            <artifactId>hk-core-data-jdbc</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

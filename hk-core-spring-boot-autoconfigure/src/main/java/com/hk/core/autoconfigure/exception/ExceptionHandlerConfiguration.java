@@ -19,7 +19,6 @@ public class ExceptionHandlerConfiguration {
 
     /**
      * 公用异常处理
-     *
      */
     @Bean
     public SimpleExceptionHandler simpleExceptionHandler() {
@@ -36,19 +35,6 @@ public class ExceptionHandlerConfiguration {
         @Bean
         public ServiceExceptionHandler jdbcExceptionHandler() {
             return new ServiceExceptionHandler();
-        }
-    }
-
-    /**
-     * Jdbc Exception
-     */
-    @Configuration
-    @ConditionalOnClass(value = {com.hk.core.data.jdbc.exception.EntityNotFoundException.class})
-    static class JdbcExceptionHandlerConfiguration {
-
-        @Bean
-        public JdbcExceptionHandler jdbcExceptionHandler() {
-            return new JdbcExceptionHandler();
         }
     }
 

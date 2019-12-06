@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.hk</groupId>
         <artifactId>hk-parent</artifactId>
-        <version>2.1.8.RELEASE</version>
+        <version>2.2.1.RELEASE</version>
     </parent>
 
     <modules>
@@ -30,7 +30,6 @@
         <module>hk-core-message-websocket</module>
         <module>hk-core-data-commons</module>
         <module>hk-core-jdbc</module>
-        <module>hk-core-data-jdbc</module>
         <module>hk-core-data-jpa</module>
         <module>hk-core-data-mybatis</module>
         <module>hk-core-data-elasticsearch</module>

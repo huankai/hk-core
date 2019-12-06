@@ -26,7 +26,6 @@ public class SingleSignOutFilter extends HttpFilter {
         if (singleSignOutHandler.process(request)) {
             chain.doFilter(request, response);
         }
-
     }
 
 }

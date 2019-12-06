@@ -29,7 +29,7 @@ public class BeanConverter implements Converter {
     @Override
     public Object convert(Object value, Class targetClass, Object context) {
         if (value == null
-                || value instanceof Optional && !((Optional) value).isPresent()) {
+                || value instanceof Optional && ((Optional<?>) value).isEmpty()) {
             return targetBeanMap.get(convertFieldName(context.toString()));
         }
         return value;

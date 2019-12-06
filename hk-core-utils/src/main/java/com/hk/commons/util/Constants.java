@@ -6,11 +6,8 @@ package com.hk.commons.util;
  * @author kevin
  * @date 2018-05-18 12:43
  */
-public interface Contants {
+public interface Constants {
 
-    /**
-     * UTF-8
-     */
     String UTF_8 = "UTF-8";
 
     /**

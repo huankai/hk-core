@@ -42,7 +42,7 @@ import java.util.Map;
  * @date 2019/3/11 9:00
  */
 @NoArgsConstructor
-public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> extends SimpleElasticsearchRepository<T>
+public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> extends SimpleElasticsearchRepository<T, String>
         implements BaseElasticsearchRepository<T> {
 
     public SimpleBaseElasticsearchRepository(ElasticsearchEntityInformation<T, String> metadata,
@@ -130,10 +130,12 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
 
     @Override
     public SearchResponse suggest(SuggestBuilder suggestBuilder) {
-        return elasticsearchOperations.getClient()
-                .prepareSearch(entityInformation.getIndexName())
-                .suggest(suggestBuilder)
-                .get();
+        // TODO 未完成
+        return null;
+//        return elasticsearchOperations.getClient()
+//                .prepareSearch(entityInformation.getIndexName())
+//                .suggest(suggestBuilder)
+//                .get();
     }
 
     @Override
@@ -162,6 +164,13 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
                 }
                 return new AggregatedPageImpl<>(result, pageable, hits.getTotalHits(), response.getAggregations(),
                         response.getScrollId(), hits.getMaxScore());
+            }
+
+            @Override
+            public <E> E mapSearchHit(SearchHit searchHit, Class<E> type) {
+
+                // TODO 未完成
+                return null;
             }
         });
         return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), page.getNumber(), page.getSize());

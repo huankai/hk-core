@@ -58,7 +58,7 @@ public class DataSourceConfigStorage<T extends ConfigID> implements ConfigStorag
         this.clazz = clazz;
         this.columns.add(idColumn);
         this.columns.addAll(ArrayUtils.asArrayList(StringUtils.splitByComma(columns)));
-        this.columnString = StringUtils.collectionToDelimitedString(this.columns, ",");
+        this.columnString = StringUtils.collectionToDelimitedString(this.columns, StringUtils.COMMA_SEPARATE);
         for (String column : this.columns) {
             fields.put(column, StringUtils.lineToSmallHump(column));
         }

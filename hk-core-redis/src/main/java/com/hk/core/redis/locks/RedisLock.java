@@ -47,7 +47,7 @@ public class RedisLock implements Lock {
      * redis lock 生成器
      */
     @Setter
-    private IDGenerator<String> lockGenerator = IDGenerator.STRING_UUID;
+    private IDGenerator<String> lockGenerator = IDGenerator.UUID_32;
 
     private static final StringRedisTemplate REDIS_TEMPLATE = SpringContextHolder.getBean(StringRedisTemplate.class);
 

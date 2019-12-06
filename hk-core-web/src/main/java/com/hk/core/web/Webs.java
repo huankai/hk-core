@@ -1,6 +1,6 @@
 package com.hk.core.web;
 
-import com.hk.commons.util.Contants;
+import com.hk.commons.util.Constants;
 import com.hk.commons.util.FileUtils;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -309,7 +310,7 @@ public abstract class Webs {
         if (StringUtils.isNotEmpty(agent)) {
             if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
                     || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE
-                encodeFileName = URLEncoder.encode(fileName, Contants.UTF_8);
+                encodeFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
             } else if (agent.contains(MOZILLA_USER_AGENT_HEADER_VALUE)) {// 火狐,谷歌
                 encodeFileName = StringUtils.newStringIso8859_1(StringUtils.getByteUtf8(fileName));
             }
@@ -365,8 +366,8 @@ public abstract class Webs {
      */
     @SneakyThrows(value = {IOException.class})
     public static void writeJson(HttpServletResponse response, int status, Object data) {
-        response.setCharacterEncoding(Contants.UTF_8);
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.setCharacterEncoding(Constants.UTF_8);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         try (PrintWriter writer = response.getWriter()) {
             response.setStatus(status);
             writer.write(JsonUtils.serialize(data));
