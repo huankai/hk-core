@@ -4,8 +4,6 @@ import com.hk.core.elasticsearch.query.Condition;
 import com.hk.core.page.QueryPage;
 import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
@@ -78,13 +76,13 @@ public interface BaseElasticsearchRepository<T extends Persistable<String>>
      */
     void bulkUpdate(Collection<T> entities);
 
-    /**
-     * 建议词查询
-     *
-     * @param suggestBuilder suggestBuilder
-     * @return {@link SearchResponse}
-     */
-    SearchResponse suggest(SuggestBuilder suggestBuilder);
+//    /**
+//     * 建议词查询
+//     *
+//     * @param suggestBuilder suggestBuilder
+//     * @return {@link SearchResponse}
+//     */
+//    SearchResponse suggest(SuggestBuilder suggestBuilder);
 
     /**
      * 分页查询，支持高亮

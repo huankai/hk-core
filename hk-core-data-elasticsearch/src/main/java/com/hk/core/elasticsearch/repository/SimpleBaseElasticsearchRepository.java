@@ -16,7 +16,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
-import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -128,15 +127,15 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
         }
     }
 
-    @Override
-    public SearchResponse suggest(SuggestBuilder suggestBuilder) {
-        // TODO 未完成
-        return null;
+//    @Override
+//    public SearchResponse suggest(SuggestBuilder suggestBuilder) {
+//        // TODO 未完成
+//        return null;
 //        return elasticsearchOperations.getClient()
 //                .prepareSearch(entityInformation.getIndexName())
 //                .suggest(suggestBuilder)
 //                .get();
-    }
+//    }
 
     @Override
     public QueryPage<T> queryForPage(SearchQuery searchQuery) {
@@ -168,9 +167,7 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
 
             @Override
             public <E> E mapSearchHit(SearchHit searchHit, Class<E> type) {
-
-                // TODO 未完成
-                return null;
+                return JsonUtils.deserialize(searchHit.getSourceAsString(), type);
             }
         });
         return new SimpleQueryPage<>(page.getContent(), page.getTotalElements(), page.getNumber(), page.getSize());

@@ -2,6 +2,7 @@ package com.hk.core.service.exception;
 
 import com.hk.commons.JsonResult;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 /**
  * Http Status Code ：200
@@ -16,7 +17,7 @@ public class ServiceException extends RuntimeException {
      * http 状态码
      */
     @Getter
-    private int statusCode = 200;
+    private int statusCode = HttpStatus.OK.value();
 
     /**
      * 返回数据

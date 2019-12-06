@@ -8,8 +8,6 @@ import com.hk.core.query.Order;
 import com.hk.core.query.QueryModel;
 import com.hk.core.service.elasticsearch.ElasticSearchService;
 import com.hk.core.service.impl.BaseServiceImpl;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.springframework.data.domain.Persistable;
 
 import java.util.Collection;
@@ -39,10 +37,10 @@ public abstract class ElasticSearchServiceImpl<T extends Persistable<String>> ex
         return getBaseRepository().count(t);
     }
 
-    @Override
-    public SearchResponse suggest(SuggestBuilder suggestBuilder) {
-        return getBaseRepository().suggest(suggestBuilder);
-    }
+//    @Override
+//    public SearchResponse suggest(SuggestBuilder suggestBuilder) {
+//        return getBaseRepository().suggest(suggestBuilder);
+//    }
 
     @Override
     public List<T> findAll(List<Condition> conditions, Order... orders) {
