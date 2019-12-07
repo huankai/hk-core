@@ -16,5 +16,6 @@ com.hk.core.autoconfigure.data.AuditorConfiguration,\
 com.hk.core.autoconfigure.data.jdbc.JdbcAutoConfiguration,\
 com.hk.core.autoconfigure.data.jpa.JpaAutoConfiguration,\
 com.hk.core.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,\
-com.hk.core.autoconfigure.weixin.WeiXinMpConfiguration
+com.hk.core.autoconfigure.weixin.WeiXinMpConfiguration,\
+com.hk.core.autoconfigure.weixin.WeiXinPayConfiguration
 

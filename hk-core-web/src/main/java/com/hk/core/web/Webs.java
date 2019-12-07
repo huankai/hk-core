@@ -44,6 +44,10 @@ public abstract class Webs {
 
     private static final String MOZILLA_USER_AGENT_HEADER_VALUE = "Mozilla";
 
+    public static final String HTTP_SCHEME = "http";
+
+    public static final String HTTPS_SCHEME = "https";
+
     /**
      * 获取request对象
      *

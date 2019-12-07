@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -92,6 +93,11 @@ public class UserPrincipal implements Serializable {
      * 用户所在部门名称
      */
     private String deptName;
+
+    /**
+     * 第三方账号 id
+     */
+    private Map<String, String> thirdOpenId;
 
     /**
      * 用户角色

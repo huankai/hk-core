@@ -112,4 +112,16 @@ public class AlipayProperties {
         }
         return callHost;
     }
+
+    /* ****************************** 支付相关参数 **************************** */
+
+    /**
+     * 支付成功后的通知地址，支付宝会发送 POST　请求到此地址
+     */
+    private String notifyUrl;
+
+    /**
+     * 支买家付款成功后,会跳到 return_url 所在的页面,这个页面可以展示给客户看,这个页面只有付款成功才会跳转,并且只跳转一次
+     */
+    private String returnUrl;
 }
