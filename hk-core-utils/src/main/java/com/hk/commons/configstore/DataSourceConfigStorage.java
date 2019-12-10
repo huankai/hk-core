@@ -66,7 +66,7 @@ public class DataSourceConfigStorage<T extends ConfigID> implements ConfigStorag
 
     private String getFindAllSql() {
         if (null == findAllSql) {
-            StringBuilder sb = new StringBuilder("SELECT ");
+            var sb = new StringBuilder("SELECT ");
             sb.append(columnString).append(" FROM ").append(tableName);
             if (StringUtils.isNotEmpty(this.order)) {
                 sb.append(" ORDER BY ").append(this.order).append(" ASC");
@@ -91,7 +91,7 @@ public class DataSourceConfigStorage<T extends ConfigID> implements ConfigStorag
         ResultSet resultSet = null;
         try {
             connection = dataSource.get().getConnection();
-            String findAllSql = getFindAllSql();
+            var findAllSql = getFindAllSql();
             preparedStatement = connection.prepareStatement(findAllSql);
             log.debug("execute getAll Query: {}", findAllSql);
             resultSet = preparedStatement.executeQuery();
@@ -110,7 +110,7 @@ public class DataSourceConfigStorage<T extends ConfigID> implements ConfigStorag
     @SneakyThrows
     private T fullPropertyValues(BeanWrapper beanWrapper, ResultSet resultSet) {
         for (String column : columns) {
-            String fieldName = fields.get(column);
+            var fieldName = fields.get(column);
             if (StringUtils.isNotEmpty(fieldName)) {
                 beanWrapper.setPropertyValue(fieldName, resultSet.getObject(column));
             }

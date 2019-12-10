@@ -21,7 +21,7 @@ public class HashMapBackedSessionMappingStorage implements SessionMappingStorage
 
     @Override
     public synchronized HttpSession removeSessionByMappingId(String mappingId) {
-        final HttpSession session = MANAGED_SESSIONS.get(mappingId);
+        final var session = MANAGED_SESSIONS.get(mappingId);
         if (session != null) {
             removeBySessionById(session.getId());
         }
@@ -31,7 +31,7 @@ public class HashMapBackedSessionMappingStorage implements SessionMappingStorage
     @Override
     public synchronized void removeBySessionById(String sessionId) {
         log.debug("Attempting to remove Session=[{}]", sessionId);
-        final String key = ID_TO_SESSION_KEY_MAPPING.get(sessionId);
+        final var key = ID_TO_SESSION_KEY_MAPPING.get(sessionId);
         if (log.isDebugEnabled()) {
             if (key != null) {
                 log.debug("Found mapping for session.  Session Removed.");

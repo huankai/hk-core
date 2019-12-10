@@ -24,7 +24,7 @@ public class SingleLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String tokenValue = AccessTokenUtils.getAccessToken(request);
+        var tokenValue = AccessTokenUtils.getAccessToken(request);
         if (StringUtils.isNotEmpty(tokenValue)) {
             singleLogoutServiceMessageHandler.handle(tokenValue);
         }

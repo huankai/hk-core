@@ -14,7 +14,6 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * @author kevin
@@ -54,7 +53,7 @@ public class GateWayHttpSessionRequestCache implements RequestCache {
     public void saveRequest(HttpServletRequest request, HttpServletResponse response) {
         if (requestMatcher.matches(request)) {
             //使用 gateWay 缓存之前访问的请求信息
-            GateWaySavedRequest savedRequest = new GateWaySavedRequest(gateWayUrl, request, portResolver);
+            var savedRequest = new GateWaySavedRequest(gateWayUrl, request, portResolver);
             if (createSessionAllowed || request.getSession(false) != null) {
                 request.getSession().setAttribute(this.sessionAttrName, savedRequest);
                 logger.debug("DefaultSavedRequest added to Session: " + savedRequest);
@@ -66,13 +65,13 @@ public class GateWayHttpSessionRequestCache implements RequestCache {
 
     @Override
     public SavedRequest getRequest(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
+        var session = request.getSession(false);
         return session != null ? (SavedRequest) session.getAttribute(sessionAttrName) : null;
     }
 
     @Override
     public HttpServletRequest getMatchingRequest(HttpServletRequest request, HttpServletResponse response) {
-        GateWaySavedRequest saved = (GateWaySavedRequest) getRequest(request, response);
+        var saved = (GateWaySavedRequest) getRequest(request, response);
         if (saved == null) {
             return null;
         }
@@ -87,7 +86,7 @@ public class GateWayHttpSessionRequestCache implements RequestCache {
 
     @Override
     public void removeRequest(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
+        var session = request.getSession(false);
         if (session != null) {
             logger.debug("Removing DefaultSavedRequest from session if present");
             session.removeAttribute(sessionAttrName);

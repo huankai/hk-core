@@ -133,11 +133,11 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
      */
     @Override
     public String getParameter(String name) {
-        String value = super.getParameter(name);
+        var value = super.getParameter(name);
         if (value != null) {
             return value;
         }
-        String[] values = savedRequest.getParameterValues(name);
+        var values = savedRequest.getParameterValues(name);
         return ArrayUtils.getFirstOrDefault(values);
     }
 
@@ -165,8 +165,8 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
 
     @Override
     public String[] getParameterValues(String name) {
-        String[] savedRequestParams = savedRequest.getParameterValues(name);
-        String[] wrappedRequestParams = super.getParameterValues(name);
+        var savedRequestParams = savedRequest.getParameterValues(name);
+        var wrappedRequestParams = super.getParameterValues(name);
 
         if (savedRequestParams == null) {
             return wrappedRequestParams;
@@ -182,7 +182,7 @@ class SavedRequestAwareWrapper extends HttpServletRequestWrapper {
 
         // We want to add all parameters of the saved request *apart from* duplicates of
         // those already added
-        for (String savedRequestParam : savedRequestParams) {
+        for (var savedRequestParam : savedRequestParams) {
             if (!wrappedParamsList.contains(savedRequestParam)) {
                 combinedParams.add(savedRequestParam);
             }

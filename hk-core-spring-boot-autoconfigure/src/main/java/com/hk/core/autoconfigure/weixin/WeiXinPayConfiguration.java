@@ -31,7 +31,7 @@ public class WeiXinPayConfiguration {
     @Bean
     @ConditionalOnMissingBean(WxPayService.class)
     public WxPayService wxPayService() {
-        WxPayConfig wxPayConfig = new WxPayConfig();
+        var wxPayConfig = new WxPayConfig();
         wxPayConfig.setAppId(weiXinPayProperties.getAppId());
         wxPayConfig.setMchId(weiXinPayProperties.getMchId());
         wxPayConfig.setMchKey(weiXinPayProperties.getMchKey());

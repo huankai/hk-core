@@ -64,8 +64,8 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
 
     @Override
     public CacheManager cacheManager() {
-        RedisCacheWriter redisCacheWriter = RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory);
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
+        var redisCacheWriter = RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory);
+        var objectMapper = Jackson2ObjectMapperBuilder
                 .json()
                 .build();
         JsonUtils.configure(objectMapper);
@@ -75,7 +75,7 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
         RedisSerializationContext.SerializationPair<Object> serializationPair = RedisSerializationContext.SerializationPair
                 .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
 
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationPair);
+        var config = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(serializationPair);
         if (redisProperties.getTimeToLive() != null) {
             config = config.entryTtl(redisProperties.getTimeToLive());
         }
@@ -88,7 +88,7 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
         if (!redisProperties.isUseKeyPrefix()) {
             config = config.disableKeyPrefix();
         }
-        CustomRedisCacheManager cacheManager = new CustomRedisCacheManager(redisCacheWriter, config);
+        var cacheManager = new CustomRedisCacheManager(redisCacheWriter, config);
         cacheManager.setNullValueTtl(nullCacheProperties.getNullValueTtl());
         return cacheManager;
     }
@@ -104,7 +104,7 @@ public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport
     @Bean
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     public CacheInterceptor cacheInterceptor() {
-        LockCacheInterceptor interceptor = new LockCacheInterceptor();
+        var interceptor = new LockCacheInterceptor();
         interceptor.configure(this::errorHandler, this::keyGenerator, this::cacheResolver, this::cacheManager);
         interceptor.setCacheOperationSource(cacheOperationSource());
         return interceptor;

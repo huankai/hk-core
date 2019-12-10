@@ -33,7 +33,7 @@ public class AlipayAuthenticationSecurityConfigurer extends SecurityConfigurerAd
 
     @Override
     public void configure(HttpSecurity builder) {
-        AlipayCallbackAuthenticationFilter filter = new AlipayCallbackAuthenticationFilter(processesUrl, alipayClient,
+        var filter = new AlipayCallbackAuthenticationFilter(processesUrl, alipayClient,
                 state, scope);
         filter.setAuthenticationManager(builder.getSharedObject(AuthenticationManager.class));
         AlipayAuthenticationProvider provider = new AlipayAuthenticationProvider(authenticationHandler);

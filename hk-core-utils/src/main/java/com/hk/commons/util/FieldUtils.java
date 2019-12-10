@@ -26,7 +26,7 @@ public abstract class FieldUtils {
      */
     public static List<Field> getFieldsListWithAnnotation(final Class<?> cls,
                                                           final Class<? extends Annotation> annotationCls) {
-        final List<Field> allFields = getAllFieldsList(cls);
+        final var allFields = getAllFieldsList(cls);
         final List<Field> annotatedFields = new ArrayList<>();
         allFields.forEach(field -> {
             if (null != field.getAnnotation(annotationCls)) {
@@ -44,7 +44,7 @@ public abstract class FieldUtils {
      * @return Field[]
      */
     public static Field[] getFieldsWithAnnotation(final Class<?> cls, final Class<? extends Annotation> annotationCls) {
-        List<Field> annotatedFieldsList = getFieldsListWithAnnotation(cls, annotationCls);
+        var annotatedFieldsList = getFieldsListWithAnnotation(cls, annotationCls);
         return annotatedFieldsList.toArray(new Field[0]);
     }
 
@@ -55,7 +55,7 @@ public abstract class FieldUtils {
      * @return Field[]
      */
     public static Field[] getAllFields(final Class<?> cls) {
-        List<Field> allFieldsList = getAllFieldsList(cls);
+        var allFieldsList = getAllFieldsList(cls);
         return allFieldsList.toArray(new Field[0]);
     }
 
@@ -67,7 +67,7 @@ public abstract class FieldUtils {
      * @return Field
      */
     public static Field findField(final Class<?> cls, String propertyName) {
-        List<Field> fieldsList = getAllFieldsList(cls);
+        var fieldsList = getAllFieldsList(cls);
         return fieldsList.stream()
                 .filter(item -> StringUtils.equals(item.getName(), propertyName))
                 .findFirst()
@@ -84,7 +84,7 @@ public abstract class FieldUtils {
     public static List<Field> getAllFieldsList(final Class<?> cls) {
         AssertUtils.isTrue(Objects.nonNull(cls), "The class must not be null");
         final List<Field> allFields = new ArrayList<>();
-        Class<?> currentClass = cls;
+        var currentClass = cls;
         while (null != currentClass) {
             CollectionUtils.addAllNotNull(allFields, currentClass.getDeclaredFields());
             currentClass = currentClass.getSuperclass();

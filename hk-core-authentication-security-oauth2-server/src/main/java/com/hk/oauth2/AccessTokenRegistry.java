@@ -7,11 +7,9 @@ import com.hk.oauth2.logout.LogoutRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -24,12 +22,12 @@ public class AccessTokenRegistry implements TokenRegistry, LogoutParameter {
 
     @Override
     public void addAccessToken(OAuth2Authentication authentication, OAuth2AccessToken accessToken) {
-        OAuth2Request oAuth2Request = authentication.getOAuth2Request();
-        List<LogoutRequest> logoutRequests = map.getOrDefault(accessToken.getValue(), new ArrayList<>());
-        Map<String, String> requestParameters = oAuth2Request.getRequestParameters();
-        String logoutUri = requestParameters.get(LOGOUT_PARAMETER_NAME);
+        var oAuth2Request = authentication.getOAuth2Request();
+        var logoutRequests = map.getOrDefault(accessToken.getValue(), new ArrayList<>());
+        var requestParameters = oAuth2Request.getRequestParameters();
+        var logoutUri = requestParameters.get(LOGOUT_PARAMETER_NAME);
         if (StringUtils.isNotEmpty(logoutUri)) {
-            LogoutRequest logoutRequest = new LogoutRequest(oAuth2Request.getClientId(), logoutUri, accessToken.getValue());
+            var logoutRequest = new LogoutRequest(oAuth2Request.getClientId(), logoutUri, accessToken.getValue());
             logoutRequests.add(logoutRequest);
             log.debug("add logoutRequest: accessToken:[{}],logoutRequest:\n{}", accessToken.getValue(), logoutRequest.toString());
             map.put(accessToken.getValue(), logoutRequests);
@@ -39,7 +37,7 @@ public class AccessTokenRegistry implements TokenRegistry, LogoutParameter {
     @Override
     public List<LogoutRequest> destroy(String tokenValue) {
         if (StringUtils.isNotEmpty(tokenValue)) {
-            List<LogoutRequest> destroyLogoutRequest = map.remove(tokenValue);
+            var destroyLogoutRequest = map.remove(tokenValue);
             if (log.isDebugEnabled() && null != destroyLogoutRequest) {
                 log.debug("destroy AccessToken,key:[{}],logoutRequest:\n{}", tokenValue, JsonUtils.serialize(destroyLogoutRequest));
             }

@@ -20,7 +20,7 @@ public class Oauth2JWTAccessTokenConverterConfiguration implements JwtAccessToke
 
     @Override
     public void configure(JwtAccessTokenConverter converter) {
-        DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
+        var accessTokenConverter = new DefaultAccessTokenConverter();
         accessTokenConverter.setUserTokenConverter(new Oauth2UserAuthenticationConverter());
         converter.setAccessTokenConverter(accessTokenConverter);
     }

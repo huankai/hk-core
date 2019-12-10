@@ -34,7 +34,7 @@ public class Lazy<T> implements Supplier<T> {
 
     @Override
     public T get() {
-        T value = getNullable();
+        var value = getNullable();
         if (value == null) {
             throw new IllegalStateException("Expected lazy evaluation to yield a non-null value but got null!");
         }
@@ -52,7 +52,7 @@ public class Lazy<T> implements Supplier<T> {
 
     private T orElseGet(Supplier<? extends T> supplier) {
         Assert.notNull(supplier, "Default value supplier must not be null!");
-        T value = getNullable();
+        var value = getNullable();
         return value == null ? supplier.get() : value;
     }
 
@@ -67,7 +67,7 @@ public class Lazy<T> implements Supplier<T> {
     }
 
     private T getNullable() {
-        T value = this.value;
+        var value = this.value;
         if (this.resolved) {
             return value;
         }

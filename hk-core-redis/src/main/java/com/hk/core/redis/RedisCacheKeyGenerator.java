@@ -18,10 +18,10 @@ public class RedisCacheKeyGenerator implements KeyGenerator {
 
     @Override
     public Object generate(Object target, Method method, Object... params) {
-        StringBuilder key = new StringBuilder();
+        var key = new StringBuilder();
         key.append(target.getClass().getSimpleName()).append(".").append(method.getName()).append(":");
 //        key.append("length=").append(params.length).append("|");
-        for (Object param : params) {
+        for (var param : params) {
             if (null != param) {
                 if (ClassUtils.isPrimitiveArray(param.getClass())
                         || ClassUtils.isPrimitiveWrapperArray(param.getClass())

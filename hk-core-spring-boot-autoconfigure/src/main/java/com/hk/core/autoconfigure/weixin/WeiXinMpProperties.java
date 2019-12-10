@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.weixin;
 
-import com.hk.commons.util.StringUtils;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -72,15 +71,5 @@ public class WeiXinMpProperties {
          * </pre>
          */
         private String scope = "snsapi_base";
-
-        /**
-         * @param callbackUrl the callbackUrl to set
-         */
-        public void setCallbackUrl(String callbackUrl) {
-            if (!StringUtils.startsWith(callbackUrl, "/")) {
-                callbackUrl = "/" + callbackUrl;
-            }
-            this.callbackUrl = callbackUrl;
-        }
     }
 }

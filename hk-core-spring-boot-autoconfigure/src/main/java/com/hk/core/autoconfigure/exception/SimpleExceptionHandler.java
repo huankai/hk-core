@@ -8,7 +8,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -122,8 +121,8 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public JsonResult<Void> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
-        FieldError fieldError = e.getBindingResult().getFieldError();
-        String message = fieldError.getField() + fieldError.getDefaultMessage();
+        var fieldError = e.getBindingResult().getFieldError();
+        var message = fieldError.getField() + fieldError.getDefaultMessage();
         error(e, message, request);
         return JsonResult.badRequest(message);
     }
@@ -131,7 +130,7 @@ public class SimpleExceptionHandler extends AbstractExceptionHandler {
     @ExceptionHandler(value = BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public JsonResult<Void> bindException(BindException bindException, HttpServletRequest request) {
-        FieldError fieldError = bindException.getBindingResult().getFieldError();
+        var fieldError = bindException.getBindingResult().getFieldError();
         error(bindException, fieldError.getDefaultMessage(), request);
         return JsonResult.badRequest(fieldError.getDefaultMessage());
     }

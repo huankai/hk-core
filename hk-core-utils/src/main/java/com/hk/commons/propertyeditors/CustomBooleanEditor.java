@@ -32,7 +32,7 @@ public class CustomBooleanEditor extends org.springframework.beans.propertyedito
 
     @Override
     public String getAsText() {
-        String value = ObjectUtils.toString(getValue());
+        var value = ObjectUtils.toString(getValue());
         if (StringUtils.equalsAny(value, BooleanUtils.TRUE_CHINESE, BooleanUtils.FALSE_CHINESE)) {
             return value;
         }

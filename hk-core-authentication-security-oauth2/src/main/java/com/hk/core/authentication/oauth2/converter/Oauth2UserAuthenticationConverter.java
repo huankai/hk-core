@@ -72,7 +72,9 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
             principal.setOrgName(CollectionUtils.getStringValue(map, "orgName"));
             principal.setDeptId(CollectionUtils.getLongValue(map, "deptId"));
             principal.setDeptName(CollectionUtils.getStringValue(map, "deptName"));
-
+            @SuppressWarnings("unchecked")
+            Map<String, String> thirdOpenId = (Map<String, String>) CollectionUtils.getMapValue(map, "thirdOpenId");
+            principal.setThirdOpenId(thirdOpenId);
             Map<?, ?> clientAppInfo = CollectionUtils.getMapValue(map, "appInfo");
             if (null != clientAppInfo) {
                 principal.setAppInfo(new ClientAppInfo(CollectionUtils.getLongValue(clientAppInfo, "appId"),

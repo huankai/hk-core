@@ -3,10 +3,8 @@ package com.hk.commons.util;
 import org.springframework.lang.Nullable;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,11 +21,11 @@ public abstract class ClassUtils extends org.springframework.util.ClassUtils {
      * @return 泛型类
      */
     public static Class<?> getGenericTypeByType(ParameterizedType genType, int index) {
-        Type[] params = genType.getActualTypeArguments();
+        var params = genType.getActualTypeArguments();
         if (index >= params.length || index < 0) {
             return null;
         }
-        Object res = params[index];
+        var res = params[index];
         if (res instanceof Class) {
             return (Class<?>) res;
         }
@@ -47,7 +45,7 @@ public abstract class ClassUtils extends org.springframework.util.ClassUtils {
     @Nullable
     @SuppressWarnings("unchecked")
     public static <T> Class<T> getGenericType(Class<?> clazz, int index) {
-        List<Type> arrays = new ArrayList<>();
+        var arrays = new ArrayList<>();
         arrays.add(clazz.getGenericSuperclass());
         arrays.addAll(Arrays.asList(clazz.getGenericInterfaces()));
         return (Class<T>) arrays.stream()

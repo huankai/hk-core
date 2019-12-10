@@ -63,8 +63,8 @@ public final class JSRValidation<T> implements Validationable<T> {
         if (CollectionUtils.isNotEmpty(violationSet)) {
             List<InvalidCell> result = new ArrayList<>(violationSet.size());
             violationSet.iterator().forEachRemaining(item -> {
-                String propertyName = item.getPropertyPath().toString();
-                Title title = titleList.stream()
+                var propertyName = item.getPropertyPath().toString();
+                var title = titleList.stream()
                         .filter(titleItem -> StringUtils.equals(propertyName, titleItem.getPropertyName()))
                         .findFirst()
                         .orElseThrow(() -> new ExcelReadException("根据属性名[" + propertyName + "]找不到对应的标题"));

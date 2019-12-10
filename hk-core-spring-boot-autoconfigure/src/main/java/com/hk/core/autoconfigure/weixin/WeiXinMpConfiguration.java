@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnClass(WxMpService.class)
 //@Conditional(WeiXinMpConfiguration.WeixinMpCondition.class)
-@ConditionalOnProperty(prefix = "wechat.mp", name = "enabled", havingValue = "true")
+@ConditionalOnProperty(prefix = "wx.mp", name = "enabled", havingValue = "true")
 @EnableConfigurationProperties(WeiXinMpProperties.class)
 public class WeiXinMpConfiguration {
 
@@ -31,7 +31,7 @@ public class WeiXinMpConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public WxMpDefaultConfigImpl configStorage() {
-        WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
+        var configStorage = new WxMpDefaultConfigImpl();
         configStorage.setAppId(properties.getAppId());
         configStorage.setSecret(properties.getSecret());
         configStorage.setToken(properties.getToken());
@@ -41,7 +41,7 @@ public class WeiXinMpConfiguration {
 
     @Bean
     public WxMpService wxMpService(WxMpConfigStorage configStorage) {
-        WxMpService wxMpService = new WxMpServiceImpl();
+        var wxMpService = new WxMpServiceImpl();
         wxMpService.setWxMpConfigStorage(configStorage);
         return wxMpService;
     }

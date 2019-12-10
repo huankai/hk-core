@@ -1,6 +1,5 @@
 package com.hk.commons.util;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -38,13 +37,13 @@ public abstract class ValidateUtils {
      * @return true or false
      */
     public static boolean isIDCard(CharSequence idCard) {
-        Matcher matcher = ID_CARD_PATTERN.matcher(idCard);
+        var matcher = ID_CARD_PATTERN.matcher(idCard);
         if (matcher.find()) {
-            int sum = 0;
+            var sum = 0;
             for (int i = 0, size = idCard.length() - 1; i < size; i++) {
                 sum += Integer.parseInt(String.valueOf(idCard.charAt(i))) * ID_CARD_WEIGHT[i];
             }
-            int mod = sum % 11;
+            var mod = sum % 11;
             return idCard.charAt(idCard.length() - 1) == ID_CARD_VALIDATE_CODE[mod];
         }
         return false;

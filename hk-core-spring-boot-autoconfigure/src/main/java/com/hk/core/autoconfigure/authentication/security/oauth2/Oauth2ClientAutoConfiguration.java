@@ -25,7 +25,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 import javax.servlet.Filter;
-import java.util.List;
 
 /**
  * oauth2 client 自动 配置
@@ -83,7 +82,7 @@ public class Oauth2ClientAutoConfiguration {
             @Override
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
                 if (bean instanceof FilterChainProxy) {
-                    List<SecurityFilterChain> filterChains = ((FilterChainProxy) bean).getFilterChains();
+                    var filterChains = ((FilterChainProxy) bean).getFilterChains();
                     for (SecurityFilterChain filterChain : filterChains) {
                         for (Filter filter : filterChain.getFilters()) {
                             if (filter instanceof OAuth2ClientAuthenticationProcessingFilter) {

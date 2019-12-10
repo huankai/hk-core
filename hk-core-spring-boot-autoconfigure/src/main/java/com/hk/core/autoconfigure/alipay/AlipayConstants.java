@@ -44,12 +44,6 @@ public interface AlipayConstants {
      * 获取 支付宝认证跳转 url
      *
      * @param properties properties
-     * @param scope      auth_user（获取用户信息、网站支付宝登录）、
-     *                   auth_base（用户信息授权）、
-     *                   auth_ecard（商户会员卡）、
-     *                   auth_invoice_info（支付宝闪电开票）、
-     *                   auth_puc_charge（生活缴费）五个值;
-     *                   多个scope时用”,”分隔，如scope为”auth_user,auth_ecard”时
      * @return authorize Url
      * @see https://docs.open.alipay.com/289/105656
      */

@@ -26,7 +26,7 @@ public class JsonStringToCollectionConverter implements GenericConverter {
         if (source == null) {
             return null;
         }
-        TypeDescriptor elementDesc = targetType.getElementTypeDescriptor();
+        var elementDesc = targetType.getElementTypeDescriptor();
         return JsonUtils.deserialize(source.toString(), targetType.getType(), elementDesc.getType());
     }
 }

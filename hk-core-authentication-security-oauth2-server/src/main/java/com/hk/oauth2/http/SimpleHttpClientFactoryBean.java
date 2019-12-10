@@ -7,7 +7,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.*;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -139,9 +138,9 @@ public class SimpleHttpClientFactoryBean implements FactoryBean<SimpleHttpClient
 
     @Override
     public SimpleHttpClient getObject() {
-        final CloseableHttpClient httpClient = buildHttpClient();
-        final FutureRequestExecutionService requestExecutorService = buildRequestExecutorService(httpClient);
-        final List<Integer> codes = acceptableCodes.stream().sorted().collect(Collectors.toList());
+        final var httpClient = buildHttpClient();
+        final var requestExecutorService = buildRequestExecutorService(httpClient);
+        final var codes = acceptableCodes.stream().sorted().collect(Collectors.toList());
         return new SimpleHttpClient(codes, httpClient, requestExecutorService);
     }
 
@@ -154,18 +153,18 @@ public class SimpleHttpClientFactoryBean implements FactoryBean<SimpleHttpClient
 
     @SneakyThrows
     private CloseableHttpClient buildHttpClient() {
-        final Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+        final var registry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.getSocketFactory())
                 .register("https", sslSocketFactory)
                 .build();
-        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
+        final var connectionManager = new PoolingHttpClientConnectionManager(registry);
         connectionManager.setMaxTotal(maxPooledConnections);
         connectionManager.setDefaultMaxPerRoute(maxConnectionsPerRoute);
         connectionManager.setValidateAfterInactivity(DEFAULT_TIMEOUT);
-        final HttpHost httpHost = new HttpHost(InetAddress.getLocalHost());
-        final HttpRoute httpRoute = new HttpRoute(httpHost);
+        final var httpHost = new HttpHost(InetAddress.getLocalHost());
+        final var httpRoute = new HttpRoute(httpHost);
         connectionManager.setMaxPerRoute(httpRoute, MAX_CONNECTIONS_PER_ROUTE);
-        final RequestConfig requestConfig = RequestConfig
+        final var requestConfig = RequestConfig
                 .custom()
                 .setSocketTimeout(readTimeout)
                 .setConnectTimeout(connectionTimeout)

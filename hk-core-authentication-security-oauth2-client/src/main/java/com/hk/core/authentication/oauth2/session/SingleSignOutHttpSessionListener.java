@@ -22,7 +22,7 @@ public class SingleSignOutHttpSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent event) {
-        String sessionId = event.getSession().getId();
+        var sessionId = event.getSession().getId();
         if (log.isDebugEnabled()) {
             log.debug("The session has been destroyed, SessionId: {}", sessionId);
         }

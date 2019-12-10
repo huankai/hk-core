@@ -49,7 +49,7 @@ public class QueryModel<T> {
 
     public T getParam() {
         if (null == param) {
-            ResolvableType resolvableType = ResolvableType.forClass(QueryModel.class);
+            var resolvableType = ResolvableType.forClass(QueryModel.class);
             @SuppressWarnings("unchecked")
             Class<T> resolve = (Class<T>) resolvableType.getGeneric(0).resolve();
             return resolve == null ? null : BeanUtils.instantiateClass(resolve);

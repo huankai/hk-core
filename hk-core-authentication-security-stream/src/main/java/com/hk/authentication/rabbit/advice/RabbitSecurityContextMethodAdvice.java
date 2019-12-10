@@ -45,19 +45,19 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
     @Override
     public void before(Method method, Object[] args, Object target) {
         log.debug("before Advice,setSecurityContext...");
-        Message message = (Message) args[1];
-        Object authorization = message.getMessageProperties().getHeaders().get(Header.AUTHORIZATION_HEADER);
+        var message = (Message) args[1];
+        var authorization = message.getMessageProperties().getHeaders().get(Header.AUTHORIZATION_HEADER);
         if (Objects.nonNull(authorization)) {
-            UserPrincipal userPrincipal = JsonUtils.deserialize(authorization.toString(), UserPrincipal.class);
-            SecurityContext currentContext = SecurityContextHolder.getContext();
-            Stack<SecurityContext> contextStack = ORIGINAL_CONTEXT.get();
+            var userPrincipal = JsonUtils.deserialize(authorization.toString(), UserPrincipal.class);
+            var currentContext = SecurityContextHolder.getContext();
+            var contextStack = ORIGINAL_CONTEXT.get();
             if (contextStack == null) {
                 contextStack = new Stack<>();
                 ORIGINAL_CONTEXT.set(contextStack);
             }
             contextStack.push(currentContext);
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            RabbitAuthenticationToken authenticationToken = new RabbitAuthenticationToken(userPrincipal, null);
+            var context = SecurityContextHolder.createEmptyContext();
+            var authenticationToken = new RabbitAuthenticationToken(userPrincipal, null);
             context.setAuthentication(authenticationToken);
             SecurityContextHolder.setContext(context);
         }
@@ -74,14 +74,14 @@ public class RabbitSecurityContextMethodAdvice implements MethodBeforeAdvice, Af
      */
     @Override
     public void afterReturning(Object returnValue, Method method, Object[] args, Object target) {
-        Stack<SecurityContext> contextStack = ORIGINAL_CONTEXT.get();
+        var contextStack = ORIGINAL_CONTEXT.get();
         log.debug("afterReturning ,clean SecurityContext...");
         if (contextStack == null || contextStack.isEmpty()) {
             SecurityContextHolder.clearContext();
             ORIGINAL_CONTEXT.remove();
             return;
         }
-        SecurityContext originalContext = contextStack.pop();
+        var originalContext = contextStack.pop();
         try {
             if (EMPTY_CONTEXT.equals(originalContext)) {
                 SecurityContextHolder.clearContext();

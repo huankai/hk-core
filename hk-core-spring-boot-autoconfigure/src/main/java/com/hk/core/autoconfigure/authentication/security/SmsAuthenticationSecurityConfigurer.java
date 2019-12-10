@@ -54,7 +54,7 @@ public class SmsAuthenticationSecurityConfigurer extends SecurityConfigurerAdapt
 
     @Override
     public void configure(HttpSecurity http) {
-        SMSAuthenticationFilter smsAuthenticationFilter = new SMSAuthenticationFilter(smsProperties.getPhoneParameter(),
+        var smsAuthenticationFilter = new SMSAuthenticationFilter(smsProperties.getPhoneParameter(),
                 smsProperties.getPhoneLoginUri(), smsProperties.isPostOnly(), validateCodeProcessor);
         smsAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
         if (this.authenticationSuccessHandler != null) {
@@ -63,7 +63,7 @@ public class SmsAuthenticationSecurityConfigurer extends SecurityConfigurerAdapt
         if (this.authenticationFailureHandler != null) {
             smsAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
         }
-        SMSAuthenticationProvider smsAuthenticationProvider = new SMSAuthenticationProvider(authenticationHandler);
+        var smsAuthenticationProvider = new SMSAuthenticationProvider(authenticationHandler);
         http.addFilterBefore(new SMSSenderFilter(smsProperties.getSendUri(), validateCodeProcessor), UsernamePasswordAuthenticationFilter.class);
         http.authenticationProvider(smsAuthenticationProvider).addFilterAfter(smsAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

@@ -5,9 +5,10 @@ import com.hk.core.web.Webs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.UnapprovedClientAuthenticationException;
-import org.springframework.security.oauth2.provider.*;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
@@ -55,17 +56,17 @@ public class PhoneAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {
         if (Webs.isAndroid(request) || Webs.isIPhone(request) || Webs.isAjax(request)) {
-            ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
+            var clientDetails = clientDetailsService.loadClientByClientId(clientId);
             if (null == clientDetails) {
                 throw new UnapprovedClientAuthenticationException("clientId不存在:" + clientId);
             } else if (!passwordEncoder.matches(clientSecret, clientDetails.getClientSecret())) {
                 throw new UnapprovedClientAuthenticationException("clientSecret不匹配:" + clientId);
             }
-            TokenRequest tokenRequest = new TokenRequest(Collections.emptyMap(), clientId, clientDetails.getScope(),
+            var tokenRequest = new TokenRequest(Collections.emptyMap(), clientId, clientDetails.getScope(),
                     AuthenticationType.password.name());// 这里的授权码模式可以随便写一个
-            OAuth2Request oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
-            OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
-            OAuth2AccessToken token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
+            var oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
+            var oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
+            var token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
             Webs.writeJson(response, HttpServletResponse.SC_OK, token);
         } else {
             super.onAuthenticationSuccess(request, response, authentication);

@@ -3,11 +3,14 @@ package com.hk.weixin.security;
 import com.hk.commons.util.AssertUtils;
 import com.hk.core.authentication.api.PostAuthenticationHandler;
 import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.api.enums.ThirdAccountType;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+
+import java.util.Map;
 
 
 /**
@@ -23,10 +26,11 @@ public class WeiXinAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        WxMpUser wxMpUser = (WxMpUser) authentication.getPrincipal();
+        var wxMpUser = (WxMpUser) authentication.getPrincipal();
         UserPrincipal userPrincipal;
         if (null == authenticationHandler) {
             userPrincipal = new UserPrincipal(null, wxMpUser.getNickname(), null);
+            userPrincipal.setThirdOpenId(Map.of(ThirdAccountType.wx.name(), wxMpUser.getOpenId()));
         } else {
             userPrincipal = authenticationHandler.handler((WxMpUser) authentication.getPrincipal());
             AssertUtils.notNull(userPrincipal, "principal Must not be null.");

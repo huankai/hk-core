@@ -26,12 +26,12 @@ public class CacheRedisAutoConfiguration {
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setEnableTransactionSupport(true);
         RedisSerializer<String> serializer = RedisSerializer.string();
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder
+        var objectMapper = Jackson2ObjectMapperBuilder
                 .json()
                 .build();
         JsonUtils.configure(objectMapper);
         objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL); // 会写入类名
-        GenericJackson2JsonRedisSerializer redisSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+        var redisSerializer = new GenericJackson2JsonRedisSerializer(objectMapper);
         redisTemplate.setKeySerializer(serializer);
         redisTemplate.setValueSerializer(redisSerializer);
 

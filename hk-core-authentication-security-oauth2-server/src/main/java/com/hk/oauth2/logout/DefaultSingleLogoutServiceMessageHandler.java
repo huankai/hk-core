@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 /**
  * @author kevin
@@ -35,7 +34,7 @@ public class DefaultSingleLogoutServiceMessageHandler implements SingleLogoutSer
 
     @Override
     public void handle(String tokenValue) {
-        List<LogoutRequest> logoutRequests = tokenRegistry.destroy(tokenValue);
+        var logoutRequests = tokenRegistry.destroy(tokenValue);
         consumerTokenServices.revokeToken(tokenValue);
         if (CollectionUtils.isNotEmpty(logoutRequests)) {
             logoutRequests.forEach(this::performBackChannelLogout);
@@ -43,10 +42,10 @@ public class DefaultSingleLogoutServiceMessageHandler implements SingleLogoutSer
     }
 
     private void performBackChannelLogout(LogoutRequest logoutRequest) {
-        String logoutMessage = logoutMessageCreator.create(logoutRequest);
+        var logoutMessage = logoutMessageCreator.create(logoutRequest);
         try {
-            URL url = new URL(logoutRequest.getLogoutURL());
-            final LogoutHttpMessage msg = new LogoutHttpMessage(url, logoutMessage, asynchronous);
+            var url = new URL(logoutRequest.getLogoutURL());
+            final var msg = new LogoutHttpMessage(url, logoutMessage, asynchronous);
             log.debug("Prepared logout message to send is [{}]. Sending...", msg);
             httpClient.sendMessageToEndPoint(msg);
         } catch (MalformedURLException e) {

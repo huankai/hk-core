@@ -30,12 +30,12 @@ public class SimpleDomReadHandler<T> extends AbstractDomReadHandler<T> {
 
     @Override
     public SheetData<T> processSheet(Sheet sheet, int sheetIndex) {
-        final int lastRowNum = sheet.getLastRowNum();
-        final String sheetName = WorkbookUtil.createSafeSheetName(sheet.getSheetName());
+        final var lastRowNum = sheet.getLastRowNum();
+        final var sheetName = WorkbookUtil.createSafeSheetName(sheet.getSheetName());
         List<ErrorLog<T>> errorLogs = new ArrayList<>();
         SheetData<T> dataSheet = new SheetData<>(sheetIndex, sheetName);
         BeanWrapper wrapper;
-        for (int rowIndex = readParam.getDataStartRow(); rowIndex <= lastRowNum; rowIndex++) {
+        for (var rowIndex = readParam.getDataStartRow(); rowIndex <= lastRowNum; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
             if (null != row) {
                 try {
@@ -59,13 +59,13 @@ public class SimpleDomReadHandler<T> extends AbstractDomReadHandler<T> {
      * @param wrapper wrapper
      */
     protected void parseRow(Row row, BeanWrapper wrapper) throws InvalidCellReadableExcelException {
-        final int rowNum = row.getRowNum();
-        final int maxColumnIndex = getMaxColumnIndex();
+        final var rowNum = row.getRowNum();
+        final var maxColumnIndex = getMaxColumnIndex();
         List<InvalidCell> invalidCellList = new ArrayList<>();
-        for (int columnIndex = 0; columnIndex <= maxColumnIndex; columnIndex++) {
+        for (var columnIndex = 0; columnIndex <= maxColumnIndex; columnIndex++) {
             Cell cell = row.getCell(columnIndex, MissingCellPolicy.RETURN_BLANK_AS_NULL);
             if (null != cell) {
-                final String value = getCellValueString(cell);
+                final var value = getCellValueString(cell);
                 try {
                     setWrapperBeanValue(wrapper, columnIndex, value);
                 } catch (BeansException e) {

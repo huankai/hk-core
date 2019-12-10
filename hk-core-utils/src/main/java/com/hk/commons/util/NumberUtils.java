@@ -79,7 +79,7 @@ public abstract class NumberUtils extends org.springframework.util.NumberUtils {
      * @return
      */
     public static String formatPercent(Object value, int maximumFractionDigits) {
-        NumberFormat format = NumberFormat.getPercentInstance();
+        var format = NumberFormat.getPercentInstance();
         format.setMaximumFractionDigits(maximumFractionDigits);
         return format.format(value);
     }
@@ -102,7 +102,7 @@ public abstract class NumberUtils extends org.springframework.util.NumberUtils {
      * @return format value
      */
     public static String formatDecimal(Object value, String pattern) {
-        DecimalFormat format = new DecimalFormat(pattern);
+        var format = new DecimalFormat(pattern);
         return format.format(value);
     }
 

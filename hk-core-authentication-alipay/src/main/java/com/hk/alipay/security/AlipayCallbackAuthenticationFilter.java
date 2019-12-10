@@ -4,8 +4,6 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.request.AlipayUserInfoShareRequest;
-import com.alipay.api.response.AlipaySystemOauthTokenResponse;
-import com.alipay.api.response.AlipayUserInfoShareResponse;
 import com.hk.commons.util.StringUtils;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -45,7 +43,7 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String authCode = request.getParameter(AUTH_CODE_NAME);
+        var authCode = request.getParameter(AUTH_CODE_NAME);
         if (StringUtils.isEmpty(authCode)) {
             throw new AuthenticationServiceException("authCode不能为空");
         }
@@ -53,17 +51,17 @@ public class AlipayCallbackAuthenticationFilter extends AbstractAuthenticationPr
                 && StringUtils.notEquals(state, request.getParameter(STATE_NAME))) {
             throw new AuthenticationServiceException("登录失败，跨站请求伪造攻击");
         }
-        AlipaySystemOauthTokenRequest oauthTokenRequest = new AlipaySystemOauthTokenRequest();
+        var oauthTokenRequest = new AlipaySystemOauthTokenRequest();
         oauthTokenRequest.setGrantType("authorization_code");
         oauthTokenRequest.setCode(authCode);
         try {
 //             根据 authCode 获取  accessToken
-            AlipaySystemOauthTokenResponse tokenResponse = alipayClient.execute(oauthTokenRequest);
+            var tokenResponse = alipayClient.execute(oauthTokenRequest);
             AlipayAuthenticationToken authenticationToken;
 ////            根据 accessToken 获取用户其它信息,只有授权在 auth_user 才可以获取用户其它信息，需要用户同意授权
             if (StringUtils.contains(scope, "auth_user")) {
-                AlipayUserInfoShareRequest userInfoShareRequest = new AlipayUserInfoShareRequest();
-                AlipayUserInfoShareResponse userInfo = alipayClient.execute(userInfoShareRequest, tokenResponse.getAccessToken());
+                var userInfoShareRequest = new AlipayUserInfoShareRequest();
+                var userInfo = alipayClient.execute(userInfoShareRequest, tokenResponse.getAccessToken());
                 authenticationToken = new AlipayAuthenticationToken(userInfo);
             } else { // 静默授权  scope = auth_base
                 authenticationToken = new AlipayAuthenticationToken(tokenResponse);

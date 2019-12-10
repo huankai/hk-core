@@ -29,7 +29,7 @@ public class GateWaySavedRequest extends DefaultSavedRequest {
 
     @Override
     public String getRedirectUrl() {
-        String requestURI = super.getRequestURI();
+        var requestURI = super.getRequestURI();
         if (!StringUtils.startsWith(requestURI, "/")) {
             requestURI = "/" + requestURI;
         }

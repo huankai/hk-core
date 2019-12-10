@@ -36,10 +36,10 @@ public class WeiXinAuthenticationSecurityConfigurer
      */
     @Override
     public void configure(HttpSecurity http) {
-        WeiXinCallbackAuthenticationFilter filter = new WeiXinCallbackAuthenticationFilter(wxMpService, authentication.getCallbackUrl(),
+        var filter = new WeiXinCallbackAuthenticationFilter(wxMpService, authentication.getCallbackUrl(),
                 authentication.getState());
         filter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        WeiXinAuthenticationProvider provider = new WeiXinAuthenticationProvider(authenticationHandler);
+        var provider = new WeiXinAuthenticationProvider(authenticationHandler);
         http.authenticationProvider(provider).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
     }
 }

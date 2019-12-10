@@ -39,8 +39,8 @@ public class DateIdGenerator extends TimestampIDGenerator {
 
     @Override
     public String generate() {
-        LocalDateTime dateTime = LocalDateTime.now();
-        String dateStr = dateTime.format(DateTimeFormatter.ofPattern(pattern.getPattern()));
+        var dateTime = LocalDateTime.now();
+        var dateStr = dateTime.format(DateTimeFormatter.ofPattern(pattern.getPattern()));
         return String.format("%s%s%s", getPrefix(), dateStr, getSuffix());
     }
 

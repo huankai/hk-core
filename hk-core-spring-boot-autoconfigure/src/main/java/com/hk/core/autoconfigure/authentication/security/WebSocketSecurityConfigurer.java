@@ -85,17 +85,17 @@ public class WebSocketSecurityConfigurer extends AbstractSecurityWebSocketMessag
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        DefaultManagedTaskScheduler scheduler = new DefaultManagedTaskScheduler();
+        var scheduler = new DefaultManagedTaskScheduler();
         registry.enableSimpleBroker(webSocketProperties.getSimpleBrokers()).setTaskScheduler(scheduler);
-        String[] applicationDestinationPrefixes = webSocketProperties.getApplicationDestinationPrefixes();
+        var applicationDestinationPrefixes = webSocketProperties.getApplicationDestinationPrefixes();
         if (ArrayUtils.isNotEmpty(applicationDestinationPrefixes)) {
             registry.setApplicationDestinationPrefixes(applicationDestinationPrefixes);
         }
-        String userDestinationPrefix = webSocketProperties.getUserDestinationPrefix();
+        var userDestinationPrefix = webSocketProperties.getUserDestinationPrefix();
         if (StringUtils.isNotEmpty(userDestinationPrefix)) {
             registry.setUserDestinationPrefix(userDestinationPrefix);
         }
-        Integer cacheLimit = webSocketProperties.getCacheLimit();
+        var cacheLimit = webSocketProperties.getCacheLimit();
         if (null != cacheLimit) {
             registry.setCacheLimit(cacheLimit);
         }

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -52,7 +51,7 @@ public final class JsonUtils {
     static {
         List<Module> moduleList = new ArrayList<>();
 
-        JavaTimeModule JAVA_TIME_MODULE = new JavaTimeModule();
+        var JAVA_TIME_MODULE = new JavaTimeModule();
         JAVA_TIME_MODULE.addSerializer(LocalDateTime.class,
                 new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern())));
 
@@ -80,7 +79,7 @@ public final class JsonUtils {
             @see https://stackoverflow.com/questions/24994440/no-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-javassist
         */
         if (HIBERNATE_MODULE_ENABLED) {
-            Hibernate5Module hibernate5Module = new Hibernate5Module();
+            var hibernate5Module = new Hibernate5Module();
             hibernate5Module.enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
             hibernate5Module.disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION);
             moduleList.add(hibernate5Module);
@@ -113,8 +112,8 @@ public final class JsonUtils {
     }
 
     public static void configure(ObjectMapper om, String... exceptFields) {
-        Set<String> exceptSet = ArrayUtils.asHashSet(exceptFields);
-        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+        var exceptSet = ArrayUtils.asHashSet(exceptFields);
+        var filterProvider = new SimpleFilterProvider();
         filterProvider.addFilter(IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
                 SimpleBeanPropertyFilter.serializeAllExcept(exceptSet));
         om.setDateFormat(new SimpleDateFormat(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()))
@@ -276,7 +275,7 @@ public final class JsonUtils {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
-        ObjectMapper mapper = getMapper();
+        var mapper = getMapper();
         return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, parametrized));
     }
 
@@ -285,7 +284,7 @@ public final class JsonUtils {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
-        ObjectMapper mapper = getMapper();
+        var mapper = getMapper();
         return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, parametrized));
     }
 
@@ -294,8 +293,8 @@ public final class JsonUtils {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
-        ObjectMapper mapper = getMapper();
-        MapType mapType = mapper.getTypeFactory().constructMapType(HashMap.class, keyClass, valueClass);
+        var mapper = getMapper();
+        var mapType = mapper.getTypeFactory().constructMapType(HashMap.class, keyClass, valueClass);
         return mapper.readValue(json, mapType);
     }
 
@@ -309,8 +308,8 @@ public final class JsonUtils {
         if (StringUtils.isEmpty(json)) {
             return null;
         }
-        ObjectMapper mapper = getMapper();
-        JavaType type = mapper.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+        var mapper = getMapper();
+        var type = mapper.getTypeFactory().constructParametricType(parametrized, parameterClasses);
         return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(rawType, type));
     }
 

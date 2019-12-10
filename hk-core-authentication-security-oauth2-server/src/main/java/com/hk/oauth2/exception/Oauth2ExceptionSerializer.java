@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.hk.commons.JsonResult;
 import com.hk.commons.Status;
 import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.EnumDisplayUtils;
 import com.hk.commons.util.StringUtils;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 
@@ -86,8 +85,8 @@ public class Oauth2ExceptionSerializer<T extends OAuth2Exception> extends StdSer
          */
         @Override
         protected String getMessage(Oauth2UnsupportedGrantTypeException exception) {
-            String errorMessage = exception.getMessage();
-            String[] delimitArr = StringUtils.delimitedListToStringArray(errorMessage, ":");
+            var errorMessage = exception.getMessage();
+            var delimitArr = StringUtils.delimitedListToStringArray(errorMessage, ":");
             if (ArrayUtils.isNotEmpty(delimitArr) && delimitArr.length == 2) {
                 errorMessage = delimitArr[1];
             }

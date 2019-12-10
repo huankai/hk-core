@@ -23,8 +23,8 @@ public final class CompositeAuthenticationKeyGenerator implements Authentication
 
     @Override
     public String extractKey(OAuth2Authentication authentication) {
-        for (AuthenticationKeyGenerator keyGenerator : authenticationKeyGenerators) {
-            String key = keyGenerator.extractKey(authentication);
+        for (var keyGenerator : authenticationKeyGenerators) {
+            var key = keyGenerator.extractKey(authentication);
             if (StringUtils.isNotEmpty(key)) {
                 return key;
             }

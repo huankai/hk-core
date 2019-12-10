@@ -103,11 +103,11 @@ public class CompositeCondition implements Condition {
 
     @Override
     public String toSqlString(List<Object> parameters) {
-        StringBuilder sb = new StringBuilder();
-        int index = 0;
-        for (Condition c : conditions) {
+        var sb = new StringBuilder();
+        var index = 0;
+        for (var c : conditions) {
             if (null != c) {
-                String sql = c.toSqlString(parameters);
+                var sql = c.toSqlString(parameters);
                 if (StringUtils.isNotEmpty(sql)) {
                     if (index++ > 0) {
                         sb.append(StringUtils.SPACE).append(andOr.toSqlString()).append(StringUtils.SPACE);

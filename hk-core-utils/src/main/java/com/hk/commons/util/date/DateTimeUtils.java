@@ -31,7 +31,7 @@ public abstract class DateTimeUtils {
      * @return calendar
      */
     public static Calendar getDateWithOutTime(Calendar calendar) {
-        Calendar newDate = Calendar.getInstance();
+        var newDate = Calendar.getInstance();
         newDate.setTime(calendar.getTime());
         newDate.set(Calendar.HOUR_OF_DAY, 0);
         newDate.set(Calendar.MINUTE, 0);
@@ -100,7 +100,7 @@ public abstract class DateTimeUtils {
     }
 
     private static String[] datePatterns(DatePattern... patterns) {
-        String[] values = new String[patterns.length];
+        var values = new String[patterns.length];
         for (int i = 0; i < values.length; i++) {
             values[i] = patterns[i].getPattern();
         }
@@ -323,7 +323,7 @@ public abstract class DateTimeUtils {
      * @return date
      */
     public static Date getYearMaxDayToDate(Date date) {
-        LocalDateTime dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+        var dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
                 .with(TemporalAdjusters.lastDayOfYear()).with(LocalTime.MAX);
         return localDateTimeToDate(dateTime);
     }
@@ -345,7 +345,7 @@ public abstract class DateTimeUtils {
      * @return date
      */
     public static Date getYearMinDay(Date date) {
-        LocalDateTime dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+        var dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
                 .with(TemporalAdjusters.firstDayOfYear()).with(LocalTime.MIN);
         return localDateTimeToDate(dateTime);
     }
@@ -357,7 +357,7 @@ public abstract class DateTimeUtils {
      * @return date
      */
     public static Date getMonthMaxDate(Date date) {
-        LocalDateTime dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+        var dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
                 .with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
         return localDateTimeToDate(dateTime);
     }
@@ -389,7 +389,7 @@ public abstract class DateTimeUtils {
      * @return date
      */
     public static Date getMonthMinDate(Date date) {
-        LocalDateTime dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+        var dateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
                 .with(TemporalAdjusters.firstDayOfMonth()).with(LocalTime.MIN);
         return localDateTimeToDate(dateTime);
     }

@@ -14,7 +14,6 @@ import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.data.domain.Page;
@@ -56,7 +55,7 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
     @Override
     public QueryPage<T> findByPage(QueryModel<T> queryModel) {
         Map<String, Object> map = BeanUtils.beanToMap(queryModel.getParam(), "class", "new");
-        CriteriaQuery query = new CriteriaQuery(new Criteria(), PageRequest.of(queryModel.getStartRowIndex(),
+        var query = new CriteriaQuery(new Criteria(), PageRequest.of(queryModel.getStartRowIndex(),
                 queryModel.getPageSize(), OrderUtils.toSort(queryModel.getOrders())));
         if (CollectionUtils.isNotEmpty(map)) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -69,7 +68,7 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
 
     @Override
     public QueryPage<T> findByPage(List<Condition> conditions, int pageIndex, int pageSize, Order... orders) {
-        CriteriaQuery query = new CriteriaQuery(new Criteria(),
+        var query = new CriteriaQuery(new Criteria(),
                 PageRequest.of(pageIndex, pageSize, OrderUtils.toSort(orders)));
         Condition.addCriteria(query, conditions);
         Page<T> pageResult = elasticsearchOperations.queryForPage(query, getEntityClass());
@@ -78,10 +77,10 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
 
     @Override
     public long count(T t) {
-        CriteriaQuery query = new CriteriaQuery(new Criteria());
+        var query = new CriteriaQuery(new Criteria());
         Map<String, Object> map = BeanUtils.beanToMap(t, "class", "new");
         if (CollectionUtils.isNotEmpty(map)) {
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
+            for (var entry : map.entrySet()) {
                 query.addCriteria(Criteria.where(entry.getKey()).is(entry.getValue()));
             }
         }
@@ -91,7 +90,7 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
     @Override
     public void deleteByIds(Iterable<String> ids) {
         if (CollectionUtils.isNotEmpty(ids)) {
-            DeleteQuery deleteQuery = new DeleteQuery();
+            var deleteQuery = new DeleteQuery();
             deleteQuery.setIndex(entityInformation.getIndexName());
             deleteQuery.setType(entityInformation.getType());
             deleteQuery.setQuery(QueryBuilders.idsQuery().addIds(CollectionUtils.toArray(ids)));
@@ -101,7 +100,7 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
 
     @Override
     public List<T> findAll(List<Condition> conditions, Order... orders) {
-        CriteriaQuery query = new CriteriaQuery(new Criteria());
+        var query = new CriteriaQuery(new Criteria());
         Condition.addCriteria(query, conditions);
         query.addSort(OrderUtils.toSort(orders));
         return elasticsearchOperations.queryForList(query, getEntityClass());
@@ -112,9 +111,9 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
         if (CollectionUtils.isNotEmpty(entities)) {
             List<UpdateQuery> list = new ArrayList<>(entities.size());
             entities.forEach(item -> {
-                String id = item.getId();
+                var id = item.getId();
                 if (StringUtils.isNotEmpty(id)) {
-                    UpdateRequest request = new UpdateRequest();
+                    var request = new UpdateRequest();
                     Map<String, Object> updateMap = BeanUtils.beanToMap(item, "class", "new", "id");
                     if (CollectionUtils.isNotEmpty(updateMap)) {
                         request.doc(JsonUtils.serialize(updateMap), XContentType.JSON);
@@ -127,32 +126,22 @@ public class SimpleBaseElasticsearchRepository<T extends Persistable<String>> ex
         }
     }
 
-//    @Override
-//    public SearchResponse suggest(SuggestBuilder suggestBuilder) {
-//        // TODO 未完成
-//        return null;
-//        return elasticsearchOperations.getClient()
-//                .prepareSearch(entityInformation.getIndexName())
-//                .suggest(suggestBuilder)
-//                .get();
-//    }
-
     @Override
     public QueryPage<T> queryForPage(SearchQuery searchQuery) {
         Page<T> page = elasticsearchOperations.queryForPage(searchQuery, getEntityClass(), new SearchResultMapper() {
 
             @Override
             public <E> AggregatedPage<E> mapResults(SearchResponse response, Class<E> clazz, Pageable pageable) {
-                SearchHits hits = response.getHits();
+                var hits = response.getHits();
                 List<E> result = new ArrayList<>(hits.getHits().length);
                 E data;
                 BeanWrapper beanWrapper;
-                for (SearchHit searchHit : hits) {
+                for (var searchHit : hits) {
                     data = JsonUtils.deserialize(searchHit.getSourceAsString(), clazz);
                     Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
                     if (CollectionUtils.isNotEmpty(highlightFields)) {
                         beanWrapper = BeanWrapperUtils.createBeanWrapper(data);
-                        for (Map.Entry<String, HighlightField> entry : highlightFields.entrySet()) {
+                        for (var entry : highlightFields.entrySet()) {
                             Text[] fragments = entry.getValue().getFragments();
                             if (ArrayUtils.isNotEmpty(fragments)) {
                                 beanWrapper.setPropertyValue(entry.getKey(), fragments[0].toString());

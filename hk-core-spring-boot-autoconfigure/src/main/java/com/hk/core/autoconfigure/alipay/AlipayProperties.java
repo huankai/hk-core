@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.alipay;
 
-import com.hk.commons.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -104,13 +103,6 @@ public class AlipayProperties {
         RSA,
 
         RSA2
-    }
-
-    public String getCallHost() {
-        if (StringUtils.endsWith(callHost, "/")) {
-            callHost = StringUtils.substring(callHost, 0, callHost.length() - 1);
-        }
-        return callHost;
     }
 
     /* ****************************** 支付相关参数 **************************** */

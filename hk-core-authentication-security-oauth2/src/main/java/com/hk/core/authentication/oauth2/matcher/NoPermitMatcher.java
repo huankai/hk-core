@@ -27,10 +27,10 @@ public class NoPermitMatcher implements RequestMatcher {
         this.requestMatchers = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(permitMatchers)) {
             RequestMatcher matcher;
-            for (PermitMatcher permitMatcher : permitMatchers) {
+            for (var permitMatcher : permitMatchers) {
                 String[] uris = permitMatcher.getUris();
                 if (ArrayUtils.isNotEmpty(uris)) {
-                    for (String item : uris) {
+                    for (var item : uris) {
                         matcher = new AntPathRequestMatcher(item,
                                 permitMatcher.getMethod() == null ? null : permitMatcher.getMethod().name());
                         requestMatchers.add(matcher);
@@ -43,10 +43,8 @@ public class NoPermitMatcher implements RequestMatcher {
 
     @Override
     public boolean matches(HttpServletRequest request) {
-        String accessToken = AccessTokenUtils.getAccessToken(request);
-        if (StringUtils.isNotEmpty(accessToken)) {
-            return requestMatchers.stream().anyMatch(item -> item.matches(request));
-        }
-        return true;
+        var accessToken = AccessTokenUtils.getAccessToken(request);
+        return StringUtils.isNotEmpty(accessToken)
+                && requestMatchers.stream().anyMatch(item -> item.matches(request));
     }
 }

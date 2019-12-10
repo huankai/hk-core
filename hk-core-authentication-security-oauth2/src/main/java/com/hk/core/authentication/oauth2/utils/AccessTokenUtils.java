@@ -20,7 +20,7 @@ public abstract class AccessTokenUtils {
      * @return access_token
      */
     public static String getAccessToken(HttpServletRequest request) {
-        String authorization = extractHeaderToken(request);
+        var authorization = extractHeaderToken(request);
         return StringUtils.isEmpty(authorization) ? request.getParameter(OAuth2AccessToken.ACCESS_TOKEN) : authorization;
     }
 
@@ -33,7 +33,7 @@ public abstract class AccessTokenUtils {
     private static String extractHeaderToken(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
         while (headers.hasMoreElements()) {
-            String value = headers.nextElement();
+            var value = headers.nextElement();
             if (StringUtils.startsWithIgnoreCase(value, OAuth2AccessToken.BEARER_TYPE)) {
                 return value.substring(OAuth2AccessToken.BEARER_TYPE.length()).trim();
             }

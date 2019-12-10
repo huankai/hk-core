@@ -1,17 +1,11 @@
 package com.hk.oauth2.http;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -23,9 +17,12 @@ import org.apache.http.impl.client.HttpRequestFutureTask;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.DisposableBean;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.client.RestTemplate;
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * @author kevin
@@ -54,9 +51,9 @@ public class SimpleHttpClient implements HttpClient, Serializable, DisposableBea
     @Override
     public boolean sendMessageToEndPoint(HttpMessage message) {
         try {
-            final HttpPost request = new HttpPost(message.getUrl().toURI());
+            final var request = new HttpPost(message.getUrl().toURI());
             request.addHeader(HttpHeaders.CONTENT_TYPE, message.getContentType());
-            final StringEntity entity = new StringEntity(message.getMessage(), ContentType.create(message.getContentType()));
+            final var entity = new StringEntity(message.getMessage(), ContentType.create(message.getContentType()));
             request.setEntity(entity);
             final ResponseHandler<Boolean> handler = response -> response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
             log.debug("Created HTTP post message payload [{}]", request);
@@ -77,10 +74,10 @@ public class SimpleHttpClient implements HttpClient, Serializable, DisposableBea
     @Override
     public boolean isValidEndPoint(URL url) {
         HttpEntity entity = null;
-        try (CloseableHttpResponse response = wrappedHttpClient.execute(new HttpGet(url.toURI()))) {
-            final int responseCode = response.getStatusLine().getStatusCode();
+        try (var response = wrappedHttpClient.execute(new HttpGet(url.toURI()))) {
+            final var responseCode = response.getStatusLine().getStatusCode();
 
-            final int idx = Collections.binarySearch(acceptableCodes, responseCode);
+            final var idx = Collections.binarySearch(acceptableCodes, responseCode);
             if (idx >= 0) {
                 log.debug("Response code from server matched [{}].", responseCode);
                 return true;

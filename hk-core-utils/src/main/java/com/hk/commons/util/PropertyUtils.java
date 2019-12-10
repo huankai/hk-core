@@ -1,7 +1,5 @@
 package com.hk.commons.util;
 
-import org.springframework.beans.BeanWrapper;
-
 /**
  * 属性工具类
  *
@@ -32,7 +30,7 @@ public abstract class PropertyUtils {
      * @return bean 属性值
      */
     public static <T> T getPropertyValue(Object bean, String propertyName, Class<T> clazz) {
-        BeanWrapper beanWrapper = BeanWrapperUtils.createBeanWrapper(bean);
+        var beanWrapper = BeanWrapperUtils.createBeanWrapper(bean);
         return clazz.cast(beanWrapper.getPropertyValue(propertyName));
     }
 
@@ -44,7 +42,7 @@ public abstract class PropertyUtils {
      * @param value        value
      */
     public static void setPropertyValue(final Object bean, String propertyName, Object value) {
-        BeanWrapper beanWrapper = BeanWrapperUtils.createBeanWrapper(bean);
+        var beanWrapper = BeanWrapperUtils.createBeanWrapper(bean);
         beanWrapper.setPropertyValue(propertyName, value);
     }
 

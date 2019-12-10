@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -91,11 +90,11 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
         if (CollectionUtils.isEmpty(params)) {
             return template;
         }
-        StringBuffer sb = new StringBuffer();
-        Matcher m = VARIABLE_PATTERN.matcher(template);
+        var sb = new StringBuffer();
+        var m = VARIABLE_PATTERN.matcher(template);
         while (m.find()) {
-            String param = m.group();
-            Object value = params.get(param.substring(2, param.length() - 1));// 截取 ${  与  }
+            var param = m.group();
+            var value = params.get(param.substring(2, param.length() - 1));// 截取 ${  与  }
             m.appendReplacement(sb, value == null ? EMPTY : value.toString());
         }
         m.appendTail(sb);
@@ -113,8 +112,8 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
     }
 
     private static String lineToHump(String str) {
-        Matcher matcher = LINE_PATTERN.matcher(str);
-        StringBuffer sb = new StringBuffer();
+        var matcher = LINE_PATTERN.matcher(str);
+        var sb = new StringBuffer();
         while (matcher.find()) {
             matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
         }
@@ -319,7 +318,7 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
     }
 
     public static <T> List<T> splitByComma(String args, Class<T> clazz) {
-        String[] list = splitByComma(args);
+        var list = splitByComma(args);
         List<T> result = new ArrayList<>(list.length);
         for (String item : list) {
             result.add(ConverterUtils.defaultConvert(item, clazz));

@@ -3,8 +3,6 @@ package com.hk.weixin.security;
 import com.hk.commons.util.StringUtils;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
-import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -64,16 +62,16 @@ public class WeiXinCallbackAuthenticationFilter extends AbstractAuthenticationPr
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        final String code = request.getParameter(CODE_PARAM_NAME);
-        final String state = request.getParameter(STATE_PARAM_NAME);
+        final var code = request.getParameter(CODE_PARAM_NAME);
+        final var state = request.getParameter(STATE_PARAM_NAME);
         if (StringUtils.isNotEmpty(this.state) && StringUtils.notEquals(this.state, state)) {
             throw new AuthenticationServiceException("登录失败，跨站请求伪造攻击");
         }
         if (StringUtils.isNotEmpty(code)) { // 用户同意授权
             try {
-                WxMpOAuth2AccessToken accessToken = wxService.oauth2getAccessToken(code);
-                WxMpUser mpUser = wxService.oauth2getUserInfo(accessToken, null);
-                WeiXinAuthenticationToken authenticationToken = new WeiXinAuthenticationToken(mpUser);
+                var accessToken = wxService.oauth2getAccessToken(code);
+                var mpUser = wxService.oauth2getUserInfo(accessToken, null);
+                var authenticationToken = new WeiXinAuthenticationToken(mpUser);
                 setDetails(request, authenticationToken);
                 return getAuthenticationManager().authenticate(authenticationToken);
             } catch (WxErrorException e) {

@@ -7,11 +7,9 @@ import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.util.ClassUtils;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 与Bean相关的工具类
@@ -30,7 +28,7 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
      * @return T
      */
     public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
-        BeanWrapper beanWrapper = BeanWrapperUtils.createBeanWrapper(clazz);
+        var beanWrapper = BeanWrapperUtils.createBeanWrapper(clazz);
         for (Map.Entry<String, ?> entry : map.entrySet()) {
             if (beanWrapper.isWritableProperty(entry.getKey())) {
                 beanWrapper.setPropertyValue(entry.getKey(), entry.getValue());
@@ -51,7 +49,7 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
     }
 
     public static Map<String, Object> beanToMapIgnoreEntityProperties(Object obj, String... ignoreProperties) {
-        Set<String> ignorePropertySet = ArrayUtils.asHashSet(AuditField.AUDIT_FIELD_ARRAY);
+        var ignorePropertySet = ArrayUtils.asHashSet(AuditField.AUDIT_FIELD_ARRAY);
         ignorePropertySet.add("new");
         ignorePropertySet.add("class");
         ignorePropertySet.add("hibernateLazyInitializer");
@@ -88,7 +86,7 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
      * @param target 拷贝后的对象
      */
     public static void copierCopyNotNullProperties(Object source, Object target) {
-        BeanCopier beanCopier = BeanCopier.create(source.getClass(), target.getClass(), true);
+        var beanCopier = BeanCopier.create(source.getClass(), target.getClass(), true);
         beanCopier.copy(source, target, new BeanConverter(target));
     }
 
@@ -99,20 +97,20 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
      * @param target target
      */
     public static void copyNotNullProperties(Object source, Object target) {
-        PropertyDescriptor[] targetDescriptors = getPropertyDescriptors(target.getClass());
+        var targetDescriptors = getPropertyDescriptors(target.getClass());
         for (PropertyDescriptor targetDescriptor : targetDescriptors) {
-            Method writeMethod = targetDescriptor.getWriteMethod();
+            var writeMethod = targetDescriptor.getWriteMethod();
             if (writeMethod != null) {
-                PropertyDescriptor sourcePd = getPropertyDescriptor(source.getClass(), targetDescriptor.getName());
+                var sourcePd = getPropertyDescriptor(source.getClass(), targetDescriptor.getName());
                 if (null != sourcePd) {
-                    Method readMethod = sourcePd.getReadMethod();
+                    var readMethod = sourcePd.getReadMethod();
                     if (readMethod != null &&
                             ClassUtils.isAssignable(writeMethod.getParameterTypes()[0], readMethod.getReturnType())) {
                         try {
                             if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
                                 readMethod.setAccessible(true);
                             }
-                            Object value = readMethod.invoke(source);
+                            var value = readMethod.invoke(source);
                             if (ObjectUtils.isNotEmpty(value)) {
                                 if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
                                     writeMethod.setAccessible(true);
@@ -127,7 +125,6 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
                 }
             }
         }
-
     }
 
 }

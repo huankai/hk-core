@@ -1,31 +1,8 @@
 package com.hk.commons.poi.excel.read.handler;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanCreationException;
-
 import com.hk.commons.poi.ReadException;
 import com.hk.commons.poi.excel.exception.ExcelReadException;
-import com.hk.commons.poi.excel.model.ErrorLog;
-import com.hk.commons.poi.excel.model.InvalidCell;
-import com.hk.commons.poi.excel.model.ReadParam;
-import com.hk.commons.poi.excel.model.ReadResult;
-import com.hk.commons.poi.excel.model.SheetData;
-import com.hk.commons.poi.excel.model.Title;
+import com.hk.commons.poi.excel.model.*;
 import com.hk.commons.poi.excel.read.interceptor.ValidationInterceptor;
 import com.hk.commons.poi.excel.read.validation.Validationable;
 import com.hk.commons.poi.excel.util.ReadExcelUtils;
@@ -34,8 +11,16 @@ import com.hk.commons.util.ClassUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.ObjectUtils;
 import com.hk.commons.util.StringUtils;
-
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
+
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author kevin
@@ -128,22 +113,22 @@ public abstract class AbstractReadHandler<T> {
     protected void setWrapperBeanValue(BeanWrapper wrapper, int columnIndex, Object value)
             throws BeansException {
         if (Objects.nonNull(value)) {
-            String propertyName = getPropertyName(columnIndex);
+            var propertyName = getPropertyName(columnIndex);
             if (StringUtils.isNotEmpty(propertyName)) {
                 value = trimToValue(value);
-                boolean isNestedProperty = StringUtils.indexOf(propertyName, WriteExcelUtils.NESTED_PROPERTY) != -1;
+                var isNestedProperty = StringUtils.indexOf(propertyName, WriteExcelUtils.NESTED_PROPERTY) != -1;
                 if (isNestedProperty) {
-                    String nestedPropertyPrefix = StringUtils.substringBefore(propertyName, WriteExcelUtils.NESTED_PROPERTY);
+                    var nestedPropertyPrefix = StringUtils.substringBefore(propertyName, WriteExcelUtils.NESTED_PROPERTY);
                     Class<?> propertyType = wrapper.getPropertyType(nestedPropertyPrefix);
                     propertyName = String.format(propertyName, 0);
-                    Object propertyValue = wrapper.getPropertyValue(propertyName);
+                    var propertyValue = wrapper.getPropertyValue(propertyName);
                     if (null == propertyValue) {
                         if (!ClassUtils.isAssignable(Collection.class, propertyType)) {
                             throw new BeanCreationException("NestedProperty 类型必须为 Collection");
                         }
                         propertyValue = newNestedPropertyValue(propertyType);
                     }
-                    int size = getNestedPropertySize(propertyValue);
+                    var size = getNestedPropertySize(propertyValue);
                     if (isNewObject(wrapper.getWrappedClass(), nestedPropertyPrefix, columnIndex)) {
                         size = size + 1;
                     }
@@ -156,7 +141,7 @@ public abstract class AbstractReadHandler<T> {
 
     private boolean isNewObject(Class<?> propertyType, String nestedPropertyPrefix, int currentColumnIndex) {
         try {
-            ParameterizedType type = (ParameterizedType) propertyType.getDeclaredField(nestedPropertyPrefix).getGenericType();
+            var type = (ParameterizedType) propertyType.getDeclaredField(nestedPropertyPrefix).getGenericType();
             return ReadExcelUtils.getMinColumnWithExcelCellAnnotations((Class<?>)type.getActualTypeArguments()[0]) == currentColumnIndex;
         } catch (NoSuchFieldException e) {
             throw new BeanCreationException(e.getMessage());
@@ -180,16 +165,16 @@ public abstract class AbstractReadHandler<T> {
      */
     private Object newNestedPropertyValue(Class<?> propertyType) {
         if (ClassUtils.isAssignable(List.class, propertyType)) {
-            return new ArrayList<>();
+            return new ArrayList<>(0);
         }
         if (ClassUtils.isAssignable(Set.class, propertyType)) {
-            return new HashSet<>();
+            return new HashSet<>(0);
         }
         if (ClassUtils.isAssignable(Queue.class, propertyType)) {
             return new LinkedList<>();
         }
         if (ClassUtils.isAssignable(Collection.class, propertyType)) {
-            return new ArrayList<>();
+            return new ArrayList<>(0);
         }
         throw new BeanCreationException("NestedProperty 类型必须为 Collection");
     }
@@ -210,7 +195,7 @@ public abstract class AbstractReadHandler<T> {
      * @return trim value
      */
     private Object trimToValue(Object value) {
-        String result = ObjectUtils.toString(value);
+        var result = ObjectUtils.toString(value);
         if (readParam.isTrim()) {
             result = StringUtils.trimToNull(result);
         }
@@ -231,7 +216,7 @@ public abstract class AbstractReadHandler<T> {
             final ValidationInterceptor<T> interceptor = readParam.getInterceptor();
             interceptor.preValidate(result);
             List<SheetData<T>> sheetDataList = result.getSheetDataList();
-            long size = CollectionUtils.size(sheetDataList);
+            var size = CollectionUtils.size(sheetDataList);
             if (size > 1) {
                 CountDownLatch countDownLatch = new CountDownLatch((int) size);
                 for (SheetData<T> sheetData : sheetDataList) {
@@ -251,10 +236,10 @@ public abstract class AbstractReadHandler<T> {
 
     private void doValidate(SheetData<T> dataSheet, ReadResult<T> result) {
         ValidationInterceptor<T> interceptor = readParam.getInterceptor();
-        int rowIndex = readParam.getDataStartRow();
+        var rowIndex = readParam.getDataStartRow();
         ListIterator<T> listIterator = dataSheet.getData().listIterator();
         while (listIterator.hasNext()) {
-            T t = listIterator.next();
+            var t = listIterator.next();
             List<InvalidCell> invalidCells = new ArrayList<>();
             if (interceptor.beforeValidate(t)) {
                 for (Validationable<T> validation : readParam.getValidationList()) {

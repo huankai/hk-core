@@ -44,7 +44,7 @@ public class AlipayAuthenticationToken extends AbstractAuthenticationToken {
 
     @Override
     public String getName() {
-        Object principal = getPrincipal();
+        var principal = getPrincipal();
         if (principal instanceof UserPrincipal) {
             return ((UserPrincipal) principal).getAccount();
         }

@@ -38,12 +38,12 @@ public class CustomRedisCache extends RedisCache {
 
     @Override
     public void put(Object key, Object value) {
-        Object cacheValue = preProcessCacheValue(value);
+        var cacheValue = preProcessCacheValue(value);
         if (!isAllowNullValues() && cacheValue == null) {
             return;
         }
         // 如果缓存值为 null ，使用 null 值的缓存过期时间
-        Duration ttl = (null == cacheValue || NullValue.INSTANCE.equals(cacheValue)) ? nullValueTtl : cacheConfig.getTtl();
+        var ttl = (null == cacheValue || NullValue.INSTANCE.equals(cacheValue)) ? nullValueTtl : cacheConfig.getTtl();
         cacheWriter.put(getName(), createAndConvertCacheKey(key), serializeCacheValue(cacheValue), ttl);
     }
 

@@ -4,8 +4,6 @@ import com.hk.commons.util.IDGenerator;
 import com.hk.commons.util.SerialUniqueIdGenerator;
 import com.hk.core.redis.locks.RedisLock;
 
-import java.util.concurrent.locks.Lock;
-
 /**
  * @author kevin
  * @date 2019-12-6 12:27
@@ -18,7 +16,7 @@ public class RedisSerialUniqueIdGenerator implements IDGenerator<String> {
 
     @Override
     public String generate() {
-        Lock lock = new RedisLock(LOCK_KEY);
+        var lock = new RedisLock(LOCK_KEY);
         try {
             lock.lock();
             return idGenerator.generate();

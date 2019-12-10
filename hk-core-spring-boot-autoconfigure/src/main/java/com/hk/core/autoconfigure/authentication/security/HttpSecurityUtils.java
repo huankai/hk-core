@@ -17,7 +17,7 @@ public abstract class HttpSecurityUtils {
     public static void buildPermitMatchers(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry urlRegistry,
                                            Set<PermitMatcher> permitAllMatchers) {
         if (CollectionUtils.isNotEmpty(permitAllMatchers)) {
-            for (PermitMatcher permitMatcher : permitAllMatchers) {
+            for (var permitMatcher : permitAllMatchers) {
                 if (ArrayUtils.isNotEmpty(permitMatcher.getPermissions())) {
                     urlRegistry.antMatchers(permitMatcher.getMethod(), permitMatcher.getUris()).hasAnyAuthority(permitMatcher.getPermissions());
                 } else if (ArrayUtils.isNotEmpty(permitMatcher.getRoles())) {

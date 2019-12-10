@@ -17,7 +17,7 @@ public class ConsumerTokenLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String accessToken = AccessTokenUtils.getAccessToken(request);
+        var accessToken = AccessTokenUtils.getAccessToken(request);
         if (StringUtils.isNotEmpty(accessToken)) {
             consumerTokenServices.revokeToken(accessToken);
         }

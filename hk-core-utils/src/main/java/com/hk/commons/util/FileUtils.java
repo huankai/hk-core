@@ -1,9 +1,9 @@
 package com.hk.commons.util;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.IOException;
-
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * 文件工具类
@@ -26,9 +26,9 @@ public abstract class FileUtils extends org.apache.commons.io.FileUtils {
      * @return true if success
      */
     public static boolean deleteFile(File file, String ext) {
-        boolean result = false;
+        var result = false;
         if (file.isDirectory()) {
-            File[] files = file.listFiles();
+            var files = file.listFiles();
             if (ArrayUtils.isNotEmpty(files)) {
                 for (File item : files) {
                     if (item.isDirectory()) {
@@ -52,7 +52,7 @@ public abstract class FileUtils extends org.apache.commons.io.FileUtils {
      * @param dir dir
      */
     public static boolean deleteDir(File dir) {
-        boolean result = false;
+        var result = false;
         if (dir.exists() && dir.isDirectory()) {
             try {
                 deleteDirectory(dir);
@@ -91,7 +91,7 @@ public abstract class FileUtils extends org.apache.commons.io.FileUtils {
      * @return boolean
      */
     public static boolean isImage(String fileName) {
-        String extension = getExtension(fileName);
+        var extension = getExtension(fileName);
         return StringUtils.isNotEmpty(extension) && ArrayUtils.contains(IMAGE_EXT, extension.toLowerCase());
     }
 

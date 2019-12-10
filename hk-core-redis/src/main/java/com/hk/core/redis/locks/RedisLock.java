@@ -125,9 +125,9 @@ public class RedisLock implements Lock {
      */
     @Override
     public boolean tryLock() {
-        String value = lockGenerator.generate();
+        var value = lockGenerator.generate();
         LOCAL_VALUE.set(value);
-        Boolean result = REDIS_TEMPLATE.opsForValue().setIfAbsent(key, value, expire, TimeUnit.SECONDS);
+        var result = REDIS_TEMPLATE.opsForValue().setIfAbsent(key, value, expire, TimeUnit.SECONDS);
         return ObjectUtils.defaultIfNull(result, Boolean.FALSE);
     }
 

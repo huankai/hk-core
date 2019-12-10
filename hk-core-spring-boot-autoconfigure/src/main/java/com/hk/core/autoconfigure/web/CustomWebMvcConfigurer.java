@@ -69,7 +69,7 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         return jacksonObjectMapperBuilder -> {
-            SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+            var filterProvider = new SimpleFilterProvider();
             filterProvider.addFilter(JsonUtils.IGNORE_ENTITY_SERIALIZE_FIELD_FILTER_ID,
                     SimpleBeanPropertyFilter.serializeAllExcept(AuditField.AUDIT_FIELD_ARRAY));
             jacksonObjectMapperBuilder.modules(JsonUtils.modules())
@@ -182,7 +182,7 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
 
         /* ****************** 国际化支持******************* */
-        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        var localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
     }

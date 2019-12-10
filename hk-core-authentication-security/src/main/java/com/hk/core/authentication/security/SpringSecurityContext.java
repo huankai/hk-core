@@ -30,7 +30,7 @@ public class SpringSecurityContext implements SecurityContext {
      */
     @Override
     public boolean isAuthenticated() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
         return null != authentication && !(authentication instanceof AnonymousAuthenticationToken)
                 && authentication.isAuthenticated();
     }

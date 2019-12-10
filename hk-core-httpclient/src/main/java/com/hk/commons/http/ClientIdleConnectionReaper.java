@@ -57,7 +57,7 @@ public class ClientIdleConnectionReaper extends Thread {
     }
 
     public static synchronized boolean removeConnectionManager(HttpClientConnectionManager connectionManager) {
-        boolean b = connectionManagers.remove(connectionManager);
+        var b = connectionManagers.remove(connectionManager);
         shutdownIfEmptyTask();
         return b;
     }

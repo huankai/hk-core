@@ -7,7 +7,6 @@ import com.hk.core.jdbc.core.HumpColumnMapRowMapper;
 import com.hk.core.jdbc.core.namedparam.SqlParameterSourceUtils;
 import com.hk.core.jdbc.dialect.Dialect;
 import com.hk.core.jdbc.exception.NonUniqueResultException;
-import com.hk.core.jdbc.query.CompositeCondition;
 import com.hk.core.page.QueryPage;
 import com.hk.core.page.SimpleQueryPage;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +42,9 @@ public final class JdbcSession {
      */
     public boolean delete(DeleteArguments arguments) {
         AssertUtils.isTrue(StringUtils.isNotEmpty(arguments.getFrom()), "delete From must not be null");
-        StringBuilder sql = new StringBuilder("DELETE FROM ").append(arguments.getFrom());
-        List<Object> params = new ArrayList<>();
-        String conditionSql = arguments.getConditions().toSqlString(params);
+        var sql = new StringBuilder("DELETE FROM ").append(arguments.getFrom());
+        var params = new ArrayList<>();
+        var conditionSql = arguments.getConditions().toSqlString(params);
         if (StringUtils.isNotEmpty(conditionSql)) {
             sql.append(" WHERE ").append(conditionSql);
         }
@@ -105,8 +104,8 @@ public final class JdbcSession {
      * @return T
      */
     public final <T> T queryForObject(SelectArguments arguments, Class<T> clazz) {
-        SelectStatement statement = buildSelect(arguments);
-        CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
+        var statement = buildSelect(arguments);
+        var rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
 //        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return jdbcTemplate.queryForObject(statement.selectSql.toString(), rowMapper, statement.parameters.toArray());
     }
@@ -118,7 +117,7 @@ public final class JdbcSession {
      * @return 记录数
      */
     public long queryForCount(SelectArguments arguments) {
-        SelectStatement statement = buildSelect(arguments);
+        var statement = buildSelect(arguments);
         return queryForScalar(statement.countSql.toString(), Long.class, statement.parameters.toArray());
     }
 
@@ -131,7 +130,7 @@ public final class JdbcSession {
      * @return {@link ListResult}
      */
     public <T> ListResult<T> queryForList(SelectArguments arguments, boolean retrieveRowCount, Class<T> clazz) {
-        CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
+        var rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
 //        rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
         return queryForList(arguments, retrieveRowCount, rowMapper);
     }
@@ -145,7 +144,7 @@ public final class JdbcSession {
      * @return {@link QueryPage}
      */
     public <T> QueryPage<T> queryForPage(SelectArguments arguments, Class<T> clazz) {
-        ListResult<T> result = queryForList(arguments, true, clazz);
+        var result = queryForList(arguments, true, clazz);
         return new SimpleQueryPage<>(result.getResult(), result.getTotalRowCount(), arguments.getStartRowIndex() + 1, arguments.getPageSize());
     }
 
@@ -158,16 +157,16 @@ public final class JdbcSession {
      * @return {@link ListResult}
      */
     private <T> ListResult<T> queryForList(SelectArguments arguments, boolean retrieveRowCount, RowMapper<T> rowMapper) {
-        SelectStatement stmt = buildSelect(arguments);
-        Object[] params = stmt.parameters.toArray();
-        long rowCount = 0;
+        var stmt = buildSelect(arguments);
+        var params = stmt.parameters.toArray();
+        var rowCount = 0L;
         if (retrieveRowCount) {// 如果是分页查询，先查询记录数，如果记录数为 0 ，直接返回，不再查询数据集
             rowCount = queryForScalar(stmt.countSql.toString(), Long.class, params);
             if (rowCount == 0) {
                 return new ListResult<>(rowCount, new ArrayList<>());
             }
         }
-        List<T> queryResult = queryForList(stmt.selectSql.toString(), rowMapper,
+        var queryResult = queryForList(stmt.selectSql.toString(), rowMapper,
                 arguments.getStartRowIndex() * arguments.getPageSize(),
                 arguments.getPageSize(), params);
         if (0 == rowCount) {
@@ -177,7 +176,7 @@ public final class JdbcSession {
     }
 
     public <T> T queryForScalar(SelectArguments arguments, Class<T> clazz) {
-        SelectStatement statement = buildSelect(arguments);
+        var statement = buildSelect(arguments);
         return queryForScalar(statement.selectSql.toString(), clazz, statement.parameters.toArray());
     }
 
@@ -206,12 +205,12 @@ public final class JdbcSession {
      * @throws NonUniqueResultException 查询返回多条记录时抛出异常
      */
     public <T> Optional<T> queryForOne(SelectArguments arguments, Class<T> clazz) {
-        CustomBeanPropertyRowMapper<T> rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
+        var rowMapper = CustomBeanPropertyRowMapper.newInstance(clazz);
         rowMapper.setConversionService(ConverterUtils.DEFAULT_CONVERSION_SERVICE);
-        SelectStatement stmt = buildSelect(arguments);
-        final String originalSql = stmt.selectSql.toString();
-        String sql = dialect.getLimitSql(originalSql, 0, 2); // 分页两条,如果返回有多条记录,抛出异常
-        List<T> result = queryForList(sql, rowMapper, stmt.parameters.toArray());
+        var stmt = buildSelect(arguments);
+        final var originalSql = stmt.selectSql.toString();
+        var sql = dialect.getLimitSql(originalSql, 0, 2); // 分页两条,如果返回有多条记录,抛出异常
+        var result = queryForList(sql, rowMapper, stmt.parameters.toArray());
         if (result.size() > 1) {
             log.error("查询结果不唯一,返回多条记录: SQL : {},args:{}", originalSql, stmt.parameters);
             throw new NonUniqueResultException("查询结果不唯一,SQL:" + originalSql);
@@ -233,11 +232,11 @@ public final class JdbcSession {
     private SelectStatement buildSelect(SelectArguments arguments) {
         AssertUtils.isTrue(Objects.nonNull(arguments), "arguments must not be null");
         AssertUtils.notEmpty(arguments.getFrom(), "查询表名不能为空");
-        StringBuilder sql = new StringBuilder();
-        StringBuilder countSql = new StringBuilder();
+        var sql = new StringBuilder();
+        var countSql = new StringBuilder();
 
-        Collection<String> fieldSet = arguments.getFields();
-        String fields = CollectionUtils.isEmpty(fieldSet) ? "*"
+        var fieldSet = arguments.getFields();
+        var fields = CollectionUtils.isEmpty(fieldSet) ? "*"
                 : String.join(StringUtils.COMMA_SEPARATE, fieldSet);
         sql.append("SELECT ");
         countSql.append("SELECT ");
@@ -247,16 +246,16 @@ public final class JdbcSession {
         }
         sql.append(fields);
         sql.append(" FROM ");
-        String countField = arguments.getCountField();
+        var countField = arguments.getCountField();
         countSql.append("COUNT(").append(StringUtils.isEmpty(countField) ? "*" : countField).append(") FROM ");
 
         sql.append(arguments.getFrom());
         countSql.append(arguments.getFrom());
 
-        List<Object> parameters = new ArrayList<>();
-        CompositeCondition condition = arguments.getConditions();
+        var parameters = new ArrayList<>();
+        var condition = arguments.getConditions();
         if (null != condition) {
-            String conditionSql = condition.toSqlString(parameters);
+            var conditionSql = condition.toSqlString(parameters);
             if (StringUtils.isNotEmpty(conditionSql)) {
                 sql.append(" WHERE ");
                 sql.append(conditionSql);
@@ -264,9 +263,9 @@ public final class JdbcSession {
                 countSql.append(conditionSql);
             }
         }
-        Collection<String> groupBys = arguments.getGroupBy();
+        var groupBys = arguments.getGroupBy();
         if (CollectionUtils.isNotEmpty(groupBys)) {
-            String groupBySql = String.join(StringUtils.COMMA_SEPARATE, groupBys);
+            var groupBySql = String.join(StringUtils.COMMA_SEPARATE, groupBys);
             sql.append(" GROUP BY ").append(groupBySql);
             countSql.append(" GROUP BY ").append(groupBySql).append(") result_");
             countSql.insert(0, "SELECT COUNT(*) FROM (");

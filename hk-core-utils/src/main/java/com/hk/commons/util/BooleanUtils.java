@@ -47,7 +47,7 @@ public abstract class BooleanUtils extends org.apache.commons.lang3.BooleanUtils
         if (StringUtils.isEmpty(args)) {
             return false;
         }
-        final String trimValue = args.trim();
+        final var trimValue = args.trim();
         return StringUtils.equalsIgnoreCase("yes", trimValue)
                 || StringUtils.equals("1", trimValue)
                 || StringUtils.equals(TRUE_CHINESE, trimValue)

@@ -3,9 +3,6 @@
  */
 package com.hk.commons.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-
 import org.springframework.core.ResolvableType;
 
 /**
@@ -44,8 +41,8 @@ public abstract class TypeUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<T> getParameterizedTypeClass(Class<?> beanClass, int index, String propertyName) {
-        Field field = FieldUtils.findField(beanClass, propertyName);
-        Type type = field.getGenericType();
+        var field = FieldUtils.findField(beanClass, propertyName);
+        var type = field.getGenericType();
         if (type.getClass() == Class.class) {
             return (Class<T>) type;
         }

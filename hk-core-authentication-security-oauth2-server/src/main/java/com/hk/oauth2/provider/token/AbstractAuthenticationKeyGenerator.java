@@ -23,7 +23,7 @@ public abstract class AbstractAuthenticationKeyGenerator implements Authenticati
 
     @Override
     public String extractKey(OAuth2Authentication authentication) {
-        String grantType = authentication.getOAuth2Request().getGrantType();
+        var grantType = authentication.getOAuth2Request().getGrantType();
         if (StringUtils.equals(this.grantType, grantType)) {
             Map<String, Object> values = new HashMap<>();
             values.put(USERNAME, authentication.getName());

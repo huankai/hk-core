@@ -84,7 +84,7 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
 
     @Transactional
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
-        OAuth2AccessToken existingAccessToken = tokenStore.getAccessToken(authentication);
+        var existingAccessToken = tokenStore.getAccessToken(authentication);
         check(existingAccessToken, authentication.getOAuth2Request().getClientId());
         OAuth2RefreshToken refreshToken = null;
         if (existingAccessToken != null) {
@@ -103,12 +103,12 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
         if (refreshToken == null) {
             refreshToken = createRefreshToken(authentication);
         } else if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
-            ExpiringOAuth2RefreshToken expiring = (ExpiringOAuth2RefreshToken) refreshToken;
+            var expiring = (ExpiringOAuth2RefreshToken) refreshToken;
             if (System.currentTimeMillis() > expiring.getExpiration().getTime()) {
                 refreshToken = createRefreshToken(authentication);
             }
         }
-        OAuth2AccessToken accessToken = createAccessToken(authentication, refreshToken);
+        var accessToken = createAccessToken(authentication, refreshToken);
         tokenStore.storeAccessToken(accessToken, authentication);
         refreshToken = accessToken.getRefreshToken();
         if (refreshToken != null) {
@@ -126,12 +126,12 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
             throw new InvalidGrantException("Invalid refresh token: " + refreshTokenValue);
         }
 
-        OAuth2RefreshToken refreshToken = tokenStore.readRefreshToken(refreshTokenValue);
+        var refreshToken = tokenStore.readRefreshToken(refreshTokenValue);
         if (refreshToken == null) {
             throw new InvalidGrantException("Invalid refresh token: " + refreshTokenValue);
         }
 
-        OAuth2Authentication authentication = tokenStore.readAuthenticationForRefreshToken(refreshToken);
+        var authentication = tokenStore.readAuthenticationForRefreshToken(refreshToken);
         if (this.authenticationManager != null && !authentication.isClientOnly()) {
             // The client has already been authenticated, but the user authentication might be old now, so give it a
             // chance to re-authenticate.
@@ -162,7 +162,7 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
             refreshToken = createRefreshToken(authentication);
         }
 
-        OAuth2AccessToken accessToken = createAccessToken(authentication, refreshToken);
+        var accessToken = createAccessToken(authentication, refreshToken);
         tokenStore.storeAccessToken(accessToken, authentication);
         if (!reuseRefreshToken) {
             tokenStore.storeRefreshToken(accessToken.getRefreshToken(), authentication);

@@ -29,7 +29,7 @@ public abstract class EnumDisplayUtils {
      * @return {@link EnumDisplay#value()}
      */
     public static String getDisplayText(Object enumValue) {
-        EnumDisplay enumDisplay = getEnumDisplay(enumValue);
+        var enumDisplay = getEnumDisplay(enumValue);
         return null == enumDisplay ? null :
                 SpringContextHolder.getMessageWithDefault(enumDisplay.value(), enumDisplay.value());
     }
@@ -40,7 +40,7 @@ public abstract class EnumDisplayUtils {
      * @return {@link EnumDisplay#value()}
      */
     public static String getDisplayText(Class<? extends Enum<?>> enumClass, int order) {
-        EnumDisplay enumDisplay = getEnumDisplayByOrder(enumClass, order);
+        var enumDisplay = getEnumDisplayByOrder(enumClass, order);
         return Objects.isNull(enumDisplay) ? null : SpringContextHolder.getMessageWithDefault(enumDisplay.value(), null);
     }
 
@@ -52,9 +52,9 @@ public abstract class EnumDisplayUtils {
      * @return {@link EnumDisplay}
      */
     public static EnumDisplay getEnumDisplayByOrder(Class<? extends Enum<?>> enumClass, int order) {
-        Enum<?>[] enumConstants = enumClass.getEnumConstants();
+        var enumConstants = enumClass.getEnumConstants();
         for (Enum<?> enumConstant : enumConstants) {
-            EnumDisplay enumDisplay = getEnumDisplay(enumConstant);
+            var enumDisplay = getEnumDisplay(enumConstant);
             if (null != enumDisplay && enumDisplay.order() == order) {
                 return enumDisplay;
             }
@@ -74,9 +74,9 @@ public abstract class EnumDisplayUtils {
         if (null == enumValue) {
             return null;
         }
-        Class<?> type = enumValue.getClass();
-        Enum<?> en = (Enum<?>) enumValue;
-        Field field = type.getField(en.name());
+        var type = enumValue.getClass();
+        var en = (Enum<?>) enumValue;
+        var field = type.getField(en.name());
         return field.getAnnotation(EnumDisplay.class);
     }
 
@@ -87,7 +87,7 @@ public abstract class EnumDisplayUtils {
      * @return order value
      */
     public static int getDisplayOrder(Object enumValue) {
-        EnumDisplay enumDisplay = getEnumDisplay(enumValue);
+        var enumDisplay = getEnumDisplay(enumValue);
         return null == enumDisplay ? 0 : enumDisplay.order();
     }
 
@@ -99,7 +99,7 @@ public abstract class EnumDisplayUtils {
      * @return {@link EnumDisplay#value()}
      */
     public static <T extends Enum<T>> String getDisplayText(String enumValue, Class<T> enumClass) {
-        T value = Enum.valueOf(enumClass, enumValue);
+        var value = Enum.valueOf(enumClass, enumValue);
         return getDisplayText(value);
     }
 
@@ -114,12 +114,12 @@ public abstract class EnumDisplayUtils {
     @SneakyThrows(value = {IllegalAccessException.class})
     public static <TEnum extends Enum<?>> List<EnumItem> getEnumItemList(Class<TEnum> enumClass) {
         List<EnumItem> items = new ArrayList<>();
-        Field[] fields = enumClass.getFields();
+        var fields = enumClass.getFields();
         EnumItem item;
         for (Field field : fields) {
             if (field.isEnumConstant()) {
                 item = new EnumItem();
-                Object value = field.get(null);
+                var value = field.get(null);
                 item.setValue(value);
                 item.setText(value.toString());
                 item.setOrder(0);

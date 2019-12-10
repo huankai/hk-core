@@ -37,21 +37,21 @@ public class Oauth2FeignAutoConfiguration {
                 if (!securityContext.isAuthenticated()) {
                     return null;
                 }
-                OAuth2AccessToken accessToken = getToken();
+                var accessToken = getToken();
                 return accessToken == null ? null : String.format("%s %s", tokenType, accessToken.getValue());
             }
 
             @Override
             public OAuth2AccessToken getToken() {
-                OAuth2AccessToken accessToken = clientContext.getAccessToken();
+                var accessToken = clientContext.getAccessToken();
                 if (accessToken == null || accessToken.isExpired()) {
                     try {
                         accessToken = acquireAccessToken();
                     } catch (UserRedirectRequiredException e) {
                         clientContext.setAccessToken(null);
-                        String stateKey = e.getStateKey();
+                        var stateKey = e.getStateKey();
                         if (stateKey != null) {
-                            Object stateToPreserve = e.getStateToPreserve();
+                            var stateToPreserve = e.getStateToPreserve();
                             if (stateToPreserve == null) {
                                 stateToPreserve = "NONE";
                             }

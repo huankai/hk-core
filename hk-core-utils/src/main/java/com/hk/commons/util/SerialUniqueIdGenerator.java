@@ -43,7 +43,7 @@ public class SerialUniqueIdGenerator implements IDGenerator<String> {
 
     @Override
     public String generate() {
-        LocalDateTime now = LocalDateTime.now();
+        var now = LocalDateTime.now();
         if (null == todayMaxTime) {
             todayMaxTime = DateTimeUtils.getLocalDateTimeEnd(now);
         }
@@ -52,18 +52,18 @@ public class SerialUniqueIdGenerator implements IDGenerator<String> {
             longAdder.reset(); //新的一天，从 0 开始记数
         }
         longAdder.increment();
-        long value = longAdder.longValue();
-        int length = String.valueOf(value).length();
-        String repeat = length > digit ? String.valueOf(value) : PATCH_POSITION.repeat(digit - length);
+        var value = longAdder.longValue();
+        var length = String.valueOf(value).length();
+        var repeat = length > digit ? String.valueOf(value) : PATCH_POSITION.repeat(digit - length);
         return String.format("%s%s%s", DateTimeUtils.localDateTimeToString(now, DatePattern.YYYYMMDDHHMMSS),
                 repeat, value);
     }
 
     /*　*********************** 测试，模拟 1000 个线程、循环测试生成的 id是否重复　*****************　*/
     public static void main(String[] args) {
-        SerialUniqueIdGenerator idGenerator = SerialUniqueIdGenerator.getInstance();
-        int num = 1000;
-        CyclicBarrier cyclicBarrier = new CyclicBarrier(num);
+        var idGenerator = SerialUniqueIdGenerator.getInstance();
+        var num = 1000;
+        var cyclicBarrier = new CyclicBarrier(num);
         for (int i = 0; i < num; i++) {
             new SimpleCyclicBarrier(cyclicBarrier, idGenerator).start();
         }
@@ -82,7 +82,7 @@ public class SerialUniqueIdGenerator implements IDGenerator<String> {
 
         @Override
         public void run() {
-            String threadName = Thread.currentThread().getName();
+            var threadName = Thread.currentThread().getName();
             System.out.println(threadName + "start...");
             try {
                 cyclicBarrier.await();

@@ -43,7 +43,7 @@ public class CustomLocalDateTimeEditor extends PropertyEditorSupport {
 
     @Override
     public String getAsText() {
-        Object value = getValue();
+        var value = getValue();
         return null == value ? null
                 : ((LocalDateTime) value)
                 .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM));

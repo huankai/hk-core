@@ -62,8 +62,8 @@ public class Oauth2DefaultWebResponseExceptionTranslator implements WebResponseE
     }
 
     private ResponseEntity<OAuth2Exception> handleOAuth2Exception(OAuth2Exception e) {
-        int status = e.getHttpErrorCode();
-        HttpHeaders headers = new HttpHeaders();
+        var status = e.getHttpErrorCode();
+        var headers = new HttpHeaders();
         headers.set("Cache-Control", "no-store");
         headers.set("Pragma", "no-cache");
         if (status == HttpStatus.UNAUTHORIZED.value() || (e instanceof InsufficientScopeException)) {

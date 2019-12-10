@@ -12,7 +12,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,8 +58,8 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
 
     @Override
     protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
-        String requestMappingName = request.getParameter(requestMappingParameterName);
-        final boolean traceEnabled = log.isTraceEnabled();
+        var requestMappingName = request.getParameter(requestMappingParameterName);
+        final var traceEnabled = log.isTraceEnabled();
         if (StringUtils.isEmpty(requestMappingName)) {
             requestMappingName = request.getHeader(requestMappingParameterName);
             if (StringUtils.isEmpty(requestMappingName)) {
@@ -70,19 +69,19 @@ public class CustomRequestMappingHandlerMapping extends RequestMappingHandlerMap
                 return super.lookupHandlerMethod(lookupPath, request);
             }
         }
-        List<HandlerMethod> handlerMethods = super.getHandlerMethodsForMappingName(requestMappingName);
+        var handlerMethods = super.getHandlerMethodsForMappingName(requestMappingName);
         if (CollectionUtils.isEmpty(handlerMethods)) {
             return super.lookupHandlerMethod(lookupPath, request);
         }
-        long size = CollectionUtils.size(handlerMethods);
+        var size = CollectionUtils.size(handlerMethods);
         if (size != 1) {
             if (traceEnabled) {
                 log.trace("path_variable_event :{},handlerMethods 匹配数:{}", requestMappingName, size);
             }
             return super.lookupHandlerMethod(lookupPath, request);
         }
-        HandlerMethod handlerMethod = handlerMethods.get(0);
-        RequestMappingInfo mappingInfo = METHOD_REQUEST_MAPPING_INFO_MAP.get(handlerMethod);
+        var handlerMethod = handlerMethods.get(0);
+        var mappingInfo = METHOD_REQUEST_MAPPING_INFO_MAP.get(handlerMethod);
         if (null == mappingInfo) {
             if (traceEnabled) {
                 log.trace("mappingInfo is null.");

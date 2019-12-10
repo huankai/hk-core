@@ -451,7 +451,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
         Map<String, Integer> result = new HashMap<>();
         for (Map<String, Integer> map : values) {
             for (Map.Entry<String, Integer> entry : map.entrySet()) {
-                Integer value = result.get(entry.getKey());
+                var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value + entry.getValue();
                 } else {
@@ -477,7 +477,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
         Map<String, Double> result = new HashMap<>();
         for (Map<String, Double> map : values) {
             for (Map.Entry<String, Double> entry : map.entrySet()) {
-                Double value = result.get(entry.getKey());
+                var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value + entry.getValue();
                 } else {
@@ -503,7 +503,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
         Map<String, Long> result = new HashMap<>();
         for (Map<String, Long> map : values) {
             for (Map.Entry<String, Long> entry : map.entrySet()) {
-                Long value = result.get(entry.getKey());
+                var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value + entry.getValue();
                 } else {
@@ -529,7 +529,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
         Map<String, BigDecimal> result = new HashMap<>();
         for (Map<String, BigDecimal> map : values) {
             for (Map.Entry<String, BigDecimal> entry : map.entrySet()) {
-                BigDecimal value = result.get(entry.getKey());
+                var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value.add(entry.getValue());
                 } else {
@@ -555,7 +555,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
         Map<String, BigInteger> result = new HashMap<>();
         for (Map<String, BigInteger> map : values) {
             for (Map.Entry<String, BigInteger> entry : map.entrySet()) {
-                BigInteger value = result.get(entry.getKey());
+                var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value.add(entry.getValue());
                 } else {

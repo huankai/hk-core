@@ -39,7 +39,7 @@ public class CustomLocalTimeEditor extends PropertyEditorSupport {
 
     @Override
     public String getAsText() {
-        Object value = getValue();
+        var value = getValue();
         return null == value ? null
                 : ((LocalTime) value).format(DateTimeFormatter.ofPattern(DatePattern.HH_MM.getPattern()));
     }

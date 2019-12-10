@@ -27,7 +27,7 @@ public abstract class BeanWrapperUtils {
      * @return BeanWrapper
      */
     public static BeanWrapper createBeanWrapper(Object obj) {
-        BeanWrapper beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(obj);
+        var beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(obj);
         registryDefaultEditor(beanWrapper);
         return beanWrapper;
     }
@@ -39,7 +39,7 @@ public abstract class BeanWrapperUtils {
      * @return BeanWrapper
      */
     public static BeanWrapper createBeanWrapper(Class<?> clazz) {
-        BeanWrapper beanWrapper = new BeanWrapperImpl(clazz);
+        var beanWrapper = new BeanWrapperImpl(clazz);
         registryDefaultEditor(beanWrapper);
         return beanWrapper;
     }

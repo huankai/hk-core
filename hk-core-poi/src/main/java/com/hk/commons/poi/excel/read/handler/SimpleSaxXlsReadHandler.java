@@ -101,10 +101,10 @@ public class SimpleSaxXlsReadHandler<T> extends AbstractSaxReadHandler<T> implem
     }
 
     private void doParseFileSystem(POIFSFileSystem fs) throws IOException {
-        MissingRecordAwareHSSFListener listener = new MissingRecordAwareHSSFListener(this);
+        var listener = new MissingRecordAwareHSSFListener(this);
         formatListener = new FormatTrackingHSSFListener(listener);
-        HSSFEventFactory factory = new HSSFEventFactory();// 处理xls文件流,按流循环处理每个Record
-        HSSFRequest request = new HSSFRequest();
+        var factory = new HSSFEventFactory();// 处理xls文件流,按流循环处理每个Record
+        var request = new HSSFRequest();
         if (readParam.isOutputFormulaValues()) {
             request.addListenerForAllRecords(formatListener);// 为所有Record 注册监听器，会影响一些性能
             // request.addListener(formatListener, BOFRecord.sid);
@@ -145,7 +145,7 @@ public class SimpleSaxXlsReadHandler<T> extends AbstractSaxReadHandler<T> implem
     @Override
     public void processRecord(Record record) {
         if (record.getSid() == BOFRecord.sid) { // 一个文件的开始,表示sheet或workbook的开始
-            BOFRecord br = (BOFRecord) record;
+            var br = (BOFRecord) record;
             isSheet = br.getType() == BOFRecord.TYPE_WORKSHEET;
             if (isSheet) { //表示为工作表
                 // Create sub workbook if required
@@ -166,7 +166,7 @@ public class SimpleSaxXlsReadHandler<T> extends AbstractSaxReadHandler<T> implem
         }
         if (currentSheetIndex == -1 || readParam.isParseAll() || (currentSheetIndex >= readParam.getSheetStartIndex()
                 && currentSheetIndex <= readParam.getSheetMaxIndex())) {
-            int thisColumn = -1;
+            var thisColumn = -1;
             String value = null;
             switch (record.getSid()) {
                 case BoundSheetRecord.sid: // 存储了每个sheet的sheet名和每个sheet在文件流中的起始位置

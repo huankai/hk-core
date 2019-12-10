@@ -73,7 +73,7 @@ public class SelectArguments extends DeleteArguments {
     }
 
     public static SelectArguments newSelectArguments(QueryModel<?> query) {
-        SelectArguments arguments = new SelectArguments();
+        var arguments = new SelectArguments();
         arguments.setOrders(query.getOrders());
         arguments.setStartRowIndex(query.getStartRowIndex());
         arguments.setPageSize(query.getPageSize());

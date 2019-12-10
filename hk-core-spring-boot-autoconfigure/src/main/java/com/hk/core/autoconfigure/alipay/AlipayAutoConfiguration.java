@@ -29,7 +29,7 @@ public class AlipayAutoConfiguration {
 
     @Bean
     public AlipayClient alipayClient() {
-        String gatewayUrl = AlipayConstants.gateway(alipayProperties.isDev());
+        var gatewayUrl = AlipayConstants.gateway(alipayProperties.isDev());
         return new DefaultAlipayClient(gatewayUrl, alipayProperties.getAppId(),
                 alipayProperties.getPrivateKey(), alipayProperties.getFormat().name(), Constants.UTF_8,
                 alipayProperties.getAlipayPublicKey(), alipayProperties.getSignType().name());

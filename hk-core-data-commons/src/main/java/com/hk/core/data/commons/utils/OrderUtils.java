@@ -24,7 +24,7 @@ public abstract class OrderUtils {
      * @return {@link Sort}
      */
     public static Sort toSort(List<Order> orders) {
-        Sort sort = Sort.unsorted();
+        var sort = Sort.unsorted();
         if (CollectionUtils.isNotEmpty(orders)) {
             List<Sort.Order> orderList = orders.stream()
                     .filter(order -> Objects.nonNull(SqlEscapeUtils.escape(order.getField())))

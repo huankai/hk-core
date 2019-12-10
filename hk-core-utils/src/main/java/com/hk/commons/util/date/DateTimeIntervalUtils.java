@@ -34,10 +34,10 @@ public abstract class DateTimeIntervalUtils {
      */
     public static List<IntervalDate> getAllWeekList(LocalDateTime start, LocalDateTime end) {
         List<IntervalDate> result = new ArrayList<>();
-        int index = 1;
-        LocalDateTime dayOfWeekStart = start;
+        var index = 1;
+        var dayOfWeekStart = start;
         while (dayOfWeekStart.isBefore(end)) {
-            LocalDateTime dayOfWeekEnd = dayOfWeekStart.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
+            var dayOfWeekEnd = dayOfWeekStart.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY))
                     .with(LocalTime.MAX);
             if (dayOfWeekEnd.isAfter(end)) {
                 dayOfWeekEnd = end;
@@ -67,7 +67,7 @@ public abstract class DateTimeIntervalUtils {
      * @return
      */
     public static List<IntervalDate> getAllWeekList(Date start, Date end) {
-        ZoneId defaultZoneId = ZoneId.systemDefault();
+        var defaultZoneId = ZoneId.systemDefault();
         return getAllWeekList(LocalDateTime.ofInstant(start.toInstant(), defaultZoneId),
                 LocalDateTime.ofInstant(end.toInstant(), defaultZoneId));
     }
@@ -108,10 +108,10 @@ public abstract class DateTimeIntervalUtils {
     private static List<IntervalDate> getIntervalDateList(LocalDateTime start, TemporalAdjuster lastDayOf,
                                                           LocalDateTime end, TemporalAdjuster firstDayOf) {
         List<IntervalDate> result = new ArrayList<>();
-        int index = 1;
-        LocalDateTime dayOfWeekStart = start;
+        var index = 1;
+        var dayOfWeekStart = start;
         while (dayOfWeekStart.isBefore(end)) {
-            LocalDateTime dayOfWeekEnd = dayOfWeekStart.with(lastDayOf).with(LocalTime.MAX);
+            var dayOfWeekEnd = dayOfWeekStart.with(lastDayOf).with(LocalTime.MAX);
             if (dayOfWeekEnd.isAfter(end)) {
                 dayOfWeekEnd = end;
             }

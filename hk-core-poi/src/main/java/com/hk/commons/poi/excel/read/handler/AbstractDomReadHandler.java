@@ -67,7 +67,7 @@ public abstract class AbstractDomReadHandler<T> extends AbstractReadHandler<T> i
      * 工作表解析初始化设置
      */
     private void sheetParseInit() {
-        int maxSheetsIndex = workbook.getNumberOfSheets() - 1;
+        var maxSheetsIndex = workbook.getNumberOfSheets() - 1;
         if (readParam.isParseAll()) {
             readParam.setSheetStartIndex(0);
             readParam.setSheetMaxIndex(maxSheetsIndex);
@@ -83,12 +83,12 @@ public abstract class AbstractDomReadHandler<T> extends AbstractReadHandler<T> i
      */
     protected final ReadResult<T> doProcessWorkbook() {
         ReadResult<T> result = new ReadResult<>();
-        int sheetMaxIndex = readParam.getSheetMaxIndex();
-        int sheetStartIndex = readParam.getSheetStartIndex();
-        int sheetNum = workbook.getNumberOfSheets();
+        var sheetMaxIndex = readParam.getSheetMaxIndex();
+        var sheetStartIndex = readParam.getSheetStartIndex();
+        var sheetNum = workbook.getNumberOfSheets();
         if (sheetNum > 1 && sheetStartIndex < sheetMaxIndex) { // 如果需要解析的工作表大于1
-            CountDownLatch countDownLatch = new CountDownLatch(sheetMaxIndex - sheetStartIndex + 1);
-            for (int index = sheetStartIndex; index <= sheetMaxIndex; index++) {
+            var countDownLatch = new CountDownLatch(sheetMaxIndex - sheetStartIndex + 1);
+            for (var index = sheetStartIndex; index <= sheetMaxIndex; index++) {
                 new ReadSheetThread(countDownLatch, index, result).start();
             }
             try {
@@ -97,7 +97,7 @@ public abstract class AbstractDomReadHandler<T> extends AbstractReadHandler<T> i
                 throw new ReadException("ThreadName: " + Thread.currentThread().getName() + ",,Message:" + e.getMessage(), e);
             }
         } else {
-            for (int index = sheetStartIndex; index <= sheetMaxIndex; index++) {
+            for (var index = sheetStartIndex; index <= sheetMaxIndex; index++) {
                 parseSheet(index, result);
             }
         }
@@ -111,13 +111,13 @@ public abstract class AbstractDomReadHandler<T> extends AbstractReadHandler<T> i
      * @param result     结果
      */
     private void parseSheet(int sheetIndex, ReadResult<T> result) {
-        final Sheet sheet = workbook.getSheetAt(sheetIndex);
+        final var sheet = workbook.getSheetAt(sheetIndex);
         if (null != sheet) {
             if (null == result.getTitleList()) {
-                List<Title> titles = parseTitleRow(sheet.getRow(readParam.getTitleRow()));
+                var titles = parseTitleRow(sheet.getRow(readParam.getTitleRow()));
                 result.setTitleList(titles);
             }
-            SheetData<T> sheetData = processSheet(sheet, sheetIndex);
+            var sheetData = processSheet(sheet, sheetIndex);
             result.addSheetData(sheetData);
             if (CollectionUtils.isNotEmpty(sheetData.getErrorLogs())) {
                 result.addErrorLogList(sheetData.getErrorLogs());

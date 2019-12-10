@@ -106,9 +106,9 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
     }
 
     protected static int getMaxWorkerId(int dataCenterId, int maxWorkerId) {
-        StringBuilder mpid = new StringBuilder();
+        var mpid = new StringBuilder();
         mpid.append(dataCenterId);
-        String name = ManagementFactory.getRuntimeMXBean().getName();
+        var name = ManagementFactory.getRuntimeMXBean().getName();
         if (StringUtils.isNotEmpty(name)) {
             /*
              * GET jvmPid
@@ -124,12 +124,12 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
     protected static int getDataCenterId(int dataCenterId) {
         int id = 0;
         try {
-            InetAddress ip = InetAddress.getLocalHost();
-            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            var ip = InetAddress.getLocalHost();
+            var network = NetworkInterface.getByInetAddress(ip);
             if (network == null) {
                 id = 1;
             } else {
-                byte[] mac = network.getHardwareAddress();
+                var mac = network.getHardwareAddress();
                 if (null != mac) {
                     id = ((0x000000FF & mac[mac.length - 1]) | (0x0000FF00 & ((mac[mac.length - 2]) << 8))) >> 6;
                     id = id % (dataCenterId + 1);
@@ -150,7 +150,7 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
      * @return 当前时间戳
      */
     private long tilNextMillis(long lastTimestamp) {
-        long timestamp = timeGen();
+        var timestamp = timeGen();
         while (timestamp <= lastTimestamp) {
             timestamp = timeGen();
         }
@@ -173,10 +173,10 @@ public class SnowflakeIdGenerator implements IDGenerator<Long> {
      */
     @Override
     public synchronized Long generate() {
-        long timestamp = timeGen();
+        var timestamp = timeGen();
         //闰秒
         if (timestamp < lastTimestamp) {
-            long offset = lastTimestamp - timestamp;
+            var offset = lastTimestamp - timestamp;
             if (offset <= 5) {
                 try {
                     wait(offset << 1);

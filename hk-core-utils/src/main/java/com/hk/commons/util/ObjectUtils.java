@@ -87,7 +87,7 @@ public abstract class ObjectUtils extends org.springframework.util.ObjectUtils {
      * @return char -> string
      */
     public static String charToString(char[] chars) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         for (char item : chars) {
             sb.append(item);
         }

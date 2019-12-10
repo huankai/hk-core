@@ -27,12 +27,12 @@ public class OracleDialect implements Dialect {
      */
     private String getLimitString(String sql, int offset, int rows) {
         sql = sql.trim();
-        boolean isForUpdate = false;
+        var isForUpdate = false;
         if (StringUtils.endsWithIgnoreCase(sql, " FOR UPDATE")) {
             sql = sql.substring(0, sql.length() - 11);
             isForUpdate = true;
         }
-        StringBuilder pagingSelect = new StringBuilder(sql.length() + 100);
+        var pagingSelect = new StringBuilder(sql.length() + 100);
 
         if (offset > 0) {
             pagingSelect.append("SELECT * FROM ( SELECT row_.*, rownum rownum_ from ( ");

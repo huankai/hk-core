@@ -87,7 +87,7 @@ public abstract class AbstractSaxReadHandler<T> extends AbstractReadHandler<T> {
                         getTitle(keyValue.getKey()), keyValue.getValue() + " 设置失败"));
             }
         }
-        T target = readParam.getBeanClazz().cast(wrapper.getWrappedInstance());
+        var target = readParam.getBeanClazz().cast(wrapper.getWrappedInstance());
         if (!invalidCells.isEmpty()) {
             throw new InvalidCellReadableExcelException("设置属性失败", target, invalidCells);
         }

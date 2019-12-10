@@ -36,15 +36,15 @@ public abstract class SkuUtils {
      * @return
      */
     public static List<List<TextValueItem>> getSkuAttributeList(String text) {
-        String[] nameValues = StringUtils.tokenizeToStringArray(text, ";");
+        var nameValues = StringUtils.tokenizeToStringArray(text, ";");
         List<NameValues> lists = new ArrayList<>(nameValues.length);
-        int excludeFirstValuesSize = 1;//排除第一个元素后其它总元素总数
+        var excludeFirstValuesSize = 1;//排除第一个元素后其它总元素总数
         for (int index = 0; index < nameValues.length; index++) {
-            String nameValue = nameValues[index];
-            String[] keyValue = StringUtils.tokenizeToStringArray(nameValue, ":");
+            var nameValue = nameValues[index];
+            var keyValue = StringUtils.tokenizeToStringArray(nameValue, ":");
             if (keyValue.length == 2) { //以 : 分隔的长度必须为2 ,key:value1,value2...
-                String name = keyValue[0];
-                String[] values = StringUtils.splitByComma(keyValue[1]);
+                var name = keyValue[0];
+                var values = StringUtils.splitByComma(keyValue[1]);
                 if (ArrayUtils.isNotEmpty(values)) {
                     if (index != 0) {
                         excludeFirstValuesSize = excludeFirstValuesSize * values.length;
@@ -63,9 +63,9 @@ public abstract class SkuUtils {
     public static List<List<TextValueItem>> getSkuAttributeList(List<NameValues> nameValues) {
         if (CollectionUtils.isNotEmpty(nameValues)) {
             List<Position> positions = new ArrayList<>();
-            int excludeFirstValuesSize = 1;
+            var excludeFirstValuesSize = 1;
             for (int index = 0, size = nameValues.size(); index < size; index++) {
-                NameValues item = nameValues.get(index);
+                var item = nameValues.get(index);
                 if (CollectionUtils.isNotEmpty(item.values)) {
                     if (index != 0) { // 第一个元素不放进去
                         excludeFirstValuesSize = excludeFirstValuesSize * item.values.size();
@@ -73,7 +73,7 @@ public abstract class SkuUtils {
                     }
                 }
             }
-            NameValues firstNameValue = nameValues.get(0);
+            var firstNameValue = nameValues.get(0);
             List<List<TextValueItem>> result = new ArrayList<>();
             Collections.reverse(positions);
             Collections.reverse(nameValues);
@@ -103,9 +103,9 @@ public abstract class SkuUtils {
      */
     private static List<TextValueItem> getList(int index, List<Position> positions, List<NameValues> nameValues) {
         List<TextValueItem> result = new ArrayList<>(positions.size());
-        int before = index % positions.get(0).getMaxPosition();
+        var before = index % positions.get(0).getMaxPosition();
         for (int i = 0, size = positions.size(); i < size; i++) {
-            NameValues nameValue = nameValues.get(i);
+            var nameValue = nameValues.get(i);
             if (before >= nameValue.values.size()) {
                 before = before % nameValue.values.size();
             }

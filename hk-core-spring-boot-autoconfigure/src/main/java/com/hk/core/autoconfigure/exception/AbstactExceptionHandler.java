@@ -2,7 +2,6 @@ package com.hk.core.autoconfigure.exception;
 
 import com.hk.commons.util.CollectionUtils;
 import com.hk.core.authentication.api.SecurityContextUtils;
-import com.hk.core.authentication.api.UserPrincipal;
 import com.hk.core.web.Webs;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,13 +21,13 @@ abstract class AbstractExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     protected void error(Throwable e, String message, HttpServletRequest request) {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.append(StringUtils.LF);
 
         sb.append("<------------------------->");
         sb.append(StringUtils.LF);
         if (SecurityContextUtils.isAuthenticated()) {
-            UserPrincipal principal = SecurityContextUtils.getPrincipal();
+            var principal = SecurityContextUtils.getPrincipal();
             sb.append("<User id:").append(principal.getUserId()).append(">");
             sb.append(StringUtils.LF);
 

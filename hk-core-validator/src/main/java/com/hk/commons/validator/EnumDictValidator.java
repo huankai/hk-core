@@ -6,7 +6,6 @@ import com.hk.commons.validator.constraints.EnumDict;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.List;
 
 /**
  * @author kevin
@@ -31,7 +30,7 @@ public class EnumDictValidator implements ConstraintValidator<EnumDict, Byte> {
         if (null == value) {
             return !notNull;
         }
-        List<Byte> list = getDictService().getDictValueListByCodeId(codeId);
+        var list = getDictService().getDictValueListByCodeId(codeId);
         return CollectionUtils.contains(list, value);
     }
 

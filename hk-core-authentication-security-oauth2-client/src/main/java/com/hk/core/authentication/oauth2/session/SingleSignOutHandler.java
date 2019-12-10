@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * @author kevin
@@ -63,17 +62,17 @@ public class SingleSignOutHandler implements LogoutParameter {
      * @param request request
      */
     private void destroySession(HttpServletRequest request) {
-        String logoutMessage = request.getParameter(LOGOUT_PARAM_NAME);
+        var logoutMessage = request.getParameter(LOGOUT_PARAM_NAME);
         if (StringUtils.isEmpty(logoutMessage)) {
             log.error("Could not locate logout message of the request from {}", LOGOUT_PARAM_NAME);
             return;
         }
         log.trace("Logout request:\n{}", logoutMessage);
-        final String token = XmlUtils.getTextForElement(logoutMessage, "AccessToken");
+        final var token = XmlUtils.getTextForElement(logoutMessage, "AccessToken");
         if (StringUtils.isNotEmpty(token)) {
-            final HttpSession session = sessionMappingStorage.removeSessionByMappingId(token);
+            final var session = sessionMappingStorage.removeSessionByMappingId(token);
             if (session != null) {
-                final String sessionId = session.getId();
+                final var sessionId = session.getId();
                 log.debug("Invalidating session [{}] for token [{}]", sessionId, token);
                 try {
                     session.invalidate();
@@ -106,14 +105,14 @@ public class SingleSignOutHandler implements LogoutParameter {
      * @param request request
      */
     private void recordSession(HttpServletRequest request) {
-        final HttpSession session = request.getSession(eagerlyCreateSessions);
+        final var session = request.getSession(eagerlyCreateSessions);
         if (session == null) {
             log.debug("No session currently exists (and none created).  Cannot record session information for single sign out.");
             return;
         }
-        String token = AccessTokenUtils.getAccessToken(request);
+        var token = AccessTokenUtils.getAccessToken(request);
         if (StringUtils.isEmpty(token)) {
-            DefaultOAuth2ClientContext clientContext = Webs.getAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
+            var clientContext = Webs.getAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
             token = clientContext.getAccessToken().getValue();
         }
         log.debug("Recording session for token {}", token);
@@ -135,11 +134,11 @@ public class SingleSignOutHandler implements LogoutParameter {
         if (StringUtils.isNotEmpty(AccessTokenUtils.getAccessToken(request))) {
             return true;
         }
-        HttpSession session = request.getSession(eagerlyCreateSessions);
+        var session = request.getSession(eagerlyCreateSessions);
         if (session == null) {
             return false;
         }
-        DefaultOAuth2ClientContext clientContext = Webs.getAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
+        var clientContext = Webs.getAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
         return null != clientContext && null != clientContext.getAccessToken();
     }
 

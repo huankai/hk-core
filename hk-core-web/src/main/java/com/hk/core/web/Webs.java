@@ -17,12 +17,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -104,7 +102,7 @@ public abstract class Webs {
      * @param create Whether to create session
      */
     public static void setAttributeFromSession(String name, Object value, boolean create) {
-        HttpSession session = getRequestAttribute().getRequest().getSession(create);
+        var session = getRequestAttribute().getRequest().getSession(create);
         if (null != session) {
             session.setAttribute(name, value);
         }
@@ -127,11 +125,11 @@ public abstract class Webs {
      * @return Value
      */
     public static <T> T getAttribute(String name, int scope, Class<T> clazz) throws ClassCastException {
-        ServletRequestAttributes requestAttribute = getRequestAttribute();
+        var requestAttribute = getRequestAttribute();
         if (requestAttribute == null) {
             return null;
         }
-        Object value = requestAttribute.getAttribute(name, scope);
+        var value = requestAttribute.getAttribute(name, scope);
         return value == null ? null : clazz.cast(value);
     }
 
@@ -215,10 +213,10 @@ public abstract class Webs {
      * @return 请求参数
      */
     public static Map<String, String> getRequestParam(HttpServletRequest request) {
-        Map<String, String[]> requestParameterMap = request.getParameterMap();
+        var requestParameterMap = request.getParameterMap();
         Map<String, String> result = new HashMap<>();
-        for (Map.Entry<String, String[]> entry : requestParameterMap.entrySet()) {
-            String value = StringUtils.arrayToCommaDelimitedString(entry.getValue());
+        for (var entry : requestParameterMap.entrySet()) {
+            var value = StringUtils.arrayToCommaDelimitedString(entry.getValue());
             if (StringUtils.isNotEmpty(value)) {
                 result.put(entry.getKey(), value);
             }
@@ -258,7 +256,7 @@ public abstract class Webs {
      */
     @SneakyThrows(value = {IOException.class})
     public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, URL url) {
-        URLConnection connection = url.openConnection();
+        var connection = url.openConnection();
         return toResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
     }
 
@@ -283,8 +281,8 @@ public abstract class Webs {
      */
     public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, long contextLength,
                                                                        InputStream in) {
-        InputStreamResource streamResource = new InputStreamResource(in);
-        MediaType mediaType = StringUtils.isEmpty(fileName)
+        var streamResource = new InputStreamResource(in);
+        var mediaType = StringUtils.isEmpty(fileName)
                 || (streamResource.isFile() && FileUtils.isImage(streamResource.getFilename()))
                 ? MediaType.IMAGE_JPEG : MediaType.APPLICATION_OCTET_STREAM;
         return toResponseEntity(fileName, mediaType, contextLength, streamResource);
@@ -292,7 +290,7 @@ public abstract class Webs {
 
     private static <T> ResponseEntity<T> toResponseEntity(String fileName, MediaType mediaType,
                                                           long contextLength, T body) {
-        HttpHeaders httpHeaders = new HttpHeaders();
+        var httpHeaders = new HttpHeaders();
         if (StringUtils.isNotEmpty(fileName)) {
             httpHeaders.setContentDispositionFormData("attachment", obtainAttachFileName(fileName));
         }
@@ -309,8 +307,8 @@ public abstract class Webs {
      */
     @SneakyThrows
     private static String obtainAttachFileName(String fileName) {
-        String encodeFileName = fileName;
-        String agent = getUserAgent(getHttpServletRequest());
+        var encodeFileName = fileName;
+        var agent = getUserAgent(getHttpServletRequest());
         if (StringUtils.isNotEmpty(agent)) {
             if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
                     || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE
@@ -329,7 +327,7 @@ public abstract class Webs {
      * @return ip address
      */
     public static String getRemoteAddr(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
+        var ip = request.getHeader("x-forwarded-for");
         if (StringUtils.isEmpty(ip)) {
             if (StringUtils.equalsIgnoreCase("unknown", ip)) {
                 ip = request.getHeader("Proxy-Client-IP");
@@ -379,7 +377,7 @@ public abstract class Webs {
     }
 
     public static String getClearContextPathUri(HttpServletRequest request) {
-        String contextPath = request.getContextPath();
+        var contextPath = request.getContextPath();
         return StringUtils.isEmpty(contextPath) ? request.getRequestURI()
                 : StringUtils.substring(request.getRequestURI(), contextPath.length());
     }

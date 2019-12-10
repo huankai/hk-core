@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -51,7 +50,7 @@ public class CreateSessionAuthenticationStrategy implements SessionAuthenticatio
     private boolean alwaysCreateSession = true;
 
     public CreateSessionAuthenticationStrategy() {
-        Method changeSessionIdMethod = ReflectionUtils
+        var changeSessionIdMethod = ReflectionUtils
                 .findMethod(HttpServletRequest.class, "changeSessionId");
         if (changeSessionIdMethod == null) {
             throw new IllegalStateException(
@@ -67,12 +66,12 @@ public class CreateSessionAuthenticationStrategy implements SessionAuthenticatio
 
     @Override
     public void onAuthentication(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws SessionAuthenticationException {
-        boolean hadSessionAlready = request.getSession(false) != null;
+        var hadSessionAlready = request.getSession(false) != null;
         if (!hadSessionAlready && !alwaysCreateSession) {
             return;
         }
-        HttpSession session = request.getSession();
-        String originalSessionId = session.getId();
+        var session = request.getSession();
+        var originalSessionId = session.getId();
         if (hadSessionAlready && request.isRequestedSessionIdValid()) {
             String newSessionId;
             Object mutex = WebUtils.getSessionMutex(session);
