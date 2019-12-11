@@ -362,7 +362,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
         if (isEmpty(map)) {
             return defaultValue;
         }
-        Object value = map.get(key);
+        var value = map.get(key);
         return null == value ? defaultValue : ConverterUtils.defaultConvert(value, clazz);
     }
 
@@ -419,7 +419,7 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
     @SafeVarargs
     public static <T> void addAllNull(Collection<T> coll, boolean containNullValue, final T... args) {
         if (ArrayUtils.isNotEmpty(args)) {
-            for (T t : args) {
+            for (var t : args) {
                 if (containNullValue || Objects.nonNull(t)) {
                     coll.add(t);
                 }
@@ -449,8 +449,8 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
             return new HashMap<>(0);
         }
         Map<String, Integer> result = new HashMap<>();
-        for (Map<String, Integer> map : values) {
-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+        for (var map : values) {
+            for (var entry : map.entrySet()) {
                 var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value + entry.getValue();
@@ -475,8 +475,8 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
             return new HashMap<>(0);
         }
         Map<String, Double> result = new HashMap<>();
-        for (Map<String, Double> map : values) {
-            for (Map.Entry<String, Double> entry : map.entrySet()) {
+        for (var map : values) {
+            for (var entry : map.entrySet()) {
                 var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value + entry.getValue();
@@ -501,8 +501,8 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
             return new HashMap<>(0);
         }
         Map<String, Long> result = new HashMap<>();
-        for (Map<String, Long> map : values) {
-            for (Map.Entry<String, Long> entry : map.entrySet()) {
+        for (var map : values) {
+            for (var entry : map.entrySet()) {
                 var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value + entry.getValue();
@@ -527,8 +527,8 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
             return new HashMap<>(0);
         }
         Map<String, BigDecimal> result = new HashMap<>();
-        for (Map<String, BigDecimal> map : values) {
-            for (Map.Entry<String, BigDecimal> entry : map.entrySet()) {
+        for (var map : values) {
+            for (var entry : map.entrySet()) {
                 var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value.add(entry.getValue());
@@ -553,8 +553,8 @@ public abstract class CollectionUtils extends org.springframework.util.Collectio
             return new HashMap<>(0);
         }
         Map<String, BigInteger> result = new HashMap<>();
-        for (Map<String, BigInteger> map : values) {
-            for (Map.Entry<String, BigInteger> entry : map.entrySet()) {
+        for (var map : values) {
+            for (var entry : map.entrySet()) {
                 var value = result.get(entry.getKey());
                 if (null != value) {
                     value = value.add(entry.getValue());

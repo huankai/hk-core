@@ -120,7 +120,7 @@ public class CompressionUtils {
         final var bais = new ByteArrayInputStream(bytes);
         final var baos = new ByteArrayOutputStream();
         final var buf = new byte[bytes.length];
-        try (InflaterInputStream iis = new InflaterInputStream(bais)) {
+        try (var iis = new InflaterInputStream(bais)) {
             var count = iis.read(buf);
             while (count != -1) {
                 baos.write(buf, 0, count);

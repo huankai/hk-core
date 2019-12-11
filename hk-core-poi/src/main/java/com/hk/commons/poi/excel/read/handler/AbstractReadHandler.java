@@ -119,7 +119,7 @@ public abstract class AbstractReadHandler<T> {
                 var isNestedProperty = StringUtils.indexOf(propertyName, WriteExcelUtils.NESTED_PROPERTY) != -1;
                 if (isNestedProperty) {
                     var nestedPropertyPrefix = StringUtils.substringBefore(propertyName, WriteExcelUtils.NESTED_PROPERTY);
-                    Class<?> propertyType = wrapper.getPropertyType(nestedPropertyPrefix);
+                    var propertyType = wrapper.getPropertyType(nestedPropertyPrefix);
                     propertyName = String.format(propertyName, 0);
                     var propertyValue = wrapper.getPropertyValue(propertyName);
                     if (null == propertyValue) {
@@ -218,8 +218,8 @@ public abstract class AbstractReadHandler<T> {
             List<SheetData<T>> sheetDataList = result.getSheetDataList();
             var size = CollectionUtils.size(sheetDataList);
             if (size > 1) {
-                CountDownLatch countDownLatch = new CountDownLatch((int) size);
-                for (SheetData<T> sheetData : sheetDataList) {
+                var countDownLatch = new CountDownLatch((int) size);
+                for (var sheetData : sheetDataList) {
                     new SheetValidateThread(countDownLatch, sheetData, result).start();
                 }
                 try {
@@ -242,8 +242,8 @@ public abstract class AbstractReadHandler<T> {
             var t = listIterator.next();
             List<InvalidCell> invalidCells = new ArrayList<>();
             if (interceptor.beforeValidate(t)) {
-                for (Validationable<T> validation : readParam.getValidationList()) {
-                    List<InvalidCell> errors = validation.validate(t, rowIndex, titles);
+                for (var validation : readParam.getValidationList()) {
+                    var errors = validation.validate(t, rowIndex, titles);
                     if (CollectionUtils.isNotEmpty(errors)) {
                         invalidCells.addAll(errors);
                         if (!validation.errorNext()) {

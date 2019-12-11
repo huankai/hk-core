@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * Oauth2 登陆错误处理器
@@ -40,7 +39,7 @@ public class Oauth2ErrorController {
             // OAuth2ClientAuthenticationProcessingFilter.attemptAuthentication(HttpServletRequest, HttpServletResponse) 方法中的 OAuth2Exception 捕捉后封装为 BadCredentialsException 一层
             var cause = exception.getCause().getCause();
             if (cause instanceof OAuth2Exception) {
-                Map<String, String> additionalInformation = ((OAuth2Exception) cause).getAdditionalInformation();
+                var additionalInformation = ((OAuth2Exception) cause).getAdditionalInformation();
                 message = CollectionUtils.isEmpty(additionalInformation) ? cause.getMessage() :
                         additionalInformation.getOrDefault("message", cause.getMessage());
             } else {

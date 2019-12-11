@@ -36,7 +36,7 @@ public class AlipayAuthenticationSecurityConfigurer extends SecurityConfigurerAd
         var filter = new AlipayCallbackAuthenticationFilter(processesUrl, alipayClient,
                 state, scope);
         filter.setAuthenticationManager(builder.getSharedObject(AuthenticationManager.class));
-        AlipayAuthenticationProvider provider = new AlipayAuthenticationProvider(authenticationHandler);
+        var provider = new AlipayAuthenticationProvider(authenticationHandler);
         builder.authenticationProvider(provider).addFilterAfter(filter, UsernamePasswordAuthenticationFilter.class);
     }
 }

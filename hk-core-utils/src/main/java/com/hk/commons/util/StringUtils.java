@@ -320,7 +320,7 @@ public abstract class StringUtils extends org.springframework.util.StringUtils {
     public static <T> List<T> splitByComma(String args, Class<T> clazz) {
         var list = splitByComma(args);
         List<T> result = new ArrayList<>(list.length);
-        for (String item : list) {
+        for (var item : list) {
             result.add(ConverterUtils.defaultConvert(item, clazz));
         }
         return result;

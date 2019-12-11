@@ -39,7 +39,7 @@ public abstract class SkuUtils {
         var nameValues = StringUtils.tokenizeToStringArray(text, ";");
         List<NameValues> lists = new ArrayList<>(nameValues.length);
         var excludeFirstValuesSize = 1;//排除第一个元素后其它总元素总数
-        for (int index = 0; index < nameValues.length; index++) {
+        for (var index = 0; index < nameValues.length; index++) {
             var nameValue = nameValues[index];
             var keyValue = StringUtils.tokenizeToStringArray(nameValue, ":");
             if (keyValue.length == 2) { //以 : 分隔的长度必须为2 ,key:value1,value2...
@@ -77,8 +77,8 @@ public abstract class SkuUtils {
             List<List<TextValueItem>> result = new ArrayList<>();
             Collections.reverse(positions);
             Collections.reverse(nameValues);
-            for (String firstValue : firstNameValue.values) {
-                for (int i = 0; i < excludeFirstValuesSize; i++) {
+            for (var firstValue : firstNameValue.values) {
+                for (var i = 0; i < excludeFirstValuesSize; i++) {
                     List<TextValueItem> list = new ArrayList<>();
                     list.add(new TextValueItem(firstNameValue.name, firstValue));
                     if (CollectionUtils.isNotEmpty(positions)) {

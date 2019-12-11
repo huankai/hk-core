@@ -42,7 +42,7 @@ public class ListResult<T> implements Iterable<T> {
     @Override
     public void forEach(Consumer<? super T> action) {
         Objects.requireNonNull(action);
-        for (T t : getResult()) {
+        for (var t : getResult()) {
             action.accept(t);
         }
     }

@@ -30,7 +30,7 @@ public abstract class FileUtils extends org.apache.commons.io.FileUtils {
         if (file.isDirectory()) {
             var files = file.listFiles();
             if (ArrayUtils.isNotEmpty(files)) {
-                for (File item : files) {
+                for (var item : files) {
                     if (item.isDirectory()) {
                         deleteFile(item, ext);
                     } else {

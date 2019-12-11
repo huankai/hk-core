@@ -101,7 +101,7 @@ public abstract class DateTimeUtils {
 
     private static String[] datePatterns(DatePattern... patterns) {
         var values = new String[patterns.length];
-        for (int i = 0; i < values.length; i++) {
+        for (var i = 0; i < values.length; i++) {
             values[i] = patterns[i].getPattern();
         }
         return values;
@@ -147,7 +147,7 @@ public abstract class DateTimeUtils {
         if (ArrayUtils.isEmpty(patterns)) {
             return LocalDateTime.parse(text, DateTimeFormatter.ofPattern(DatePattern.YYYY_MM_DD_HH_MM_SS.getPattern()));
         }
-        Date date = stringToDate(text, patterns);
+        var date = stringToDate(text, patterns);
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 

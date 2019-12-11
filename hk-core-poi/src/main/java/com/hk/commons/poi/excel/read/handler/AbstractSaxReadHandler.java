@@ -8,12 +8,10 @@ import com.hk.commons.poi.excel.model.Title;
 import com.hk.commons.util.BeanWrapperUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.KeyValue;
-import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Use Sax parse Excel
@@ -56,9 +54,9 @@ public abstract class AbstractSaxReadHandler<T> extends AbstractReadHandler<T> {
      * 解析标题行
      */
     protected final void parseTitleRow() {
-        List<KeyValue<Integer, String>> columnValues = getRowColumnValues();
+        var columnValues = getRowColumnValues();
         List<Title> titles = new ArrayList<>(columnValues.size());
-        Map<Integer, String> columnProperties = readParam.getColumnProperties();
+        var columnProperties = readParam.getColumnProperties();
         columnValues.forEach((item) -> titles.add(new Title(readParam.getTitleRow(), item.getKey(), item.getValue(), columnProperties.get(item.getKey()))));
         setTitles(titles);
     }
@@ -70,13 +68,13 @@ public abstract class AbstractSaxReadHandler<T> extends AbstractReadHandler<T> {
      * @return
      */
     protected T parseToData(int rowNum) throws InvalidCellReadableExcelException {
-        List<KeyValue<Integer, String>> columnValues = getRowColumnValues();
+        var columnValues = getRowColumnValues();
         if (CollectionUtils.isEmpty(columnValues)) {
             return null;
         }
-        BeanWrapper wrapper = BeanWrapperUtils.createBeanWrapper(readParam.getBeanClazz());
+        var wrapper = BeanWrapperUtils.createBeanWrapper(readParam.getBeanClazz());
         List<InvalidCell> invalidCells = new ArrayList<>();
-        for (KeyValue<Integer, String> keyValue : columnValues) {
+        for (var keyValue : columnValues) {
             try {
                 setWrapperBeanValue(wrapper, keyValue.getKey(), keyValue.getValue());
             } catch (BeansException e) {

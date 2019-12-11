@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import org.springframework.lang.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -53,7 +52,7 @@ public abstract class EnumDisplayUtils {
      */
     public static EnumDisplay getEnumDisplayByOrder(Class<? extends Enum<?>> enumClass, int order) {
         var enumConstants = enumClass.getEnumConstants();
-        for (Enum<?> enumConstant : enumConstants) {
+        for (var enumConstant : enumConstants) {
             var enumDisplay = getEnumDisplay(enumConstant);
             if (null != enumDisplay && enumDisplay.order() == order) {
                 return enumDisplay;
@@ -116,7 +115,7 @@ public abstract class EnumDisplayUtils {
         List<EnumItem> items = new ArrayList<>();
         var fields = enumClass.getFields();
         EnumItem item;
-        for (Field field : fields) {
+        for (var field : fields) {
             if (field.isEnumConstant()) {
                 item = new EnumItem();
                 var value = field.get(null);

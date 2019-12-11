@@ -6,7 +6,6 @@ import com.hk.commons.poi.excel.model.InvalidCell;
 import com.hk.commons.poi.excel.model.ReadParam;
 import com.hk.commons.poi.excel.model.SheetData;
 import com.hk.commons.util.BeanWrapperUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -36,7 +35,7 @@ public class SimpleDomReadHandler<T> extends AbstractDomReadHandler<T> {
         SheetData<T> dataSheet = new SheetData<>(sheetIndex, sheetName);
         BeanWrapper wrapper;
         for (var rowIndex = readParam.getDataStartRow(); rowIndex <= lastRowNum; rowIndex++) {
-            Row row = sheet.getRow(rowIndex);
+            var row = sheet.getRow(rowIndex);
             if (null != row) {
                 try {
                     wrapper = BeanWrapperUtils.createBeanWrapper(readParam.getBeanClazz());
@@ -63,7 +62,7 @@ public class SimpleDomReadHandler<T> extends AbstractDomReadHandler<T> {
         final var maxColumnIndex = getMaxColumnIndex();
         List<InvalidCell> invalidCellList = new ArrayList<>();
         for (var columnIndex = 0; columnIndex <= maxColumnIndex; columnIndex++) {
-            Cell cell = row.getCell(columnIndex, MissingCellPolicy.RETURN_BLANK_AS_NULL);
+            var cell = row.getCell(columnIndex, MissingCellPolicy.RETURN_BLANK_AS_NULL);
             if (null != cell) {
                 final var value = getCellValueString(cell);
                 try {

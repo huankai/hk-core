@@ -29,7 +29,7 @@ public class ElasticsearchAutoConfiguration extends AbstractElasticsearchConfigu
 
     @Override
     public RestHighLevelClient elasticsearchClient() {
-        ClientConfiguration configuration = ClientConfiguration.builder()
+        var configuration = ClientConfiguration.builder()
                 .connectedTo(restClientProperties.getUris().toArray(new String[0]))
                 .usingSsl()
                 .withBasicAuth(restClientProperties.getUsername(), restClientProperties.getPassword())

@@ -58,7 +58,7 @@ public abstract class AbstractDomReadHandler<T> extends AbstractReadHandler<T> i
      * @return result
      */
     protected ReadResult<T> processWorkbook() {
-        ReadResult<T> result = doProcessWorkbook();
+        var result = doProcessWorkbook();
         validate(result);
         return result;
     }

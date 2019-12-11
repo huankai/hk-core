@@ -6,7 +6,6 @@ import org.springframework.beans.FatalBeanException;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.util.ClassUtils;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +28,7 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
      */
     public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
         var beanWrapper = BeanWrapperUtils.createBeanWrapper(clazz);
-        for (Map.Entry<String, ?> entry : map.entrySet()) {
+        for (var entry : map.entrySet()) {
             if (beanWrapper.isWritableProperty(entry.getKey())) {
                 beanWrapper.setPropertyValue(entry.getKey(), entry.getValue());
             }
@@ -68,9 +67,9 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
         Map<String, Object> result = new HashMap<>();
         if (null != obj) {
             BeanWrapper beanWrapper = BeanWrapperUtils.createBeanWrapper(obj);
-            for (PropertyDescriptor descriptor : beanWrapper.getPropertyDescriptors()) {
-                String name = descriptor.getName();
-                Object value = beanWrapper.getPropertyValue(name);
+            for (var descriptor : beanWrapper.getPropertyDescriptors()) {
+                var name = descriptor.getName();
+                var value = beanWrapper.getPropertyValue(name);
                 if ((value != null || containsNullValue) && ArrayUtils.noContains(ignoreProperties, name)) {
                     result.put(name, value);
                 }
@@ -98,7 +97,7 @@ public abstract class BeanUtils extends org.springframework.beans.BeanUtils {
      */
     public static void copyNotNullProperties(Object source, Object target) {
         var targetDescriptors = getPropertyDescriptors(target.getClass());
-        for (PropertyDescriptor targetDescriptor : targetDescriptors) {
+        for (var targetDescriptor : targetDescriptors) {
             var writeMethod = targetDescriptor.getWriteMethod();
             if (writeMethod != null) {
                 var sourcePd = getPropertyDescriptor(source.getClass(), targetDescriptor.getName());

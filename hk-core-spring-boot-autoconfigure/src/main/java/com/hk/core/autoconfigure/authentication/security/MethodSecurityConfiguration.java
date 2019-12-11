@@ -31,8 +31,7 @@ public class MethodSecurityConfiguration extends GlobalMethodSecurityConfigurati
 			@Override
 			protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication,
 					MethodInvocation invocation) {
-				AdminAccessMethodSecurityExpressionRoot root = new AdminAccessMethodSecurityExpressionRoot(
-						authentication);
+				var root = new AdminAccessMethodSecurityExpressionRoot(authentication);
 				root.setThis(invocation.getThis());
 				root.setPermissionEvaluator(new AdminAccessPermissionEvaluator());
 				root.setTrustResolver(getTrustResolver());

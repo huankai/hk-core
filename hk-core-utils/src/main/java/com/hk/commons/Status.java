@@ -77,8 +77,8 @@ public enum Status {
     static {
         map = new HashMap<>(Status.values().length);
         EnumDisplayUtils.EnumItem enumItem;
-        for (Status item : Status.values()) {
-            EnumDisplay enumDisplay = EnumDisplayUtils.getEnumDisplay(item);
+        for (var item : Status.values()) {
+            var enumDisplay = EnumDisplayUtils.getEnumDisplay(item);
             if (null != enumDisplay) {
                 enumItem = new EnumDisplayUtils.EnumItem();
                 enumItem.setOrder(enumDisplay.order());

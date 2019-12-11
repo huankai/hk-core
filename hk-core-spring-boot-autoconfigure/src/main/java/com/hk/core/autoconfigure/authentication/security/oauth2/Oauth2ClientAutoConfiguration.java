@@ -21,10 +21,7 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.web.FilterChainProxy;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-
-import javax.servlet.Filter;
 
 /**
  * oauth2 client 自动 配置
@@ -83,8 +80,8 @@ public class Oauth2ClientAutoConfiguration {
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
                 if (bean instanceof FilterChainProxy) {
                     var filterChains = ((FilterChainProxy) bean).getFilterChains();
-                    for (SecurityFilterChain filterChain : filterChains) {
-                        for (Filter filter : filterChain.getFilters()) {
+                    for (var filterChain : filterChains) {
+                        for (var filter : filterChain.getFilters()) {
                             if (filter instanceof OAuth2ClientAuthenticationProcessingFilter) {
                                 OAuth2ClientAuthenticationProcessingFilter processingFilter = (OAuth2ClientAuthenticationProcessingFilter) filter;
                                 SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();

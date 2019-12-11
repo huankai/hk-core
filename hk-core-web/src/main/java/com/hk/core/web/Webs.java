@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -370,7 +369,7 @@ public abstract class Webs {
     public static void writeJson(HttpServletResponse response, int status, Object data) {
         response.setCharacterEncoding(Constants.UTF_8);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        try (PrintWriter writer = response.getWriter()) {
+        try (var writer = response.getWriter()) {
             response.setStatus(status);
             writer.write(JsonUtils.serialize(data));
         }

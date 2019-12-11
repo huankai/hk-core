@@ -25,7 +25,7 @@ public class CacheRedisAutoConfiguration {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setEnableTransactionSupport(true);
-        RedisSerializer<String> serializer = RedisSerializer.string();
+        var serializer = RedisSerializer.string();
         var objectMapper = Jackson2ObjectMapperBuilder
                 .json()
                 .build();

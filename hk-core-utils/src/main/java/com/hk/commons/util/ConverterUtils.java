@@ -80,7 +80,7 @@ public class ConverterUtils {
      */
     public ConverterUtils addConverters(GenericConverter... converters) {
         if (ArrayUtils.isNotEmpty(converters)) {
-            for (GenericConverter converter : converters) {
+            for (var converter : converters) {
                 if (null != converter) {
                     conversionService.addConverter(converter);
                 }

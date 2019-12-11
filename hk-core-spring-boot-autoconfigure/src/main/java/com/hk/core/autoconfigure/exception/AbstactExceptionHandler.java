@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * @author kevin
@@ -47,7 +46,7 @@ abstract class AbstractExceptionHandler {
         sb.append("<Request Method:").append(request.getMethod()).append(">");
         sb.append(StringUtils.LF);
 
-        Map<String, String[]> parameterMap = request.getParameterMap();
+        var parameterMap = request.getParameterMap();
         if (CollectionUtils.isNotEmpty(parameterMap)) {
             sb.append("<Request Params:");
             parameterMap.forEach((name, value) -> sb.append(name).append("=").append(ArrayUtils.toString(value)));

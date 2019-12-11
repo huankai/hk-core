@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.hk.commons.converters.*;
-import com.hk.commons.util.*;
+import com.hk.commons.util.AuditField;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.JsonUtils;
+import com.hk.commons.util.SpringContextHolder;
 import com.hk.commons.util.date.DatePattern;
 import com.hk.core.jdbc.deserializer.ConditionQueryModelDeserializer;
 import com.hk.core.jdbc.query.ConditionQueryModel;
@@ -33,7 +36,6 @@ import javax.servlet.Filter;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author huangkai
@@ -88,7 +90,7 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
      */
     @Bean
     public FilterRegistrationBean<Filter> xssFilter() {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+        var filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setAsyncSupported(true);
         filterRegistrationBean.addUrlPatterns("/*");// 这里是 /* ,不是 /**
         filterRegistrationBean.setFilter(new XssFilter());
@@ -174,8 +176,8 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
 //        if (accessTokenPresent) {
 //            registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**");
 //        }
-        GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
-        Map<String, Object> property = requestProperty.getProperty();
+        var propertyInterceptor = new GlobalPropertyInterceptor();
+        var property = requestProperty.getProperty();
         if (CollectionUtils.isNotEmpty(property)) {
             propertyInterceptor.setProperty(property);
         }
