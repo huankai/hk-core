@@ -20,7 +20,7 @@ public abstract class StyleCellUtils {
      * @return {@link CustomCellStyle}
      */
     public static CustomCellStyle toCustomCellStyle(CellStyle cellStyle) {
-        CustomCellStyle columnStyle = new CustomCellStyle();
+        var columnStyle = new CustomCellStyle();
         columnStyle.setBackgroundColor(cellStyle.backgroundColor());
         columnStyle.setFillForegroundColor(cellStyle.fillForegroundColor());
         columnStyle.setFillPatternType(cellStyle.fillPatternType());

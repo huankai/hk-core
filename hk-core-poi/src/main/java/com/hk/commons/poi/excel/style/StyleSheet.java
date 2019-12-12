@@ -1,5 +1,6 @@
 package com.hk.commons.poi.excel.style;
 
+import lombok.Getter;
 import org.apache.poi.ss.usermodel.Font;
 
 /**
@@ -12,6 +13,7 @@ public interface StyleSheet {
     /**
      * 字体
      */
+    @Getter
     enum Fonts {
 
         /**
@@ -65,10 +67,6 @@ public interface StyleSheet {
             this.fontName = fontName;
         }
 
-        public String getFontName() {
-            return fontName;
-        }
-
     }
 
     /**
@@ -80,6 +78,7 @@ public interface StyleSheet {
      * 下划线
      */
 
+    @Getter
     enum UnderLineStyle {
 
         /**
@@ -111,10 +110,6 @@ public interface StyleSheet {
 
         UnderLineStyle(byte value) {
             this.value = value;
-        }
-
-        public byte getValue() {
-            return value;
         }
     }
 

@@ -1,12 +1,10 @@
 package com.hk.commons.poi.excel.util;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Workbook;
-
 import com.hk.commons.poi.excel.style.CustomCellStyle;
 import com.hk.commons.poi.excel.style.StyleSheet;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * 样式创建工具类
@@ -26,7 +24,7 @@ public abstract class CellStyleBuilder {
 	 */
 	public static CellStyle buildCellStyle(Workbook workbook, CustomCellStyle style,
 			com.hk.commons.poi.excel.model.DataFormat dataFormat) {
-		CellStyle cellStyle = workbook.createCellStyle();
+		var cellStyle = workbook.createCellStyle();
 		if (null != style) {
 			if (null != style.getHorizontalAlignment()) {
 				cellStyle.setAlignment(style.getHorizontalAlignment());
@@ -70,7 +68,7 @@ public abstract class CellStyleBuilder {
 			cellStyle.setLocked(style.isLocked());
 			cellStyle.setFont(createFont(workbook, style));
 		}
-		DataFormat format = workbook.getCreationHelper().createDataFormat();
+		var format = workbook.getCreationHelper().createDataFormat();
 		cellStyle.setDataFormat(format.getFormat(dataFormat.getPattern()));
 		return cellStyle;
 	}
@@ -83,7 +81,7 @@ public abstract class CellStyleBuilder {
 	 * @return Font
 	 */
 	private static Font createFont(Workbook workbook, CustomCellStyle style) {
-		Font font = workbook.createFont();
+		var font = workbook.createFont();
 		font.setBold(style.isBold());
 		font.setItalic(style.isItalic());
 		font.setStrikeout(style.isStrikeout());

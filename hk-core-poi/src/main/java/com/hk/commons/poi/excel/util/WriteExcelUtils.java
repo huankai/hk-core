@@ -5,7 +5,6 @@ import com.hk.commons.poi.excel.annotations.WriteExcelField;
 import com.hk.commons.poi.excel.exception.ExcelWriteException;
 import com.hk.commons.poi.excel.model.ExcelColumnInfo;
 import com.hk.commons.poi.excel.model.StyleTitle;
-import com.hk.commons.poi.excel.style.CustomCellStyle;
 import com.hk.commons.util.BeanUtils;
 import com.hk.commons.util.FieldUtils;
 import com.hk.commons.util.StringUtils;
@@ -17,7 +16,6 @@ import org.springframework.util.ClassUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * 导出Excel工具类
@@ -78,32 +76,32 @@ public abstract class WriteExcelUtils {
         Map<String, WriteExcelField> maps = getWriteExcelAnnotationList(parameterizedTypeClass);
         ExcelColumnInfo info;
         StyleTitle styleTitle;
-        for (Entry<String, WriteExcelField> entry : maps.entrySet()) {
-            WriteExcelField writeExcel = entry.getValue();
+        for (var entry : maps.entrySet()) {
+            var writeExcel = entry.getValue();
             info = new ExcelColumnInfo();
             info.setStatistics(writeExcel.isStatistics());
             info.setCommentAuthor(writeExcel.author());
             info.setCommentVisible(writeExcel.visible());
 
-            CustomCellStyle titleStyle = StyleCellUtils.toCustomCellStyle(writeExcel.titleStyle());
+            var titleStyle = StyleCellUtils.toCustomCellStyle(writeExcel.titleStyle());
             styleTitle = new StyleTitle(titleRow, writeExcel.index(), writeExcel.value(),
                     nestedPrefix + entry.getKey());
             styleTitle.setColumnWidth(writeExcel.width());
             styleTitle.setStyle(titleStyle);
             info.setTitle(styleTitle);
 
-            CustomCellStyle dataStyle = StyleCellUtils.toCustomCellStyle(writeExcel.dataStyle());
+            var dataStyle = StyleCellUtils.toCustomCellStyle(writeExcel.dataStyle());
             info.setDataStyle(dataStyle);
             result.add(info);
         }
-        List<Field> nestedFieldList = FieldUtils.getFieldsListWithAnnotation(parameterizedTypeClass,
+        var nestedFieldList = FieldUtils.getFieldsListWithAnnotation(parameterizedTypeClass,
                 NestedProperty.class);
         if (nestedFieldList.size() > 1) {
             // 如果有多个 NestedProperty的注解,对于合并单元格是个麻烦事,如果你有好的想法,可以提出来
             throw new ExcelWriteException("暂不支持多个有NestedProperty注解标记的属性");
         }
         nestedFieldList.forEach(item -> {
-            Class<?> ptclass = TypeUtils.getCollectionParameterizedTypeClass(parameterizedTypeClass, item.getName());
+            var ptclass = TypeUtils.getCollectionParameterizedTypeClass(parameterizedTypeClass, item.getName());
             if (null != ptclass && !BeanUtils.isSimpleProperty(ptclass)) {
                 addWriteExcel(titleRow, ptclass, item.getType(), item.getName(), result);
             }
@@ -137,14 +135,14 @@ public abstract class WriteExcelUtils {
      * @return {@link Map}
      */
     private static Map<String, WriteExcelField> getWriteExcelAnnotationList(Class<?> cls) {
-        List<Field> fields = getFieldWithWriteExcelAnnotationList(cls);
-        List<Method> methods = getMethodWithWriteExcelAnnotationList(cls);
+        var fields = getFieldWithWriteExcelAnnotationList(cls);
+        var methods = getMethodWithWriteExcelAnnotationList(cls);
         Map<String, WriteExcelField> result = new HashMap<>();
         fields.forEach(item -> result.put(item.getName(), item.getAnnotation(WriteExcelField.class)));
         methods.forEach(item -> {
-            String methodName = item.getName();
+            var methodName = item.getName();
             if (StringUtils.startsWithAny(methodName, GET_METHOD_PREFIX, IS_METHOD_PREFIX)) {
-                String name = StringUtils.uncapitalize(StringUtils.substring(methodName, GET_METHOD_PREFIX.length()));
+                var name = StringUtils.uncapitalize(StringUtils.substring(methodName, GET_METHOD_PREFIX.length()));
                 result.put(name, item.getAnnotation(WriteExcelField.class));
             }
         });

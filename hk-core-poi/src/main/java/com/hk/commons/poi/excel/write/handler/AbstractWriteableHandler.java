@@ -3,7 +3,6 @@ package com.hk.commons.poi.excel.write.handler;
 import com.hk.commons.poi.excel.exception.ExcelWriteException;
 import com.hk.commons.poi.excel.model.DataFormat;
 import com.hk.commons.poi.excel.model.ExcelColumnInfo;
-import com.hk.commons.poi.excel.model.StyleTitle;
 import com.hk.commons.poi.excel.model.WriteParam;
 import com.hk.commons.poi.excel.style.CustomCellStyle;
 import com.hk.commons.poi.excel.util.CellStyleBuilder;
@@ -24,7 +23,6 @@ import org.springframework.util.ClassUtils;
 import java.io.OutputStream;
 import java.time.temporal.Temporal;
 import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * @author kevin
@@ -184,13 +182,13 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
      * @param sheet
      */
     protected void createTitleRow(Sheet sheet) {
-        Row titleRow = sheet.createRow(params.getTitleRow());
+        var titleRow = sheet.createRow(params.getTitleRow());
         titleRow.setHeightInPoints(params.getTitleRowHeight());
-        List<ExcelColumnInfo> columnInfoList = getColumnInfoList();
+        var columnInfoList = getColumnInfoList();
         columnInfoList.forEach(item -> {
-            StyleTitle title = item.getTitle();
+            var title = item.getTitle();
             sheet.setColumnWidth(title.getColumn(), title.getColumnWidth());
-            Cell cell = titleRow.createCell(title.getColumn(), CellType.STRING);
+            var cell = titleRow.createCell(title.getColumn(), CellType.STRING);
             setCellStyle(cell, title.getStyle(), null, null);
             setCellValue(cell, null, title.getValue());
         });
@@ -203,7 +201,7 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
      * @return {@link CellType}
      */
     protected final CellType getCellType(Class<?> propertyType) {
-        CellType cellType = CellType.STRING;
+        var cellType = CellType.STRING;
         if (Objects.nonNull(propertyType)) {
             if (ClassUtils.isAssignable(Number.class, propertyType)
                     || ClassUtils.isAssignable(Date.class, propertyType)
@@ -222,21 +220,19 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
      * @param sheet    sheet
      * @param dataList dataList
      */
-    protected void createDataRows(Sheet sheet, List<T> dataList) {
+    protected void createDataRows(Sheet sheet, Drawing<?> drawing, CreationHelper creationHelper, int startRow, List<T> dataList) {
         if (CollectionUtils.isNotEmpty(dataList)) {
-            CreationHelper helper = workbook.getCreationHelper();
-            Drawing<?> drawing = sheet.createDrawingPatriarch();
-            int rowIndex = params.getDataStartRow();
+            var rowIndex = startRow;
 
             Map<Integer, String> statisFormula = new HashMap<>();// 记录需要统计的列与公式
-            List<ExcelColumnInfo> columnInfoList = getColumnInfoList();
+            var columnInfoList = getColumnInfoList();
 
             // 记录nested属性所在每个列、与属性名称的Map
             Map<Integer, String> columnNestedPropertyMap = new HashMap<>();
 
             String nestedPropertyPrefix = null;// Nested属性前缀 ，如 users[].name ，则此值为 users
-            for (ExcelColumnInfo excelColumnInfo : columnInfoList) {
-                StyleTitle title = excelColumnInfo.getTitle();
+            for (var excelColumnInfo : columnInfoList) {
+                var title = excelColumnInfo.getTitle();
                 if (StringUtils.contains(title.getPropertyName(), WriteExcelUtils.NESTED_PROPERTY)) {
                     nestedPropertyPrefix = StringUtils.substringBefore(title.getPropertyName(),
                             WriteExcelUtils.NESTED_PROPERTY);
@@ -245,43 +241,45 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
                 }
             }
             BeanWrapper beanWrapper;
-            for (T item : dataList) {
+            Row row;
+            Cell cell;
+            for (var item : dataList) {
                 beanWrapper = BeanWrapperUtils.createBeanWrapper(item);
                 if (StringUtils.isEmpty(nestedPropertyPrefix)) {
-                    Row row = createDataRow(sheet, item, rowIndex++);
-                    for (ExcelColumnInfo excelColumnInfo : columnInfoList) {
-                        Cell cell = createCell(row, item, excelColumnInfo, excelColumnInfo.getTitle().getPropertyName(), beanWrapper, helper, drawing);
+                    row = createDataRow(sheet, item, rowIndex++);
+                    for (var excelColumnInfo : columnInfoList) {
+                        cell = createCell(row, item, excelColumnInfo, excelColumnInfo.getTitle().getPropertyName(), beanWrapper, creationHelper, drawing);
                         statisFormula(excelColumnInfo, cell, statisFormula, StringUtils.COLON_SEPARATE);
                     }
                 } else {
-                    Collection<?> collection = (Collection<?>) beanWrapper.getPropertyValue(nestedPropertyPrefix);
+                    var collection = (Collection<?>) beanWrapper.getPropertyValue(nestedPropertyPrefix);
                     if (CollectionUtils.isEmpty(collection)) {
-                        Row row = createDataRow(sheet, item, rowIndex++);
-                        for (ExcelColumnInfo excelColumnInfo : columnInfoList) {
-                            StyleTitle title = excelColumnInfo.getTitle();
+                        row = createDataRow(sheet, item, rowIndex++);
+                        for (var excelColumnInfo : columnInfoList) {
+                            var title = excelColumnInfo.getTitle();
                             if (!StringUtils.contains(title.getPropertyName(), WriteExcelUtils.NESTED_PROPERTY)) {
-                                Cell cell = createCell(row, item, excelColumnInfo, title.getPropertyName(), beanWrapper, helper, drawing);
+                                cell = createCell(row, item, excelColumnInfo, title.getPropertyName(), beanWrapper, creationHelper, drawing);
                                 statisFormula(excelColumnInfo, cell, statisFormula, StringUtils.COLON_SEPARATE);
                             }
                         }
                     } else {
                         final int firstRow = rowIndex;
                         Set<Integer> margeCellColumnList = new HashSet<>();
-                        for (int index = 0; index < collection.size(); index++) {
-                            Row row = createDataRow(sheet, item, rowIndex++);
-                            for (Entry<Integer, String> entry : columnNestedPropertyMap.entrySet()) {
-                                ExcelColumnInfo info = columnInfoList.stream()
+                        for (var index = 0; index < collection.size(); index++) {
+                            row = createDataRow(sheet, item, rowIndex++);
+                            for (var entry : columnNestedPropertyMap.entrySet()) {
+                                var info = columnInfoList.stream()
                                         .filter(infoItem -> infoItem.getTitle().getColumn() == entry.getKey())
                                         .findFirst().get();
-                                final String nestedPropertyName = String.format("%s" + WriteExcelUtils.NESTED_PROPERTY + "%s", nestedPropertyPrefix, index, entry.getValue());
-                                Cell cell = createCell(row, item, info, nestedPropertyName, beanWrapper, helper, drawing);
+                                final var nestedPropertyName = String.format("%s" + WriteExcelUtils.NESTED_PROPERTY + "%s", nestedPropertyPrefix, index, entry.getValue());
+                                cell = createCell(row, item, info, nestedPropertyName, beanWrapper, creationHelper, drawing);
                                 statisFormula(info, cell, statisFormula, StringUtils.COLON_SEPARATE);
                             }
-                            for (ExcelColumnInfo excelColumnInfo : columnInfoList) {
-                                StyleTitle title = excelColumnInfo.getTitle();
+                            for (var excelColumnInfo : columnInfoList) {
+                                var title = excelColumnInfo.getTitle();
                                 if (!StringUtils.contains(title.getPropertyName(), WriteExcelUtils.NESTED_PROPERTY)) {
                                     margeCellColumnList.add(title.getColumn());
-                                    Cell cell = createCell(row, item, excelColumnInfo, title.getPropertyName(), beanWrapper, helper, drawing);
+                                    cell = createCell(row, item, excelColumnInfo, title.getPropertyName(), beanWrapper, creationHelper, drawing);
                                     if (index == 0) {//只需要统计第一条
                                         statisFormula(excelColumnInfo, cell, statisFormula, StringUtils.COMMA_SEPARATE);
                                     }
@@ -289,7 +287,7 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
                             }
                         }
                         if (params.isMergeCell() && !margeCellColumnList.isEmpty()) {
-                            for (Integer columnItem : margeCellColumnList) {
+                            for (var columnItem : margeCellColumnList) {
                                 mergingCells(sheet, firstRow, rowIndex - 1, columnItem, columnItem);
                             }
                         }
@@ -304,9 +302,9 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
 
     private void statisFormula(ExcelColumnInfo excelColumnInfo, Cell cell, Map<Integer, String> statisFormula, String separate) {
         if (excelColumnInfo.isStatistics() && cell.getCellType() == CellType.NUMERIC && !DateUtil.isCellDateFormatted(cell)) {
-            int columnIndex = cell.getColumnIndex();
-            String formula = statisFormula.get(columnIndex);
-            String cellAddress = cell.getAddress().formatAsString();
+            var columnIndex = cell.getColumnIndex();
+            var formula = statisFormula.get(columnIndex);
+            var cellAddress = cell.getAddress().formatAsString();
             statisFormula.put(columnIndex, StringUtils.isEmpty(formula) ? cellAddress + separate : formula + separate + cellAddress);
         }
     }
@@ -347,9 +345,9 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
      */
     private Cell createCell(Row row, T data, ExcelColumnInfo excelColumnInfo, String nestedPropertyName, BeanWrapper beanWrapper,
                             CreationHelper helper, Drawing<?> drawing) {
-        StyleTitle title = excelColumnInfo.getTitle();
-        Class<?> propertyType = getPropertyType(data, beanWrapper, nestedPropertyName);
-        Cell cell = row.createCell(title.getColumn(), getCellType(propertyType));
+        var title = excelColumnInfo.getTitle();
+        var propertyType = getPropertyType(data, beanWrapper, nestedPropertyName);
+        var cell = row.createCell(title.getColumn(), getCellType(propertyType));
         setCellComment(drawing, helper, cell, getCommentText(data, nestedPropertyName, propertyType),
                 excelColumnInfo.getCommentAuthor(), excelColumnInfo.isCommentVisible());
         if (StringUtils.contains(nestedPropertyName, WriteExcelUtils.NESTED_PROPERTY)) {
@@ -369,9 +367,9 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
      * @return 有样式的行，如果样式存在
      */
     private Row createDataRow(Sheet sheet, T item, int rowIndex) {
-        Row row = sheet.createRow(rowIndex);
+        var row = sheet.createRow(rowIndex);
         row.setHeightInPoints(params.getDataRowHeight());
-        CustomCellStyle rowStyle = getRowStyle(item, row.getRowNum());
+        var rowStyle = getRowStyle(item, row.getRowNum());
         if (null != rowStyle) {
             row.setRowStyle(rowStyle.toCellStyle(workbook, DataFormat.TEXT_FORMAT));
         }
@@ -384,11 +382,11 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
      * @param statisticsStyle   statisticsStyle
      */
     protected void buildStatisRow(Map<Integer, String> statisticsFormula, Row row, CustomCellStyle statisticsStyle) {
-        CellStyle style = CellStyleBuilder.buildCellStyle(workbook, statisticsStyle, DataFormat.TEXT_FORMAT);
-        for (ExcelColumnInfo info : getColumnInfoList()) {
-            StyleTitle title = info.getTitle();
+        var style = CellStyleBuilder.buildCellStyle(workbook, statisticsStyle, DataFormat.TEXT_FORMAT);
+        for (var info : getColumnInfoList()) {
+            var title = info.getTitle();
             if (statisticsFormula.containsKey(title.getColumn())) {
-                Cell cell = row.createCell(title.getColumn(), CellType.NUMERIC);
+                var cell = row.createCell(title.getColumn(), CellType.NUMERIC);
                 cell.setCellFormula(String.format("SUM(%s)", statisticsFormula.get(title.getColumn())));
                 cell.setCellStyle(style);
             }
@@ -414,7 +412,7 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
      * @param propertyType 单元格对应的属性类型,如果为null,使用 com.hk.commons.poi.excel.model.DataFormat#TEXT_FORMAT
      */
     protected void setCellStyle(Cell cell, CustomCellStyle style, String propertyName, Class<?> propertyType) {
-        CellStyle cellStyle = cacheDataCellStyle.get(propertyName);
+        var cellStyle = cacheDataCellStyle.get(propertyName);
         if (null == cellStyle && null != style) {
             cellStyle = style.toCellStyle(workbook, params.getValueFormat().getFormat(propertyName, propertyType));
             if (StringUtils.isNotEmpty(propertyName)) {
@@ -469,7 +467,7 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
             clientAnchor.setCol2(cell.getColumnIndex() + 1);// 只会占用一个单元格的位置
             clientAnchor.setRow1(cell.getRowIndex());
             clientAnchor.setRow2(cell.getRowIndex() + 1);// 只会占用一个单元格的位置
-            Comment comment = drawing.createCellComment(clientAnchor);
+            var comment = drawing.createCellComment(clientAnchor);
             comment.setAuthor(author);// 作者
             comment.setVisible(visible); // 是否可见 ，默认隐藏，需要鼠标移动到指定的区域才可见
             comment.setString(helper.createRichTextString(commentText));
@@ -478,8 +476,8 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
     }
 
     private String toStringValue(String propertyName, Object value) {
-        Class<?> clazz = value.getClass();
-        DataFormat format = params.getValueFormat().getFormat(propertyName, clazz);
+        var clazz = value.getClass();
+        var format = params.getValueFormat().getFormat(propertyName, clazz);
         return CELL_FORMATTER.get(format).format(value);
     }
 
@@ -503,8 +501,6 @@ public abstract class AbstractWriteableHandler<T> implements WriteableHandler<T>
 
     /**
      * build ExcelColumnInfo
-     *
-     * @return
      */
     protected List<ExcelColumnInfo> buildExcelColumnInfo() {
         return WriteExcelUtils.parse(params.getBeanClazz(), params.getTitleRow());
