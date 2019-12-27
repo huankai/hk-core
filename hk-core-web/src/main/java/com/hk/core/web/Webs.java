@@ -1,6 +1,6 @@
 package com.hk.core.web;
 
-import com.hk.commons.util.Constants;
+import com.hk.commons.util.Contants;
 import com.hk.commons.util.FileUtils;
 import com.hk.commons.util.JsonUtils;
 import com.hk.commons.util.StringUtils;
@@ -17,11 +17,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,9 +43,11 @@ public abstract class Webs {
 
     private static final String MOZILLA_USER_AGENT_HEADER_VALUE = "Mozilla";
 
-    public static final String HTTP_SCHEME = "http";
+    public static final String X_FORWARDED_FOR_HEADER = "x-forwarded-for";
 
-    public static final String HTTPS_SCHEME = "https";
+    public static final String HTTP = "http";
+
+    public static final String HTTPS = "https";
 
     /**
      * 获取request对象
@@ -101,7 +105,7 @@ public abstract class Webs {
      * @param create Whether to create session
      */
     public static void setAttributeFromSession(String name, Object value, boolean create) {
-        var session = getRequestAttribute().getRequest().getSession(create);
+        HttpSession session = getRequestAttribute().getRequest().getSession(create);
         if (null != session) {
             session.setAttribute(name, value);
         }
@@ -124,11 +128,11 @@ public abstract class Webs {
      * @return Value
      */
     public static <T> T getAttribute(String name, int scope, Class<T> clazz) throws ClassCastException {
-        var requestAttribute = getRequestAttribute();
+        ServletRequestAttributes requestAttribute = getRequestAttribute();
         if (requestAttribute == null) {
             return null;
         }
-        var value = requestAttribute.getAttribute(name, scope);
+        Object value = requestAttribute.getAttribute(name, scope);
         return value == null ? null : clazz.cast(value);
     }
 
@@ -212,10 +216,10 @@ public abstract class Webs {
      * @return 请求参数
      */
     public static Map<String, String> getRequestParam(HttpServletRequest request) {
-        var requestParameterMap = request.getParameterMap();
+        Map<String, String[]> requestParameterMap = request.getParameterMap();
         Map<String, String> result = new HashMap<>();
-        for (var entry : requestParameterMap.entrySet()) {
-            var value = StringUtils.arrayToCommaDelimitedString(entry.getValue());
+        for (Map.Entry<String, String[]> entry : requestParameterMap.entrySet()) {
+            String value = StringUtils.arrayToCommaDelimitedString(entry.getValue());
             if (StringUtils.isNotEmpty(value)) {
                 result.put(entry.getKey(), value);
             }
@@ -255,7 +259,7 @@ public abstract class Webs {
      */
     @SneakyThrows(value = {IOException.class})
     public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, URL url) {
-        var connection = url.openConnection();
+        URLConnection connection = url.openConnection();
         return toResponseEntity(fileName, connection.getContentLength(), connection.getInputStream());
     }
 
@@ -280,8 +284,8 @@ public abstract class Webs {
      */
     public static ResponseEntity<InputStreamResource> toResponseEntity(String fileName, long contextLength,
                                                                        InputStream in) {
-        var streamResource = new InputStreamResource(in);
-        var mediaType = StringUtils.isEmpty(fileName)
+        InputStreamResource streamResource = new InputStreamResource(in);
+        MediaType mediaType = StringUtils.isEmpty(fileName)
                 || (streamResource.isFile() && FileUtils.isImage(streamResource.getFilename()))
                 ? MediaType.IMAGE_JPEG : MediaType.APPLICATION_OCTET_STREAM;
         return toResponseEntity(fileName, mediaType, contextLength, streamResource);
@@ -289,7 +293,7 @@ public abstract class Webs {
 
     private static <T> ResponseEntity<T> toResponseEntity(String fileName, MediaType mediaType,
                                                           long contextLength, T body) {
-        var httpHeaders = new HttpHeaders();
+        HttpHeaders httpHeaders = new HttpHeaders();
         if (StringUtils.isNotEmpty(fileName)) {
             httpHeaders.setContentDispositionFormData("attachment", obtainAttachFileName(fileName));
         }
@@ -306,12 +310,12 @@ public abstract class Webs {
      */
     @SneakyThrows
     private static String obtainAttachFileName(String fileName) {
-        var encodeFileName = fileName;
-        var agent = getUserAgent(getHttpServletRequest());
+        String encodeFileName = fileName;
+        String agent = getUserAgent(getHttpServletRequest());
         if (StringUtils.isNotEmpty(agent)) {
             if (agent.contains(EDGE_USER_AGENT_HEADER_VALUE) || agent.contains(MSIE_USER_AGENT_HEADER_VALUE)
                     || agent.contains(TRIDENT_USER_AGENT_HEADER_VALUE)) {// IE
-                encodeFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+                encodeFileName = URLEncoder.encode(fileName, Contants.UTF_8);
             } else if (agent.contains(MOZILLA_USER_AGENT_HEADER_VALUE)) {// 火狐,谷歌
                 encodeFileName = StringUtils.newStringIso8859_1(StringUtils.getByteUtf8(fileName));
             }
@@ -326,23 +330,21 @@ public abstract class Webs {
      * @return ip address
      */
     public static String getRemoteAddr(HttpServletRequest request) {
-        var ip = request.getHeader("x-forwarded-for");
-        if (StringUtils.isEmpty(ip)) {
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
-            }
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
-                ip = request.getHeader("HTTP_CLIENT_IP");
-            }
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
-                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-            }
-            if (StringUtils.equalsIgnoreCase("unknown", ip) || StringUtils.isEmpty(ip)) {
-                ip = request.getRemoteAddr();
-            }
+        String ip = request.getHeader(X_FORWARDED_FOR_HEADER);
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getRemoteAddr();
         }
         // 在使用 nginx 做多层代理时， 获取的 ip 格式 为 ip1,ip2, 这里只获取到第一个 ip
         return StringUtils.substringBefore(ip, StringUtils.COMMA_SEPARATE);
@@ -367,16 +369,16 @@ public abstract class Webs {
      */
     @SneakyThrows(value = {IOException.class})
     public static void writeJson(HttpServletResponse response, int status, Object data) {
-        response.setCharacterEncoding(Constants.UTF_8);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        try (var writer = response.getWriter()) {
+        response.setCharacterEncoding(Contants.UTF_8);
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        try (PrintWriter writer = response.getWriter()) {
             response.setStatus(status);
             writer.write(JsonUtils.serialize(data));
         }
     }
 
     public static String getClearContextPathUri(HttpServletRequest request) {
-        var contextPath = request.getContextPath();
+        String contextPath = request.getContextPath();
         return StringUtils.isEmpty(contextPath) ? request.getRequestURI()
                 : StringUtils.substring(request.getRequestURI(), contextPath.length());
     }

@@ -1,4 +1,4 @@
-package com.hk.oauth2.exception;
+package com.hk.core.authentication.oauth2.exception;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.security.oauth2.common.exceptions.UnsupportedGrantTypeException;
@@ -18,5 +18,4 @@ public class Oauth2UnsupportedGrantTypeException extends UnsupportedGrantTypeExc
     public Oauth2UnsupportedGrantTypeException(String msg, Throwable t) {
         super(msg, t);
     }
-
 }

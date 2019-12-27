@@ -1,4 +1,4 @@
-package com.hk.oauth2.exception;
+package com.hk.core.authentication.oauth2.exception;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -36,7 +36,7 @@ public class Oauth2ExceptionSerializer<T extends OAuth2Exception> extends StdSer
      * 获取data字段值
      *
      * @param exception exception
-     * @see JsonResult#data
+     * @see JsonResult#getData()
      */
     protected Object getData(T exception) {
         return null;
@@ -47,7 +47,7 @@ public class Oauth2ExceptionSerializer<T extends OAuth2Exception> extends StdSer
      *
      * @param exception exception
      * @return 错误消息
-     * @see JsonResult#message
+     * @see JsonResult#getMessage()
      */
     protected String getMessage(T exception) {
         return exception.getMessage();
@@ -67,6 +67,30 @@ public class Oauth2ExceptionSerializer<T extends OAuth2Exception> extends StdSer
 
         protected Oauth2ClientStatusExceptionJackson2Serializer() {
             super(Oauth2ClientStatusException.class);
+        }
+    }
+
+    public static class Oauth2TokenControlExceptionJackson2Serializer
+            extends Oauth2ExceptionSerializer<TokenControlException> {
+
+        protected Oauth2TokenControlExceptionJackson2Serializer() {
+            super(TokenControlException.class);
+        }
+    }
+
+    public static class CustomInvalidTokenExceptionJackson2Serializer
+            extends Oauth2ExceptionSerializer<CustomInvalidTokenException> {
+
+        protected CustomInvalidTokenExceptionJackson2Serializer() {
+            super(CustomInvalidTokenException.class);
+        }
+    }
+
+    public static class IllegalClientIpTokenExceptionJackson2Serializer
+            extends Oauth2ExceptionSerializer<IllegalClientIpTokenException> {
+
+        protected IllegalClientIpTokenExceptionJackson2Serializer() {
+            super(IllegalClientIpTokenException.class);
         }
     }
 

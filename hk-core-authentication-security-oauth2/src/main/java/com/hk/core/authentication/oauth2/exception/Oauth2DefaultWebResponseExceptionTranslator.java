@@ -1,5 +1,6 @@
-package com.hk.oauth2.exception;
+package com.hk.core.authentication.oauth2.exception;
 
+import com.hk.commons.util.SpringContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,16 +8,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.DefaultThrowableAnalyzer;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.exceptions.InsufficientScopeException;
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
-import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.oauth2.common.exceptions.UnsupportedGrantTypeException;
+import org.springframework.security.oauth2.common.exceptions.*;
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.web.util.ThrowableAnalyzer;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-
-import com.hk.commons.util.SpringContextHolder;
 
 
 /**
@@ -39,22 +35,25 @@ public class Oauth2DefaultWebResponseExceptionTranslator implements WebResponseE
         Exception ase = (OAuth2Exception) throwableAnalyzer.getFirstThrowableOfType(
                 OAuth2Exception.class, causeChain);
         if (ase != null) {
+            if (ase instanceof InvalidTokenException) {
+                return handleOAuth2Exception(new CustomInvalidTokenException(SpringContextHolder.getMessage("invalid.token")));
+            }
             return handleOAuth2Exception((OAuth2Exception) ase);
         }
         ase = (AuthenticationException) throwableAnalyzer.getFirstThrowableOfType(AuthenticationException.class,
                 causeChain);
         if (ase != null) {
-            return handleOAuth2Exception(new Oauth2DefaultWebResponseExceptionTranslator.UnauthorizedException(e.getMessage(), e));
+            return handleOAuth2Exception(new UnauthorizedException(e.getMessage(), e));
         }
         ase = (Exception) throwableAnalyzer.getFirstThrowableOfType(AccessDeniedException.class, causeChain);
         if (ase instanceof AccessDeniedException) {
-            return handleOAuth2Exception(new Oauth2DefaultWebResponseExceptionTranslator.ForbiddenException(ase.getMessage(), ase));
+            return handleOAuth2Exception(new ForbiddenException(ase.getMessage(), ase));
         }
 
         ase = (Exception) throwableAnalyzer
                 .getFirstThrowableOfType(HttpRequestMethodNotSupportedException.class, causeChain);
         if (ase instanceof HttpRequestMethodNotSupportedException) {
-            return handleOAuth2Exception(new Oauth2DefaultWebResponseExceptionTranslator.MethodNotAllowedException(ase.getMessage(), ase));
+            return handleOAuth2Exception(new MethodNotAllowedException(ase.getMessage(), ase));
         }
 
         return handleOAuth2Exception(new ServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e));
