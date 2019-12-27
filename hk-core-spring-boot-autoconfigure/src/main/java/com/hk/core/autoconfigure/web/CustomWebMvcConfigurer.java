@@ -183,6 +183,7 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
         /* ****************** 国际化支持******************* */
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setIgnoreInvalidLocale(true);
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
     }

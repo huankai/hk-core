@@ -5,9 +5,11 @@ import com.hk.commons.http.utils.HttpUtils;
 import com.hk.commons.util.ArrayUtils;
 import com.hk.commons.util.CollectionUtils;
 import com.hk.commons.util.JsonUtils;
+import com.hk.commons.util.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -54,7 +56,12 @@ public abstract class HttpClientUtils {
     }
 
     public static CloseableHttpClient createHttpClient(RequestConfig requestConfig) {
+        return createHttpClient(requestConfig, null);
+    }
+
+    public static CloseableHttpClient createHttpClient(RequestConfig requestConfig, String proxyHost) {
         return HttpClients.custom()
+                .setProxy(StringUtils.isEmpty(proxyHost) ? null : HttpHost.create(proxyHost))
                 .setConnectionManager(connectionManager)
                 // 使用共享 connectionManager 需要设置为 true ，如果设置为 false，则每个 CloseableHttpClient 对象关闭后不能再使用
                 .setConnectionManagerShared(true)

@@ -43,6 +43,12 @@ public abstract class Webs {
 
     private static final String MOZILLA_USER_AGENT_HEADER_VALUE = "Mozilla";
 
+    public static final String X_FORWARDED_FOR_HEADER = "x-forwarded-for";
+
+    public static final String HTTP = "http";
+
+    public static final String HTTPS = "https";
+
     /**
      * 获取request对象
      *
@@ -324,23 +330,21 @@ public abstract class Webs {
      * @return ip address
      */
     public static String getRemoteAddr(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
-        if (StringUtils.isEmpty(ip)) {
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
-            }
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
-                ip = request.getHeader("HTTP_CLIENT_IP");
-            }
-            if (StringUtils.equalsIgnoreCase("unknown", ip)) {
-                ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-            }
-            if (StringUtils.equalsIgnoreCase("unknown", ip) || StringUtils.isEmpty(ip)) {
-                ip = request.getRemoteAddr();
-            }
+        String ip = request.getHeader(X_FORWARDED_FOR_HEADER);
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (StringUtils.isEmpty(ip) || StringUtils.equalsIgnoreCase("unknown", ip)) {
+            ip = request.getRemoteAddr();
         }
         // 在使用 nginx 做多层代理时， 获取的 ip 格式 为 ip1,ip2, 这里只获取到第一个 ip
         return StringUtils.substringBefore(ip, StringUtils.COMMA_SEPARATE);

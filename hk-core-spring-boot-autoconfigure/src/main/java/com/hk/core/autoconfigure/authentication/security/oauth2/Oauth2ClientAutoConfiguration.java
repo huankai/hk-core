@@ -1,6 +1,7 @@
 package com.hk.core.autoconfigure.authentication.security.oauth2;
 
 import com.hk.core.authentication.oauth2.client.token.grant.code.LogoutAuthorizationCodeAccessTokenProvider;
+import com.hk.core.authentication.oauth2.provider.token.RequestIpJwtTokenStore;
 import com.hk.core.authentication.oauth2.session.HashMapBackedSessionMappingStorage;
 import com.hk.core.authentication.oauth2.session.SessionMappingStorage;
 import com.hk.core.authentication.oauth2.session.SingleSignOutHttpSessionListener;
@@ -20,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -50,6 +53,14 @@ public class Oauth2ClientAutoConfiguration {
     @Bean
     public Oauth2ErrorController oauth2ErrorController() {
         return new Oauth2ErrorController();
+    }
+
+    /**
+     * @see org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration.JwtTokenServicesConfiguration#jwtTokenStore()
+     */
+    @Bean
+    public JwtTokenStore jwtTokenStore(JwtAccessTokenConverter jwtAccessTokenConverter) {
+        return new RequestIpJwtTokenStore(jwtAccessTokenConverter);
     }
 
     /**

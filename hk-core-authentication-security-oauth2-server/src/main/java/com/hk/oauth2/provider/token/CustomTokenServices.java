@@ -1,7 +1,7 @@
 package com.hk.oauth2.provider.token;
 
+import com.hk.core.authentication.oauth2.exception.Oauth2ClientStatusException;
 import com.hk.oauth2.TokenRegistry;
-import com.hk.oauth2.exception.Oauth2ClientStatusException;
 import com.hk.oauth2.provider.ClientDetailsCheckService;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
