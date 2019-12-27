@@ -1,6 +1,6 @@
 package com.hk.oauth2.provider;
 
-import com.hk.oauth2.exception.Oauth2ClientStatusException;
+import com.hk.core.authentication.oauth2.exception.Oauth2ClientStatusException;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 
 /**

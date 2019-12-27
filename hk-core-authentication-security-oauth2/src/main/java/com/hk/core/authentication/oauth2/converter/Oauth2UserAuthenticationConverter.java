@@ -41,7 +41,7 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            List<?> roleList = CollectionUtils.getValue(map, "roleSet", List.class);
+            List<?> roleList = CollectionUtils.getValue(map, "roles", List.class);
             Set<String> roles = null;
             if (null != roleList) {
                 roles = roleList.stream().map(Object::toString).collect(Collectors.toSet());
@@ -53,7 +53,7 @@ public class Oauth2UserAuthenticationConverter implements UserAuthenticationConv
                 });
             }
 
-            List<?> permissionList = CollectionUtils.getValue(map, "permissionSet", List.class);
+            List<?> permissionList = CollectionUtils.getValue(map, "permissions", List.class);
             Set<String> permissions = null;
             if (null != permissionList) {
                 permissions = permissionList.stream().map(Object::toString).collect(Collectors.toSet());

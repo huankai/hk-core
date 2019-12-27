@@ -1,15 +1,13 @@
 package com.hk.core.authentication.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hk.commons.util.CollectionUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -72,44 +70,44 @@ public class UserPrincipal implements Serializable {
     /**
      * 获取 app 信息，对于 单点登陆，或 oauth2 登陆时有效
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private ClientAppInfo appInfo;
 
     /**
      * 用户所在机构id
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long orgId;
 
     /**
      * 用户所在机构名称
      */
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String orgName;
 
     /**
      * 用户所在部门Id
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long deptId;
 
     /**
      * 用户所在部门名称
      */
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String deptName;
-
-    /**
-     * 第三方账号 id
-     */
-    private Map<String, String> thirdOpenId;
 
     /**
      * 用户角色
      */
-    @JsonIgnore
-    private Set<String> roles = new HashSet<>();
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Set<String> roles;
 
     /**
      * 用户权限
      */
-    @JsonIgnore
-    private Set<String> permissions = new HashSet<>();
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Set<String> permissions;
 
     public UserPrincipal(Long userId, String account, Byte userType) {
         this.userId = userId;
@@ -128,27 +126,9 @@ public class UserPrincipal implements Serializable {
         this.email = email;
         this.sex = sex;
         this.iconPath = iconPath;
-        if (CollectionUtils.isNotEmpty(roles)) {
-            this.roles.addAll(roles);
-        }
-        if (CollectionUtils.isNotEmpty(permissions)) {
-            this.permissions.addAll(permissions);
-        }
+        this.roles = roles;
+        this.permissions = permissions;
 
-    }
-
-    /**
-     * 获取用户所有权限
-     */
-    public Set<String> getPermissions() {
-        return Collections.unmodifiableSet(permissions);
-    }
-
-    /**
-     * 获取用户所有角色
-     */
-    public Set<String> getRoles() {
-        return Collections.unmodifiableSet(roles);
     }
 
     /**
