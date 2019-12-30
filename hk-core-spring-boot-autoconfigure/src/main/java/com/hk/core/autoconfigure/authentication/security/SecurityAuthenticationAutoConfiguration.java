@@ -1,6 +1,7 @@
 package com.hk.core.autoconfigure.authentication.security;
 
 import com.hk.core.authentication.security.SpringSecurityContext;
+import com.hk.core.authentication.security.crypto.factory.PasswordEncoderFactories;
 import com.hk.core.authentication.security.savedrequest.GateWayHttpSessionRequestCache;
 import com.hk.core.autoconfigure.authentication.AuthenticationProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -9,7 +10,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.savedrequest.RequestCache;
 
