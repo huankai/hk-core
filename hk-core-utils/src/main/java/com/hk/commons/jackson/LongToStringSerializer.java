@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 将 long 转换为 前端 String，在使用雪花算法生成 的Long 类型id时，防止前端long类型丢失精度
@@ -25,7 +26,7 @@ public class LongToStringSerializer extends JsonSerializer<Long> {
 
     @Override
     public void serialize(Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        if (null != value) {
+        if (Objects.nonNull(value)) {
             gen.writeString(value.toString());
         }
     }

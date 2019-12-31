@@ -92,7 +92,7 @@ public abstract class DateTimeUtils {
     }
 
     public static List<String> datePatternList() {
-        return Collections.unmodifiableList(Arrays.asList(DATE_PATTERN));
+        return List.of(DATE_PATTERN);
     }
 
     public static String[] datePatterns() {

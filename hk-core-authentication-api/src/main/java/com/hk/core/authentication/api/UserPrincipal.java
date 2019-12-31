@@ -2,12 +2,14 @@ package com.hk.core.authentication.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hk.commons.util.ByteConstants;
 import com.hk.commons.util.CollectionUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -97,6 +99,9 @@ public class UserPrincipal implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String deptName;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Map<String, String> thirdOpenId;
+
     /**
      * 用户角色
      */
@@ -156,7 +161,7 @@ public class UserPrincipal implements Serializable {
      */
     @JsonIgnore
     public final boolean isAdministrator() {
-        return userType == 1;
+        return userType == ByteConstants.ONE;
     }
 
 }

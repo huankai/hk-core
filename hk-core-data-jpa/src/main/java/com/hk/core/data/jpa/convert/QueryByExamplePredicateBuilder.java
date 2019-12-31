@@ -85,7 +85,7 @@ public class QueryByExamplePredicateBuilder {
             Optional<Object> optionalValue = transformer
                     .apply(Optional.ofNullable(beanWrapper.getPropertyValue(attribute.getName())));
 
-            if (!optionalValue.isPresent()) {
+            if (optionalValue.isEmpty()) {
                 if (exampleAccessor.getNullHandler().equals(ExampleMatcher.NullHandler.INCLUDE)) {
                     predicates.add(cb.isNull(from.get(attribute)));
                 }
@@ -98,7 +98,7 @@ public class QueryByExamplePredicateBuilder {
             if (attributeValue instanceof CharSequence && ((CharSequence) attributeValue).length() == 0) {
                 continue;
             }
-            if (attributeValue instanceof Optional && !((Optional) attributeValue).isPresent()) {
+            if (attributeValue instanceof Optional && ((Optional) attributeValue).isEmpty()) {
                 continue;
             }
 

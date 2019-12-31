@@ -4,7 +4,6 @@ import com.hk.core.authentication.api.SecurityContext;
 import com.hk.core.authentication.api.UserPrincipal;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -17,7 +16,7 @@ public class SpringSecurityContext implements SecurityContext {
     @Override
     public UserPrincipal getPrincipal() {
         if (isAuthenticated()) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            var authentication = SecurityContextHolder.getContext().getAuthentication();
             return (UserPrincipal) authentication.getPrincipal();
         }
         throw new AuthenticationServiceException("未认证的用户");

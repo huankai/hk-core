@@ -1,5 +1,6 @@
 package com.hk.commons.util;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Getter;
  * @date 2019-05-14 22:40
  */
 @Getter
+@AllArgsConstructor
 public enum Algorithm {
 
     MD5("MD5"),
@@ -19,7 +21,4 @@ public enum Algorithm {
 
     private String name;
 
-    Algorithm(String name) {
-        this.name = name;
-    }
 }
