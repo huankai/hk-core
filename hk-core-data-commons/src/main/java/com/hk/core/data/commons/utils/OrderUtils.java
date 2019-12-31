@@ -26,7 +26,7 @@ public abstract class OrderUtils {
     public static Sort toSort(List<Order> orders) {
         var sort = Sort.unsorted();
         if (CollectionUtils.isNotEmpty(orders)) {
-            List<Sort.Order> orderList = orders.stream()
+            var orderList = orders.stream()
                     .filter(order -> Objects.nonNull(SqlEscapeUtils.escape(order.getField())))
                     .map(order -> new Sort.Order(order.isDesc() ? Sort.Direction.DESC : Sort.Direction.ASC, order.getField()))
                     .collect(Collectors.toList());
@@ -64,7 +64,7 @@ public abstract class OrderUtils {
         StringBuilder orderSql = new StringBuilder();
         if (CollectionUtils.isNotEmpty(orders)) {
             int index = 0;
-            for (Order order : orders) {
+            for (var order : orders) {
                 if (StringUtils.isNotEmpty(SqlEscapeUtils.escape(order.getField()))) {
                     if (index++ > 0) {
                         orderSql.append(StringUtils.COMMA_SEPARATE);

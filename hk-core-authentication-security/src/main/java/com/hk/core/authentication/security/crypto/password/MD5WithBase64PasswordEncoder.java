@@ -1,8 +1,8 @@
 package com.hk.core.authentication.security.crypto.password;
 
 import com.hk.commons.util.Algorithm;
+import com.hk.commons.util.Base64Utils;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import sun.misc.BASE64Encoder;
 
 import java.security.MessageDigest;
 
@@ -17,7 +17,7 @@ public class MD5WithBase64PasswordEncoder implements PasswordEncoder {
         try {
             MessageDigest md = MessageDigest.getInstance(Algorithm.MD5.getName());
             byte[] b = md.digest(rawPassword.toString().getBytes());
-            return new BASE64Encoder().encode(b);
+            return Base64Utils.encodeToString(b);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

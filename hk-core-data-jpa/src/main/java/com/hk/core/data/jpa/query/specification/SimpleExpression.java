@@ -7,7 +7,6 @@ import lombok.Getter;
 import javax.persistence.criteria.*;
 import javax.persistence.criteria.CriteriaBuilder.In;
 import java.util.Collection;
-import java.util.Iterator;
 
 
 /**
@@ -51,13 +50,13 @@ public class SimpleExpression implements Criterion {
                 In<Object> in = cb.in(path);
                 Collection<Object> c = (Collection) value;
                 Object o;
-                for (Iterator it = c.iterator(); it.hasNext(); in = in.value(o)) {
+                for (var it = c.iterator(); it.hasNext(); in = in.value(o)) {
                     o = it.next();
                 }
                 return in;
             case BETWEEN:
                 if (this.value instanceof Comparable[]) {
-                    Comparable[] values = (Comparable[]) value;
+                    var values = (Comparable[]) value;
                     if (values.length == 2) {
                         return cb.between(path, values[0], values[1]);
                     }

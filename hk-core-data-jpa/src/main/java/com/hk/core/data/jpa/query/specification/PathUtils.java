@@ -14,9 +14,9 @@ class PathUtils {
     static <X> Path<X> getPath(Root<X> root, String propertyName) {
         Path<X> path;
         if (StringUtils.contains(propertyName, ".")) {
-            String[] names = StringUtils.splitByComma(propertyName);
+            var names = StringUtils.splitByComma(propertyName);
             path = root.get(names[0]);
-            for (String name : names) {
+            for (var name : names) {
                 path = path.get(name);
             }
         } else {

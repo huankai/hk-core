@@ -69,7 +69,7 @@ public class DataSourceConfigStorage<T extends ConfigID> implements ConfigStorag
             var sb = new StringBuilder("SELECT ");
             sb.append(columnString).append(" FROM ").append(tableName);
             if (StringUtils.isNotEmpty(this.order)) {
-                sb.append(" ORDER BY ").append(this.order).append(" ASC");
+                sb.append(" ORDER BY ").append(this.order);
             }
             findAllSql = sb.toString();
         }

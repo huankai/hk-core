@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * 在使用 jdbcSession 查询时，如果指定属性类型为 Serializable （@see  com.hyj.core.commons.ui.tree.BaseTreeNode#value）
@@ -27,7 +28,7 @@ public class BigIntegerToStringSerializer extends JsonSerializer<BigInteger> {
 
     @Override
     public void serialize(BigInteger value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        if (value != null) {
+        if (Objects.nonNull(value)) {
             gen.writeString(value.toString());
         }
     }
