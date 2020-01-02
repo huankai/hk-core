@@ -467,12 +467,12 @@ public class BaseSimpleJpaRepository<T extends Persistable<ID>, ID extends Seria
         TypedQuery<Long> countQuery = em.createQuery(sqlCount.toString(), Long.class); // 分页查询
         TypedParameterValue parameterValue;
         for (int index = 0, size = parameters.size(); index < size; index++) {
-            Object value = parameters.get(index);
+            var value = parameters.get(index);
             parameterValue = new TypedParameterValue(TypeFactory.getType(value), value);
             hqlQuery.setParameter(index, parameterValue);
             countQuery.setParameter(index, parameterValue);
         }
-        Long count = countQuery.getSingleResult();
+        var count = countQuery.getSingleResult();
         List<T> result = (count == 0) ? new ArrayList<>() : hqlQuery.getResultList();//当查询记录为 0 时，不再需要查询数据集
         return new SimpleQueryPage<>(result, count, queryModel.getStartRowIndex(), queryModel.getPageSize());
     }
