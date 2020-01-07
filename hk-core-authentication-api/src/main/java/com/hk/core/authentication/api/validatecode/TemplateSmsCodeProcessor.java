@@ -38,7 +38,7 @@ public class TemplateSmsCodeProcessor extends AbstractSmsValidateCodeProcessor {
 
     @Override
     protected void doSend(String phone, ValidateCode validateCode, ServletWebRequest request) throws IOException {
-        Map<String, Object> templateMap = new HashMap<>();
+        Map<String, Object> templateMap = new HashMap<>(2);
         templateMap.put(codeKey, validateCode.getCode());
         templateMap.put(expireKey, validateCode.getExpireSecond() / 60);// 秒转分钟
         if (CollectionUtils.isNotEmpty(this.templateParameter)) {

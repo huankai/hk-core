@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 /**
+ * 支付宝配置属性
+ *
  * @author huangkai
  * @date 2019/3/5 17:35
  */

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 支付宝 自动配置
+ * 支付宝配置
  *
  * @author huangkai
  * @date 2019/3/5 22:13

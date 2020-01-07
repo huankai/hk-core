@@ -118,25 +118,6 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         };
     }
 
-//    /**
-//     * @see #jackson2ObjectMapperBuilderCustomizer()
-//     */
-//    @Override
-//    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-//        converters.forEach(converter -> {
-//            if (converter instanceof StringHttpMessageConverter) {
-//                ((StringHttpMessageConverter) converter).setDefaultCharset(Contants.CHARSET_UTF_8);
-//            } else if (converter instanceof MappingJackson2HttpMessageConverter) {
-////                SimpleModule module = new SimpleModule();
-////                module.addDeserializer(QueryPage.class,
-////                        new QueryPageReferenceTypeDeserializer()));
-//                MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
-////                mappingJackson2HttpMessageConverter.setObjectMapper();
-//                mappingJackson2HttpMessageConverter.setDefaultCharset(Contants.CHARSET_UTF_8);
-//            }
-//        });
-//    }
-
     /**
      * 添加转换
      */
@@ -166,20 +147,12 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        boolean securityContextPresent = ClassUtils.isPresent("com.hk.core.authentication.api.SecurityContextUtils", null);
-//        if (securityContextPresent) {
-//            registry.addInterceptor(new UserContextInterceptor()).addPathPatterns("/**");
-//        }
-//        boolean accessTokenPresent = ClassUtils.isPresent("com.hk.core.authentication.oauth2.utils.AccessTokenUtils", null);
-//        if (accessTokenPresent) {
-//            registry.addInterceptor(new AccessTokenInterceptor()).addPathPatterns("/**");
-//        }
-        GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
         Map<String, Object> property = requestProperty.getProperty();
         if (CollectionUtils.isNotEmpty(property)) {
+            GlobalPropertyInterceptor propertyInterceptor = new GlobalPropertyInterceptor();
             propertyInterceptor.setProperty(property);
+            registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
         }
-        registry.addInterceptor(propertyInterceptor).addPathPatterns("/**");
 
         /* ****************** 国际化支持******************* */
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
@@ -187,43 +160,5 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
     }
-
-//    private class QueryPageReferenceTypeDeserializer extends ReferenceTypeDeserializer<QueryPage<?>> {
-//
-//
-//        public QueryPageReferenceTypeDeserializer(JavaType fullType, ValueInstantiator vi,
-//                                                  TypeDeserializer typeDeser, JsonDeserializer<?> deser) {
-//            super(fullType, vi, typeDeser, deser);
-//        }
-//
-//        @Override
-//        protected ReferenceTypeDeserializer<QueryPage<?>> withResolved(TypeDeserializer typeDeser, JsonDeserializer<?> valueDeser) {
-//            return new QueryPageReferenceTypeDeserializer(_fullType, _valueInstantiator, typeDeser, valueDeser);
-//        }
-//
-//        @Override
-//        public QueryPage<?> getNullValue(DeserializationContext ctxt) {
-//            return new SimpleQueryPage<>();
-//        }
-//
-//        @Override
-//        public QueryPage<?> referenceValue(Object contents) {
-//            SimpleQueryPage<Object> queryPage = new SimpleQueryPage<>();
-//            queryPage.setData((List<Object>) contents);
-//            return queryPage;
-//        }
-//
-//        @Override
-//        public QueryPage<?> updateReference(QueryPage<?> reference, Object contents) {
-//            SimpleQueryPage<Object> queryPage = new SimpleQueryPage<>();
-//            queryPage.setData((List<Object>) contents);
-//            return queryPage;
-//        }
-//
-//        @Override
-//        public Object getReferenced(QueryPage<?> reference) {
-//            return reference.getData();
-//        }
-//    }
 }
 

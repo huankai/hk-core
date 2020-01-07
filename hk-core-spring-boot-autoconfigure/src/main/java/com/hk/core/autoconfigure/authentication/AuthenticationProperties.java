@@ -105,12 +105,12 @@ public class AuthenticationProperties {
         /**
          * POST 登陆处理URL
          */
-        private String loginProcessingUrl = getLoginUrl();
+        private String loginProcessingUrl = "/login";
 
         /**
          * 登陆失败url
          */
-        private String failureUrl = getLoginUrl();
+        private String failureUrl = "/login?error";
 
         /**
          * 登陆成功后的地址
@@ -125,12 +125,12 @@ public class AuthenticationProperties {
         /**
          * 退出成功后的请求地址
          */
-        private String logoutSuccessUrl = getLoginUrl();
+        private String logoutSuccessUrl = "/";
 
         /**
          * Session 失效/过期URL
          */
-        private String sessionInvalidUrl = "/login";
+        private String sessionInvalidUrl = "/";
 
         /**
          * <p>

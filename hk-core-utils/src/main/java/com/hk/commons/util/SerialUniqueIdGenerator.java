@@ -60,38 +60,38 @@ public class SerialUniqueIdGenerator implements IDGenerator<String> {
     }
 
     /*　*********************** 测试，模拟 1000 个线程、循环测试生成的 id是否重复　*****************　*/
-    public static void main(String[] args) {
-        var idGenerator = SerialUniqueIdGenerator.getInstance();
-        var num = 1000;
-        var cyclicBarrier = new CyclicBarrier(num);
-        for (int i = 0; i < num; i++) {
-            new SimpleCyclicBarrier(cyclicBarrier, idGenerator).start();
-        }
-    }
-
-    private static class SimpleCyclicBarrier extends Thread {
-
-        private CyclicBarrier cyclicBarrier;
-
-        private SerialUniqueIdGenerator idGenerator;
-
-        private SimpleCyclicBarrier(CyclicBarrier cyclicBarrier, SerialUniqueIdGenerator idGenerator) {
-            this.cyclicBarrier = cyclicBarrier;
-            this.idGenerator = idGenerator;
-        }
-
-        @Override
-        public void run() {
-            var threadName = Thread.currentThread().getName();
-            System.out.println(threadName + "start...");
-            try {
-                cyclicBarrier.await();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            for (int i = 0; i < 10000; i++) {
-                System.out.println(threadName + ",i:" + i + ",value:" + idGenerator.generate());
-            }
-        }
-    }
+//    public static void main(String[] args) {
+//        var idGenerator = SerialUniqueIdGenerator.getInstance();
+//        var num = 1000;
+//        var cyclicBarrier = new CyclicBarrier(num);
+//        for (int i = 0; i < num; i++) {
+//            new SimpleCyclicBarrier(cyclicBarrier, idGenerator).start();
+//        }
+//    }
+//
+//    private static class SimpleCyclicBarrier extends Thread {
+//
+//        private CyclicBarrier cyclicBarrier;
+//
+//        private SerialUniqueIdGenerator idGenerator;
+//
+//        private SimpleCyclicBarrier(CyclicBarrier cyclicBarrier, SerialUniqueIdGenerator idGenerator) {
+//            this.cyclicBarrier = cyclicBarrier;
+//            this.idGenerator = idGenerator;
+//        }
+//
+//        @Override
+//        public void run() {
+//            var threadName = Thread.currentThread().getName();
+//            System.out.println(threadName + "start...");
+//            try {
+//                cyclicBarrier.await();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            for (int i = 0; i < 10000; i++) {
+//                System.out.println(threadName + ",i:" + i + ",value:" + idGenerator.generate());
+//            }
+//        }
+//    }
 }

@@ -10,7 +10,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import javax.validation.constraints.NotNull;
 
 /**
- * wechat mp properties
+ * 微信公众号配置
  *
  * @author Binary Wang(https://github.com/binarywang)
  */
@@ -19,27 +19,34 @@ import javax.validation.constraints.NotNull;
 @ConfigurationProperties(prefix = "wx.mp")
 public class WeiXinMpProperties {
 
-    private boolean enabled;
     /**
-     * 设置微信公众号的appid
+     * 是否开启配置
+     */
+    private boolean enabled;
+
+    /**
+     * 设置微信公众号的 appId
      */
     private String appId;
 
     /**
-     * 设置微信公众号的app secret
+     * 设置微信公众号的 appSecret
      */
     private String secret;
 
     /**
-     * 设置微信公众号的token
+     * 设置微信公众号的 token
      */
     private String token;
 
     /**
-     * 设置微信公众号的EncodingAESKey
+     * 设置微信公众号的 EncodingAESKey
      */
     private String aesKey;
 
+    /**
+     * 微信认证配置
+     */
     @NestedConfigurationProperty
     private Authentication authentication = new Authentication();
 
@@ -55,8 +62,11 @@ public class WeiXinMpProperties {
          * 微信登陆回调
          */
         @NotNull
-        private String callbackUrl;
+        private String callbackUrl = "/wechat/callback";
 
+        /**
+         * 微信登录回调域名
+         */
         private String callHost;
 
         /**

@@ -1,21 +1,19 @@
 package com.hk.core.authentication.security.expression;
 
-import java.io.Serializable;
-import java.util.Set;
-
+import com.hk.commons.util.ArrayUtils;
+import com.hk.commons.util.CollectionUtils;
+import com.hk.commons.util.StringUtils;
+import com.hk.core.authentication.api.UserPrincipal;
+import com.hk.core.authentication.security.SecurityUserPrincipal;
+import lombok.Setter;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.SecurityExpressionOperations;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.commons.util.CollectionUtils;
-import com.hk.commons.util.StringUtils;
-import com.hk.core.authentication.api.UserPrincipal;
-import com.hk.core.authentication.security.SecurityUserPrincipal;
-
-import lombok.Setter;
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * <p>
@@ -93,7 +91,7 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
         if (isAnonymous()) {// 为什么要这么判断，因为调用此方法时，用户可能是未登陆的用户
             return false;
         }
-        UserPrincipal userPrincipal = UserPrincipal.class.cast(authentication.getPrincipal());
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         return userPrincipal.isAdministrator()
                 || CollectionUtils.containsAny(userPrincipal.getPermissions(), authorities)
                 || hasAnyAuthorityName(null, authorities);
@@ -114,7 +112,7 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
         if (ArrayUtils.isEmpty(roles) || isAnonymous()) {// 为什么要这么判断，因为调用此方法时，用户可能是未登陆的用户
             return false;
         }
-        UserPrincipal userPrincipal = UserPrincipal.class.cast(authentication.getPrincipal());
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         for (String role : roles) {
             if (userPrincipal.hasRole(role)) {
                 return true;
@@ -124,7 +122,7 @@ public class AdminAccessSecurityExpressionRoot implements SecurityExpressionOper
     }
 
     private boolean hasAnyAuthorityName(String prefix, String... roles) {
-        Set<String> permissionSet = UserPrincipal.class.cast(authentication.getPrincipal()).getPermissions();
+        Set<String> permissionSet = ((UserPrincipal) authentication.getPrincipal()).getPermissions();
         for (String role : roles) {
             String defaultedRole = getRoleWithDefaultPrefix(prefix, role);
             if (CollectionUtils.contains(permissionSet, defaultedRole)) {

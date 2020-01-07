@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * 微信支付配置
+ *
  * @author kevin
  * @date 2019-12-7 16:27
  */

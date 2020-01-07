@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * 微信支付配置属性
+ *
  * @author kevin
  * @date 2019-12-7 16:27
  */

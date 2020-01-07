@@ -1,7 +1,6 @@
 package com.hk.core.autoconfigure.data.elasticsearch;
 
 import com.hk.core.elasticsearch.repository.BaseElasticsearchRepositoryFactoryBean;
-import lombok.RequiredArgsConstructor;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.elasticsearch.rest.RestClientProperties;
@@ -22,10 +21,13 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @ConditionalOnClass(RestHighLevelClient.class)
 @EnableConfigurationProperties(value = {RestClientProperties.class})
 @EnableElasticsearchRepositories(basePackages = {"**.repository.elasticsearch"}, repositoryFactoryBeanClass = BaseElasticsearchRepositoryFactoryBean.class)
-@RequiredArgsConstructor
 public class ElasticsearchAutoConfiguration extends AbstractElasticsearchConfiguration {
 
     private final RestClientProperties restClientProperties;
+
+    public ElasticsearchAutoConfiguration(RestClientProperties restClientProperties) {
+        this.restClientProperties = restClientProperties;
+    }
 
     @Override
     public RestHighLevelClient elasticsearchClient() {

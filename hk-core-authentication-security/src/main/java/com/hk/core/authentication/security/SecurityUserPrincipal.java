@@ -66,7 +66,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        Set<String> roleSet = getRoles();
+        var roleSet = getRoles();
         if (CollectionUtils.isNotEmpty(roleSet)) {
             roleSet.forEach(role -> {
                 if (!StringUtils.startsWith(role, ROLE_PREFIX)) {
@@ -76,7 +76,7 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
 
             });
         }
-        Set<String> permissionSet = getPermissions();
+        var permissionSet = getPermissions();
         if (CollectionUtils.isNotEmpty(permissionSet)) {
             permissionSet.forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission)));
         }

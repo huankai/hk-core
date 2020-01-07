@@ -75,9 +75,10 @@ public enum Status {
     private static final Map<Status, EnumDisplayUtils.EnumItem> map;
 
     static {
-        map = new HashMap<>(Status.values().length);
+        Status[] values = Status.values();
+        map = new HashMap<>(values.length);
         EnumDisplayUtils.EnumItem enumItem;
-        for (var item : Status.values()) {
+        for (var item : values) {
             var enumDisplay = EnumDisplayUtils.getEnumDisplay(item);
             if (null != enumDisplay) {
                 enumItem = new EnumDisplayUtils.EnumItem();
