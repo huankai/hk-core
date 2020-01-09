@@ -43,7 +43,7 @@ public interface SelectService<T extends Persistable<ID>, ID extends Serializabl
      */
     @SuppressWarnings("unchecked")
     default Iterable<T> findByIds(ID... ids) {
-        return ArrayUtils.isEmpty(ids) ? Collections.emptyList() : findByIds(Arrays.asList(ids));
+        return ArrayUtils.isEmpty(ids) ? Collections.emptyList() : ((SelectService<T, ID>) Service.currentProxy()).findByIds(Arrays.asList(ids));
     }
 
     /**

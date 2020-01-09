@@ -23,8 +23,7 @@ import org.springframework.web.socket.server.HandshakeHandler;
 
 /**
  * <pre>
- * spring security websocket 配置类，
- * 如果不与 spring security 整合，可以直接使用 {@link com.hk.core.autoconfigure.message.websocket.WebSocketAutoConfiguration}  配置类，如果使用这个配置，则不能通过
+ * spring security websocket 配置类
  * {@link SecurityContextUtils#getPrincipal()} 获取用户信息
  * </pre>
  *
@@ -65,37 +64,38 @@ public class WebSocketSecurityConfigurer extends AbstractSecurityWebSocketMessag
 //        return new WebsocketMessager(messagingTemplate);
 //    }
 
-//	/**
+    //	/**
 //	 * 配置 {@link ChannelRegistration}，可以添加自定义拦截器
 //	 *
 //	 * @param registration registration
 //	 */
-//	@Override
-//	protected void customizeClientInboundChannel(ChannelRegistration registration) {
-//		if (CollectionUtils.isNotEmpty(channelInterceptors)) {
-//			registration.interceptors(channelInterceptors.toArray(new ChannelInterceptor[] {}));
-//		}
-//	}
+//    @Override
+//    protected void customizeClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(new AccessTokenChannelInterceptor());
+//    }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(webSocketProperties.getEndpoint()).setHandshakeHandler(handshakeHandler)
-                .setAllowedOrigins(webSocketProperties.getAllowedOrigins()).withSockJS();
+                .setAllowedOrigins(webSocketProperties.getAllowedOrigins()).withSockJS()
+                .setWebSocketEnabled(false)
+                .setSessionCookieNeeded(false);
     }
+
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        var scheduler = new DefaultManagedTaskScheduler();
+        DefaultManagedTaskScheduler scheduler = new DefaultManagedTaskScheduler();
         registry.enableSimpleBroker(webSocketProperties.getSimpleBrokers()).setTaskScheduler(scheduler);
-        var applicationDestinationPrefixes = webSocketProperties.getApplicationDestinationPrefixes();
+        String[] applicationDestinationPrefixes = webSocketProperties.getApplicationDestinationPrefixes();
         if (ArrayUtils.isNotEmpty(applicationDestinationPrefixes)) {
             registry.setApplicationDestinationPrefixes(applicationDestinationPrefixes);
         }
-        var userDestinationPrefix = webSocketProperties.getUserDestinationPrefix();
+        String userDestinationPrefix = webSocketProperties.getUserDestinationPrefix();
         if (StringUtils.isNotEmpty(userDestinationPrefix)) {
             registry.setUserDestinationPrefix(userDestinationPrefix);
         }
-        var cacheLimit = webSocketProperties.getCacheLimit();
+        Integer cacheLimit = webSocketProperties.getCacheLimit();
         if (null != cacheLimit) {
             registry.setCacheLimit(cacheLimit);
         }
@@ -108,7 +108,8 @@ public class WebSocketSecurityConfigurer extends AbstractSecurityWebSocketMessag
      */
     @Override
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
-        messages.anyMessage().authenticated();
+//        messages.anyMessage().authenticated();
+        messages.anyMessage().permitAll();
 //        messages.simpTypeMatchers(SimpMessageType.CONNECT).permitAll(); //连接时不需要认证
 //        messages.simpDestMatchers("/user/**").permitAll(); // 发送到 /user/** 的不需要认证
     }

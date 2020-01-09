@@ -14,7 +14,6 @@ import com.hk.core.service.jpa.JpaBaseService;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -92,13 +91,11 @@ public abstract class JpaServiceImpl<T extends Persistable<ID>, ID extends Seria
     }
 
     @Override
-    @Transactional(rollbackFor = {Throwable.class})
     public List<T> batchUpdate(Collection<T> entities) {
         return getBaseRepository().saveAll(entities);
     }
 
     @Override
-    @Transactional(rollbackFor = {Throwable.class})
     public T updateByIdSelective(T t) {
         return getBaseRepository().updateByIdSelective(t);
     }

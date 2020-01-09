@@ -20,8 +20,4 @@ public class TokenControlException extends OAuth2Exception {
         super(msg, t);
     }
 
-    @Override
-    public int getHttpErrorCode() {
-        return 200;
-    }
 }

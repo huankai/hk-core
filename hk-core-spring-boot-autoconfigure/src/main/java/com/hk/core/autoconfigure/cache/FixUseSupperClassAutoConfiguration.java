@@ -19,7 +19,6 @@ import org.springframework.cache.interceptor.CacheInterceptor;
 import org.springframework.cache.interceptor.CacheOperationSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Role;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -37,7 +36,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 @Configuration
 @EnableCaching
 @ConditionalOnClass(FixUseSupperClassCacheOperationSource.class)
-@EnableAspectJAutoProxy(exposeProxy = true)
 @EnableConfigurationProperties(value = {CacheProperties.class, NullCacheProperties.class})
 public class FixUseSupperClassAutoConfiguration extends CachingConfigurerSupport {
 

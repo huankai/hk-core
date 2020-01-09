@@ -5,6 +5,7 @@ import com.hk.core.data.jpa.BaseJpaRepositoryFactoryBean;
 import com.hk.core.data.jpa.repository.BaseJpaRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
@@ -21,6 +22,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @date 2018-06-07 13:07
  */
 @EnableJpaAuditing
+@EnableAspectJAutoProxy(exposeProxy = true)
 @EnableConfigurationProperties(value = {SnowflakeProperties.class})
 @ConditionalOnClass(BaseJpaRepository.class)
 @EnableJpaRepositories(basePackages = {"**.repository.jpa"}, repositoryFactoryBeanClass = BaseJpaRepositoryFactoryBean.class)

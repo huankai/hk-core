@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -68,31 +67,26 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     protected abstract PagingAndSortingRepository<T, ID> getBaseRepository();
 
     @Override
-    @Transactional(rollbackFor = {Throwable.class})
     public void deleteById(ID id) {
         getBaseRepository().deleteById(id);
     }
 
     @Override
-    @Transactional(rollbackFor = {Throwable.class})
     public void delete(T entity) {
         getBaseRepository().delete(entity);
     }
 
     @Override
-    @Transactional(rollbackFor = {Throwable.class})
     public void delete(Iterable<T> entities) {
         getBaseRepository().deleteAll(entities);
     }
 
     @Override
-    @Transactional(rollbackFor = {Throwable.class})
     public T insert(T t, Function<T, T> function) {
         return getBaseRepository().save(function.apply(t));
     }
 
     @Override
-    @Transactional(rollbackFor = {Throwable.class})
     public Iterable<T> batchInsert(Iterable<T> entities) {
         return getBaseRepository().saveAll(entities);
     }
@@ -128,7 +122,6 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     }
 
     @Override
-    @Transactional(rollbackFor = {Throwable.class})
     public T updateById(T t, Function<T, T> function) {
         AssertUtils.isTrueWithI18n(!t.isNew(), "update.id.notEmpty");
         return getBaseRepository().save(function.apply(t));

@@ -25,8 +25,11 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @return T
      */
     default T insertOrUpdateSelective(T t) {
-        return t.isNew() ? insert(t) : updateByIdSelective(t);
+        BaseService<T, ID> proxy = Service.currentProxy();
+        return t.isNew() ? proxy.insert(t)
+                : proxy.updateByIdSelective(t);
     }
+
 
     /**
      * 保存或更新
@@ -35,7 +38,8 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @return T
      */
     default T insertOrUpdate(T t) {
-        return t.isNew() ? insert(t) : updateById(t);
+        BaseService<T, ID> proxy = Service.currentProxy();
+        return t.isNew() ? proxy.insert(t) : proxy.updateById(t);
     }
 
     /**
@@ -45,8 +49,9 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @return {@link List}
      */
     default List<T> insertOrUpdate(Collection<T> entities) {
+        BaseService<T, ID> proxy = Service.currentProxy();
         List<T> result = new ArrayList<>(entities.size());
-        entities.forEach(entity -> result.add(insertOrUpdate(entity)));
+        entities.forEach(entity -> result.add(proxy.insertOrUpdate(entity)));
         return result;
     }
 
@@ -57,8 +62,9 @@ public interface BaseService<T extends Persistable<ID>, ID extends Serializable>
      * @return {@link List}
      */
     default List<T> insertOrUpdateSelective(Collection<T> entities) {
+        BaseService<T, ID> proxy = Service.currentProxy();
         List<T> result = new ArrayList<>(entities.size());
-        entities.forEach(entity -> result.add(insertOrUpdateSelective(entity)));
+        entities.forEach(entity -> result.add(proxy.insertOrUpdateSelective(entity)));
         return result;
     }
 }
