@@ -131,7 +131,7 @@ public abstract class BaseServiceImpl<T extends Persistable<ID>, ID extends Seri
     @Override
     @Transactional(rollbackFor = {Throwable.class})
     public T updateById(T t, Function<T, T> function) {
-        AssertUtils.isTrueWithI18n(!t.isNew(), "update.id.notEmpty");
+        AssertUtils.isTrueWithI18n(t.isNew(), "update.id.notEmpty");
         return getBaseRepository().save(function.apply(t));
     }
 
