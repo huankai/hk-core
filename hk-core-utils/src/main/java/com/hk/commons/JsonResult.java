@@ -1,6 +1,7 @@
 package com.hk.commons;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hk.commons.util.SpringContextHolder;
 import com.hk.commons.util.StringUtils;
 import lombok.AllArgsConstructor;
@@ -36,8 +37,8 @@ public final class JsonResult<T> implements Serializable {
      */
     @Getter
     @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
-
 
     /**
      * 请求成功

@@ -9,7 +9,11 @@ import org.springframework.aop.framework.AopContext;
 public interface Service {
 
     @SuppressWarnings("unchecked")
-    static <P> P currentProxy() throws ClassCastException {
-        return (P) AopContext.currentProxy();
+    static <T> T currentProxy(T t) throws ClassCastException {
+        try {
+            return (T) AopContext.currentProxy();
+        } catch (IllegalStateException e) {
+            return t;
+        }
     }
 }

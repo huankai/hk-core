@@ -18,7 +18,7 @@ public interface InsertService<T extends Persistable<ID>, ID extends Serializabl
      * @return T
      */
     default T insert(T t) {
-        InsertService<T, ID> proxy = Service.currentProxy();
+        InsertService<T, ID> proxy = Service.currentProxy(this);
         return proxy.insert(t, Function.identity());
     }
 

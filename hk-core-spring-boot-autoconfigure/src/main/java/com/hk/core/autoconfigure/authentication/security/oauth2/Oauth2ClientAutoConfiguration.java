@@ -1,6 +1,6 @@
 package com.hk.core.autoconfigure.authentication.security.oauth2;
 
-import com.hk.core.authentication.oauth2.client.token.grant.code.LogoutAuthorizationCodeAccessTokenProvider;
+import com.hk.core.authentication.oauth2.authentication.CodeAuthenticationSuccessHandler;
 import com.hk.core.authentication.oauth2.provider.token.RequestIpJwtTokenStore;
 import com.hk.core.authentication.oauth2.session.HashMapBackedSessionMappingStorage;
 import com.hk.core.authentication.oauth2.session.SessionMappingStorage;
@@ -19,8 +19,8 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.FilterChainProxy;
@@ -67,11 +67,13 @@ public class Oauth2ClientAutoConfiguration {
     @Bean
     public UserInfoRestTemplateCustomizer userInfoRestTemplateCustomizer() {
         return template -> {
-            AuthenticationProperties.LoginProperties loginProperties = authenticationProperties.getLogin();
-            LogoutAuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider = new LogoutAuthorizationCodeAccessTokenProvider();
-            authorizationCodeAccessTokenProvider.setLogoutUrl(loginProperties.getLogoutUrl());
-            authorizationCodeAccessTokenProvider.setForceHttps(authenticationProperties.getOauth2().isForceHttps());
-            template.setAccessTokenProvider(authorizationCodeAccessTokenProvider);//简化，只需要认证码模式
+//            AuthenticationProperties.LoginProperties loginProperties = authenticationProperties.getLogin();
+//            LogoutAuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider = new LogoutAuthorizationCodeAccessTokenProvider();
+//            authorizationCodeAccessTokenProvider.setLogoutUrl(loginProperties.getLogoutUrl());
+//            authorizationCodeAccessTokenProvider.setForceHttps(authenticationProperties.getOauth2().isForceHttps());
+            AuthorizationCodeAccessTokenProvider accessTokenProvider = new AuthorizationCodeAccessTokenProvider();
+            accessTokenProvider.setStateMandatory(false);
+            template.setAccessTokenProvider(accessTokenProvider);//简化，只需要认证码模式
 
         };
     }
@@ -95,6 +97,7 @@ public class Oauth2ClientAutoConfiguration {
                         for (var filter : filterChain.getFilters()) {
                             if (filter instanceof OAuth2ClientAuthenticationProcessingFilter) {
                                 OAuth2ClientAuthenticationProcessingFilter processingFilter = (OAuth2ClientAuthenticationProcessingFilter) filter;
+                                processingFilter.setAuthenticationSuccessHandler(new CodeAuthenticationSuccessHandler());
                                 SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();
                                 authenticationFailureHandler.setAllowSessionCreation(authenticationProperties.isAllowSessionCreation());
                                 authenticationFailureHandler.setDefaultFailureUrl(authenticationProperties.getOauth2().getOauth2FailureUrl());

@@ -21,7 +21,7 @@ public interface DeleteService<T extends Persistable<ID>, ID extends Serializabl
      * @param ids ids
      */
     default void deleteByIds(Iterable<ID> ids) {
-        DeleteService<T, ID> proxy = Service.currentProxy();
+        DeleteService<T, ID> proxy = Service.currentProxy(this);
         if (CollectionUtils.isNotEmpty(ids)) {
             ids.forEach(proxy::deleteById);
         }
