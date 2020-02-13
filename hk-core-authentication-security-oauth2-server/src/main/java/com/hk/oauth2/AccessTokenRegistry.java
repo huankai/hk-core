@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * access token 存储
  */
 @Slf4j
+@Deprecated
 public class AccessTokenRegistry implements TokenRegistry, LogoutParameter {
 
     private final ConcurrentHashMap<String, List<LogoutRequest>> map = new ConcurrentHashMap<>(128);

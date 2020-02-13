@@ -1,7 +1,6 @@
 package com.hk.oauth2.provider.token;
 
 import com.hk.core.authentication.oauth2.exception.Oauth2ClientStatusException;
-import com.hk.oauth2.TokenRegistry;
 import com.hk.oauth2.provider.ClientDetailsCheckService;
 import lombok.Setter;
 import org.springframework.beans.factory.InitializingBean;
@@ -54,8 +53,8 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
     @Setter
     private AuthenticationManager authenticationManager;
 
-    @Setter
-    private TokenRegistry tokenRegistry;
+//    @Setter
+//    private TokenRegistry tokenRegistry;
 
     /**
      * Initialize these token services. If no random generator is set, one will be created.
@@ -96,7 +95,7 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
                 tokenStore.removeAccessToken(existingAccessToken);
             } else {
                 tokenStore.storeAccessToken(existingAccessToken, authentication);
-                tokenRegistry.addAccessToken(authentication, existingAccessToken);
+//                tokenRegistry.addAccessToken(authentication, existingAccessToken);
                 return existingAccessToken;
             }
         }
@@ -114,7 +113,7 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
         if (refreshToken != null) {
             tokenStore.storeRefreshToken(refreshToken, authentication);
         }
-        tokenRegistry.addAccessToken(authentication, accessToken);
+//        tokenRegistry.addAccessToken(authentication, accessToken);
         return accessToken;
     }
 

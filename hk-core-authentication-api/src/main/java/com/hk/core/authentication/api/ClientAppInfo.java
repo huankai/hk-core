@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class ClientAppInfo implements Serializable {
 
     /**
-     * appid
+     * app id
      */
     private Long appId;
 

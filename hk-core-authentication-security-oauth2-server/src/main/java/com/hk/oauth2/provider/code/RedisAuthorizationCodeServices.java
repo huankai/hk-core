@@ -1,12 +1,9 @@
 package com.hk.oauth2.provider.code;
 
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.hk.commons.util.ArrayUtils;
+import com.hk.core.web.Webs;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.oauth2.common.util.SerializationUtils;
@@ -14,11 +11,11 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.code.RandomValueAuthorizationCodeServices;
 
-import com.hk.commons.util.ArrayUtils;
-import com.hk.core.web.Webs;
-
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 使用Redis 存储 authorization_code 认证的 code 与 authentication

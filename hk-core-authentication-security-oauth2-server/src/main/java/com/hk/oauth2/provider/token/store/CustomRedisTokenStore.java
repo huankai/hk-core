@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.JdkSerializationStrategy;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStoreSerializationStrategy;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -35,6 +36,11 @@ public class CustomRedisTokenStore implements TokenStore {
     private static final String AUTH_TO_ACCESS = "auth_to_access:";
 
     private static final String AUTH = "auth:";
+
+    /**
+     * 自定义 session 与 token 关联
+     */
+    public static final String AUTH_SESSION = "session:";
 
     private static final String REFRESH_AUTH = "refresh_auth:";
 
@@ -166,6 +172,9 @@ public class CustomRedisTokenStore implements TokenStore {
 
     @Override
     public void storeAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication) {
+        WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getUserAuthentication().getDetails();
+        byte[] sessionSerializedKey = serialize(AUTH_SESSION + details.getSessionId());// sessionId
+        byte[] sessionSerializedValue = serialize(token.getValue());
         byte[] serializedAccessToken = serialize(token);
         byte[] serializedAuth = serialize(authentication);
         byte[] accessKey = serializeKey(ACCESS + token.getValue());
@@ -179,6 +188,7 @@ public class CustomRedisTokenStore implements TokenStore {
             if (springDataRedis_2_0) {
                 try {
                     this.redisConnectionSet_2_0.invoke(conn, accessKey, serializedAccessToken);
+                    this.redisConnectionSet_2_0.invoke(conn, sessionSerializedKey, sessionSerializedValue);// sessionId 与 token 关联
                     this.redisConnectionSet_2_0.invoke(conn, authKey, serializedAuth);
                     this.redisConnectionSet_2_0.invoke(conn, authToAccessKey, serializedAccessToken);
                 } catch (Exception ex) {
@@ -186,6 +196,7 @@ public class CustomRedisTokenStore implements TokenStore {
                 }
             } else {
                 conn.set(accessKey, serializedAccessToken);
+                conn.set(sessionSerializedKey, sessionSerializedValue);// sessionId 与 token 关联
                 conn.set(authKey, serializedAuth);
                 conn.set(authToAccessKey, serializedAccessToken);
             }
@@ -195,6 +206,7 @@ public class CustomRedisTokenStore implements TokenStore {
             if (token.getExpiration() != null) {
                 int seconds = token.getExpiresIn();
                 conn.expire(accessKey, seconds);
+                conn.expire(sessionSerializedKey, seconds);
                 conn.expire(authKey, seconds);
                 conn.expire(authToAccessKey, seconds);
                 conn.expire(approvalKey, seconds);

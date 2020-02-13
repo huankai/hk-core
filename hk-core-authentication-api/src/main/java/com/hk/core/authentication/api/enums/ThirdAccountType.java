@@ -1,5 +1,6 @@
 package com.hk.core.authentication.api.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Getter;
  * @date 2019-12-7 17:19
  */
 @Getter
+@AllArgsConstructor
 public enum ThirdAccountType {
 
     wx((byte) 1, "微信"),
@@ -16,9 +18,4 @@ public enum ThirdAccountType {
     private byte value;
 
     private String text;
-
-    ThirdAccountType(byte value, String text) {
-        this.value = value;
-        this.text = text;
-    }
 }

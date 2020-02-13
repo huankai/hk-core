@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * token 存储
  */
+@Deprecated
 public interface TokenRegistry {
 
     /**

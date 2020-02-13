@@ -50,7 +50,6 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
         return parameters;
     }
 
-
     @Override
     public String getHeader(String name) {
         var value = super.getHeader(name);

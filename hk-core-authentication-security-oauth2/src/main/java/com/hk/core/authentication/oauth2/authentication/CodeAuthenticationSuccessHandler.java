@@ -4,17 +4,18 @@ import com.hk.commons.JsonResult;
 import com.hk.core.web.Webs;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
-import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 认证成功后，返回  token 信息
+ *
  * @author kevin
  * @date 2020-02-12 16:58
  */
-public class CodeAuthenticationSuccessHandler extends AbstractAuthenticationTargetUrlRequestHandler implements AuthenticationSuccessHandler {
+public class CodeAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     /**
      * session 中存储的 oauth2ClientContext

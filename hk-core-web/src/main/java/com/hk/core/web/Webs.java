@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * web相关的工具类
@@ -118,7 +119,10 @@ public abstract class Webs {
      * @param name name
      */
     public static void removeAttributeFromSession(String name) {
-        getRequestAttribute().removeAttribute(name, RequestAttributes.SCOPE_SESSION);
+        ServletRequestAttributes requestAttribute = getRequestAttribute();
+        if (Objects.nonNull(requestAttribute)) {
+            requestAttribute.removeAttribute(name, RequestAttributes.SCOPE_SESSION);
+        }
     }
 
     /**
