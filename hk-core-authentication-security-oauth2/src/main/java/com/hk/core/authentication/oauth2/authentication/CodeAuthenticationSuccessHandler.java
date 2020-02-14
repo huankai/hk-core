@@ -20,11 +20,18 @@ public class CodeAuthenticationSuccessHandler implements AuthenticationSuccessHa
     /**
      * session 中存储的 oauth2ClientContext
      */
-    private static final String SESSION_OAUTH2_CLIENT_CONTEXT_KEY = "scopedTarget.oauth2ClientContext";
+    private static final String SESSION_SCOPED_OAUTH2_CLIENT_CONTEXT_KEY = "scopedTarget.oauth2ClientContext";
+
+    private static final String SESSION_OAUTH2_CLIENT_CONTEXT_KEY = "oauth2ClientContext";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        DefaultOAuth2ClientContext auth2ClientContext = Webs.getAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
-        Webs.writeJson(response, HttpServletResponse.SC_OK, new JsonResult<>(auth2ClientContext.getAccessToken().getValue()));
+        DefaultOAuth2ClientContext auth2ClientContext = Webs.getAttributeFromSession(SESSION_SCOPED_OAUTH2_CLIENT_CONTEXT_KEY, DefaultOAuth2ClientContext.class);
+        try {
+            Webs.writeJson(response, HttpServletResponse.SC_OK, new JsonResult<>(auth2ClientContext.getAccessToken().getValue()));
+        } finally {
+            Webs.removeAttributeFromSession(SESSION_SCOPED_OAUTH2_CLIENT_CONTEXT_KEY);
+            Webs.removeAttributeFromSession(SESSION_OAUTH2_CLIENT_CONTEXT_KEY);
+        }
     }
 }

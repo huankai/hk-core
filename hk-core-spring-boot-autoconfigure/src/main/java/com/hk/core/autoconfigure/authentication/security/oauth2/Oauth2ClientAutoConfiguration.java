@@ -2,9 +2,6 @@ package com.hk.core.autoconfigure.authentication.security.oauth2;
 
 import com.hk.core.authentication.oauth2.authentication.CodeAuthenticationSuccessHandler;
 import com.hk.core.authentication.oauth2.provider.token.RequestIpJwtTokenStore;
-import com.hk.core.authentication.oauth2.session.HashMapBackedSessionMappingStorage;
-import com.hk.core.authentication.oauth2.session.SessionMappingStorage;
-import com.hk.core.authentication.oauth2.session.SingleSignOutHttpSessionListener;
 import com.hk.core.autoconfigure.authentication.AuthenticationProperties;
 import com.hk.core.autoconfigure.authentication.security.SecurityAuthenticationAutoConfiguration;
 import com.hk.core.autoconfigure.exception.Oauth2ErrorController;
@@ -12,13 +9,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
-import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -112,31 +107,31 @@ public class Oauth2ClientAutoConfiguration {
         };
     }
 
-    /**
-     * oauth2 client 单点退出配置
-     */
-    @Configuration
-    @ConditionalOnClass(SessionMappingStorage.class)
-    static class OAuth2ClientSingleSignOutAuthenticationConfiguration {
-
-        @Bean
-        @ConditionalOnMissingBean(value = {SessionMappingStorage.class})
-        public SessionMappingStorage sessionMappingStorage() {
-            return new HashMapBackedSessionMappingStorage();
-        }
-
-        /**
-         * oauth2 单点退出 session 监听器，必要配置，确保 {@link SessionMappingStorage} 中过期的 Session 自动清除
-         */
-        @Bean
-        public ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> singleSignOutHttpSessionListener(SessionMappingStorage sessionMappingStorage) {
-            ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> registrationBean = new ServletListenerRegistrationBean<>();
-            registrationBean.setListener(new SingleSignOutHttpSessionListener(sessionMappingStorage));
-            registrationBean.setOrder(0);
-            return registrationBean;
-        }
-
-    }
+//    /**
+//     * oauth2 client 单点退出配置
+//     */
+//    @Configuration
+//    @ConditionalOnClass(SessionMappingStorage.class)
+//    static class OAuth2ClientSingleSignOutAuthenticationConfiguration {
+//
+//        @Bean
+//        @ConditionalOnMissingBean(value = {SessionMappingStorage.class})
+//        public SessionMappingStorage sessionMappingStorage() {
+//            return new HashMapBackedSessionMappingStorage();
+//        }
+//
+//        /**
+//         * oauth2 单点退出 session 监听器，必要配置，确保 {@link SessionMappingStorage} 中过期的 Session 自动清除
+//         */
+//        @Bean
+//        public ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> singleSignOutHttpSessionListener(SessionMappingStorage sessionMappingStorage) {
+//            ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> registrationBean = new ServletListenerRegistrationBean<>();
+//            registrationBean.setListener(new SingleSignOutHttpSessionListener(sessionMappingStorage));
+//            registrationBean.setOrder(0);
+//            return registrationBean;
+//        }
+//
+//    }
 
 
 }
