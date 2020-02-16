@@ -40,7 +40,7 @@ public class CustomRedisTokenStore implements TokenStore {
     /**
      * 自定义 session 与 token 关联
      */
-    public static final String AUTH_SESSION = "session:";
+    public static final String AUTH_SESSION = "auth:session:";
 
     private static final String REFRESH_AUTH = "refresh_auth:";
 

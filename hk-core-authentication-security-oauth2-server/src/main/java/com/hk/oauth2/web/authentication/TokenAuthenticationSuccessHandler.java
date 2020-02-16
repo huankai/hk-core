@@ -19,13 +19,13 @@ import java.io.IOException;
 import java.util.Collections;
 
 /**
- * 手机号登陆认证成功后的处理
+ * 登陆认证成功后的处理，生成 token 信息
  *
  * @author kevin
  * @date 2019-7-1 16:38
  */
 @RequiredArgsConstructor
-public class PhoneAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+public class TokenAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     /**
      * 客户端 id
@@ -55,18 +55,18 @@ public class PhoneAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {
+        var clientDetails = clientDetailsService.loadClientByClientId(clientId);
+        if (null == clientDetails) {
+            throw new UnapprovedClientAuthenticationException("clientId不存在:" + clientId);
+        } else if (!passwordEncoder.matches(clientSecret, clientDetails.getClientSecret())) {
+            throw new UnapprovedClientAuthenticationException("clientSecret不匹配:" + clientId);
+        }
+        var tokenRequest = new TokenRequest(Collections.emptyMap(), clientId, clientDetails.getScope(),
+                AuthenticationType.password.name());// 这里的授权码模式可以随便写一个
+        var oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
+        var oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
+        var token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
         if (Webs.isAndroid(request) || Webs.isIPhone(request) || Webs.isAjax(request)) {
-            var clientDetails = clientDetailsService.loadClientByClientId(clientId);
-            if (null == clientDetails) {
-                throw new UnapprovedClientAuthenticationException("clientId不存在:" + clientId);
-            } else if (!passwordEncoder.matches(clientSecret, clientDetails.getClientSecret())) {
-                throw new UnapprovedClientAuthenticationException("clientSecret不匹配:" + clientId);
-            }
-            var tokenRequest = new TokenRequest(Collections.emptyMap(), clientId, clientDetails.getScope(),
-                    AuthenticationType.password.name());// 这里的授权码模式可以随便写一个
-            var oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
-            var oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
-            var token = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
             Webs.writeJson(response, HttpServletResponse.SC_OK, token);
         } else {
             super.onAuthenticationSuccess(request, response, authentication);

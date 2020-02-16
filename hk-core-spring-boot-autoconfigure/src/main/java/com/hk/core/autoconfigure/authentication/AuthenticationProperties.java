@@ -77,6 +77,16 @@ public class AuthenticationProperties {
          * 是否使用 https
          */
         private boolean forceHttps = false;
+
+        /**
+         * oauth2 认证服务器 登陆生成 access_token 信息 的 clientId
+         */
+        private String clientId;
+
+        /**
+         * oauth2 认证服务器 登陆生成 access_token 信息 的 clientSecret
+         */
+        private String clientSecret;
     }
 
     /* ******************************************************************* */
@@ -260,15 +270,7 @@ public class AuthenticationProperties {
          */
         private String phoneLoginUri = "/phone/login";
 
-        /**
-         * oauth2 认证服务器 手机号登陆返回 access_token 信息 的 clientId
-         */
-        private String clientId;
 
-        /**
-         * oauth2 认证服务器 手机号登陆返回 access_token 信息 的 clientSecret
-         */
-        private String clientSecret;
     }
 
 }
