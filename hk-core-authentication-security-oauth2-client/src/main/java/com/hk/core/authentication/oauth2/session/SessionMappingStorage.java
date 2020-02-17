@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
  * @author kevin
  * @date 2019-5-18 10:06
  */
+@Deprecated
 public interface SessionMappingStorage {
 
     /**

@@ -17,6 +17,7 @@ import java.util.Objects;
  * 单点退出处理器，退出后，将token 信息清除
  */
 @Slf4j
+@Deprecated
 public class ConsumerTokenLogoutHandler extends AbstractRedisSessionHandler implements LogoutHandler {
 
     public ConsumerTokenLogoutHandler(ConsumerTokenServices consumerTokenServices,

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2019-5-18 11:38
  */
 @Slf4j
+@Deprecated
 @RequiredArgsConstructor
 public class SingleLogoutHandler implements LogoutHandler {
 

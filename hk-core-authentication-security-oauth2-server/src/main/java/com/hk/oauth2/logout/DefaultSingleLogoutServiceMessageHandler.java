@@ -17,6 +17,7 @@ import java.net.URL;
  * @date 2019-5-18 11:56
  */
 @Slf4j
+@Deprecated
 @RequiredArgsConstructor
 public class DefaultSingleLogoutServiceMessageHandler implements SingleLogoutServiceMessageHandler {
 

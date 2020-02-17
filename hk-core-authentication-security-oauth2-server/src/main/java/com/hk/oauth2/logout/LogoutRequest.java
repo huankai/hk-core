@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @date 2019-5-18 13:59
  */
 @Data
+@Deprecated
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogoutRequest implements Serializable {

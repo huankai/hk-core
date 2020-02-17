@@ -15,6 +15,7 @@ import java.io.IOException;
  * @author kevin
  * @date 2019-5-18 10:47
  */
+@Deprecated
 @RequiredArgsConstructor
 public class SingleSignOutFilter extends HttpFilter {
 

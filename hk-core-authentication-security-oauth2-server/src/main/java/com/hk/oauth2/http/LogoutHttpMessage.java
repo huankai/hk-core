@@ -12,6 +12,7 @@ import java.net.URL;
  * @date 2019-5-18 11:33
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class LogoutHttpMessage extends HttpMessage implements LogoutParameter {
 
     public LogoutHttpMessage(URL url, String message) {

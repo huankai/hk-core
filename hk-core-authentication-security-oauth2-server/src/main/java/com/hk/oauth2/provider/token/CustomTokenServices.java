@@ -85,23 +85,8 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
     public OAuth2AccessToken createAccessToken(OAuth2Authentication authentication) throws AuthenticationException {
         var existingAccessToken = tokenStore.getAccessToken(authentication);
         check(existingAccessToken, authentication.getOAuth2Request().getClientId());
-        OAuth2RefreshToken refreshToken = null;
-        if (existingAccessToken != null) {
-            if (existingAccessToken.isExpired()) {
-                if (existingAccessToken.getRefreshToken() != null) {
-                    refreshToken = existingAccessToken.getRefreshToken();
-                    tokenStore.removeRefreshToken(refreshToken);
-                }
-                tokenStore.removeAccessToken(existingAccessToken);
-            } else {
-                tokenStore.storeAccessToken(existingAccessToken, authentication);
-//                tokenRegistry.addAccessToken(authentication, existingAccessToken);
-                return existingAccessToken;
-            }
-        }
-        if (refreshToken == null) {
-            refreshToken = createRefreshToken(authentication);
-        } else if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
+        OAuth2RefreshToken refreshToken = createRefreshToken(authentication);
+        if (refreshToken instanceof ExpiringOAuth2RefreshToken) {
             var expiring = (ExpiringOAuth2RefreshToken) refreshToken;
             if (System.currentTimeMillis() > expiring.getExpiration().getTime()) {
                 refreshToken = createRefreshToken(authentication);
@@ -113,7 +98,6 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
         if (refreshToken != null) {
             tokenStore.storeRefreshToken(refreshToken, authentication);
         }
-//        tokenRegistry.addAccessToken(authentication, accessToken);
         return accessToken;
     }
 
@@ -140,10 +124,10 @@ public class CustomTokenServices implements AuthorizationServerTokenServices, Re
             authentication = new OAuth2Authentication(authentication.getOAuth2Request(), user);
             authentication.setDetails(details);
         }
-        String clientId = authentication.getOAuth2Request().getClientId();
-        if (clientId == null || !clientId.equals(tokenRequest.getClientId())) {
-            throw new InvalidGrantException("Wrong client for this refresh token: " + refreshTokenValue);
-        }
+//        String clientId = authentication.getOAuth2Request().getClientId();
+//        if (clientId == null || !clientId.equals(tokenRequest.getClientId())) {
+//            throw new InvalidGrantException("Wrong client for this refresh token: " + refreshTokenValue);
+//        }
 
         // clear out any access tokens already associated with the refresh
         // token.

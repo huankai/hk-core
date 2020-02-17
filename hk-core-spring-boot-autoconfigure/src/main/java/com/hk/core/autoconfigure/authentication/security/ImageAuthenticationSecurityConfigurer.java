@@ -11,6 +11,7 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
  * @author kevin
  * @date 2018-07-27 16:00
  */
+@Deprecated
 public class ImageAuthenticationSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
 //    private final AuthenticationProperties.ImageCodeProperties imageCodeProperties;

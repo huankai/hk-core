@@ -41,6 +41,7 @@ import java.util.*;
  * @date 2019-06-15 22:04
  * @see org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider
  */
+@Deprecated
 public class LogoutAuthorizationCodeAccessTokenProvider extends OAuth2AccessTokenSupport implements AccessTokenProvider, LogoutParameter {
 
     @Setter

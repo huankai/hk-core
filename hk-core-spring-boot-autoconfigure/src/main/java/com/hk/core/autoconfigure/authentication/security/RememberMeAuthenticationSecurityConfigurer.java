@@ -11,6 +11,7 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
  * @author kevin
  * @date 2018-07-27 16:09
  */
+@Deprecated
 public class RememberMeAuthenticationSecurityConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
 //    private AuthenticationProperties.RememberMeProperties rememberMe;

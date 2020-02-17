@@ -47,6 +47,7 @@ import java.util.Objects;
  * @date 2020-02-14 12:23
  * @see org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
  */
+@Deprecated
 public class CustomOAuth2ClientAuthenticationProcessingFilter extends GenericFilterBean
         implements ApplicationEventPublisherAware {
 

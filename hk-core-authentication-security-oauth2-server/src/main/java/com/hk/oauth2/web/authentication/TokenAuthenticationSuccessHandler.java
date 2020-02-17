@@ -1,5 +1,7 @@
 package com.hk.oauth2.web.authentication;
 
+import com.hk.commons.JsonResult;
+import com.hk.commons.util.StringUtils;
 import com.hk.core.authentication.oauth2.AuthenticationType;
 import com.hk.core.web.Webs;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +14,8 @@ import org.springframework.security.oauth2.provider.TokenRequest;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Collections;
 
 /**
@@ -52,9 +52,10 @@ public class TokenAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
      */
     private final PasswordEncoder passwordEncoder;
 
+    private static final String REDIRECT_PARAMETER = "service";
+
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws ServletException, IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         var clientDetails = clientDetailsService.loadClientByClientId(clientId);
         if (null == clientDetails) {
             throw new UnapprovedClientAuthenticationException("clientId不存在:" + clientId);
@@ -69,7 +70,8 @@ public class TokenAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
         if (Webs.isAndroid(request) || Webs.isIPhone(request) || Webs.isAjax(request)) {
             Webs.writeJson(response, HttpServletResponse.SC_OK, token);
         } else {
-            super.onAuthenticationSuccess(request, response, authentication);
+            String targetUrl = StringUtils.defaultIfEmpty(request.getParameter(REDIRECT_PARAMETER), determineTargetUrl(request, response));
+            Webs.writeJson(response, HttpServletResponse.SC_OK, JsonResult.redirect(targetUrl));
         }
     }
 }

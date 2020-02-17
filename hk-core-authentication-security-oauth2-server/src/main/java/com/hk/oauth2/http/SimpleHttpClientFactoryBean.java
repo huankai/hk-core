@@ -38,6 +38,7 @@ import java.util.stream.IntStream;
  * @date 2019-5-18 14:29
  */
 @Setter
+@Deprecated
 public class SimpleHttpClientFactoryBean implements FactoryBean<SimpleHttpClient> {
 
     /**

@@ -1,11 +1,11 @@
 package com.hk.oauth2.provider.code;
 
-import java.io.Serializable;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 /**
  * 用户访问 单点登陆服务器客户端 信息

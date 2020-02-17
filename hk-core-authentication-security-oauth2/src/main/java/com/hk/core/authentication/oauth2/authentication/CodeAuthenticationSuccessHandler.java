@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author kevin
  * @date 2020-02-12 16:58
  */
+@Deprecated
 public class CodeAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     /**

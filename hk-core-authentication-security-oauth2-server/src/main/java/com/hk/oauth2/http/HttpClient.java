@@ -9,6 +9,7 @@ import java.net.URL;
  * @author kevin
  * @date 2019-5-18 11:33
  */
+@Deprecated
 public interface HttpClient {
 
     /**

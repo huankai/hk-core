@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @SuppressWarnings("serial")
+@Deprecated
 public class HttpMessage implements Serializable {
 
     private static final boolean DEFAULT_ASYNCHRONOUS_CALLBACKS_ENABLED = true;

@@ -13,6 +13,7 @@ import java.io.IOException;
  * @author kevin
  * @date 2019-5-10 18:58
  */
+@Deprecated
 public class Oauth2UrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final String oauth2ServerLogoutUrl;

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2019-5-18 10:26
  */
 @Slf4j
+@Deprecated
 public class SingleSignOutHandler implements LogoutParameter {
 
     /**

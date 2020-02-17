@@ -24,6 +24,7 @@ import java.util.Map;
  * @date 2019-5-6 17:26
  */
 @Slf4j
+@Deprecated
 public final class XmlUtils {
 
     /**

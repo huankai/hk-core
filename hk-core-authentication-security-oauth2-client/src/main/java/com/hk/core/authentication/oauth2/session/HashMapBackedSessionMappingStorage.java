@@ -13,6 +13,7 @@ import java.util.Map;
  * @date 2019-5-18 10:07
  */
 @Slf4j
+@Deprecated
 public class HashMapBackedSessionMappingStorage implements SessionMappingStorage {
 
     private final Map<String, HttpSession> MANAGED_SESSIONS = new HashMap<>();

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSessionListener;
  * @date 2019-5-18 10:16
  */
 @Slf4j
+@Deprecated
 public class SingleSignOutHttpSessionListener implements HttpSessionListener {
 
     private final SessionMappingStorage sessionMappingStorage;

@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
  * @author kevin
  * @date 2019-12-18 16:58
  */
+@Deprecated
 public class ClientResourceServerTokenServices implements ResourceServerTokenServices {
 
     private TokenStore tokenStore;

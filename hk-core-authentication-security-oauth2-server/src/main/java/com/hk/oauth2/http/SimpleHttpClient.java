@@ -31,6 +31,7 @@ import java.util.concurrent.RejectedExecutionException;
 @Slf4j
 @RequiredArgsConstructor
 @SuppressWarnings("serial")
+@Deprecated
 public class SimpleHttpClient implements HttpClient, Serializable, DisposableBean {
 
     /**

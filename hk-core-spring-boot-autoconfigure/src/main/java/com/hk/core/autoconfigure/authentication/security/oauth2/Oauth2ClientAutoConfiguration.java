@@ -1,6 +1,5 @@
 package com.hk.core.autoconfigure.authentication.security.oauth2;
 
-import com.hk.core.authentication.oauth2.authentication.CodeAuthenticationSuccessHandler;
 import com.hk.core.authentication.oauth2.provider.token.RequestIpJwtTokenStore;
 import com.hk.core.autoconfigure.authentication.AuthenticationProperties;
 import com.hk.core.autoconfigure.authentication.security.SecurityAuthenticationAutoConfiguration;
@@ -92,7 +91,7 @@ public class Oauth2ClientAutoConfiguration {
                         for (var filter : filterChain.getFilters()) {
                             if (filter instanceof OAuth2ClientAuthenticationProcessingFilter) {
                                 OAuth2ClientAuthenticationProcessingFilter processingFilter = (OAuth2ClientAuthenticationProcessingFilter) filter;
-                                processingFilter.setAuthenticationSuccessHandler(new CodeAuthenticationSuccessHandler());
+//                                processingFilter.setAuthenticationSuccessHandler(new CodeAuthenticationSuccessHandler());
                                 SimpleUrlAuthenticationFailureHandler authenticationFailureHandler = new SimpleUrlAuthenticationFailureHandler();
                                 authenticationFailureHandler.setAllowSessionCreation(authenticationProperties.isAllowSessionCreation());
                                 authenticationFailureHandler.setDefaultFailureUrl(authenticationProperties.getOauth2().getOauth2FailureUrl());

@@ -12,10 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 使用 spring security 实现的当前用户实体
@@ -147,5 +144,18 @@ public class SecurityUserPrincipal extends UserPrincipal implements UserDetails,
     @Override
     public void eraseCredentials() {
         password = null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof SecurityUserPrincipal) {
+            return ((SecurityUserPrincipal) o).getAccount().equals(this.getAccount());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getAccount().hashCode();
     }
 }
